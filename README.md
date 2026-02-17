@@ -34,7 +34,7 @@
 | Role | Email | Password | Dashboard |
 | :--- | :--- | :--- | :--- |
 | **Student** | `user@test.com` | `123456` | `/learner/dashboard` |
-| **Instructor** | `instructor@test.com` | `123456` | `/instructor/dashboard` |
+| 
 | **Admin** | `admin@test.com` | `admin123` | `/admin/dashboard` |
 
 ---
@@ -92,15 +92,7 @@ The frontend is **100% ready** for backend connection. See [`BACKEND_HANDOFF.md`
 2. Auth flow is in `src/auth/AuthContext.jsx` — replace `localStorage` logic with JWT token management
 3. AI chat logic is in `src/pages/AIDemoPage.jsx` — replace `getDemoResponse()` with a `POST /api/ai/chat` call
 
----
 
-## 📦 Deployment (Netlify)
-
-1. Run `npm run build` to generate the `dist/` folder
-2. Upload the `dist/` folder to [Netlify Drop](https://app.netlify.com/drop)
-3. Make sure `public/_redirects` exists with: `/* /index.html 200`
-
----
 
 ## 📄 License
 
