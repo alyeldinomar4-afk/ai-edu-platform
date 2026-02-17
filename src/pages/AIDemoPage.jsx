@@ -15,16 +15,41 @@ const AIDemoPage = () => {
     ]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const messagesEndRef = useRef(null);
+    const chatContainerRef = useRef(null);
     const inputRef = useRef(null);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        // Use multiple timeouts to catch different stages of rendering/animation
+        // Immediate scroll
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+
+        // After short delay
+        setTimeout(() => {
+            if (chatContainerRef.current) {
+                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            }
+        }, 50);
+
+        // After medium delay (animation mid-point)
+        setTimeout(() => {
+            if (chatContainerRef.current) {
+                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            }
+        }, 150);
+
+        // After long delay (animation complete)
+        setTimeout(() => {
+            if (chatContainerRef.current) {
+                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            }
+        }, 300);
     };
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [messages, isTyping]);
 
     // Demo responses for different topics
     const getDemoResponse = (userMessage) => {
@@ -115,9 +140,12 @@ const AIDemoPage = () => {
                 </div>
 
                 {/* Chat Container */}
-                <div className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden flex flex-col" style={{ height: 'calc(100vh - 280px)' }}>
+                <div
+                    className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden flex flex-col"
+                    style={{ height: 'calc(100vh - 280px)' }}
+                >
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                    <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-6 space-y-6">
                         <AnimatePresence>
                             {messages.map((message) => (
                                 <motion.div
@@ -129,8 +157,8 @@ const AIDemoPage = () => {
                                 >
                                     {/* Avatar */}
                                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.role === 'assistant'
-                                            ? 'bg-gradient-to-br from-blue-500 to-purple-600'
-                                            : 'bg-gradient-to-br from-purple-500 to-pink-500'
+                                        ? 'bg-gradient-to-br from-blue-500 to-purple-600'
+                                        : 'bg-gradient-to-br from-purple-500 to-pink-500'
                                         }`}>
                                         {message.role === 'assistant' ? (
                                             <Bot className="w-5 h-5 text-white" />
@@ -142,8 +170,8 @@ const AIDemoPage = () => {
                                     {/* Message Content */}
                                     <div className={`flex-1 max-w-[80%] ${message.role === 'user' ? 'items-end' : ''}`}>
                                         <div className={`rounded-2xl p-4 ${message.role === 'assistant'
-                                                ? 'bg-slate-50 text-slate-800'
-                                                : 'bg-gradient-to-br from-blue-500 to-purple-600 text-white'
+                                            ? 'bg-slate-50 text-slate-800'
+                                            : 'bg-gradient-to-br from-blue-500 to-purple-600 text-white'
                                             }`}>
                                             <div className="whitespace-pre-wrap text-sm leading-relaxed">
                                                 {message.content}
@@ -177,7 +205,7 @@ const AIDemoPage = () => {
                             </motion.div>
                         )}
 
-                        <div ref={messagesEndRef} />
+
                     </div>
 
                     {/* Suggested Questions (only show if few messages) */}

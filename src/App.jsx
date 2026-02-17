@@ -23,11 +23,13 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminLayout from './components/layout/AdminLayout';
 import ManageCoursesPage from './pages/admin/ManageCoursesPage';
 import ComingSoon from './components/common/ComingSoon';
+import ScrollToTop from './components/common/ScrollToTop';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Public Routes */}
           <Route element={<MainLayout />}>
