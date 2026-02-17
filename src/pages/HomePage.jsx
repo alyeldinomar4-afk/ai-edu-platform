@@ -1,0 +1,270 @@
+import { motion } from 'framer-motion';
+import { Search, ArrowRight, Zap, Sparkles, Play, Award, Users, Star } from 'lucide-react';
+import Button from '../components/ui/Button';
+import CourseCard from '../components/features/course/CourseCard';
+import { courses, categories, testimonials } from '../data/mockData';
+import { useNavigate, Link } from 'react-router-dom';
+
+const HomePage = () => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="space-y-0 pb-24 overflow-x-hidden">
+            {/* Hero Section */}
+            <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-white">
+                {/* Abstract Background Shapes */}
+                <div className="absolute inset-0 z-0 opacity-30">
+                    <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-primary to-accent rounded-full blur-[100px] animate-float" />
+                    <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-gradient-to-tr from-secondary to-primary-dark rounded-full blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+                </div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/50 backdrop-blur-sm border border-slate-200 text-primary font-semibold text-sm mb-6">
+                                <Sparkles className="w-4 h-4" />
+                                <span>The Future of Learning is Here</span>
+                            </div>
+                            <h1 className="text-5xl md:text-7xl font-bold text-slate-900 leading-tight mb-6 tracking-tight">
+                                Master AI with <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
+                                    Intelligent Education
+                                </span>
+                            </h1>
+                            <p className="text-xl text-slate-600 mb-8 max-w-lg leading-relaxed">
+                                Unlock your potential with our AI-powered learning platform.
+                                Personalized learning paths, real-time feedback, and world-class instructors.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all">
+                                    Start Learning Now <ArrowRight className="w-5 h-5 ml-2" />
+                                </Button>
+                                <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50">
+                                    <Play className="w-5 h-5 mr-2 fill-current" /> Watch Demo
+                                </Button>
+                            </div>
+
+                            <div className="mt-12 flex items-center gap-4 text-sm font-medium text-slate-500">
+                                <div className="flex -space-x-3">
+                                    {[1, 2, 3, 4].map(((_, i) => (
+                                        <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center overflow-hidden">
+                                            <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
+                                        </div>
+                                    )))}
+                                </div>
+                                <p>Trusted by <span className="text-slate-900 font-bold">10,000+</span> students</p>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="relative"
+                        >
+                            <div className="relative z-10 bg-white p-4 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                                <img
+                                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                                    alt="Students learning"
+                                    className="rounded-2xl w-full object-cover h-[400px] md:h-[500px]"
+                                />
+
+                                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-50 flex items-center gap-4 animate-float" style={{ animationDelay: '1s' }}>
+                                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                        <Award className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-slate-500">Course Completed</p>
+                                        <p className="text-lg font-bold text-slate-900">Python Mastery</p>
+                                    </div>
+                                </div>
+
+                                <div className="absolute top-10 -right-8 bg-white p-4 rounded-xl shadow-xl border border-slate-50 flex items-center gap-3 animate-float" style={{ animationDelay: '0.5s' }}>
+                                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                                        <Star className="w-5 h-5 fill-current" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-bold text-slate-900">4.9/5 Rating</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Stats Section */}
+            <section className="bg-slate-900 text-white py-12">
+                <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-8 text-center md:text-left">
+                    {[
+                        { label: 'Active Learners', value: '50k+' },
+                        { label: 'Courses Available', value: '200+' },
+                        { label: 'Instructors', value: '50+' },
+                        { label: 'Satisfaction Rate', value: '99%' },
+                    ].map((stat, idx) => (
+                        <div key={idx} className="flex-1 min-w-[150px]">
+                            <h3 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-white">{stat.value}</h3>
+                            <p className="text-slate-400 text-sm mt-1 uppercase tracking-wider">{stat.label}</p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Categories Section */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div className="text-center mb-16">
+                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">Discover</span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">Explore Categories</h2>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {categories.map((cat, idx) => (
+                        <motion.div
+                            key={cat.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                            viewport={{ once: true }}
+                            onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
+                            className="group cursor-pointer p-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20 transition-all text-center"
+                        >
+                            <div className="w-12 h-12 mx-auto bg-slate-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300">
+                                <span className={`text-2xl group-hover:text-primary transition-colors`}>{cat.icon || '📚'}</span>
+                            </div>
+                            <h3 className="font-semibold text-slate-900 group-hover:text-primary transition-colors">{cat.name}</h3>
+                            <p className="text-xs text-slate-400 mt-1">{cat.count} Courses</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Featured Courses */}
+            <section className="bg-slate-50 py-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-end mb-12">
+                        <div>
+                            <span className="text-primary font-semibold tracking-wider uppercase text-sm">Top Rated</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">Featured Courses</h2>
+                        </div>
+                        <Button variant="ghost" className="hidden sm:flex items-center gap-1 hover:text-primary">
+                            View All Courses <ArrowRight className="w-4 h-4" />
+                        </Button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {courses.map((course, idx) => (
+                            <motion.div
+                                key={course.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ delay: idx * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <CourseCard course={course} />
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    <div className="mt-8 text-center sm:hidden">
+                        <Button variant="outline" className="w-full">View All Courses</Button>
+                    </div>
+                </div>
+            </section>
+
+            {/* AI Feature Highlight */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+                <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black rounded-[2.5rem] p-8 md:p-20 overflow-hidden relative text-white">
+                    <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
+                                <Zap className="w-4 h-4 text-yellow-400" />
+                                <span>AI-Powered Assistant</span>
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                                Learning stuck? <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-secondary-400">Ask the AI Tutor.</span>
+                            </h2>
+                            <p className="text-slate-300 text-lg mb-8 leading-relaxed">
+                                    Get instant feedback, code explanations, and personalized study plans.
+                                    Our AI tutor understands your learning style and adapts to your pace.
+                                </p>
+                                <Link to="/ai-demo">
+                                    <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 hover:scale-105 transition-transform border-none shadow-xl shadow-white/5">
+                                        Try AI Demo <ArrowRight className="w-5 h-5 ml-2" />
+                                    </Button>
+                                </Link>
+                        </div>
+
+                        <div className="relative">
+                            {/* Abstract UI representation of chat */}
+                            <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 border border-slate-700 shadow-2xl relative z-20">
+                                <div className="space-y-4">
+                                    <div className="flex gap-4 items-start">
+                                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary-400">
+                                            <Users className="w-5 h-5" />
+                                        </div>
+                                        <div className="bg-slate-700/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
+                                            <p>How do I optimize this React component for performance?</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4 items-start">
+                                        <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                                            <Zap className="w-5 h-5" />
+                                        </div>
+                                        <div className="bg-slate-700/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
+                                            <p className="mb-2">You can use `useMemo` and `useCallback` to prevent unnecessary re-renders.</p>
+                                            <div className="bg-slate-900 rounded p-2 font-mono text-xs text-green-300">
+                                                const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Decorative blurred circles behind */}
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-primary to-purple-600 blur-[80px] opacity-20 -z-10 rounded-full animate-pulse" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Testimonials */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl font-bold text-slate-900">Loved by Students</h2>
+                    <p className="text-slate-500 mt-2">Don't just take our word for it</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {testimonials.map((t, idx) => (
+                        <motion.div
+                            key={t.id}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: idx * 0.1 }}
+                            viewport={{ once: true }}
+                            className="p-8 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        >
+                            <div className="flex items-center gap-4 mb-6">
+                                <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
+                                <div>
+                                    <h4 className="font-bold text-slate-900">{t.name}</h4>
+                                    <p className="text-sm text-slate-500">{t.role}</p>
+                                </div>
+                            </div>
+                            <div className="flex gap-1 mb-4">
+                                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+                            </div>
+                            <p className="text-slate-600 italic leading-relaxed">"{t.content}"</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
+        </div>
+    );
+};
+
+export default HomePage;
