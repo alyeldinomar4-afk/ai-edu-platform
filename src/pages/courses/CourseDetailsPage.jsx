@@ -75,6 +75,7 @@ const CourseDetailsPage = () => {
                     {/* Breadcrumb */}
                     <div className="mb-6">
                         <Breadcrumb
+                            light={true}
                             items={[
                                 { label: 'Courses', href: '/courses' },
                                 { label: course.category, href: `/courses?category=${encodeURIComponent(course.category)}` },

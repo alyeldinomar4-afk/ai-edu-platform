@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Search, ArrowRight, Zap, Sparkles, Play, Award, Users, Star } from 'lucide-react';
+import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star } from 'lucide-react';
 import Button from '../components/ui/Button';
 import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials } from '../data/mockData';
@@ -40,12 +40,16 @@ const HomePage = () => {
                                 Personalized learning paths, real-time feedback, and world-class instructors.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all">
-                                    Start Learning Now <ArrowRight className="w-5 h-5 ml-2" />
-                                </Button>
-                                <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
-                                    <Play className="w-5 h-5 mr-2 fill-current" /> Watch Demo
-                                </Button>
+                                <Link to="/courses">
+                                    <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all w-full sm:w-auto">
+                                        Start Learning Now <ArrowRight className="w-5 h-5 ml-2" />
+                                    </Button>
+                                </Link>
+                                <Link to="/ai-demo">
+                                    <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto">
+                                        <Play className="w-5 h-5 mr-2 fill-current" /> Watch Demo
+                                    </Button>
+                                </Link>
                             </div>
 
                             <div className="mt-12 flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400">
@@ -150,9 +154,11 @@ const HomePage = () => {
                             <span className="text-primary font-semibold tracking-wider uppercase text-sm">Top Rated</span>
                             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Featured Courses</h2>
                         </div>
-                        <Button variant="ghost" className="hidden sm:flex items-center gap-1 hover:text-primary dark:text-slate-300 cursor-pointer">
-                            View All Courses <ArrowRight className="w-4 h-4" />
-                        </Button>
+                        <Link to="/courses">
+                            <Button variant="ghost" className="hidden sm:flex items-center gap-1 hover:text-primary dark:text-slate-300 cursor-pointer">
+                                View All Courses <ArrowRight className="w-4 h-4" />
+                            </Button>
+                        </Link>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -170,7 +176,9 @@ const HomePage = () => {
                     </div>
 
                     <div className="mt-8 text-center sm:hidden">
-                        <Button variant="outline" className="w-full h-12 dark:border-slate-700 dark:text-slate-300">View All Courses</Button>
+                        <Link to="/courses">
+                            <Button variant="outline" className="w-full h-12 dark:border-slate-700 dark:text-slate-300">View All Courses</Button>
+                        </Link>
                     </div>
                 </div>
             </section>
