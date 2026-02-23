@@ -53,12 +53,12 @@ const Quiz = () => {
 
     if (showResult) {
         return (
-            <div className="p-8 text-center bg-white rounded-xl border border-slate-100">
+            <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 transition-colors">
                 <div className="mb-4">
                     <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Quiz Completed!</h3>
-                <p className="text-slate-600 mb-6">You scored {score} out of {questions.length}</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Quiz Completed!</h3>
+                <p className="text-slate-600 dark:text-slate-400 mb-6">You scored {score} out of {questions.length}</p>
                 <Button onClick={() => {
                     setShowResult(false);
                     setCurrentQuestion(0);
@@ -71,14 +71,14 @@ const Quiz = () => {
     }
 
     return (
-        <div className="bg-white rounded-xl border border-slate-100 p-6">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-6 transition-colors">
             <div className="flex justify-between items-center mb-6">
-                <h3 className="font-bold text-slate-900">Module Quiz</h3>
-                <span className="text-sm text-slate-500">Question {currentQuestion + 1} of {questions.length}</span>
+                <h3 className="font-bold text-slate-900 dark:text-white">Module Quiz</h3>
+                <span className="text-sm text-slate-500 dark:text-slate-400">Question {currentQuestion + 1} of {questions.length}</span>
             </div>
 
             <div className="mb-8">
-                <h4 className="text-lg font-medium text-slate-800 mb-4">{questions[currentQuestion].question}</h4>
+                <h4 className="text-lg font-medium text-slate-800 dark:text-slate-200 mb-4">{questions[currentQuestion].question}</h4>
                 <div className="space-y-3">
                     {questions[currentQuestion].options.map((option, idx) => (
                         <button
@@ -86,10 +86,10 @@ const Quiz = () => {
                             onClick={() => !selectedOption && handleAnswer(idx)}
                             disabled={selectedOption !== null}
                             className={`w-full text-left p-4 rounded-lg border transition-all ${selectedOption === idx
-                                    ? isCorrect
-                                        ? 'bg-green-50 border-green-500 text-green-700'
-                                        : 'bg-red-50 border-red-500 text-red-700'
-                                    : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                                ? isCorrect
+                                    ? 'bg-green-50 dark:bg-green-900/20 border-green-500 text-green-700 dark:text-green-400'
+                                    : 'bg-red-50 dark:bg-red-900/20 border-red-500 text-red-700 dark:text-red-400'
+                                : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-700 dark:text-slate-300'
                                 }`}
                         >
                             <div className="flex justify-between items-center">

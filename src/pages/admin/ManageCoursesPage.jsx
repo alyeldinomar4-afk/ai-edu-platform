@@ -47,19 +47,19 @@ const ManageCoursesPage = () => {
     };
 
     return (
-        <div>
+        <div className="transition-colors duration-300">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                <h1 className="text-2xl font-bold text-slate-900">Manage Courses</h1>
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Manage Courses</h1>
                 <Button className="flex items-center gap-2" onClick={openAddModal}>
                     <Plus size={18} /> Add New Course
                 </Button>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm transition-colors">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-sm uppercase tracking-wider">
+                            <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">
                                 <th className="p-4 font-semibold">Course</th>
                                 <th className="p-4 font-semibold hidden sm:table-cell">Instructor</th>
                                 <th className="p-4 font-semibold hidden md:table-cell">Category</th>
@@ -67,35 +67,35 @@ const ManageCoursesPage = () => {
                                 <th className="p-4 font-semibold text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                             {courseList.map((course) => (
-                                <tr key={course.id} className="hover:bg-slate-50 transition-colors">
+                                <tr key={course.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                                     <td className="p-4">
                                         <div className="flex items-center gap-3">
                                             <img src={course.image} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                                             <div className="min-w-0">
-                                                <span className="font-medium text-slate-900 block truncate">{course.title}</span>
-                                                <span className="text-xs text-slate-500 sm:hidden">{course.instructor}</span>
+                                                <span className="font-medium text-slate-900 dark:text-white block truncate">{course.title}</span>
+                                                <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">{course.instructor}</span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-4 text-slate-600 hidden sm:table-cell">{course.instructor}</td>
+                                    <td className="p-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell">{course.instructor}</td>
                                     <td className="p-4 hidden md:table-cell">
-                                        <span className="px-2 py-1 rounded-full bg-slate-100 text-xs font-semibold text-slate-600">{course.category}</span>
+                                        <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-400">{course.category}</span>
                                     </td>
-                                    <td className="p-4 font-medium text-slate-900">${course.price}</td>
+                                    <td className="p-4 font-medium text-slate-900 dark:text-white">${course.price}</td>
                                     <td className="p-4 text-right">
                                         <div className="flex justify-end gap-1">
                                             <button
                                                 onClick={() => openEditModal(course)}
-                                                className="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                                                className="p-2 text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary-dark hover:bg-primary/10 rounded-lg transition-colors"
                                                 title="Edit course"
                                             >
                                                 <Edit2 size={18} />
                                             </button>
                                             <button
                                                 onClick={() => setShowDeleteConfirm(course.id)}
-                                                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                className="p-2 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                                                 title="Delete course"
                                             >
                                                 <Trash2 size={18} />
@@ -107,7 +107,7 @@ const ManageCoursesPage = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="p-4 border-t border-slate-200 text-center text-sm text-slate-500">
+                <div className="p-4 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
                     Showing {courseList.length} courses
                 </div>
             </div>
@@ -115,56 +115,56 @@ const ManageCoursesPage = () => {
             {/* Add/Edit Modal */}
             <AnimatePresence>
                 {showModal && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-                        onClick={() => setShowModal(false)}
-                    >
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6"
-                            onClick={e => e.stopPropagation()}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setShowModal(false)}
+                        />
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                            className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-lg p-6 relative z-10 border border-slate-100 dark:border-slate-800 transition-colors"
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-xl font-bold text-slate-900">
+                                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                                     {editingCourse ? 'Edit Course' : 'Add New Course'}
                                 </h2>
-                                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 rounded-lg">
-                                    <X size={20} className="text-slate-500" />
+                                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                                    <X size={20} className="text-slate-500 dark:text-slate-400" />
                                 </button>
                             </div>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Course Title</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Course Title</label>
                                     <input
                                         type="text"
                                         value={formData.title}
                                         onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                                         placeholder="e.g. Introduction to Machine Learning"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Instructor</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Instructor</label>
                                     <input
                                         type="text"
                                         value={formData.instructor}
                                         onChange={e => setFormData(prev => ({ ...prev, instructor: e.target.value }))}
-                                        className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                        className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                                         placeholder="e.g. Dr. Sarah Smith"
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Category</label>
                                         <select
                                             value={formData.category}
                                             onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white"
+                                            className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors select"
                                         >
                                             <option value="">Select</option>
                                             <option value="Data Science">Data Science</option>
@@ -175,53 +175,53 @@ const ManageCoursesPage = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">Price ($)</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Price ($)</label>
                                         <input
                                             type="number"
                                             value={formData.price}
                                             onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                                            className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                            className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                                             placeholder="19.99"
                                         />
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex gap-3 mt-6">
+                            <div className="flex gap-3 mt-8">
                                 <Button variant="ghost" onClick={() => setShowModal(false)} className="flex-1">Cancel</Button>
                                 <Button onClick={handleSave} className="flex-1">
                                     {editingCourse ? 'Save Changes' : 'Create Course'}
                                 </Button>
                             </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
 
             {/* Delete Confirmation Modal */}
             <AnimatePresence>
                 {showDeleteConfirm && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-                        onClick={() => setShowDeleteConfirm(null)}
-                    >
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6"
-                            onClick={e => e.stopPropagation()}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setShowDeleteConfirm(null)}
+                        />
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                            className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-sm p-6 relative z-10 border border-slate-100 dark:border-slate-800 transition-colors"
                         >
-                            <h2 className="text-lg font-bold text-slate-900 mb-2">Delete Course?</h2>
-                            <p className="text-sm text-slate-500 mb-6">This action cannot be undone. The course and all its data will be permanently removed.</p>
+                            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Delete Course?</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">This action cannot be undone. The course and all its data will be permanently removed.</p>
                             <div className="flex gap-3">
                                 <Button variant="ghost" onClick={() => setShowDeleteConfirm(null)} className="flex-1">Cancel</Button>
                                 <Button variant="danger" onClick={() => handleDelete(showDeleteConfirm)} className="flex-1">Delete</Button>
                             </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
         </div>

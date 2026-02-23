@@ -9,11 +9,11 @@ const HomePage = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="space-y-0 pb-24 overflow-x-hidden">
+        <div className="space-y-0 pb-24 overflow-x-hidden transition-colors duration-300">
             {/* Hero Section */}
-            <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-white">
+            <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
                 {/* Abstract Background Shapes */}
-                <div className="absolute inset-0 z-0 opacity-30">
+                <div className="absolute inset-0 z-0 opacity-30 dark:opacity-20 pointer-events-none">
                     <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-primary to-accent rounded-full blur-[100px] animate-float" />
                     <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-gradient-to-tr from-secondary to-primary-dark rounded-full blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
                 </div>
@@ -25,17 +25,17 @@ const HomePage = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6 }}
                         >
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/50 backdrop-blur-sm border border-slate-200 text-primary font-semibold text-sm mb-6">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-primary font-semibold text-sm mb-6">
                                 <Sparkles className="w-4 h-4" />
                                 <span>The Future of Learning is Here</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-bold text-slate-900 leading-tight mb-6 tracking-tight">
+                            <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
                                 Master AI with <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
                                     Intelligent Education
                                 </span>
                             </h1>
-                            <p className="text-xl text-slate-600 mb-8 max-w-lg leading-relaxed">
+                            <p className="text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-lg leading-relaxed">
                                 Unlock your potential with our AI-powered learning platform.
                                 Personalized learning paths, real-time feedback, and world-class instructors.
                             </p>
@@ -43,20 +43,20 @@ const HomePage = () => {
                                 <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all">
                                     Start Learning Now <ArrowRight className="w-5 h-5 ml-2" />
                                 </Button>
-                                <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50">
+                                <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                                     <Play className="w-5 h-5 mr-2 fill-current" /> Watch Demo
                                 </Button>
                             </div>
 
-                            <div className="mt-12 flex items-center gap-4 text-sm font-medium text-slate-500">
+                            <div className="mt-12 flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400">
                                 <div className="flex -space-x-3">
                                     {[1, 2, 3, 4].map(((_, i) => (
-                                        <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center overflow-hidden">
+                                        <div key={i} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
                                             <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
                                         </div>
                                     )))}
                                 </div>
-                                <p>Trusted by <span className="text-slate-900 font-bold">10,000+</span> students</p>
+                                <p>Trusted by <span className="text-slate-900 dark:text-white font-bold">10,000+</span> students</p>
                             </div>
                         </motion.div>
 
@@ -66,29 +66,29 @@ const HomePage = () => {
                             transition={{ duration: 0.8, delay: 0.2 }}
                             className="relative"
                         >
-                            <div className="relative z-10 bg-white p-4 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                            <div className="relative z-10 bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
                                 <img
                                     src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
                                     alt="Students learning"
-                                    className="rounded-2xl w-full object-cover h-[400px] md:h-[500px]"
+                                    className="rounded-2xl w-full object-cover h-[400px] md:h-[500px] brightness-90 dark:brightness-75"
                                 />
 
-                                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-xl border border-slate-50 flex items-center gap-4 animate-float" style={{ animationDelay: '1s' }}>
-                                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-4 animate-float pointer-events-none" style={{ animationDelay: '1s' }}>
+                                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
                                         <Award className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-slate-500">Course Completed</p>
-                                        <p className="text-lg font-bold text-slate-900">Python Mastery</p>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400">Course Completed</p>
+                                        <p className="text-lg font-bold text-slate-900 dark:text-white">Python Mastery</p>
                                     </div>
                                 </div>
 
-                                <div className="absolute top-10 -right-8 bg-white p-4 rounded-xl shadow-xl border border-slate-50 flex items-center gap-3 animate-float" style={{ animationDelay: '0.5s' }}>
-                                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                                <div className="absolute top-10 -right-8 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-3 animate-float pointer-events-none" style={{ animationDelay: '0.5s' }}>
+                                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400">
                                         <Star className="w-5 h-5 fill-current" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-bold text-slate-900">4.9/5 Rating</p>
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white">4.9/5 Rating</p>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@ const HomePage = () => {
             </section>
 
             {/* Stats Section */}
-            <section className="bg-slate-900 text-white py-12">
+            <section className="bg-slate-900 dark:bg-black text-white py-12 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-8 text-center md:text-left">
                     {[
                         { label: 'Active Learners', value: '50k+' },
@@ -118,7 +118,7 @@ const HomePage = () => {
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <div className="text-center mb-16">
                     <span className="text-primary font-semibold tracking-wider uppercase text-sm">Discover</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">Explore Categories</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Explore Categories</h2>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -130,27 +130,27 @@ const HomePage = () => {
                             transition={{ delay: idx * 0.05 }}
                             viewport={{ once: true }}
                             onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
-                            className="group cursor-pointer p-6 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20 transition-all text-center"
+                            className="group cursor-pointer p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl dark:hover:shadow-primary/10 hover:border-primary/20 transition-all text-center"
                         >
-                            <div className="w-12 h-12 mx-auto bg-slate-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300">
+                            <div className="w-12 h-12 mx-auto bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300">
                                 <span className={`text-2xl group-hover:text-primary transition-colors`}>{cat.icon || '📚'}</span>
                             </div>
-                            <h3 className="font-semibold text-slate-900 group-hover:text-primary transition-colors">{cat.name}</h3>
-                            <p className="text-xs text-slate-400 mt-1">{cat.count} Courses</p>
+                            <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{cat.name}</h3>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{cat.count} Courses</p>
                         </motion.div>
                     ))}
                 </div>
             </section>
 
             {/* Featured Courses */}
-            <section className="bg-slate-50 py-20">
+            <section className="bg-slate-50 dark:bg-slate-900/50 py-20 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-end mb-12">
                         <div>
                             <span className="text-primary font-semibold tracking-wider uppercase text-sm">Top Rated</span>
-                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">Featured Courses</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Featured Courses</h2>
                         </div>
-                        <Button variant="ghost" className="hidden sm:flex items-center gap-1 hover:text-primary">
+                        <Button variant="ghost" className="hidden sm:flex items-center gap-1 hover:text-primary dark:text-slate-300 cursor-pointer">
                             View All Courses <ArrowRight className="w-4 h-4" />
                         </Button>
                     </div>
@@ -170,14 +170,14 @@ const HomePage = () => {
                     </div>
 
                     <div className="mt-8 text-center sm:hidden">
-                        <Button variant="outline" className="w-full">View All Courses</Button>
+                        <Button variant="outline" className="w-full h-12 dark:border-slate-700 dark:text-slate-300">View All Courses</Button>
                     </div>
                 </div>
             </section>
 
             {/* AI Feature Highlight */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-                <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black rounded-[2.5rem] p-8 md:p-20 overflow-hidden relative text-white">
+                <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black rounded-[2.5rem] p-8 md:p-20 overflow-hidden relative text-white dark:from-black dark:via-slate-950 dark:to-slate-900 border dark:border-slate-800">
                     <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
@@ -186,28 +186,28 @@ const HomePage = () => {
                             </div>
                             <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
                                 Learning stuck? <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-secondary-400">Ask the AI Tutor.</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Ask the AI Tutor.</span>
                             </h2>
                             <p className="text-slate-300 text-lg mb-8 leading-relaxed">
-                                    Get instant feedback, code explanations, and personalized study plans.
-                                    Our AI tutor understands your learning style and adapts to your pace.
-                                </p>
-                                <Link to="/ai-demo">
-                                    <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 hover:scale-105 transition-transform border-none shadow-xl shadow-white/5">
-                                        Try AI Demo <ArrowRight className="w-5 h-5 ml-2" />
-                                    </Button>
-                                </Link>
+                                Get instant feedback, code explanations, and personalized study plans.
+                                Our AI tutor understands your learning style and adapts to your pace.
+                            </p>
+                            <Link to="/ai-demo">
+                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 hover:scale-105 transition-transform border-none shadow-xl shadow-white/5">
+                                    Try AI Demo <ArrowRight className="w-5 h-5 ml-2" />
+                                </Button>
+                            </Link>
                         </div>
 
                         <div className="relative">
                             {/* Abstract UI representation of chat */}
-                            <div className="bg-slate-800/80 backdrop-blur-md rounded-2xl p-6 border border-slate-700 shadow-2xl relative z-20">
+                            <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl p-6 border border-slate-700 dark:border-slate-800 shadow-2xl relative z-20">
                                 <div className="space-y-4">
                                     <div className="flex gap-4 items-start">
-                                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary-400">
+                                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                                             <Users className="w-5 h-5" />
                                         </div>
-                                        <div className="bg-slate-700/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
+                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
                                             <p>How do I optimize this React component for performance?</p>
                                         </div>
                                     </div>
@@ -215,7 +215,7 @@ const HomePage = () => {
                                         <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
                                             <Zap className="w-5 h-5" />
                                         </div>
-                                        <div className="bg-slate-700/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
+                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
                                             <p className="mb-2">You can use `useMemo` and `useCallback` to prevent unnecessary re-renders.</p>
                                             <div className="bg-slate-900 rounded p-2 font-mono text-xs text-green-300">
                                                 const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);
@@ -235,8 +235,8 @@ const HomePage = () => {
             {/* Testimonials */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold text-slate-900">Loved by Students</h2>
-                    <p className="text-slate-500 mt-2">Don't just take our word for it</p>
+                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Loved by Students</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-2">Don't just take our word for it</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {testimonials.map((t, idx) => (
@@ -246,19 +246,19 @@ const HomePage = () => {
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ delay: idx * 0.1 }}
                             viewport={{ once: true }}
-                            className="p-8 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                            className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                         >
                             <div className="flex items-center gap-4 mb-6">
                                 <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
                                 <div>
-                                    <h4 className="font-bold text-slate-900">{t.name}</h4>
-                                    <p className="text-sm text-slate-500">{t.role}</p>
+                                    <h4 className="font-bold text-slate-900 dark:text-white">{t.name}</h4>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">{t.role}</p>
                                 </div>
                             </div>
                             <div className="flex gap-1 mb-4">
                                 {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
                             </div>
-                            <p className="text-slate-600 italic leading-relaxed">"{t.content}"</p>
+                            <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm">"{t.content}"</p>
                         </motion.div>
                     ))}
                 </div>

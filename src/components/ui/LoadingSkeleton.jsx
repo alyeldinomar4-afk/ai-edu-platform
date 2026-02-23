@@ -1,5 +1,5 @@
 const LoadingSkeleton = ({ className = "", variant = "default" }) => {
-    const baseClasses = "animate-pulse bg-slate-200 rounded";
+    const baseClasses = "animate-pulse bg-slate-200 dark:bg-slate-700 rounded";
 
     const variants = {
         default: "h-4 w-full",
@@ -17,7 +17,7 @@ const LoadingSkeleton = ({ className = "", variant = "default" }) => {
 
 export const CourseCardSkeleton = () => {
     return (
-        <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700">
             <LoadingSkeleton variant="card" className="h-48 rounded-none" />
             <div className="p-5 space-y-3">
                 <div className="flex items-center justify-between">
@@ -41,7 +41,7 @@ export const CourseCardSkeleton = () => {
 
 export const StatCardSkeleton = () => {
     return (
-        <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
             <div className="flex flex-col items-center justify-center text-center space-y-3">
                 <LoadingSkeleton className="h-12 w-12 rounded-full" />
                 <LoadingSkeleton className="h-8 w-12" />
@@ -53,7 +53,7 @@ export const StatCardSkeleton = () => {
 
 export const ProgressCardSkeleton = () => {
     return (
-        <div className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+        <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm">
             <div className="flex justify-between items-start mb-4">
                 <div className="flex-1 space-y-2">
                     <LoadingSkeleton className="h-5 w-3/4" />

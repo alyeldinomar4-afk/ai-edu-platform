@@ -9,7 +9,7 @@ const CourseCard = ({ course }) => {
             whileHover={{ y: -5 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 group"
+            className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl dark:hover:shadow-primary/10 transition-all duration-300 border border-slate-100 dark:border-slate-700 group h-full"
         >
             <div className="relative h-48 overflow-hidden">
                 <img
@@ -17,27 +17,27 @@ const CourseCard = ({ course }) => {
                     alt={course.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-semibold text-slate-700">
+                <div className="absolute top-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200">
                     {course.category}
                 </div>
             </div>
 
-            <div className="p-5">
+            <div className="p-5 flex flex-col h-[calc(100%-12rem)]">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">
                         {course.level}
                     </span>
                     <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 flex-shrink-0" />
-                        <span className="text-sm font-medium text-slate-700">{course.rating}</span>
-                        <span className="text-xs text-slate-400">({course.reviews})</span>
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-200">{course.rating}</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500">({course.reviews})</span>
                     </div>
                 </div>
 
-                <h3 className="font-bold text-base sm:text-lg text-slate-900 mb-1 line-clamp-2 leading-snug">{course.title}</h3>
-                <p className="text-xs sm:text-sm text-slate-500 mb-4 line-clamp-1 sm:line-clamp-1">{course.instructor}</p>
+                <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white mb-1 line-clamp-2 leading-snug">{course.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-1 sm:line-clamp-1">{course.instructor}</p>
 
-                <div className="flex items-center gap-4 text-xs text-slate-400 mb-4">
+                <div className="flex items-center gap-4 text-xs text-slate-400 dark:text-slate-500 mb-4 mt-auto">
                     <div className="flex items-center gap-1">
                         <BookOpen className="w-3 h-3" />
                         <span>{course.lessons} Lessons</span>
@@ -48,8 +48,8 @@ const CourseCard = ({ course }) => {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-auto">
-                    <span className="text-xl font-bold text-slate-900">${course.price}</span>
+                <div className="flex items-center justify-between pt-2">
+                    <span className="text-xl font-bold text-slate-900 dark:text-white">${course.price}</span>
                     <Link to={`/courses/${course.id}`}>
                         <Button variant="outline" size="sm">View Course</Button>
                     </Link>

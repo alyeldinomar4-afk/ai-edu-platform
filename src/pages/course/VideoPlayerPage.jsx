@@ -33,9 +33,9 @@ const VideoPlayerPage = () => {
     ];
 
     return (
-        <div className="flex flex-col h-screen bg-slate-900 overflow-hidden">
+        <div className="flex flex-col h-screen bg-slate-900 overflow-hidden transition-colors duration-300">
             {/* Top Bar */}
-            <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 flex-shrink-0">
+            <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 flex-shrink-0 transition-colors">
                 <div className="flex items-center gap-4">
                     <Link to={`/courses/${courseId}`} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors">
                         <ArrowLeft size={20} />
@@ -54,7 +54,7 @@ const VideoPlayerPage = () => {
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Main Content (Video + Tabs) */}
-                <div className="flex-1 flex flex-col overflow-y-auto bg-slate-950">
+                <div className="flex-1 flex flex-col overflow-y-auto bg-slate-950 transition-colors">
                     <div className="p-4 md:p-6 pb-0">
                         <VideoPlayer />
                     </div>
@@ -140,17 +140,17 @@ const VideoPlayerPage = () => {
                 </div>
 
                 {/* Right Sidebar (Playlist / AI) */}
-                <div className="w-80 md:w-96 bg-white border-l border-slate-200 flex flex-col flex-shrink-0 hidden lg:flex">
-                    <div className="flex border-b border-slate-100">
+                <div className="w-80 md:w-96 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col flex-shrink-0 hidden lg:flex transition-colors">
+                    <div className="flex border-b border-slate-100 dark:border-slate-800 transition-colors">
                         <button
                             onClick={() => setRightSidebarTab('playlist')}
-                            className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 ${rightSidebarTab === 'playlist' ? 'text-primary bg-primary/5 border-b-2 border-primary' : 'text-slate-500 hover:bg-slate-50'}`}
+                            className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${rightSidebarTab === 'playlist' ? 'text-primary bg-primary/5 dark:bg-primary/10 border-b-2 border-primary' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                         >
                             <List size={16} /> Content
                         </button>
                         <button
                             onClick={() => setRightSidebarTab('ai')}
-                            className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 ${rightSidebarTab === 'ai' ? 'text-purple-600 bg-purple-50 border-b-2 border-purple-600' : 'text-slate-500 hover:bg-slate-50'}`}
+                            className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${rightSidebarTab === 'ai' ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 border-b-2 border-purple-600 dark:border-purple-400' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                         >
                             <Zap size={16} /> AI Tutor
                         </button>

@@ -11,7 +11,7 @@ const LoginPage = () => {
         email: '',
         password: ''
     });
-    
+
     const { login } = useAuth();
     const navigate = useNavigate();
 
@@ -38,18 +38,18 @@ const LoginPage = () => {
     };
 
     return (
-        <>
+        <div className="transition-colors duration-300">
             <div className="mb-6 text-center">
-                <h2 className="text-2xl font-bold text-slate-900">Welcome back</h2>
-                <p className="text-slate-500 mt-2">Sign in to continue your learning journey</p>
-                <div className="mt-2 text-xs text-slate-400 bg-slate-50 p-2 rounded border border-slate-100 inline-block">
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to continue your learning journey</p>
+                <div className="mt-2 text-xs text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-700 inline-block pointer-events-none">
                     <p>Student: user@test.com / 123456</p>
                     <p>Admin: admin@test.com / admin123</p>
                 </div>
             </div>
 
             {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg flex items-center gap-2">
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 text-sm rounded-lg flex items-center gap-2">
                     <AlertCircle size={16} />
                     {error}
                 </div>
@@ -57,12 +57,12 @@ const LoginPage = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                         Email address
                     </label>
                     <div className="mt-1 relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Mail className="h-5 w-5 text-slate-400" />
+                            <Mail className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                         </div>
                         <input
                             id="email"
@@ -72,19 +72,19 @@ const LoginPage = () => {
                             required
                             value={formData.email}
                             onChange={handleChange}
-                            className="appearance-none block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                            className="appearance-none block w-full pl-10 pr-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors"
                             placeholder="you@example.com"
                         />
                     </div>
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+                    <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                         Password
                     </label>
                     <div className="mt-1 relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Lock className="h-5 w-5 text-slate-400" />
+                            <Lock className="h-5 w-5 text-slate-400 dark:text-slate-500" />
                         </div>
                         <input
                             id="password"
@@ -94,7 +94,7 @@ const LoginPage = () => {
                             required
                             value={formData.password}
                             onChange={handleChange}
-                            className="appearance-none block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg placeholder-slate-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                            className="appearance-none block w-full pl-10 pr-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors"
                             placeholder="••••••••"
                         />
                     </div>
@@ -106,15 +106,19 @@ const LoginPage = () => {
                             id="remember-me"
                             name="remember-me"
                             type="checkbox"
-                            className="h-4 w-4 text-primary focus:ring-primary border-slate-300 rounded"
+                            className="h-4 w-4 text-primary focus:ring-primary border-slate-300 dark:border-slate-700 rounded dark:bg-slate-900"
                         />
-                        <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-900">
+                        <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-900 dark:text-slate-300 cursor-pointer">
                             Remember me
                         </label>
                     </div>
 
                     <div className="text-sm">
-                        <Link to="/forgot-password" className="font-medium text-primary hover:text-primary-dark">
+                        <Link to="/forgot-password" hidden className="font-medium text-primary hover:text-primary-dark cursor-pointer">
+                            Forgot password?
+                        </Link>
+                        {/* The link is not hidden in the source but I'll make sure it's accessible */}
+                        <Link to="/forgot-password" className="font-medium text-primary hover:text-primary-dark cursor-pointer">
                             Forgot password?
                         </Link>
                     </div>
@@ -123,7 +127,7 @@ const LoginPage = () => {
                 <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full justify-center"
+                    className="w-full justify-center h-12"
                 >
                     {loading ? <Loader2 className="animate-spin" /> : 'Sign in'}
                 </Button>
@@ -132,30 +136,30 @@ const LoginPage = () => {
             <div className="mt-6">
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-slate-200" />
+                        <div className="w-full border-t border-slate-200 dark:border-slate-700" />
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white text-slate-500">Or continue with</span>
+                        <span className="px-2 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400">Or continue with</span>
                     </div>
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="w-full justify-center font-normal">
+                    <Button variant="outline" className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300">
                         Google
                     </Button>
-                    <Button variant="outline" className="w-full justify-center font-normal">
+                    <Button variant="outline" className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300">
                         GitHub
                     </Button>
                 </div>
             </div>
 
-            <p className="mt-6 text-center text-sm text-slate-600">
+            <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
                 Don't have an account?{' '}
-                <Link to="/register" className="font-medium text-primary hover:text-primary-dark">
+                <Link to="/register" className="font-medium text-primary hover:text-primary-dark cursor-pointer">
                     Sign up
                 </Link>
             </p>
-        </>
+        </div>
     );
 };
 

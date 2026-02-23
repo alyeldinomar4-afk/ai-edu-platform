@@ -4,8 +4,8 @@ import { cn } from '../../utils';
 const variants = {
     primary: 'bg-primary text-white hover:bg-primary-dark shadow-md shadow-primary/20',
     secondary: 'bg-secondary text-white hover:bg-sky-600 shadow-md shadow-secondary/20',
-    outline: 'border-2 border-primary text-primary hover:bg-primary/5',
-    ghost: 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+    outline: 'border-2 border-primary text-primary hover:bg-primary/5 dark:hover:bg-primary/10',
+    ghost: 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white',
     danger: 'bg-red-500 text-white hover:bg-red-600',
 };
 
