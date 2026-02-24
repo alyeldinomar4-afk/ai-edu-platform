@@ -16,10 +16,14 @@ export const ThemeProvider = ({ children }) => {
     // Apply the dark class to <html> whenever theme changes
     useEffect(() => {
         const root = document.documentElement;
+        const favicon = document.querySelector('link[rel="icon"]');
+
         if (theme === 'dark') {
             root.classList.add('dark');
+            if (favicon) favicon.href = '/favicon-dark.png';
         } else {
             root.classList.remove('dark');
+            if (favicon) favicon.href = '/favicon-light.png';
         }
         localStorage.setItem('ai_edu_theme', theme);
     }, [theme]);

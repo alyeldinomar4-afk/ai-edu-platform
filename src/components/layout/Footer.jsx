@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, Github, Twitter, Linkedin } from 'lucide-react';
+import { Github, Twitter, Linkedin } from 'lucide-react';
+import logoLight from '../../assets/logo-light.png';
+import logoDark from '../../assets/logo-dark.png';
 
 const Footer = () => {
     return (
@@ -8,8 +10,13 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="col-span-1 md:col-span-1">
                         <Link to="/" className="flex items-center gap-2 mb-4">
-                            <div className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
-                                <BookOpen className="w-6 h-6 text-primary" />
+                            {/* Light mode logo */}
+                            <div className="bg-white rounded-lg shadow-sm border border-slate-100 w-10 h-10 flex items-center justify-center overflow-hidden dark:hidden">
+                                <img src={logoLight} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                            </div>
+                            {/* Dark mode logo */}
+                            <div className="hidden bg-black rounded-lg shadow-sm w-10 h-10 items-center justify-center overflow-hidden border border-slate-800 dark:flex">
+                                <img src={logoDark} alt="AI Edu Logo" className="w-full h-full object-contain" />
                             </div>
                             <span className="font-bold text-xl text-slate-900 dark:text-white">
                                 AI<span className="text-primary">Edu</span>

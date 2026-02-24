@@ -54,9 +54,14 @@ const HomePage = () => {
 
                             <div className="mt-12 flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400">
                                 <div className="flex -space-x-3">
-                                    {[1, 2, 3, 4].map(((_, i) => (
+                                    {[
+                                        "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=100&q=80",
+                                        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80",
+                                        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80",
+                                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                                    ].map(((src, i) => (
                                         <div key={i} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
-                                            <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
+                                            <img src={src} alt="User" className="w-full h-full object-cover" />
                                         </div>
                                     )))}
                                 </div>

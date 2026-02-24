@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, BookOpen, LogOut } from 'lucide-react';
+import logoLight from '../../assets/logo-light.png';
+import logoDark from '../../assets/logo-dark.png';
 import Button from '../ui/Button';
 import ThemeToggle from '../ui/ThemeToggle';
 import { cn } from '../../utils';
@@ -39,8 +41,13 @@ const Navbar = () => {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 group-hover:border-primary/50 transition-all">
-                            <BookOpen className="w-6 h-6 text-primary" />
+                        {/* Light mode logo */}
+                        <div className="w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm border border-slate-100 group-hover:border-primary/50 transition-all dark:hidden">
+                            <img src={logoLight} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                        </div>
+                        {/* Dark mode logo */}
+                        <div className="hidden w-10 h-10 items-center justify-center overflow-hidden rounded-lg bg-black shadow-sm group-hover:border-primary/50 transition-all border border-transparent dark:flex">
+                            <img src={logoDark} alt="AI Edu Logo" className="w-full h-full object-contain" />
                         </div>
                         <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">
                             AI<span className="text-primary">Edu</span>
