@@ -42,8 +42,12 @@ const RegisterPage = () => {
     return (
         <div className="transition-colors duration-300">
             <div className="mb-6 text-center">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Create an account</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-2">Start your AI learning journey today</p>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent animate-slide-up">
+                    Create an account
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm sm:text-base animate-slide-up [animation-delay:100ms] opacity-0 [animation-fill-mode:forwards]">
+                    Start your AI learning journey today
+                </p>
             </div>
 
             {error && (

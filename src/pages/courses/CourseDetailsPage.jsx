@@ -102,7 +102,7 @@ const CourseDetailsPage = () => {
                                     <User className="w-4 h-4 flex-shrink-0 text-slate-400" />
                                     <span className="truncate max-w-[150px] sm:max-w-none">
                                         <span className="hidden sm:inline text-slate-400">Created by </span>
-                                        <span className="text-white hover:underline cursor-pointer font-medium">{course.instructor}</span>
+                                        <span className="text-white font-medium">{course.instructor}</span>
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-slate-400">
@@ -127,7 +127,7 @@ const CourseDetailsPage = () => {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
-                                        className={`px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors relative ${activeTab === tab.id
+                                        className={`px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors relative cursor-pointer ${activeTab === tab.id
                                             ? 'text-primary'
                                             : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
                                             }`}

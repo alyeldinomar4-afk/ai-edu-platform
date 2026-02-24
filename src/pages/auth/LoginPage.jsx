@@ -40,8 +40,12 @@ const LoginPage = () => {
     return (
         <div className="transition-colors duration-300">
             <div className="mb-6 text-center">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to continue your learning journey</p>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent animate-slide-up">
+                    Welcome back
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm sm:text-base animate-slide-up [animation-delay:100ms] opacity-0 [animation-fill-mode:forwards]">
+                    Sign in to continue your learning journey
+                </p>
                 <div className="mt-2 text-xs text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-700 inline-block pointer-events-none">
                     <p>Student: user@test.com / 123456</p>
                     <p>Admin: admin@test.com / admin123</p>
