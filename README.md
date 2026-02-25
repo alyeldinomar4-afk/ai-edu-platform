@@ -1,4 +1,4 @@
-# AI Education Platform
+# Nexora AI
 
 > A modern, full-featured **AI-powered Learning Management System** built with React. This is the **frontend** layer of the graduation project — designed to be connected to any backend.
 

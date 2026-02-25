@@ -42,15 +42,15 @@ const Navbar = () => {
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-2 group">
                         {/* Light mode logo */}
-                        <div className="w-10 h-10 flex items-center justify-center overflow-hidden rounded-lg bg-white shadow-sm border border-slate-100 group-hover:border-primary/50 transition-all dark:hidden">
-                            <img src={logoLight} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                        <div className="w-9 h-9 flex items-center justify-center transition-transform group-hover:scale-105 dark:hidden">
+                            <img src={logoLight} alt="Nexora AI Logo" className="w-full h-full object-contain" />
                         </div>
                         {/* Dark mode logo */}
-                        <div className="hidden w-10 h-10 items-center justify-center overflow-hidden rounded-lg bg-black shadow-sm group-hover:border-primary/50 transition-all border border-transparent dark:flex">
-                            <img src={logoDark} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                        <div className="hidden w-9 h-9 items-center justify-center transition-transform group-hover:scale-105 dark:flex">
+                            <img src={logoDark} alt="Nexora AI Logo" className="w-full h-full object-contain" />
                         </div>
-                        <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">
-                            AI<span className="text-primary">Edu</span>
+                        <span className="font-extrabold text-2xl tracking-tight bg-clip-text text-transparent bg-linear-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 transition-all group-hover:from-primary group-hover:to-primary-600">
+                            Nexora <span className="text-primary italic">AI</span>
                         </span>
                     </Link>
 

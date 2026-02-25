@@ -11,15 +11,15 @@ const Footer = () => {
                     <div className="col-span-1 md:col-span-1">
                         <Link to="/" className="flex items-center gap-2 mb-4">
                             {/* Light mode logo */}
-                            <div className="bg-white rounded-lg shadow-sm border border-slate-100 w-10 h-10 flex items-center justify-center overflow-hidden dark:hidden">
-                                <img src={logoLight} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                            <div className="w-10 h-10 flex items-center justify-center overflow-hidden dark:hidden group">
+                                <img src={logoLight} alt="Nexora AI Logo" className="w-full h-full object-contain transition-transform group-hover:scale-110" />
                             </div>
                             {/* Dark mode logo */}
-                            <div className="hidden bg-black rounded-lg shadow-sm w-10 h-10 items-center justify-center overflow-hidden border border-slate-800 dark:flex">
-                                <img src={logoDark} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                            <div className="hidden w-10 h-10 items-center justify-center overflow-hidden dark:flex group">
+                                <img src={logoDark} alt="Nexora AI Logo" className="w-full h-full object-contain transition-transform group-hover:scale-110" />
                             </div>
-                            <span className="font-bold text-xl text-slate-900 dark:text-white">
-                                AI<span className="text-primary">Edu</span>
+                            <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-linear-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300">
+                                Nexora <span className="text-primary italic">AI</span>
                             </span>
                         </Link>
                         <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
@@ -58,7 +58,7 @@ const Footer = () => {
 
                 <div className="border-t border-gray-100 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-slate-400 dark:text-slate-500 text-sm">
-                        © {new Date().getFullYear()} AI Edu Platform. All rights reserved.
+                        © {new Date().getFullYear()} Nexora AI. All rights reserved.
                     </p>
                     <div className="flex gap-4 text-slate-400 dark:text-slate-500">
                         <a href="#" className="hover:text-primary transition-colors"><Twitter size={20} /></a>

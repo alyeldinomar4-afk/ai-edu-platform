@@ -14,15 +14,15 @@ const AuthLayout = () => {
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <Link to="/" className="flex justify-center items-center gap-2 mb-6">
                     {/* Light mode logo */}
-                    <div className="bg-white rounded-lg w-14 h-14 flex items-center justify-center overflow-hidden shadow-md border border-slate-100 dark:hidden">
-                        <img src={logoLight} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                    <div className="w-14 h-14 flex items-center justify-center overflow-hidden dark:hidden transition-transform hover:scale-105">
+                        <img src={logoLight} alt="Nexora AI Logo" className="w-full h-full object-contain" />
                     </div>
                     {/* Dark mode logo */}
-                    <div className="hidden bg-black rounded-lg w-14 h-14 items-center justify-center overflow-hidden shadow-md border border-slate-800 dark:flex">
-                        <img src={logoDark} alt="AI Edu Logo" className="w-full h-full object-contain" />
+                    <div className="hidden w-14 h-14 items-center justify-center overflow-hidden dark:flex transition-transform hover:scale-105">
+                        <img src={logoDark} alt="Nexora AI Logo" className="w-full h-full object-contain" />
                     </div>
-                    <span className="font-bold text-2xl text-slate-900 dark:text-white">
-                        AI<span className="text-primary">Edu</span>
+                    <span className="font-extrabold text-3xl tracking-tight bg-clip-text text-transparent bg-linear-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300">
+                        Nexora <span className="text-primary italic">AI</span>
                     </span>
                 </Link>
             </div>
