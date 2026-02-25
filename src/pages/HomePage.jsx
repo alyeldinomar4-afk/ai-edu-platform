@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star } from 'lucide-react';
+import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star, Code2, BarChart3, Palette, Megaphone, Briefcase, Camera } from 'lucide-react';
 import Button from '../components/ui/Button';
 import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials } from '../data/mockData';
@@ -8,14 +8,23 @@ import { useNavigate, Link } from 'react-router-dom';
 const HomePage = () => {
     const navigate = useNavigate();
 
+    const iconMap = {
+        Code2,
+        BarChart3,
+        Palette,
+        Megaphone,
+        Briefcase,
+        Camera
+    };
+
     return (
         <div className="space-y-0 pb-24 overflow-x-hidden transition-colors duration-300">
             {/* Hero Section */}
             <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
                 {/* Abstract Background Shapes */}
                 <div className="absolute inset-0 z-0 opacity-30 dark:opacity-20 pointer-events-none">
-                    <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-gradient-to-br from-primary to-accent rounded-full blur-[100px] animate-float" />
-                    <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-gradient-to-tr from-secondary to-primary-dark rounded-full blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+                    <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-linear-to-br from-primary to-accent rounded-full blur-[100px] animate-float" />
+                    <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-linear-to-tr from-secondary to-primary-dark rounded-full blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -31,7 +40,7 @@ const HomePage = () => {
                             </div>
                             <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
                                 Master AI with <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent">
                                     Intelligent Education
                                 </span>
                             </h1>
@@ -75,7 +84,7 @@ const HomePage = () => {
                             transition={{ duration: 0.8, delay: 0.2 }}
                             className="relative"
                         >
-                            <div className="relative z-10 bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                            <div className="relative z-10 bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 transform -rotate-2 hover:rotate-0 transition-transform duration-500">
                                 <img
                                     src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
                                     alt="Students learning"
@@ -116,7 +125,7 @@ const HomePage = () => {
                         { label: 'Satisfaction Rate', value: '99%' },
                     ].map((stat, idx) => (
                         <div key={idx} className="flex-1 min-w-[150px]">
-                            <h3 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-white">{stat.value}</h3>
+                            <h3 className="text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-primary via-secondary to-white">{stat.value}</h3>
                             <p className="text-slate-400 text-sm mt-1 uppercase tracking-wider">{stat.label}</p>
                         </div>
                     ))}
@@ -142,7 +151,14 @@ const HomePage = () => {
                             className="group cursor-pointer p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl dark:hover:shadow-primary/10 hover:border-primary/20 transition-all text-center"
                         >
                             <div className="w-12 h-12 mx-auto bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300">
-                                <span className={`text-2xl group-hover:text-primary transition-colors`}>{cat.icon || '📚'}</span>
+                                {cat.icon && iconMap[cat.icon] ? (
+                                    (() => {
+                                        const IconComponent = iconMap[cat.icon];
+                                        return <IconComponent className="w-6 h-6 group-hover:text-primary transition-colors text-slate-600 dark:text-slate-400" />;
+                                    })()
+                                ) : (
+                                    <span className={`text-2xl group-hover:text-primary transition-colors`}>{cat.icon || '📚'}</span>
+                                )}
                             </div>
                             <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{cat.name}</h3>
                             <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{cat.count} Courses</p>
@@ -190,18 +206,18 @@ const HomePage = () => {
 
             {/* AI Feature Highlight */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-                <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black rounded-[2.5rem] p-8 md:p-20 overflow-hidden relative text-white dark:from-black dark:via-slate-950 dark:to-slate-900 border dark:border-slate-800">
+                <div className="bg-linear-to-br from-slate-900 via-slate-800 to-black rounded-[2.5rem] p-8 sm:p-10 md:p-20 overflow-hidden relative text-white dark:from-black dark:via-slate-950 dark:to-slate-900 border dark:border-slate-800">
                     <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
                                 <Zap className="w-4 h-4 text-yellow-400" />
                                 <span>AI-Powered Assistant</span>
                             </div>
-                            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
                                 Learning stuck? <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Ask the AI Tutor.</span>
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">Ask the AI Tutor.</span>
                             </h2>
-                            <p className="text-slate-300 text-lg mb-8 leading-relaxed">
+                            <p className="text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
                                 Get instant feedback, code explanations, and personalized study plans.
                                 Our AI tutor understands your learning style and adapts to your pace.
                             </p>
@@ -239,7 +255,7 @@ const HomePage = () => {
                             </div>
 
                             {/* Decorative blurred circles behind */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-primary to-purple-600 blur-[80px] opacity-20 -z-10 rounded-full animate-pulse" />
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-linear-to-r from-primary to-purple-600 blur-[80px] opacity-20 -z-10 rounded-full animate-pulse" />
                         </div>
                     </div>
                 </div>

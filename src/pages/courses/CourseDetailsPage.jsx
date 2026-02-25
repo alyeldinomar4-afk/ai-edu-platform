@@ -70,7 +70,7 @@ const CourseDetailsPage = () => {
     return (
         <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-12 overflow-x-hidden transition-colors duration-300">
             {/* Course Header */}
-            <div className="bg-slate-900 dark:bg-black text-white pt-12 pb-24 border-b dark:border-slate-800 transition-colors">
+            <div className="bg-slate-900 dark:bg-black text-white pt-12 pb-8 sm:pb-24 border-b dark:border-slate-800 transition-colors">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Breadcrumb */}
                     <div className="mb-6">
@@ -85,28 +85,28 @@ const CourseDetailsPage = () => {
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-8">
-                        <div className="flex-1">
-                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">{course.title}</h1>
-                            <p className="text-slate-300 dark:text-slate-400 text-base sm:text-lg mb-6 line-clamp-2">
+                        <div className="flex-1 min-w-0">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight wrap-break-word">{course.title}</h1>
+                            <p className="text-slate-300 dark:text-slate-400 text-base sm:text-lg mb-6">
                                 Master {course.title} with this comprehensive course. Learn from industry experts and build real-world projects.
                             </p>
 
                             <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-slate-300 dark:text-slate-400">
                                 <div className="flex items-center gap-1.5">
-                                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 flex-shrink-0" />
+                                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 shrink-0" />
                                     <span className="font-bold text-white">{course.rating}</span>
                                     <span className="hidden sm:inline">({course.reviews} reviews)</span>
                                     <span className="sm:hidden">({course.reviews})</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                    <User className="w-4 h-4 flex-shrink-0 text-slate-400" />
+                                    <User className="w-4 h-4 shrink-0 text-slate-400" />
                                     <span className="truncate max-w-[150px] sm:max-w-none">
                                         <span className="hidden sm:inline text-slate-400">Created by </span>
                                         <span className="text-white font-medium">{course.instructor}</span>
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-slate-400">
-                                    <Clock className="w-4 h-4 flex-shrink-0" />
+                                    <Clock className="w-4 h-4 shrink-0" />
                                     <span className="hidden sm:inline">Last updated: June 2025</span>
                                     <span className="sm:hidden">Updated Jun 2025</span>
                                 </div>
@@ -116,7 +116,7 @@ const CourseDetailsPage = () => {
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:-mt-16">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content */}
                     <div className="lg:col-span-2">
@@ -165,7 +165,7 @@ const CourseDetailsPage = () => {
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     {[1, 2, 3, 4, 5, 6].map((item) => (
                                                         <div key={item} className="flex items-start gap-3">
-                                                            <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                                                            <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
                                                             <span className="text-slate-600 dark:text-slate-300 text-sm">Master core concepts and advanced techniques</span>
                                                         </div>
                                                     ))}
@@ -203,7 +203,7 @@ const CourseDetailsPage = () => {
 
                                         {activeTab === 'instructor' && (
                                             <div className="flex flex-col sm:flex-row gap-6">
-                                                <div className="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 flex-shrink-0 overflow-hidden">
+                                                <div className="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden">
                                                     <img src={`https://ui-avatars.com/api/?name=${course.instructor}&background=random`} alt={course.instructor} className="w-full h-full object-cover" />
                                                 </div>
                                                 <div>

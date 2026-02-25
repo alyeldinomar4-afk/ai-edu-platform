@@ -54,12 +54,12 @@ export const courses = [
 ];
 
 export const categories = [
-    { id: 1, name: 'Development', count: 120 },
-    { id: 2, name: 'Data Science', count: 85 },
-    { id: 3, name: 'Design', count: 64 },
-    { id: 4, name: 'Marketing', count: 42 },
-    { id: 5, name: 'Business', count: 56 },
-    { id: 6, name: 'Photography', count: 35 },
+    { id: 1, name: 'Development', count: 120, icon: 'Code2' },
+    { id: 2, name: 'Data Science', count: 85, icon: 'BarChart3' },
+    { id: 3, name: 'Design', count: 64, icon: 'Palette' },
+    { id: 4, name: 'Marketing', count: 42, icon: 'Megaphone' },
+    { id: 5, name: 'Business', count: 56, icon: 'Briefcase' },
+    { id: 6, name: 'Photography', count: 35, icon: 'Camera' },
 ];
 
 export const testimonials = [
