@@ -45,8 +45,8 @@ const HomePage = () => {
                                 </span>
                             </h1>
                             <p className="text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-lg leading-relaxed">
-                                Unlock your potential with our AI-powered learning platform.
-                                Personalized learning paths, real-time feedback, and world-class instructors.
+                                Unlock your potential with <span className="font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">Nexora AI</span> — personalized learning paths,
+                                real-time feedback, and world-class instructors all in one platform.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link to="/courses">
@@ -135,8 +135,9 @@ const HomePage = () => {
             {/* Categories Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <div className="text-center mb-16">
-                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">Discover</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Explore Categories</h2>
+                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">Nexora AI Categories</span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Explore What You Love</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto">Browse our curated categories and find the perfect course for your goals</p>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -264,8 +265,9 @@ const HomePage = () => {
             {/* Testimonials */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Loved by Students</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-2">Don't just take our word for it</p>
+                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">Testimonials</span>
+                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">Loved by Students</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-3">See what our community has to say about Nexora AI</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {testimonials.map((t, idx) => (
@@ -292,8 +294,33 @@ const HomePage = () => {
                     ))}
                 </div>
             </section>
+
+            {/* CTA Section */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="relative text-center py-16 px-8 rounded-3xl bg-linear-to-r from-primary via-secondary to-accent overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="relative z-10">
+                        <Sparkles className="w-8 h-8 text-white/80 mx-auto mb-4" />
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Transform Your Learning?</h2>
+                        <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">Join thousands of students already learning smarter with Nexora AI</p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Link to="/register">
+                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl h-14 px-8 text-lg">
+                                    Get Started Free <ArrowRight className="w-5 h-5 ml-2" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                </motion.div>
+            </section>
         </div>
     );
 };
+
 
 export default HomePage;
