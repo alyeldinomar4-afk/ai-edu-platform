@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, MessageSquare, FileText, HelpCircle, List, Zap } from 'lucide-react';
+import { ArrowLeft, MessageSquare, FileText, HelpCircle, List, Zap, Send, Clock, User } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import VideoPlayer from '../../components/features/video/VideoPlayer';
 import Playlist from '../../components/features/video/Playlist';
@@ -66,7 +66,7 @@ const VideoPlayerPage = () => {
                                 { id: 'ai', label: 'AI Tutor', icon: Zap, mobileOnly: true },
                                 { id: 'overview', label: 'Overview', icon: FileText },
                                 { id: 'quiz', label: 'Quiz', icon: HelpCircle },
-                                { id: 'comments', label: 'Comments', icon: MessageSquare },
+                                { id: 'comments', label: 'Q&A', icon: HelpCircle },
                                 { id: 'resources', label: 'Resources', icon: FileText },
                             ].map(tab => (
                                 <button
@@ -112,9 +112,83 @@ const VideoPlayerPage = () => {
                                 </div>
                             )}
                             {activeTab === 'comments' && (
-                                <div className="text-center py-10 text-slate-500">
-                                    <MessageSquare className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                                    <p>Discussion forum coming soon.</p>
+                                <div className="space-y-6">
+                                    {/* Question Submission Form */}
+                                    <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 mb-8">
+                                        <h3 className="text-sm font-semibold text-slate-200 mb-3">Ask a question to the instructor</h3>
+                                        <div className="flex gap-4">
+                                            <div className="w-8 h-8 rounded-full bg-slate-700 shrink-0 flex items-center justify-center text-[10px] font-bold">YOU</div>
+                                            <div className="flex-1">
+                                                <textarea
+                                                    placeholder="Type your question here (e.g. Can you explain the difference between RNN and LSTM?)"
+                                                    rows="2"
+                                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none mb-2"
+                                                />
+                                                <div className="flex justify-end">
+                                                    <Button size="sm">
+                                                        <Send size={14} className="mr-2" /> Post Question
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Questions List */}
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-bold text-white uppercase text-[10px] tracking-wider text-slate-500">Discussion forum</h3>
+                                            <span className="text-xs text-slate-500">2 questions asked</span>
+                                        </div>
+
+                                        {[
+                                            {
+                                                id: 1,
+                                                user: "Mohammed Khaled",
+                                                question: "How do we decide the number of hidden layers in a deep neural network?",
+                                                date: "2 hours ago",
+                                                reply: "Hi Mohammed! Generally, it starts with trial and error. More layers allow for more complex abstractions, but also risk overfitting. Start small and use validation metrics to guide your architecture."
+                                            },
+                                            {
+                                                id: 2,
+                                                user: "Nour Ali",
+                                                question: "Is backpropagation the only way to train neural networks?",
+                                                date: "1 day ago",
+                                                reply: null
+                                            }
+                                        ].map(q => (
+                                            <div key={q.id} className="p-4 bg-slate-900 rounded-xl border border-slate-800">
+                                                <div className="flex items-center gap-3 mb-3">
+                                                    <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] text-slate-400 font-bold">
+                                                        {q.user.charAt(0)}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-slate-200">{q.user}</p>
+                                                        <p className="text-[10px] text-slate-500">{q.date}</p>
+                                                    </div>
+                                                </div>
+                                                <p className="text-sm text-slate-300 mb-4">{q.question}</p>
+
+                                                {q.reply ? (
+                                                    <div className="mt-4 pt-4 border-t border-slate-800/50 flex gap-3">
+                                                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                                                            <User size={12} />
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <p className="text-xs font-bold text-primary">Instructor Reply</p>
+                                                                <span className="text-[10px] text-slate-600 px-1.5 py-0.5 bg-slate-800 rounded">Official</span>
+                                                            </div>
+                                                            <p className="text-xs text-slate-400 leading-relaxed italic">"{q.reply}"</p>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="mt-2 text-[10px] font-medium text-yellow-600/70 italic flex items-center gap-1.5">
+                                                        <Clock size={10} /> Waiting for instructor's response...
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                             {activeTab === 'resources' && (

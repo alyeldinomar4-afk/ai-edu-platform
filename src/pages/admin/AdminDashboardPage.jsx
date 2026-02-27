@@ -1,5 +1,6 @@
 import { Users, BookOpen, Video, DollarSign, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/useAuth';
 
 const StatCard = ({ title, value, change, icon: Icon, color }) => (
@@ -29,7 +30,7 @@ const AdminDashboardPage = () => {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin Dashboard</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Welcome back, {user?.name}</p>
+                    <p className="text-slate-500 dark:text-slate-400">Welcome back, <Link to="/admin/profile" className="text-primary hover:underline">{user?.name}</Link></p>
                 </div>
                 <div className="text-sm text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/50 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
                     Last updated: {new Date().toLocaleDateString()}

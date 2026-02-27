@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Video, Users, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Video, Users, Settings, LogOut, Menu, X, User } from 'lucide-react';
 import { useAuth } from '../../auth/useAuth';
 import ThemeToggle from '../ui/ThemeToggle';
 
@@ -20,6 +20,7 @@ const AdminLayout = () => {
         { name: 'Courses', path: '/admin/courses', icon: BookOpen },
         { name: 'Videos', path: '/admin/videos', icon: Video },
         { name: 'Users', path: '/admin/users', icon: Users },
+        { name: 'Profile', path: '/admin/profile', icon: User },
         { name: 'Settings', path: '/admin/settings', icon: Settings },
     ];
 
@@ -101,14 +102,16 @@ const AdminLayout = () => {
                     </div>
                     <div className="flex items-center gap-3">
                         <ThemeToggle />
-                        {user && (
-                            <>
-                                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">{user.name}</span>
-                                <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                                </div>
-                            </>
-                        )}
+                        <Link to="/admin/profile" className="flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-800 p-2 rounded-xl transition-colors cursor-pointer group">
+                            {user && (
+                                <>
+                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block group-hover:text-primary transition-colors">{user.name}</span>
+                                    <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border border-slate-200 dark:border-slate-800">
+                                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                                    </div>
+                                </>
+                            )}
+                        </Link>
                     </div>
                 </header>
                 <main className="p-4 sm:p-8">

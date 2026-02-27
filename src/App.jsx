@@ -16,12 +16,20 @@ import AIDemoPage from './pages/AIDemoPage';
 
 // Dashboards
 import LearnerDashboardPage from './pages/learner/LearnerDashboardPage';
+import LearnerProfilePage from './pages/learner/LearnerProfilePage';
 import InstructorDashboardPage from './pages/instructor/InstructorDashboardPage';
+import InstructorProfilePage from './pages/instructor/InstructorProfilePage';
+import InstructorQAPage from './pages/instructor/InstructorQAPage';
+import InstructorReviewsPage from './pages/instructor/InstructorReviewsPage';
+import InstructorAnnouncementsPage from './pages/instructor/InstructorAnnouncementsPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminProfilePage from './pages/admin/AdminProfilePage';
 
 // Admin Pages (Other)
 import AdminLayout from './components/layout/AdminLayout';
 import ManageCoursesPage from './pages/admin/ManageCoursesPage';
+import ManageUsersPage from './pages/admin/ManageUsersPage';
+import ManageVideosPage from './pages/admin/ManageVideosPage';
 import ComingSoon from './components/common/ComingSoon';
 import ScrollToTop from './components/common/ScrollToTop';
 
@@ -60,6 +68,7 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="dashboard" element={<LearnerDashboardPage />} />
+            <Route path="profile" element={<LearnerProfilePage />} />
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>
 
@@ -70,6 +79,10 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="dashboard" element={<InstructorDashboardPage />} />
+            <Route path="profile" element={<InstructorProfilePage />} />
+            <Route path="qa" element={<InstructorQAPage />} />
+            <Route path="reviews" element={<InstructorReviewsPage />} />
+            <Route path="announcements" element={<InstructorAnnouncementsPage />} />
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>
 
@@ -81,9 +94,10 @@ function App() {
           }>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboardPage />} />
+            <Route path="profile" element={<AdminProfilePage />} />
             <Route path="courses" element={<ManageCoursesPage />} />
-            <Route path="videos" element={<ComingSoon title="Manage Videos" />} />
-            <Route path="users" element={<ComingSoon title="Manage Users" />} />
+            <Route path="videos" element={<ManageVideosPage />} />
+            <Route path="users" element={<ManageUsersPage />} />
             <Route path="settings" element={<ComingSoon title="Settings" />} />
           </Route>
 

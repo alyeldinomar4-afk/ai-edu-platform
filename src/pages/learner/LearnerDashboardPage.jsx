@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/useAuth';
-import { BookOpen, Clock, Award, Play, Sparkles, TrendingUp } from 'lucide-react';
+import { BookOpen, Clock, Award, Play, Sparkles, TrendingUp, User, Camera, Shield, ChevronRight, Megaphone, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import { api } from '../../services/api';
@@ -47,7 +47,9 @@ const LearnerDashboardPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-8"
             >
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Welcome back, {user?.name}!</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                    Welcome back, <Link to="/learner/profile" className="text-primary hover:underline">{user?.name}</Link>!
+                </h1>
                 <p className="text-slate-500 dark:text-slate-400 mt-2">Ready to continue your learning journey?</p>
             </motion.div>
 
@@ -90,7 +92,7 @@ const LearnerDashboardPage = () => {
                                 alt={course.title}
                                 className="w-full sm:w-40 h-28 object-cover rounded-xl"
                             />
-                            <div className="flex-1 w-full">
+                            <div className="flex-1 w-full text-left">
                                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
                                     <h3 className="font-bold text-lg text-slate-900 dark:text-white">{course.title}</h3>
                                     <span className="text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 px-2 py-1 rounded-full w-fit">In Progress</span>
@@ -146,28 +148,68 @@ const LearnerDashboardPage = () => {
                 </div>
             </section>
 
+            {/* NEW: Instructor Announcements */}
+            <section className="mb-10">
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <Megaphone className="w-5 h-5 text-primary" /> Instructor Announcements
+                    </h2>
+                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">New</span>
+                </div>
+                <div className="space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-gradient-to-r from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent p-5 rounded-2xl border border-primary/10 flex gap-4 items-start"
+                    >
+                        <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm border border-primary/5">
+                            <Bell size={20} />
+                        </div>
+                        <div className="flex-1">
+                            <div className="flex justify-between items-start mb-1">
+                                <h3 className="font-bold text-slate-900 dark:text-white">New Bonus Section Added!</h3>
+                                <span className="text-xs text-slate-500">2h ago</span>
+                            </div>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">Hi everyone! I just uploaded 3 new videos covering the latest React 19 hooks. Make sure to check them out in Section 8...</p>
+                            <Link to="/courses/2" className="text-xs font-bold text-primary hover:underline flex items-center gap-1 group">
+                                View Course <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
             {/* Quick Actions */}
             <section>
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                     <TrendingUp className="w-5 h-5 text-green-500" /> Quick Actions
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Link to="/courses" className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary dark:text-blue-400">
+                        <div className="w-12 h-12 shrink-0 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary dark:text-blue-400">
                             <BookOpen className="w-6 h-6" />
                         </div>
                         <div>
                             <h3 className="font-semibold text-slate-900 dark:text-white">Browse Courses</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Explore new topics</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">Explore new topics</p>
                         </div>
                     </Link>
                     <Link to="/ai-demo" className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
+                        <div className="w-12 h-12 shrink-0 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
                             <Sparkles className="w-6 h-6" />
                         </div>
                         <div>
                             <h3 className="font-semibold text-slate-900 dark:text-white">AI Tutor</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Get help from AI assistant</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">Get help from AI</p>
+                        </div>
+                    </Link>
+                    <Link to="/learner/profile" className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors flex items-center gap-4">
+                        <div className="w-12 h-12 shrink-0 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center text-teal-600 dark:text-teal-400">
+                            <User className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-slate-900 dark:text-white">Profile</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">Manage details</p>
                         </div>
                     </Link>
                 </div>

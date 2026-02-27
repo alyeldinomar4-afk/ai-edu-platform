@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/useAuth';
-import { Plus, Users, BarChart3, DollarSign, Video, X, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Users, BarChart3, DollarSign, Video, X, Edit2, Trash2, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import Button from '../../components/ui/Button';
+import InstructorNav from '../../components/layout/InstructorNav';
 import { api } from '../../services/api';
 
 const InstructorDashboardPage = () => {
@@ -80,10 +82,19 @@ const InstructorDashboardPage = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Instructor Dashboard</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">Manage your courses and track performance.</p>
                 </div>
-                <Button onClick={openAddModal}>
-                    <Plus className="w-5 h-5 mr-2" /> Create New Course
-                </Button>
+                <div className="flex gap-3 w-full sm:w-auto">
+                    <Link to="/instructor/profile" className="flex-1 sm:flex-none">
+                        <Button variant="outline" className="w-full">
+                            <User className="w-5 h-5 mr-2" /> Profile
+                        </Button>
+                    </Link>
+                    <Button onClick={openAddModal} className="flex-1 sm:flex-none">
+                        <Plus className="w-5 h-5 mr-2" /> New Course
+                    </Button>
+                </div>
             </div>
+
+            <InstructorNav />
 
             {/* Analytics Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
@@ -137,8 +148,8 @@ const InstructorDashboardPage = () => {
                                     <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300">{course.students}</td>
                                     <td className="px-4 sm:px-6 py-4 hidden sm:table-cell">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${course.status === 'Published'
-                                                ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
-                                                : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400'
+                                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
+                                            : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400'
                                             }`}>
                                             {course.status}
                                         </span>

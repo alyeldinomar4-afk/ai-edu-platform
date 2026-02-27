@@ -223,25 +223,86 @@ const CourseDetailsPage = () => {
                                         )}
 
                                         {activeTab === 'reviews' && (
-                                            <div className="space-y-6">
-                                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Student Reviews</h3>
-                                                <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-100 dark:border-slate-800">
-                                                    <div className="text-center">
-                                                        <div className="text-5xl font-bold text-slate-900 dark:text-white">{course.rating}</div>
-                                                        <div className="flex p-1 justify-center"><Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /></div>
-                                                        <div className="text-xs text-slate-500 dark:text-slate-400">Course Rating</div>
+                                            <div className="space-y-8">
+                                                {/* Summary Stats */}
+                                                <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50 dark:bg-slate-800/50 p-8 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                                    <div className="text-center md:border-r md:border-slate-200 dark:md:border-slate-700 md:pr-12">
+                                                        <div className="text-6xl font-bold text-slate-900 dark:text-white mb-2">{course.rating}</div>
+                                                        <div className="flex justify-center gap-1 mb-2">
+                                                            {[1, 2, 3, 4, 5].map(i => (
+                                                                <Star key={i} className={`w-5 h-5 ${i <= Math.round(course.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300 dark:text-slate-600'}`} />
+                                                            ))}
+                                                        </div>
+                                                        <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Course Rating</div>
                                                     </div>
-                                                    <div className="flex-1 space-y-2">
+                                                    <div className="flex-1 w-full space-y-3">
                                                         {[5, 4, 3, 2, 1].map((rating) => (
-                                                            <div key={rating} className="flex items-center gap-2">
-                                                                <div className="w-12 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                                                                    <div className="h-full bg-yellow-400" style={{ width: `${rating * 20}%` }} />
+                                                            <div key={rating} className="flex items-center gap-4 text-sm">
+                                                                <span className="w-12 font-medium text-slate-600 dark:text-slate-400">{rating} Stars</span>
+                                                                <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                                                    <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${rating === 5 ? 75 : rating === 4 ? 15 : 5}%` }} />
                                                                 </div>
-                                                                <div className="flex"><Star className="w-3 h-3 text-slate-300 dark:text-slate-500" /></div>
-                                                                <span className="text-xs text-slate-400 dark:text-slate-500">{rating * 15}%</span>
+                                                                <span className="w-10 text-right text-slate-400">{rating === 5 ? '75%' : rating === 4 ? '15%' : '5%'}</span>
                                                             </div>
                                                         ))}
                                                     </div>
+                                                </div>
+
+                                                {/* NEW: Leave a Review Form */}
+                                                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border-2 border-primary/10 shadow-sm">
+                                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Leave a Review</h3>
+                                                    <div className="space-y-4">
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">How would you rate this course?</label>
+                                                            <div className="flex gap-2">
+                                                                {[1, 2, 3, 4, 5].map(i => (
+                                                                    <button key={i} className="p-1 hover:scale-110 transition-transform">
+                                                                        <Star className={`w-8 h-8 ${i <= 5 ? 'fill-yellow-400 text-yellow-400' : 'text-slate-200 dark:text-slate-700'}`} />
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Write your feedback</label>
+                                                            <textarea
+                                                                placeholder="What did you like or dislike about this course? How can the instructor improve?"
+                                                                rows="4"
+                                                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                                                            ></textarea>
+                                                        </div>
+                                                        <div className="flex justify-end">
+                                                            <Button>Submit Review</Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Reviews List */}
+                                                <div className="space-y-6 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
+                                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Recent Reviews</h3>
+                                                    {[
+                                                        { name: "Mohammed Khaled", date: "3 days ago", rating: 5, comment: "This course is life-changing. Everything is explained so clearly!" },
+                                                        { name: "Youssef Tariq", date: "1 week ago", rating: 4, comment: "Great content, but would love more practical exercises in section 3." }
+                                                    ].map((r, i) => (
+                                                        <div key={i} className="flex gap-4 pb-6 border-b border-slate-50 dark:border-slate-800/50 last:border-0 transition-colors">
+                                                            <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden">
+                                                                <img src={`https://ui-avatars.com/api/?name=${r.name}&background=random`} alt={r.name} />
+                                                            </div>
+                                                            <div className="flex-1">
+                                                                <div className="flex justify-between items-start mb-2">
+                                                                    <div>
+                                                                        <h4 className="font-bold text-slate-900 dark:text-white text-sm">{r.name}</h4>
+                                                                        <div className="flex gap-0.5 mt-1">
+                                                                            {[1, 2, 3, 4, 5].map(star => (
+                                                                                <Star key={star} className={`w-3 h-3 ${star <= r.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-200 dark:text-slate-700'}`} />
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                    <span className="text-[10px] text-slate-400 font-medium">{r.date}</span>
+                                                                </div>
+                                                                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{r.comment}</p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             </div>
                                         )}
