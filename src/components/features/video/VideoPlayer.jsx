@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings, SkipBack, SkipForward } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings, SkipBack, SkipForward, Zap } from 'lucide-react';
 
 const SAMPLE_VIDEO = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
@@ -11,7 +11,7 @@ const formatTime = (seconds) => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
 
-const VideoPlayer = ({ src, title }) => {
+const VideoPlayer = ({ src, title, onStateChange, markers = [] }) => {
     const videoRef = useRef(null);
     const containerRef = useRef(null);
     const controlsTimeoutRef = useRef(null);
@@ -59,11 +59,13 @@ const VideoPlayer = ({ src, title }) => {
             video.play();
             setIsPlaying(true);
             setHasStarted(true);
+            onStateChange?.({ isPlaying: true });
         } else {
             video.pause();
             setIsPlaying(false);
+            onStateChange?.({ isPlaying: false });
         }
-    }, []);
+    }, [onStateChange]);
 
     // ─── Mute / Unmute ────────────────────────────────────
     const toggleMute = useCallback(() => {
@@ -173,7 +175,8 @@ const VideoPlayer = ({ src, title }) => {
         const video = videoRef.current;
         if (!video || isSeeking) return;
         setCurrentTime(video.currentTime);
-    }, [isSeeking]);
+        onStateChange?.({ currentTime: video.currentTime });
+    }, [isSeeking, onStateChange]);
 
     const handleLoadedMetadata = useCallback(() => {
         const video = videoRef.current;
@@ -190,7 +193,8 @@ const VideoPlayer = ({ src, title }) => {
     const handleVideoEnd = useCallback(() => {
         setIsPlaying(false);
         setShowControls(true);
-    }, []);
+        onStateChange?.({ isPlaying: false });
+    }, [onStateChange]);
 
     // ─── Keyboard shortcuts ───────────────────────────────
     useEffect(() => {
@@ -251,13 +255,18 @@ const VideoPlayer = ({ src, title }) => {
             />
 
             {/* Big Center Play Button (when paused) */}
-            {!isPlaying && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 z-10 pointer-events-none">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                        <Play className="w-8 h-8 md:w-10 md:h-10 text-white ml-1" />
+            <div className={`absolute inset-0 flex flex-col items-center justify-center bg-black/40 z-10 pointer-events-none transition-all duration-700 ease-in-out ${!isPlaying ? 'opacity-100' : 'opacity-0 scale-105'}`}>
+                {/* Pulsing AI Indicator */}
+                <div className={`mb-6 flex flex-col items-center transition-all duration-700 delay-100 ${!isPlaying ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 backdrop-blur-md border border-purple-500/30 rounded-full mb-3 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+                        <Zap className="w-4 h-4 text-purple-400 animate-pulse" />
+                        <span className="text-[10px] md:text-xs font-bold text-purple-100 uppercase tracking-widest">AI is analyzing this moment...</span>
+                    </div>
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
+                        <Play className="w-8 h-8 md:w-10 md:h-10 text-white ml-1 opacity-80" />
                     </div>
                 </div>
-            )}
+            </div>
 
             {/* Controls Overlay — pointer-events-auto so buttons work and block the click-catcher */}
             <div
@@ -285,6 +294,15 @@ const VideoPlayer = ({ src, title }) => {
                         {/* Thumb */}
                         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 bg-primary rounded-full shadow-lg scale-0 group-hover/progress:scale-100 transition-transform border-2 border-white" />
                     </div>
+
+                    {/* AI Markers */}
+                    {duration > 0 && markers.map((time, i) => (
+                        <div
+                            key={i}
+                            className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-purple-500 rounded-full shadow-[0_0_8px_rgba(168,85,247,0.8)] border border-white/20 pointer-events-none z-10"
+                            style={{ left: `${(time / duration) * 100}%` }}
+                        />
+                    ))}
                 </div>
 
                 {/* Controls Row */}

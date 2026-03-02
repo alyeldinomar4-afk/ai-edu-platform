@@ -11,6 +11,18 @@ const VideoPlayerPage = () => {
     const { courseId } = useParams();
     const [rightSidebarTab, setRightSidebarTab] = useState('playlist'); // playlist, ai
     const [activeTab, setActiveTab] = useState('overview');
+    const [videoState, setVideoState] = useState({ currentTime: 0, isPlaying: false });
+    const [markers, setMarkers] = useState([]);
+
+    const handleVideoStateChange = (newState) => {
+        setVideoState(prev => ({ ...prev, ...newState }));
+    };
+
+    const addMarker = (time) => {
+        if (!markers.includes(time)) {
+            setMarkers(prev => [...prev, time]);
+        }
+    };
 
     // Mock data
     const courseTitle = "Machine Learning Fundamentals";
@@ -56,7 +68,10 @@ const VideoPlayerPage = () => {
                 {/* Main Content (Video + Tabs) */}
                 <div className="flex-1 flex flex-col overflow-y-auto bg-slate-950 transition-colors">
                     <div className="p-4 md:p-6 pb-0">
-                        <VideoPlayer />
+                        <VideoPlayer
+                            onStateChange={handleVideoStateChange}
+                            markers={markers}
+                        />
                     </div>
 
                     <div className="p-4 md:p-6">
@@ -93,7 +108,10 @@ const VideoPlayerPage = () => {
                             )}
                             {activeTab === 'ai' && (
                                 <div className="lg:hidden h-[500px]">
-                                    <ContextualAI />
+                                    <ContextualAI
+                                        videoState={videoState}
+                                        addMarker={addMarker}
+                                    />
                                 </div>
                             )}
 
@@ -234,7 +252,10 @@ const VideoPlayerPage = () => {
                         {rightSidebarTab === 'playlist' ? (
                             <Playlist sections={playlistData} currentLecture={3} onSelect={() => { }} />
                         ) : (
-                            <ContextualAI />
+                            <ContextualAI
+                                videoState={videoState}
+                                addMarker={addMarker}
+                            />
                         )}
                     </div>
                 </div>
