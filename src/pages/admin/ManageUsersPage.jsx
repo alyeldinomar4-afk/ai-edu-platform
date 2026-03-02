@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Users,
     Search,
-    Filter,
-    MoreVertical,
     Shield,
     UserX,
     CheckCircle,
@@ -15,7 +13,7 @@ import {
     X,
     ChevronLeft,
     ChevronRight,
-    AlertTriangle
+    Ban
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
@@ -23,7 +21,6 @@ const ManageUsersPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [showActionMenu, setShowActionMenu] = useState(null);
     const [showUserModal, setShowUserModal] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
 
@@ -152,7 +149,7 @@ const ManageUsersPage = () => {
             </div>
 
             {/* Users Table */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden min-h-[400px]">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm min-h-[400px]">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead>
@@ -180,8 +177,8 @@ const ManageUsersPage = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${user.role === 'instructor'
-                                                ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400'
-                                                : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
+                                            ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400'
+                                            : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
                                             }`}>
                                             {user.role}
                                         </span>
@@ -202,54 +199,36 @@ const ManageUsersPage = () => {
                                             )}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right relative font-medium">
-                                        <button
-                                            onClick={() => setShowActionMenu(showActionMenu === user.id ? null : user.id)}
-                                            className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors"
-                                        >
-                                            <MoreVertical size={18} className="text-slate-500" />
-                                        </button>
-
-                                        <AnimatePresence>
-                                            {showActionMenu === user.id && (
-                                                <>
-                                                    <div
-                                                        className="fixed inset-0 z-10"
-                                                        onClick={() => setShowActionMenu(null)}
-                                                    />
-                                                    <motion.div
-                                                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                                                        className="absolute right-6 top-12 w-48 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl z-20 py-2"
-                                                    >
-                                                        <button
-                                                            onClick={() => {
-                                                                setEditingUser(user);
-                                                                setShowUserModal(true);
-                                                                setShowActionMenu(null);
-                                                            }}
-                                                            className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50"
-                                                        >
-                                                            <Edit size={14} /> Edit User
-                                                        </button>
-                                                        <button
-                                                            onClick={() => toggleStatus(user.id)}
-                                                            className={`w-full text-left flex items-center gap-2 px-4 py-2 text-sm ${user.status === 'active' ? 'text-amber-600' : 'text-green-600'} hover:bg-slate-50 dark:hover:bg-slate-700/50`}
-                                                        >
-                                                            {user.status === 'active' ? <><UserX size={14} /> Suspend</> : <><CheckCircle size={14} /> Activate</>}
-                                                        </button>
-                                                        <div className="h-px bg-slate-100 dark:bg-slate-700 my-1" />
-                                                        <button
-                                                            onClick={() => handleDeleteUser(user.id)}
-                                                            className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 font-bold hover:bg-red-50 dark:hover:bg-red-900/20"
-                                                        >
-                                                            <Trash2 size={14} /> Delete
-                                                        </button>
-                                                    </motion.div>
-                                                </>
-                                            )}
-                                        </AnimatePresence>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                                        <div className="flex items-center justify-end gap-1">
+                                            {/* Edit */}
+                                            <button
+                                                onClick={() => { setEditingUser(user); setShowUserModal(true); }}
+                                                title="Edit User"
+                                                className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                                            >
+                                                <Edit size={16} />
+                                            </button>
+                                            {/* Suspend / Activate */}
+                                            <button
+                                                onClick={() => toggleStatus(user.id)}
+                                                title={user.status === 'active' ? 'Suspend' : 'Activate'}
+                                                className={`p-2 rounded-lg transition-colors ${user.status === 'active'
+                                                    ? 'text-slate-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20'
+                                                    : 'text-slate-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                                                    }`}
+                                            >
+                                                {user.status === 'active' ? <Ban size={16} /> : <CheckCircle size={16} />}
+                                            </button>
+                                            {/* Delete */}
+                                            <button
+                                                onClick={() => handleDeleteUser(user.id)}
+                                                title="Delete User"
+                                                className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             )) : (
@@ -332,7 +311,7 @@ const ManageUsersPage = () => {
                                         required
                                         defaultValue={editingUser?.name || ''}
                                         className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
-                                        placeholder="John Doe"
+                                        placeholder="Ali Omar"
                                     />
                                 </div>
                                 <div>

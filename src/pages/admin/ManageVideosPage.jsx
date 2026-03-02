@@ -97,7 +97,7 @@ const ManageVideosPage = () => {
             duration: "32:10",
             status: "published",
             date: "2024-01-12",
-            thumbnail: "https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&q=80"
+            thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
         }
     ]);
 

@@ -11,6 +11,26 @@ const CourseDetailsPage = () => {
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState('overview');
     const [isLoading, setIsLoading] = useState(true);
+    const [reviewRating, setReviewRating] = useState(0);
+    const [reviewHover, setReviewHover] = useState(0);
+    const [reviewText, setReviewText] = useState('');
+    const [reviewError, setReviewError] = useState('');
+    const [reviewSuccess, setReviewSuccess] = useState(false);
+    const [reviews, setReviews] = useState([
+        { name: "Mohammed Khaled", date: "3 days ago", rating: 5, comment: "This course is life-changing. Everything is explained so clearly!" },
+        { name: "Youssef Tariq", date: "1 week ago", rating: 4, comment: "Great content, but would love more practical exercises in section 3." }
+    ]);
+
+    const handleSubmitReview = () => {
+        if (reviewRating === 0) { setReviewError('Please select a star rating first.'); return; }
+        if (!reviewText.trim()) { setReviewError('Please write your feedback before submitting.'); return; }
+        setReviewError('');
+        setReviews(prev => [{ name: 'أنت', date: 'Just now', rating: reviewRating, comment: reviewText.trim() }, ...prev]);
+        setReviewRating(0);
+        setReviewText('');
+        setReviewSuccess(true);
+        setTimeout(() => setReviewSuccess(false), 4000);
+    };
 
     // Find course by ID (mock) - fallback to first course if not found
     const course = courses.find(c => c.id === parseInt(id)) || courses[0];
@@ -157,16 +177,21 @@ const CourseDetailsPage = () => {
                                             <div className="space-y-6">
                                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">Course Description</h3>
                                                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                                                    This course is designed to take you from beginner to advanced in {course.title}.
-                                                    We cover everything from the fundamentals to complex topics, ensuring you have a solid understanding of the subject matter.
+                                                    {course.description}
+                                                </p>
+                                                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                                    This course will take you through a comprehensive journey in {course.category}.
+                                                    From the very first lecture to the advanced modules, you will gain hands-on experience and deep insights from {course.instructor}.
                                                 </p>
 
                                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">What you'll learn</h3>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {[1, 2, 3, 4, 5, 6].map((item) => (
-                                                        <div key={item} className="flex items-start gap-3">
+                                                    {(course.highlights || [1, 2, 3, 4, 5, 6]).map((item, index) => (
+                                                        <div key={index} className="flex items-start gap-3">
                                                             <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
-                                                            <span className="text-slate-600 dark:text-slate-300 text-sm">Master core concepts and advanced techniques</span>
+                                                            <span className="text-slate-600 dark:text-slate-300 text-sm">
+                                                                {typeof item === 'string' ? item : "Master core concepts and advanced techniques"}
+                                                            </span>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -254,24 +279,55 @@ const CourseDetailsPage = () => {
                                                     <div className="space-y-4">
                                                         <div>
                                                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">How would you rate this course?</label>
-                                                            <div className="flex gap-2">
+                                                            <div className="flex gap-1">
                                                                 {[1, 2, 3, 4, 5].map(i => (
-                                                                    <button key={i} className="p-1 hover:scale-110 transition-transform">
-                                                                        <Star className={`w-8 h-8 ${i <= 5 ? 'fill-yellow-400 text-yellow-400' : 'text-slate-200 dark:text-slate-700'}`} />
+                                                                    <button
+                                                                        key={i}
+                                                                        type="button"
+                                                                        onClick={() => setReviewRating(i)}
+                                                                        onMouseEnter={() => setReviewHover(i)}
+                                                                        onMouseLeave={() => setReviewHover(0)}
+                                                                        className="p-1 transition-transform hover:scale-110 active:scale-95"
+                                                                    >
+                                                                        <Star
+                                                                            className={`w-8 h-8 transition-colors duration-150 ${i <= (reviewHover || reviewRating)
+                                                                                ? 'fill-yellow-400 text-yellow-400'
+                                                                                : 'fill-slate-200 text-slate-200 dark:fill-slate-700 dark:text-slate-700'
+                                                                                }`}
+                                                                        />
                                                                     </button>
                                                                 ))}
+                                                                {reviewRating > 0 && (
+                                                                    <span className="ml-2 self-center text-sm font-semibold text-yellow-500">
+                                                                        {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][reviewRating]}
+                                                                    </span>
+                                                                )}
                                                             </div>
                                                         </div>
                                                         <div>
                                                             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Write your feedback</label>
                                                             <textarea
+                                                                value={reviewText}
+                                                                onChange={(e) => { setReviewText(e.target.value); setReviewError(''); }}
                                                                 placeholder="What did you like or dislike about this course? How can the instructor improve?"
                                                                 rows="4"
                                                                 className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
-                                                            ></textarea>
+                                                            />
                                                         </div>
+                                                        {reviewError && (
+                                                            <p className="text-sm text-red-500 font-medium">{reviewError}</p>
+                                                        )}
+                                                        {reviewSuccess && (
+                                                            <motion.p
+                                                                initial={{ opacity: 0, y: -8 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                className="text-sm text-green-600 font-semibold flex items-center gap-2"
+                                                            >
+                                                                <CheckCircle className="w-4 h-4" /> Thank you! Your review has been submitted.
+                                                            </motion.p>
+                                                        )}
                                                         <div className="flex justify-end">
-                                                            <Button>Submit Review</Button>
+                                                            <Button onClick={handleSubmitReview}>Submit Review</Button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -279,30 +335,34 @@ const CourseDetailsPage = () => {
                                                 {/* Reviews List */}
                                                 <div className="space-y-6 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
                                                     <h3 className="text-xl font-bold text-slate-900 dark:text-white">Recent Reviews</h3>
-                                                    {[
-                                                        { name: "Mohammed Khaled", date: "3 days ago", rating: 5, comment: "This course is life-changing. Everything is explained so clearly!" },
-                                                        { name: "Youssef Tariq", date: "1 week ago", rating: 4, comment: "Great content, but would love more practical exercises in section 3." }
-                                                    ].map((r, i) => (
-                                                        <div key={i} className="flex gap-4 pb-6 border-b border-slate-50 dark:border-slate-800/50 last:border-0 transition-colors">
-                                                            <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden">
-                                                                <img src={`https://ui-avatars.com/api/?name=${r.name}&background=random`} alt={r.name} />
-                                                            </div>
-                                                            <div className="flex-1">
-                                                                <div className="flex justify-between items-start mb-2">
-                                                                    <div>
-                                                                        <h4 className="font-bold text-slate-900 dark:text-white text-sm">{r.name}</h4>
-                                                                        <div className="flex gap-0.5 mt-1">
-                                                                            {[1, 2, 3, 4, 5].map(star => (
-                                                                                <Star key={star} className={`w-3 h-3 ${star <= r.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-200 dark:text-slate-700'}`} />
-                                                                            ))}
-                                                                        </div>
-                                                                    </div>
-                                                                    <span className="text-[10px] text-slate-400 font-medium">{r.date}</span>
+                                                    <AnimatePresence>
+                                                        {reviews.map((r, i) => (
+                                                            <motion.div
+                                                                key={r.name + i}
+                                                                initial={{ opacity: 0, y: -12 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                className="flex gap-4 pb-6 border-b border-slate-50 dark:border-slate-800/50 last:border-0 transition-colors"
+                                                            >
+                                                                <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden">
+                                                                    <img src={`https://ui-avatars.com/api/?name=${r.name}&background=random`} alt={r.name} />
                                                                 </div>
-                                                                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{r.comment}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))}
+                                                                <div className="flex-1">
+                                                                    <div className="flex justify-between items-start mb-2">
+                                                                        <div>
+                                                                            <h4 className="font-bold text-slate-900 dark:text-white text-sm">{r.name}</h4>
+                                                                            <div className="flex gap-0.5 mt-1">
+                                                                                {[1, 2, 3, 4, 5].map(star => (
+                                                                                    <Star key={star} className={`w-3 h-3 ${star <= r.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-200 dark:text-slate-700'}`} />
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                        <span className="text-[10px] text-slate-400 font-medium">{r.date}</span>
+                                                                    </div>
+                                                                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{r.comment}</p>
+                                                                </div>
+                                                            </motion.div>
+                                                        ))}
+                                                    </AnimatePresence>
                                                 </div>
                                             </div>
                                         )}

@@ -13,6 +13,7 @@ const CoursesPage = () => {
     const [showFilters, setShowFilters] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All');
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedLevels, setSelectedLevels] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -44,10 +45,23 @@ const CoursesPage = () => {
     const filteredCourses = courses.filter(course => {
         const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
         const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
+        const matchesLevel = selectedLevels.length === 0 || selectedLevels.includes(course.level);
+        return matchesCategory && matchesSearch && matchesLevel;
     });
 
-    const activeFiltersCount = (selectedCategory !== 'All' ? 1 : 0) + (searchQuery ? 1 : 0);
+    const handleLevelToggle = (level) => {
+        setSelectedLevels(prev =>
+            prev.includes(level) ? prev.filter(l => l !== level) : [...prev, level]
+        );
+    };
+
+    const handleClearAll = () => {
+        handleCategoryChange('All');
+        setSearchQuery('');
+        setSelectedLevels([]);
+    };
+
+    const activeFiltersCount = (selectedCategory !== 'All' ? 1 : 0) + (searchQuery ? 1 : 0) + selectedLevels.length;
     const hasActiveFilters = activeFiltersCount > 0;
 
     return (
@@ -106,7 +120,7 @@ const CoursesPage = () => {
                             </div>
                             {hasActiveFilters && (
                                 <button
-                                    onClick={() => { handleCategoryChange('All'); setSearchQuery(''); }}
+                                    onClick={handleClearAll}
                                     className="text-xs text-primary hover:text-primary-dark font-medium transition-colors cursor-pointer"
                                 >
                                     Clear all
@@ -148,8 +162,13 @@ const CoursesPage = () => {
                                 <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Difficulty</h4>
                                 <div className="space-y-2">
                                     {['Beginner', 'Intermediate', 'Advanced'].map(level => (
-                                        <label key={level} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
-                                            <input type="checkbox" className="rounded text-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-700" />
+                                        <label key={level} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer hover:text-primary transition-colors">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedLevels.includes(level)}
+                                                onChange={() => handleLevelToggle(level)}
+                                                className="rounded text-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-700 cursor-pointer"
+                                            />
                                             {level}
                                         </label>
                                     ))}

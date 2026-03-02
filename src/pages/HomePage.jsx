@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star, Code2, BarChart3, Palette, Megaphone, Briefcase, Camera } from 'lucide-react';
+import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star, Code2, BarChart3, Palette, Megaphone, Briefcase, DollarSign } from 'lucide-react';
 import Button from '../components/ui/Button';
 import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials } from '../data/mockData';
@@ -14,7 +14,7 @@ const HomePage = () => {
         Palette,
         Megaphone,
         Briefcase,
-        Camera
+        DollarSign,
     };
 
     return (
@@ -184,7 +184,7 @@ const HomePage = () => {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {courses.map((course, idx) => (
+                        {courses.slice(0, 4).map((course, idx) => (
                             <motion.div
                                 key={course.id}
                                 initial={{ opacity: 0, y: 20 }}
