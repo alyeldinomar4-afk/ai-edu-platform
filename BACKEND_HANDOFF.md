@@ -139,7 +139,14 @@ POST /api/instructor/courses   → Create new course
 ### Admin Endpoints
 ```
 GET  /api/admin/stats          → { totalUsers, activeCourses, totalRevenue, activeUsers }
-GET  /api/admin/users          → User[] (with pagination)
+GET  /api/admin/users          → User[] (with pagination/filtering)
+```
+
+### Review Endpoints
+```
+POST /api/courses/:id/reviews
+  Body: { rating: 1-5, comment: string }
+  Response: { success: true, review: Review }
 ```
 
 ### AI Chat Endpoint
@@ -160,7 +167,7 @@ POST /api/ai/chat
 {
   "id": 1,
   "title": "Machine Learning Fundamentals",
-  "instructor": "Dr. Sarah Smith",
+  "instructor": "Dr. Laila Hassan",
   "rating": 4.8,
   "reviews": 124,
   "price": 19.99,
@@ -168,7 +175,13 @@ POST /api/ai/chat
   "category": "Data Science",
   "level": "Beginner",
   "lessons": 24,
-  "duration": "12h 30m"
+  "duration": "12h 30m",
+  "description": "Take your first steps into the world of Artificial Intelligence...",
+  "highlights": [
+    "Understand the mathematical foundations of ML",
+    "Build and train predictive models...",
+    "Translate data into insights..."
+  ]
 }
 ```
 
