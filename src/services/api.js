@@ -150,9 +150,30 @@ export const api = {
         getCourses: async () => {
             await delay(600);
             return [
-                { id: 1, title: 'Introduction to AI v1.0', students: 120, status: 'Published', revenue: '$1,200' },
-                { id: 2, title: 'Introduction to AI v2.0', students: 85, status: 'Published', revenue: '$950' },
-                { id: 3, title: 'Introduction to AI v3.0', students: 200, status: 'Draft', revenue: '$0' },
+                {
+                    id: 1,
+                    title: 'Introduction to AI v1.0',
+                    students: 120,
+                    status: 'Published',
+                    revenue: '$1,200',
+                    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+                },
+                {
+                    id: 2,
+                    title: 'Introduction to AI v2.0',
+                    students: 85,
+                    status: 'Published',
+                    revenue: '$950',
+                    image: 'https://images.unsplash.com/photo-1591453089816-0fbb971b454c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+                },
+                {
+                    id: 3,
+                    title: 'Introduction to AI v3.0',
+                    students: 200,
+                    status: 'Draft',
+                    revenue: '$0',
+                    image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+                },
             ];
         },
     },

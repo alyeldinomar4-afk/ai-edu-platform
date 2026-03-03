@@ -182,7 +182,7 @@ export const courses = [
         rating: 4.6,
         reviews: 77,
         price: 16.99,
-        image: 'https://images.unsplash.com/photo-1551288049-bbdac8a28a80?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
         category: 'Data Science',
         level: 'Intermediate',
         lessons: 22,
@@ -226,7 +226,7 @@ export const categories = [
     { id: 2, name: 'Data Science', count: 85, icon: 'BarChart3' },
     { id: 3, name: 'Design', count: 64, icon: 'Palette' },
     { id: 4, name: 'Marketing', count: 42, icon: 'Megaphone' },
-    { id: 5, name: 'Business', count: 56, icon: 'Briefcase' },
+    { id: 5, name: 'Photography', count: 56, icon: 'Camera' },
     { id: 6, name: 'Finance', count: 38, icon: 'DollarSign' },
 ];
 

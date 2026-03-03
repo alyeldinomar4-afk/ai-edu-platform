@@ -138,9 +138,17 @@ const InstructorDashboardPage = () => {
                                 <tr key={course.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                                     <td className="px-4 sm:px-6 py-4 font-medium text-slate-900 dark:text-white">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-slate-800 shrink-0"></div>
+                                            <div className="w-12 h-12 rounded-lg bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden shadow-sm">
+                                                {course.image ? (
+                                                    <img src={course.image} alt={course.title} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                                        <Video size={20} />
+                                                    </div>
+                                                )}
+                                            </div>
                                             <div className="min-w-0">
-                                                <span className="block truncate">{course.title}</span>
+                                                <span className="block truncate font-bold">{course.title}</span>
                                                 <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">{course.status} • {course.revenue}</span>
                                             </div>
                                         </div>

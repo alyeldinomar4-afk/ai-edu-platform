@@ -29,20 +29,43 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                             isActive && "bg-primary/5 dark:bg-primary/10 hover:bg-primary/10 dark:hover:bg-primary/20 border-r-2 border-primary"
                                         )}
                                     >
-                                        <div className="mt-0.5">
-                                            {isCompleted ? (
-                                                <CheckCircle className="w-4 h-4 text-green-500" />
-                                            ) : isLocked ? (
-                                                <Lock className="w-4 h-4 text-slate-300 dark:text-slate-600" />
-                                            ) : (
-                                                <PlayCircle className={cn("w-4 h-4", isActive ? "text-primary" : "text-slate-400 dark:text-slate-500")} />
-                                            )}
+                                        <div className="mt-0.5 flex-shrink-0 relative">
+                                            <div className="w-12 h-8 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden mb-1 shadow-sm border border-slate-200 dark:border-slate-700">
+                                                {lecture.thumbnail ? (
+                                                    <img src={lecture.thumbnail} className="w-full h-full object-cover transition-transform hover:scale-110 duration-300" alt="" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-slate-400">
+                                                        <PlayCircle size={14} />
+                                                    </div>
+                                                )}
+                                                {isLocked && (
+                                                    <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center backdrop-blur-[1px]">
+                                                        <Lock className="w-3 h-3 text-white" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="absolute -bottom-1 -right-1 z-10">
+                                                {isCompleted ? (
+                                                    <div className="bg-white dark:bg-slate-900 rounded-full p-0.5">
+                                                        <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                                                    </div>
+                                                ) : (!isLocked && isActive) ? (
+                                                    <div className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse shadow-sm shadow-primary/50" />
+                                                ) : null}
+                                            </div>
                                         </div>
-                                        <div className="flex-1">
-                                            <p className={cn("text-sm transition-colors", isActive ? "font-medium text-primary" : "text-slate-600 dark:text-slate-400 group-hover:dark:text-slate-200")}>
+                                        <div className="flex-1 min-w-0">
+                                            <p className={cn(
+                                                "text-sm transition-colors truncate",
+                                                isActive ? "font-bold text-primary" : "text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200"
+                                            )}>
                                                 {lIdx + 1}. {lecture.title}
                                             </p>
-                                            <span className="text-xs text-slate-400 dark:text-slate-500">{lecture.duration}</span>
+                                            <div className="flex items-center gap-2 mt-0.5">
+                                                <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                                                    <PlayCircle size={10} /> {lecture.duration}
+                                                </span>
+                                            </div>
                                         </div>
                                     </button>
                                 );

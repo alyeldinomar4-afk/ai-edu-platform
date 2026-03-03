@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Star, Megaphone } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Star, Megaphone, Video } from 'lucide-react';
 import { cn } from '../../utils';
 
 const InstructorNav = () => {
@@ -7,6 +7,7 @@ const InstructorNav = () => {
 
     const links = [
         { name: 'Dashboard', path: '/instructor/dashboard', icon: LayoutDashboard },
+        { name: 'Lectures', path: '/instructor/videos', icon: Video },
         { name: 'Q&A', path: '/instructor/qa', icon: MessageSquare },
         { name: 'Reviews', path: '/instructor/reviews', icon: Star },
         { name: 'Announcements', path: '/instructor/announcements', icon: Megaphone },

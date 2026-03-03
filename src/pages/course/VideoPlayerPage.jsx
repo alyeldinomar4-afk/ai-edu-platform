@@ -31,15 +31,15 @@ const VideoPlayerPage = () => {
         {
             title: "Introduction",
             lectures: [
-                { id: 1, title: "Course Overview", duration: "05:20", completed: true },
-                { id: 2, title: "What is ML?", duration: "12:45", completed: true },
+                { id: 1, title: "Course Overview", duration: "05:20", completed: true, thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&q=80" },
+                { id: 2, title: "What is ML?", duration: "12:45", completed: true, thumbnail: "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=400&q=80" },
             ]
         },
         {
             title: "Neural Networks",
             lectures: [
-                { id: 3, title: "Neurons & Perceptrons", duration: "15:30", completed: false },
-                { id: 4, title: "Activation Functions", duration: "10:15", locked: true },
+                { id: 3, title: "Neurons & Perceptrons", duration: "15:30", completed: false, thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=80" },
+                { id: 4, title: "Activation Functions", duration: "10:15", locked: true, thumbnail: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=400&q=80" },
             ]
         }
     ];

@@ -1,19 +1,29 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star, Code2, BarChart3, Palette, Megaphone, Briefcase, DollarSign } from 'lucide-react';
+import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star, Code2, BarChart3, Palette, Megaphone, Camera, DollarSign } from 'lucide-react';
 import Button from '../components/ui/Button';
 import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials } from '../data/mockData';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../auth/useAuth';
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const { isAuthenticated, user } = useAuth();
+
+    const getStartedPath = !isAuthenticated
+        ? '/register'
+        : user?.role === 'admin'
+            ? '/admin/dashboard'
+            : user?.role === 'instructor'
+                ? '/instructor/dashboard'
+                : '/learner/dashboard';
 
     const iconMap = {
         Code2,
         BarChart3,
         Palette,
         Megaphone,
-        Briefcase,
+        Camera,
         DollarSign,
     };
 
@@ -309,9 +319,9 @@ const HomePage = () => {
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Transform Your Learning?</h2>
                         <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">Join thousands of students already learning smarter with Nexora AI</p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/register">
+                            <Link to={getStartedPath}>
                                 <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl h-14 px-8 text-lg">
-                                    Get Started Free <ArrowRight className="w-5 h-5 ml-2" />
+                                    {isAuthenticated ? 'Continue Learning' : 'Get Started Free'} <ArrowRight className="w-5 h-5 ml-2" />
                                 </Button>
                             </Link>
                         </div>

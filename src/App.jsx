@@ -29,7 +29,8 @@ import AdminProfilePage from './pages/admin/AdminProfilePage';
 import AdminLayout from './components/layout/AdminLayout';
 import ManageCoursesPage from './pages/admin/ManageCoursesPage';
 import ManageUsersPage from './pages/admin/ManageUsersPage';
-import ManageVideosPage from './pages/admin/ManageVideosPage';
+import AdminManageVideosPage from './pages/admin/ManageVideosPage';
+import InstructorLecturesPage from './pages/instructor/InstructorLecturesPage';
 import ComingSoon from './components/common/ComingSoon';
 import ScrollToTop from './components/common/ScrollToTop';
 
@@ -83,6 +84,7 @@ function App() {
             <Route path="qa" element={<InstructorQAPage />} />
             <Route path="reviews" element={<InstructorReviewsPage />} />
             <Route path="announcements" element={<InstructorAnnouncementsPage />} />
+            <Route path="videos" element={<InstructorLecturesPage />} />
             <Route index element={<Navigate to="dashboard" replace />} />
           </Route>
 
@@ -96,7 +98,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="profile" element={<AdminProfilePage />} />
             <Route path="courses" element={<ManageCoursesPage />} />
-            <Route path="videos" element={<ManageVideosPage />} />
+            <Route path="videos" element={<AdminManageVideosPage />} />
             <Route path="users" element={<ManageUsersPage />} />
             <Route path="settings" element={<ComingSoon title="Settings" />} />
           </Route>

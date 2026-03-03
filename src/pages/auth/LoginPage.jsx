@@ -48,6 +48,7 @@ const LoginPage = () => {
                 </p>
                 <div className="mt-2 text-xs text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-700 inline-block pointer-events-none">
                     <p>Student: user@test.com / 123456</p>
+                    <p>Instructor: instructor@test.com / 123456</p>
                     <p>Admin: admin@test.com / admin123</p>
                 </div>
             </div>

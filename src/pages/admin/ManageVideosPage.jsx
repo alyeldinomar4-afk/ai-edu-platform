@@ -64,7 +64,7 @@ const ManageVideosPage = () => {
             duration: "18:20",
             status: "pending",
             date: "2024-02-25",
-            thumbnail: "https://images.unsplash.com/photo-1551288049-bbdac8a28a80?w=800&q=80"
+            thumbnail: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
             id: 4,
@@ -75,7 +75,7 @@ const ManageVideosPage = () => {
             duration: "45:00",
             status: "published",
             date: "2024-01-30",
-            thumbnail: "https://images.unsplash.com/photo-1620712943543-bcc462824100?w=800&q=80"
+            thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
         },
         {
             id: 5,
@@ -86,7 +86,7 @@ const ManageVideosPage = () => {
             duration: "10:15",
             status: "draft",
             date: "2024-02-20",
-            thumbnail: "https://images.unsplash.com/photo-1556075798-4825dfafd998?w=800&q=80"
+            thumbnail: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80"
         },
         {
             id: 6,

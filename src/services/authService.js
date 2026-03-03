@@ -69,12 +69,27 @@ export const authService = {
                 };
             }
 
+            // Allow default instructor user
+            if (email === 'instructor@test.com' && password === '123456') {
+                const instructorUser = {
+                    id: 'instructor-1',
+                    name: 'Test Instructor',
+                    email: 'instructor@test.com',
+                    role: 'instructor',
+                    avatar: 'https://i.pravatar.cc/150?u=instructor'
+                };
+                return {
+                    user: instructorUser,
+                    token: 'mock-jwt-token-instructor-' + Date.now()
+                };
+            }
+
             throw new Error('Invalid email or password');
         }
 
         // Generate a mock token
         const token = `mock-jwt-token-${user.role}-${Date.now()}`;
-        
+
         // Return user info (excluding password) and token
         const { password: _, ...userWithoutPassword } = user;
         return {
@@ -124,7 +139,7 @@ export const authService = {
         const userStr = localStorage.getItem(CURRENT_USER_KEY);
         return userStr ? JSON.parse(userStr) : null;
     },
-    
+
     // Store session
     setSession: (user, token) => {
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
