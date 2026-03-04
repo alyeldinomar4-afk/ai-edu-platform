@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
     Video,
     Search,
@@ -37,7 +38,7 @@ const ManageVideosPage = () => {
             id: 1,
             title: "Introduction to Neural Networks",
             instructor: "Dr. Laila Hassan",
-            course: "Mastering AI & Machine Learning",
+            course: "Machine Learning Fundamentals",
             views: "1.2k",
             duration: "12:45",
             status: "published",
@@ -48,7 +49,7 @@ const ManageVideosPage = () => {
             id: 2,
             title: "Advanced React Patterns",
             instructor: "Ahmed Mansour",
-            course: "Modern Web Development",
+            course: "Advanced React Patterns",
             views: "856",
             duration: "25:30",
             status: "published",
@@ -59,7 +60,7 @@ const ManageVideosPage = () => {
             id: 3,
             title: "Data Visualization with D3.js",
             instructor: "Ahmed Mansour",
-            course: "Data Science Specialization",
+            course: "Python for Finance",
             views: "0",
             duration: "18:20",
             status: "pending",
@@ -70,7 +71,7 @@ const ManageVideosPage = () => {
             id: 4,
             title: "Ethics in Artificial Intelligence",
             instructor: "Dr. Laila Hassan",
-            course: "AI Policy & Governance",
+            course: "UX Design for AI Interfaces",
             views: "2.4k",
             duration: "45:00",
             status: "published",
@@ -80,8 +81,8 @@ const ManageVideosPage = () => {
         {
             id: 5,
             title: "Git Workflow for Teams",
-            instructor: "Sara Ali",
-            course: "Software Engineering 101",
+            instructor: "Ahmed Mansour",
+            course: "Full-Stack Web Development",
             views: "152",
             duration: "10:15",
             status: "draft",
@@ -92,7 +93,7 @@ const ManageVideosPage = () => {
             id: 6,
             title: "Deep Learning Fundamentals",
             instructor: "Dr. Laila Hassan",
-            course: "Mastering AI & Machine Learning",
+            course: "Machine Learning Fundamentals",
             views: "3.1k",
             duration: "32:10",
             status: "published",
@@ -118,15 +119,16 @@ const ManageVideosPage = () => {
 
     // Actions
     const handleDeleteVideo = (id) => {
-        if (window.confirm('Are you sure you want to delete this video?')) {
-            setVideos(prev => prev.filter(v => v.id !== id));
-        }
+        setVideos(prev => prev.filter(v => v.id !== id));
+        toast.success('Video deleted successfully!');
     };
 
     const togglePublish = (id) => {
         setVideos(prev => prev.map(v => {
             if (v.id === id) {
-                return { ...v, status: v.status === 'published' ? 'draft' : 'published' };
+                const newStatus = v.status === 'published' ? 'draft' : 'published';
+                toast.success(`Video ${newStatus === 'published' ? 'published' : 'unpublished'} successfully!`);
+                return { ...v, status: newStatus };
             }
             return v;
         }));
@@ -142,12 +144,14 @@ const ManageVideosPage = () => {
         };
         setVideos(prev => [newVideo, ...prev]);
         setShowVideoModal(false);
+        toast.success('Video added successfully!');
     };
 
     const handleUpdateVideo = (data) => {
         setVideos(prev => prev.map(v => v.id === data.id ? { ...v, ...data } : v));
         setEditingVideo(null);
         setShowVideoModal(false);
+        toast.success('Video updated successfully!');
     };
 
     const getStatusStyle = (status) => {
@@ -282,11 +286,15 @@ const ManageVideosPage = () => {
                     </div>
                 )
             ) : (
-                <div className="bg-white dark:bg-slate-900 py-20 rounded-xl border border-slate-100 dark:border-slate-800 text-center shadow-sm">
-                    <Video size={40} className="mx-auto text-slate-300 mb-4" />
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">No videos found</h3>
-                    <p className="text-slate-500 mb-6 text-sm">Adjust search or filters.</p>
-                    <Button variant="outline" onClick={() => { setSearchTerm(''); setStatusFilter('all'); }}>Reset All Filters</Button>
+                <div className="bg-white dark:bg-slate-900 py-20 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                            <Video size={32} />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">No videos found</h3>
+                        <p className="text-slate-500 text-sm">Adjust search or filters.</p>
+                        <Button variant="outline" onClick={() => { setSearchTerm(''); setStatusFilter('all'); }}>Reset All Filters</Button>
+                    </div>
                 </div>
             )}
 

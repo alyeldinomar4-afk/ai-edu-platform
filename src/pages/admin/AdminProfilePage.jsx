@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../auth/useAuth';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { User, Mail, Camera, Lock, Save, Shield } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
@@ -18,26 +19,27 @@ const AdminProfilePage = () => {
 
     const [isSavingProfile, setIsSavingProfile] = useState(false);
     const [isSavingPassword, setIsSavingPassword] = useState(false);
+    const [avatar, setAvatar] = useState(user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "Admin") + "&background=random");
 
     const handleSaveProfile = (e) => {
         e.preventDefault();
         setIsSavingProfile(true);
         setTimeout(() => {
             setIsSavingProfile(false);
-            alert('Admin profile updated successfully!');
+            toast.success('Admin profile updated successfully!');
         }, 1000);
     };
 
     const handleUpdatePassword = (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            alert('New passwords do not match!');
+            toast.error('New passwords do not match!');
             return;
         }
         setIsSavingPassword(true);
         setTimeout(() => {
             setIsSavingPassword(false);
-            alert('Password updated successfully!');
+            toast.success('Password updated successfully!');
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -71,7 +73,7 @@ const AdminProfilePage = () => {
                     <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm text-center">
                         <div className="relative inline-block mb-4 group cursor-pointer" onClick={() => document.getElementById('avatar-upload').click()}>
                             <img
-                                src={user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "Admin") + "&background=random"}
+                                src={avatar}
                                 alt="Profile"
                                 className="w-24 h-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800 shadow-sm transition-opacity group-hover:opacity-75"
                             />
@@ -80,7 +82,10 @@ const AdminProfilePage = () => {
                             </div>
                             <input type="file" id="avatar-upload" className="hidden" accept="image/*" onChange={(e) => {
                                 if (e.target.files && e.target.files[0]) {
-                                    alert("Photo updated successfully! (Mock)");
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => setAvatar(event.target.result);
+                                    reader.readAsDataURL(e.target.files[0]);
+                                    toast.success("Photo updated successfully!");
                                 }
                             }} />
                         </div>
@@ -88,7 +93,15 @@ const AdminProfilePage = () => {
                             <Button variant="outline" size="sm" onClick={() => document.getElementById('avatar-upload').click()} className="w-full justify-center">
                                 Update Photo
                             </Button>
-                            <Button variant="outline" size="sm" className="w-full justify-center text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="w-full justify-center text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50"
+                                onClick={() => {
+                                    setAvatar("https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "Admin") + "&background=random&size=128");
+                                    toast.success("Photo removed successfully!");
+                                }}
+                            >
                                 Remove
                             </Button>
                         </div>

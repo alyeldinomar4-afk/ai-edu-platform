@@ -3,6 +3,7 @@ import { useAuth } from '../../auth/useAuth';
 import { Plus, Users, BarChart3, DollarSign, Video, X, Edit2, Trash2, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
 import InstructorNav from '../../components/layout/InstructorNav';
 import { api } from '../../services/api';
@@ -13,6 +14,7 @@ const InstructorDashboardPage = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [formData, setFormData] = useState({ title: '', students: '', status: 'Draft', revenue: '$0' });
@@ -47,25 +49,40 @@ const InstructorDashboardPage = () => {
         setShowModal(true);
     };
 
-    const handleSave = () => {
-        if (!formData.title.trim()) return;
+    const handleSave = async (e) => {
+        e?.preventDefault();
+        if (!formData.title.trim()) {
+            toast.error('Course title is required');
+            return;
+        }
+
+        setIsSaving(true);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         if (editingCourse) {
             setCourses(prev => prev.map(c =>
                 c.id === editingCourse.id ? { ...c, ...formData, students: parseInt(formData.students) || 0 } : c
             ));
+            toast.success('Course updated successfully');
         } else {
             setCourses(prev => [...prev, {
                 id: Date.now(),
                 ...formData,
                 students: parseInt(formData.students) || 0
             }]);
+            toast.success('Course created successfully');
         }
+
+        setIsSaving(false);
         setShowModal(false);
     };
 
     const handleDelete = (id) => {
         setCourses(prev => prev.filter(c => c.id !== id));
         setShowDeleteConfirm(null);
+        toast.success('Course deleted');
     };
 
     const statCards = stats ? [
@@ -134,7 +151,7 @@ const InstructorDashboardPage = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {courses.map((course) => (
+                            {courses.length > 0 ? courses.map((course) => (
                                 <tr key={course.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                                     <td className="px-4 sm:px-6 py-4 font-medium text-slate-900 dark:text-white">
                                         <div className="flex items-center gap-3">
@@ -182,7 +199,22 @@ const InstructorDashboardPage = () => {
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                            )) : (
+                                <tr>
+                                    <td colSpan="5" className="px-6 py-16 text-center">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                                                <Video size={28} />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">No courses yet</h3>
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">Create your first course to start teaching!</p>
+                                            <Button onClick={openAddModal}>
+                                                <Plus size={16} className="mr-2" /> Create Course
+                                            </Button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -209,51 +241,54 @@ const InstructorDashboardPage = () => {
                                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                                     {editingCourse ? 'Edit Course' : 'Create New Course'}
                                 </h2>
-                                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors disabled:opacity-50">
                                     <X size={20} className="text-slate-500 dark:text-slate-400" />
                                 </button>
                             </div>
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Course Title</label>
-                                    <input
-                                        type="text"
-                                        value={formData.title}
-                                        onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                        className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                                        placeholder="e.g. Advanced Python Masterclass"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
+                            <form onSubmit={handleSave}>
+                                <div className="space-y-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Status</label>
-                                        <select
-                                            value={formData.status}
-                                            onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
-                                            className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                                        >
-                                            <option value="Draft">Draft</option>
-                                            <option value="Published">Published</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Price</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Course Title *</label>
                                         <input
                                             type="text"
-                                            value={formData.revenue}
-                                            onChange={e => setFormData(prev => ({ ...prev, revenue: e.target.value }))}
+                                            required
+                                            value={formData.title}
+                                            onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
                                             className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-                                            placeholder="$0"
+                                            placeholder="e.g. Advanced Python Masterclass"
                                         />
                                     </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Status</label>
+                                            <select
+                                                value={formData.status}
+                                                onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                                                className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                            >
+                                                <option value="Draft">Draft</option>
+                                                <option value="Published">Published</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Price</label>
+                                            <input
+                                                type="text"
+                                                value={formData.revenue}
+                                                onChange={e => setFormData(prev => ({ ...prev, revenue: e.target.value }))}
+                                                className="w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                                                placeholder="$0"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex gap-3 mt-8">
-                                <Button variant="ghost" onClick={() => setShowModal(false)} className="flex-1">Cancel</Button>
-                                <Button onClick={handleSave} className="flex-1">
-                                    {editingCourse ? 'Save Changes' : 'Create Course'}
-                                </Button>
-                            </div>
+                                <div className="flex gap-3 mt-8">
+                                    <Button type="button" variant="ghost" onClick={() => setShowModal(false)} className="flex-1" disabled={isSaving}>Cancel</Button>
+                                    <Button type="submit" className="flex-1" disabled={isSaving}>
+                                        {isSaving ? 'Saving...' : (editingCourse ? 'Save Changes' : 'Create Course')}
+                                    </Button>
+                                </div>
+                            </form>
                         </motion.div>
                     </div>
                 )}

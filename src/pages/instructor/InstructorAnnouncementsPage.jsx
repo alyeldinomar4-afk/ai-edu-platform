@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { Megaphone, Send, Users, Clock, Bold, Italic, Link as LinkIcon, List } from 'lucide-react';
 import InstructorNav from '../../components/layout/InstructorNav';
 import Button from '../../components/ui/Button';
@@ -61,7 +62,7 @@ const InstructorAnnouncementsPage = () => {
             setSelectedCourse('all');
             setShowForm(false);
             setIsSending(false);
-            alert('Announcement sent successfully!');
+            toast.success('Announcement sent successfully!');
         }, 1500);
     };
 

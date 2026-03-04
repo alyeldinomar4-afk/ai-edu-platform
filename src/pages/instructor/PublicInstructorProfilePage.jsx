@@ -115,7 +115,7 @@ const PublicInstructorProfilePage = () => {
                                     initial={{ y: 10, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.1 }}
-                                    className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white capitalize mb-2"
+                                    className="text-3xl md:text-5xl font-bold text-white capitalize mb-2"
                                 >
                                     {instructorName}
                                 </motion.h1>

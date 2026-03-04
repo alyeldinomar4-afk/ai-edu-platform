@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Button from '../../components/ui/Button';
 import { courses } from '../../data/mockData';
-import { Edit2, Trash2, Plus, X } from 'lucide-react';
+import { Edit2, Trash2, Plus, X, Search, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ManageCoursesPage = () => {
@@ -10,6 +10,16 @@ const ManageCoursesPage = () => {
     const [editingCourse, setEditingCourse] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [formData, setFormData] = useState({ title: '', instructor: '', category: '', price: '' });
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const filteredCourses = useMemo(() => {
+        const search = searchTerm.toLowerCase();
+        return courseList.filter(course =>
+            course.title.toLowerCase().includes(search) ||
+            course.instructor.toLowerCase().includes(search) ||
+            course.category.toLowerCase().includes(search)
+        );
+    }, [courseList, searchTerm]);
 
     const openAddModal = () => {
         setEditingCourse(null);
@@ -55,61 +65,96 @@ const ManageCoursesPage = () => {
                 </Button>
             </div>
 
+            {/* Search Bar */}
+            <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm mb-6">
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Search courses by title, instructor, or category..."
+                        className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary transition-all outline-none"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+            </div>
+
             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm transition-colors">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">
-                                <th className="p-4 font-semibold">Course</th>
-                                <th className="p-4 font-semibold hidden sm:table-cell">Instructor</th>
-                                <th className="p-4 font-semibold hidden md:table-cell">Category</th>
-                                <th className="p-4 font-semibold">Price</th>
-                                <th className="p-4 font-semibold text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {courseList.map((course) => (
-                                <tr key={course.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                                    <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <img src={course.image} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
-                                            <div className="min-w-0">
-                                                <span className="font-medium text-slate-900 dark:text-white block truncate">{course.title}</span>
-                                                <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">{course.instructor}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="p-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell">{course.instructor}</td>
-                                    <td className="p-4 hidden md:table-cell">
-                                        <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-400">{course.category}</span>
-                                    </td>
-                                    <td className="p-4 font-medium text-slate-900 dark:text-white">${course.price}</td>
-                                    <td className="p-4 text-right">
-                                        <div className="flex justify-end gap-1">
-                                            <button
-                                                onClick={() => openEditModal(course)}
-                                                className="p-2 text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary-dark hover:bg-primary/10 rounded-lg transition-colors"
-                                                title="Edit course"
-                                            >
-                                                <Edit2 size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => setShowDeleteConfirm(course.id)}
-                                                className="p-2 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                                                title="Delete course"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="p-4 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
-                    Showing {courseList.length} courses
-                </div>
+                {filteredCourses.length > 0 ? (
+                    <>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">
+                                        <th className="p-4 font-semibold">Course</th>
+                                        <th className="p-4 font-semibold hidden sm:table-cell">Instructor</th>
+                                        <th className="p-4 font-semibold hidden md:table-cell">Category</th>
+                                        <th className="p-4 font-semibold">Price</th>
+                                        <th className="p-4 font-semibold text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                    {filteredCourses.map((course) => (
+                                        <tr key={course.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <td className="p-4">
+                                                <div className="flex items-center gap-3">
+                                                    <img src={course.image} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                                                    <div className="min-w-0">
+                                                        <span className="font-medium text-slate-900 dark:text-white block truncate">{course.title}</span>
+                                                        <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">{course.instructor}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell">{course.instructor}</td>
+                                            <td className="p-4 hidden md:table-cell">
+                                                <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-400">{course.category}</span>
+                                            </td>
+                                            <td className="p-4 font-medium text-slate-900 dark:text-white">${course.price}</td>
+                                            <td className="p-4 text-right">
+                                                <div className="flex justify-end gap-1">
+                                                    <button
+                                                        onClick={() => openEditModal(course)}
+                                                        className="p-2 text-slate-400 dark:text-slate-500 hover:text-primary dark:hover:text-primary-dark hover:bg-primary/10 rounded-lg transition-colors"
+                                                        title="Edit course"
+                                                    >
+                                                        <Edit2 size={18} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setShowDeleteConfirm(course.id)}
+                                                        className="p-2 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                                        title="Delete course"
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="p-4 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
+                            Showing {filteredCourses.length} of {courseList.length} courses
+                        </div>
+                    </>
+                ) : (
+                    <div className="py-20 text-center">
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                                <BookOpen size={32} />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">No courses found</h3>
+                            <p className="text-slate-500 dark:text-slate-400 text-sm">
+                                {searchTerm ? "Try adjusting your search term." : "Click 'Add New Course' to create your first course."}
+                            </p>
+                            {searchTerm && (
+                                <Button variant="outline" onClick={() => setSearchTerm('')}>
+                                    Clear Search
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Add/Edit Modal */}

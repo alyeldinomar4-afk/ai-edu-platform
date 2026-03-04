@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import {
     Users,
     Search,
@@ -27,7 +28,7 @@ const ManageUsersPage = () => {
     // Initial users state
     const [users, setUsers] = useState([
         { id: 1, name: "Ahmed Mansour", email: "ahmed@example.com", role: "instructor", status: "active", joined: "2023-10-12", avatar: "https://ui-avatars.com/api/?name=Ahmed+Mansour&background=random" },
-        { id: 2, name: "Sara Ali", email: "sara@example.com", role: "learner", status: "active", joined: "2023-11-05", avatar: "https://ui-avatars.com/api/?name=Sara+Ali&background=random" },
+        { id: 2, name: "Mona Gamal", email: "mona@example.com", role: "learner", status: "active", joined: "2023-11-05", avatar: "https://ui-avatars.com/api/?name=Mona+Gamal&background=random" },
         { id: 3, name: "Youssef Khaled", email: "youssef@example.com", role: "learner", status: "suspended", joined: "2024-01-20", avatar: "https://ui-avatars.com/api/?name=Youssef+Khaled&background=random" },
         { id: 4, name: "Dr. Laila Hassan", email: "laila@example.com", role: "instructor", status: "active", joined: "2023-09-15", avatar: "https://ui-avatars.com/api/?name=Laila+Hassan&background=random" },
         { id: 5, name: "Nour Eddeen", email: "nour@example.com", role: "learner", status: "active", joined: "2024-02-10", avatar: "https://ui-avatars.com/api/?name=Nour+Eddeen&background=random" },
@@ -55,25 +56,28 @@ const ManageUsersPage = () => {
         };
         setUsers([newUser, ...users]);
         setShowUserModal(false);
+        toast.success('User added successfully!');
     };
 
     const handleUpdateUser = (userData) => {
         setUsers(users.map(u => u.id === userData.id ? { ...u, ...userData } : u));
         setEditingUser(null);
         setShowUserModal(false);
+        toast.success('User updated successfully!');
     };
 
     const handleDeleteUser = (id) => {
-        if (window.confirm('Are you sure you want to delete this user?')) {
-            setUsers(users.filter(u => u.id !== id));
-            setShowActionMenu(null);
-        }
+        setUsers(users.filter(u => u.id !== id));
+        setShowActionMenu(null);
+        toast.success('User deleted successfully!');
     };
 
     const toggleStatus = (id) => {
         setUsers(users.map(u => {
             if (u.id === id) {
-                return { ...u, status: u.status === 'active' ? 'suspended' : 'active' };
+                const newStatus = u.status === 'active' ? 'suspended' : 'active';
+                toast.success(`User ${newStatus === 'active' ? 'activated' : 'suspended'} successfully!`);
+                return { ...u, status: newStatus };
             }
             return u;
         }));

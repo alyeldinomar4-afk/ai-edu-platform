@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../auth/useAuth';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { User, Mail, Camera, Lock, Save, Shield } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
@@ -17,26 +18,27 @@ const LearnerProfilePage = () => {
 
     const [isSavingProfile, setIsSavingProfile] = useState(false);
     const [isSavingPassword, setIsSavingPassword] = useState(false);
+    const [avatar, setAvatar] = useState(user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "User") + "&background=random");
 
     const handleSaveProfile = (e) => {
         e.preventDefault();
         setIsSavingProfile(true);
         setTimeout(() => {
             setIsSavingProfile(false);
-            alert('Profile updated successfully!');
+            toast.success('Profile updated successfully!');
         }, 1000);
     };
 
     const handleUpdatePassword = (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            alert('New passwords do not match!');
+            toast.error('New passwords do not match!');
             return;
         }
         setIsSavingPassword(true);
         setTimeout(() => {
             setIsSavingPassword(false);
-            alert('Password updated successfully!');
+            toast.success('Password updated successfully!');
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -68,7 +70,7 @@ const LearnerProfilePage = () => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                         <div className="relative group cursor-pointer" onClick={() => document.getElementById('learner-avatar-upload').click()}>
                             <img
-                                src={user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "User") + "&background=random"}
+                                src={avatar}
                                 alt="Profile"
                                 className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-100 dark:border-slate-800 transition-opacity group-hover:opacity-75"
                             />
@@ -77,14 +79,27 @@ const LearnerProfilePage = () => {
                             </div>
                             <input type="file" id="learner-avatar-upload" className="hidden" accept="image/*" onChange={(e) => {
                                 if (e.target.files && e.target.files[0]) {
-                                    alert("Photo updated successfully! (Mock)");
+                                    const reader = new FileReader();
+                                    reader.onload = (event) => setAvatar(event.target.result);
+                                    reader.readAsDataURL(e.target.files[0]);
+                                    toast.success("Photo updated successfully!");
                                 }
                             }} />
                         </div>
                         <div>
                             <div className="flex flex-wrap gap-3 mb-3">
                                 <Button size="sm" onClick={() => document.getElementById('learner-avatar-upload').click()}>Upload New Photo</Button>
-                                <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50">Remove</Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50"
+                                    onClick={() => {
+                                        setAvatar("https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "User") + "&background=random&size=128");
+                                        toast.success("Photo removed successfully!");
+                                    }}
+                                >
+                                    Remove
+                                </Button>
                             </div>
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                                 Recommended size: 400x400px. JPG, PNG or GIF up to 5MB.

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '../../auth/useAuth';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { User, Mail, Camera, Lock, Save, Shield, Link as LinkIcon, Twitter, Linkedin, Globe, Briefcase, ExternalLink } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { User, Mail, Camera, Lock, Save, Shield, Link as LinkIcon, Twitter, Linkedin, Globe, Briefcase } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 const InstructorProfilePage = () => {
@@ -26,26 +26,27 @@ const InstructorProfilePage = () => {
 
     const [isSavingProfile, setIsSavingProfile] = useState(false);
     const [isSavingPassword, setIsSavingPassword] = useState(false);
+    const [avatar, setAvatar] = useState(user?.avatar || "https://randomuser.me/api/portraits/women/44.jpg");
 
     const handleSaveProfile = (e) => {
         e.preventDefault();
         setIsSavingProfile(true);
         setTimeout(() => {
             setIsSavingProfile(false);
-            alert('Instructor profile updated successfully!');
+            toast.success('Instructor profile updated successfully!');
         }, 1000);
     };
 
     const handleUpdatePassword = (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            alert('New passwords do not match!');
+            toast.error('New passwords do not match!');
             return;
         }
         setIsSavingPassword(true);
         setTimeout(() => {
             setIsSavingPassword(false);
-            alert('Password updated successfully!');
+            toast.success('Password updated successfully!');
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -63,12 +64,7 @@ const InstructorProfilePage = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Instructor Profile</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">Manage your public profile, bio, and security settings.</p>
                 </div>
-                <div className="flex gap-3 w-full sm:w-auto mt-4 sm:mt-0">
-                    <Link to={`/instructor/user/${encodeURIComponent((user?.name || '').replace(/\s+/g, '-').toLowerCase())}`} className="flex-1 sm:flex-none">
-                        <Button variant="outline" className="w-full flex items-center justify-center gap-2">
-                            <ExternalLink size={16} /> Public Profile
-                        </Button>
-                    </Link>
+                <div className="flex gap-3">
                     <Button onClick={handleSaveProfile} disabled={isSavingProfile} className="flex-1 sm:flex-none">
                         {isSavingProfile ? 'Saving...' : <><Save size={16} className="mr-2" /> Save Profile</>}
                     </Button>
@@ -94,10 +90,10 @@ const InstructorProfilePage = () => {
 
                     <div className="px-6 sm:px-8 pb-8">
                         {/* Avatar */}
-                        <div className="relative -mt-12 sm:-mt-16 mb-4 flex justify-between items-end">
+                        <div className="relative -mt-12 sm:-mt-16 mb-4 flex items-end gap-4">
                             <div className="relative inline-block group cursor-pointer" onClick={() => document.getElementById('instructor-avatar-upload').click()}>
                                 <img
-                                    src={user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "Instructor") + "&background=random"}
+                                    src={avatar}
                                     alt="Profile"
                                     className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white dark:border-slate-900 bg-white transition-opacity group-hover:opacity-75"
                                 />
@@ -106,7 +102,10 @@ const InstructorProfilePage = () => {
                                 </div>
                                 <input type="file" id="instructor-avatar-upload" className="hidden" accept="image/*" onChange={(e) => {
                                     if (e.target.files && e.target.files[0]) {
-                                        alert("Photo updated successfully! (Mock)");
+                                        const reader = new FileReader();
+                                        reader.onload = (event) => setAvatar(event.target.result);
+                                        reader.readAsDataURL(e.target.files[0]);
+                                        toast.success("Photo updated successfully!");
                                     }
                                 }} />
                             </div>
@@ -114,7 +113,15 @@ const InstructorProfilePage = () => {
                                 <Button onClick={() => document.getElementById('instructor-avatar-upload').click()} size="sm">
                                     Update Photo
                                 </Button>
-                                <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50"
+                                    onClick={() => {
+                                        setAvatar("https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "Instructor") + "&background=random&size=128");
+                                        toast.success("Photo removed successfully!");
+                                    }}
+                                >
                                     Remove
                                 </Button>
                             </div>

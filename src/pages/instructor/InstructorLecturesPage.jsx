@@ -15,10 +15,12 @@ import {
     X,
     Edit,
     PauseCircle,
-    FileText
+    FileText,
+    UploadCloud
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { lectures } from '../../data/mockData';
+import toast from 'react-hot-toast';
 
 // InstructorLecturesPage v1.2 - Modern SaaS Dashboard UI Refinement
 const InstructorLecturesPage = () => {
@@ -27,6 +29,8 @@ const InstructorLecturesPage = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [showVideoModal, setShowVideoModal] = useState(false);
     const [editingVideo, setEditingVideo] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
     // Initial Videos state
     const [videos, setVideos] = useState(lectures);
@@ -46,21 +50,26 @@ const InstructorLecturesPage = () => {
 
     // Actions
     const handleDeleteVideo = (id) => {
-        if (window.confirm('Are you sure you want to delete this lecture?')) {
-            setVideos(prev => prev.filter(v => v.id !== id));
-        }
+        setVideos(prev => prev.filter(v => v.id !== id));
+        toast.success('Lecture deleted successfully');
     };
 
     const togglePublish = (id) => {
         setVideos(prev => prev.map(v => {
             if (v.id === id) {
-                return { ...v, status: v.status === 'published' ? 'draft' : 'published' };
+                const newStatus = v.status === 'published' ? 'draft' : 'published';
+                toast.success(`Lecture marked as ${newStatus}`);
+                return { ...v, status: newStatus };
             }
             return v;
         }));
     };
 
-    const handleAddVideo = (data) => {
+    const handleAddVideo = async (data) => {
+        setIsSaving(true);
+        // Simulate API saving
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         const newVideo = {
             ...data,
             id: Date.now(),
@@ -70,12 +79,22 @@ const InstructorLecturesPage = () => {
         };
         setVideos(prev => [newVideo, ...prev]);
         setShowVideoModal(false);
+        setIsSaving(false);
+        setSelectedFiles([]);
+        toast.success('Lecture uploaded successfully!');
     };
 
-    const handleUpdateVideo = (data) => {
+    const handleUpdateVideo = async (data) => {
+        setIsSaving(true);
+        // Simulate API updating
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         setVideos(prev => prev.map(v => v.id === data.id ? { ...v, ...data } : v));
         setEditingVideo(null);
         setShowVideoModal(false);
+        setIsSaving(false);
+        setSelectedFiles([]);
+        toast.success('Lecture updated successfully!');
     };
 
     const getStatusStyle = (status) => {
@@ -317,6 +336,10 @@ const InstructorLecturesPage = () => {
                                 e.preventDefault();
                                 const formData = new FormData(e.target);
                                 const data = Object.fromEntries(formData);
+                                if (!data.title.trim()) {
+                                    toast.error('Lecture title is required');
+                                    return;
+                                }
                                 if (editingVideo) handleUpdateVideo({ ...editingVideo, ...data });
                                 else handleAddVideo(data);
                             }} className="p-8 space-y-6 text-left">
@@ -354,8 +377,12 @@ const InstructorLecturesPage = () => {
                                         className="w-full border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer group"
                                         onClick={() => document.getElementById('resource-file-upload').click()}
                                     >
-                                        <FileText className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors mb-2" />
-                                        <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Click to upload resource files</p>
+                                        <UploadCloud className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors mb-2" />
+                                        <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                                            {selectedFiles.length > 0
+                                                ? `${selectedFiles.length} file(s) selected`
+                                                : "Click to upload resource files"}
+                                        </p>
                                         <p className="text-xs text-slate-500 mt-1">PDF, DOCX, ZIP up to 50MB</p>
                                         <input
                                             type="file"
@@ -365,17 +392,38 @@ const InstructorLecturesPage = () => {
                                             accept=".pdf,.doc,.docx,.zip,.rar"
                                             onChange={(e) => {
                                                 if (e.target.files && e.target.files.length > 0) {
-                                                    alert(`${e.target.files.length} file(s) selected for upload.`);
+                                                    setSelectedFiles(Array.from(e.target.files));
                                                 }
                                             }}
                                         />
                                     </div>
+
+                                    {/* Display selected files */}
+                                    {selectedFiles.length > 0 && (
+                                        <div className="mt-4 space-y-2">
+                                            {selectedFiles.map((file, idx) => (
+                                                <div key={idx} className="flex justify-between items-center bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-lg text-sm">
+                                                    <span className="truncate text-slate-700 dark:text-slate-300">{file.name}</span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setSelectedFiles(prev => prev.filter((_, i) => i !== idx));
+                                                        }}
+                                                        className="text-slate-400 hover:text-red-500 transition-colors"
+                                                    >
+                                                        <X size={14} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="pt-6 flex gap-4">
-                                    <Button variant="outline" className="flex-1 py-3.5 rounded-2xl font-bold" onClick={() => { setShowVideoModal(false); setEditingVideo(null); }}>Discard</Button>
-                                    <Button className="flex-1 py-3.5 rounded-2xl font-bold shadow-lg shadow-primary/20" type="submit">
-                                        {editingVideo ? 'Update Lecture' : 'Confirm Upload'}
+                                    <Button type="button" variant="outline" className="flex-1 py-3.5 rounded-2xl font-bold" onClick={() => { setShowVideoModal(false); setEditingVideo(null); setSelectedFiles([]); }} disabled={isSaving}>Discard</Button>
+                                    <Button className="flex-1 py-3.5 rounded-2xl font-bold shadow-lg shadow-primary/20" type="submit" disabled={isSaving}>
+                                        {isSaving ? 'Saving...' : (editingVideo ? 'Update Lecture' : 'Confirm Upload')}
                                     </Button>
                                 </div>
                             </form>

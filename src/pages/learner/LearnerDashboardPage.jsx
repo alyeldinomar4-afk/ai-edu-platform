@@ -80,7 +80,7 @@ const LearnerDashboardPage = () => {
                     <Play className="w-5 h-5 text-primary" /> Continue Learning
                 </h2>
                 <div className="space-y-4">
-                    {progress.map((course) => (
+                    {progress.length > 0 ? progress.map((course) => (
                         <motion.div
                             key={course.courseId}
                             initial={{ opacity: 0, x: -10 }}
@@ -111,7 +111,18 @@ const LearnerDashboardPage = () => {
                                 </Button>
                             </Link>
                         </motion.div>
-                    ))}
+                    )) : (
+                        <div className="bg-white dark:bg-slate-900 p-10 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
+                            <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary mx-auto mb-4">
+                                <BookOpen size={28} />
+                            </div>
+                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">No courses in progress</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Start learning by enrolling in a course!</p>
+                            <Link to="/courses">
+                                <Button>Browse Courses</Button>
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -121,7 +132,7 @@ const LearnerDashboardPage = () => {
                     <Sparkles className="w-5 h-5 text-yellow-500" /> Recommended for You
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                    {recommendations.map((course, i) => (
+                    {recommendations.length > 0 ? recommendations.map((course, i) => (
                         <motion.div
                             key={course.id}
                             initial={{ opacity: 0, y: 20 }}
@@ -144,7 +155,15 @@ const LearnerDashboardPage = () => {
                                 </div>
                             </Link>
                         </motion.div>
-                    ))}
+                    )) : (
+                        <div className="col-span-full bg-white dark:bg-slate-900 p-10 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
+                            <div className="w-16 h-16 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-500 mx-auto mb-4">
+                                <Sparkles size={28} />
+                            </div>
+                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">No recommendations yet</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Start exploring courses and we'll personalize your recommendations.</p>
+                        </div>
+                    )}
                 </div>
             </section>
 
