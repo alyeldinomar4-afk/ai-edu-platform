@@ -298,16 +298,18 @@ const InstructorLecturesPage = () => {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="bg-white dark:bg-slate-900 py-24 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 text-center"
+                            className="bg-white dark:bg-slate-900 py-24 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700"
                         >
-                            <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Video size={32} className="text-slate-300" />
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center">
+                                    <Video size={32} className="text-slate-300" />
+                                </div>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">No lectures found</h3>
+                                <p className="text-slate-500 dark:text-slate-400 max-w-xs text-sm text-center">We couldn't find any lectures matching your current search or filters.</p>
+                                <Button variant="outline" onClick={() => { setSearchTerm(''); setStatusFilter('all'); }} className="px-8">
+                                    Clear All Filters
+                                </Button>
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">No lectures found</h3>
-                            <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-xs mx-auto text-sm">We couldn't find any lectures matching your current search or filters.</p>
-                            <Button variant="outline" onClick={() => { setSearchTerm(''); setStatusFilter('all'); }} className="px-8">
-                                Clear All Filters
-                            </Button>
                         </motion.div>
                     )}
                 </AnimatePresence>
