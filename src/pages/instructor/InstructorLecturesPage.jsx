@@ -18,6 +18,7 @@ import {
     FileText
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import { lectures } from '../../data/mockData';
 
 // InstructorLecturesPage v1.2 - Modern SaaS Dashboard UI Refinement
 const InstructorLecturesPage = () => {
@@ -28,48 +29,7 @@ const InstructorLecturesPage = () => {
     const [editingVideo, setEditingVideo] = useState(null);
 
     // Initial Videos state
-    const [videos, setVideos] = useState([
-        {
-            id: 1,
-            title: "Introduction to Neural Networks",
-            course: "Mastering AI & Machine Learning",
-            views: "1.2k",
-            duration: "12:45",
-            status: "published",
-            date: "2024-02-15",
-            thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
-        },
-        {
-            id: 2,
-            title: "Advanced React Patterns",
-            course: "Modern Web Development",
-            views: "856",
-            duration: "25:30",
-            status: "published",
-            date: "2024-02-10",
-            thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
-        },
-        {
-            id: 3,
-            title: "Data Visualization with D3.js",
-            course: "Data Science Specialization",
-            views: "0",
-            duration: "18:20",
-            status: "pending",
-            date: "2024-02-25",
-            thumbnail: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        },
-        {
-            id: 4,
-            title: "Ethics in Artificial Intelligence",
-            course: "AI Policy & Governance",
-            views: "2.4k",
-            duration: "45:00",
-            status: "published",
-            date: "2024-01-30",
-            thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        }
-    ]);
+    const [videos, setVideos] = useState(lectures);
 
     // Filtering Logic
     const filteredVideos = useMemo(() => {

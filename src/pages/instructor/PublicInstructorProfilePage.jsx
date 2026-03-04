@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { User, Star, Users, PlayCircle, Clock, BookOpen } from 'lucide-react';
+import { User, Star, Users, PlayCircle, Clock, BookOpen, Globe, Linkedin, Twitter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton, { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
@@ -14,6 +14,7 @@ const PublicInstructorProfilePage = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [instructorCourses, setInstructorCourses] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false);
 
     // Simulate loading and fetching instructor's courses
     useEffect(() => {
@@ -33,6 +34,16 @@ const PublicInstructorProfilePage = () => {
         const timer = setTimeout(() => setIsLoading(false), 800);
         return () => clearTimeout(timer);
     }, [instructorName]);
+
+    const handleFollowToggle = () => {
+        setIsFollowing(!isFollowing);
+        // Simulate API call or toast notification here
+        if (!isFollowing) {
+            console.log(`Now following ${instructorName}`);
+        } else {
+            console.log(`Unfollowed ${instructorName}`);
+        }
+    };
 
     // Mock instructor details based on name
     const instructorStats = {
@@ -112,11 +123,29 @@ const PublicInstructorProfilePage = () => {
                                     initial={{ y: 10, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.2 }}
-                                    className="text-primary font-medium text-sm md:text-base flex items-center justify-center md:justify-start gap-2"
+                                    className="text-primary font-medium text-sm md:text-base flex items-center justify-center md:justify-start gap-2 mb-4"
                                 >
                                     <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                                     Senior Technical Instructor
                                 </motion.p>
+
+                                {/* Social Links */}
+                                <motion.div
+                                    initial={{ y: 10, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.25 }}
+                                    className="flex items-center justify-center md:justify-start gap-4 mb-2"
+                                >
+                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/10 transition-all hover:scale-110" title="Website">
+                                        <Globe size={18} />
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-all hover:scale-110" title="LinkedIn">
+                                        <Linkedin size={18} />
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-all hover:scale-110" title="Twitter">
+                                        <Twitter size={18} />
+                                    </a>
+                                </motion.div>
                             </div>
 
                             {/* Actions */}
@@ -126,7 +155,13 @@ const PublicInstructorProfilePage = () => {
                                 transition={{ delay: 0.3 }}
                                 className="hidden md:flex gap-3 pb-2"
                             >
-                                <Button className="shadow-lg shadow-primary/20">Follow</Button>
+                                <Button
+                                    onClick={handleFollowToggle}
+                                    variant={isFollowing ? "outline" : "primary"}
+                                    className={`shadow-lg shadow-primary/20 transition-all ${isFollowing ? 'hover:bg-red-50 hover:text-red-500 hover:border-red-200 dark:hover:bg-red-900/20 dark:hover:border-red-800' : ''}`}
+                                >
+                                    {isFollowing ? 'Following' : 'Follow'}
+                                </Button>
                             </motion.div>
                         </div>
 
@@ -200,7 +235,13 @@ const PublicInstructorProfilePage = () => {
                                         </div>
                                     </div>
 
-                                    <Button className="w-full mt-4 md:hidden">Follow</Button>
+                                    <Button
+                                        className={`w-full mt-4 md:hidden transition-all ${isFollowing ? 'hover:bg-red-50 hover:text-red-500 hover:border-red-200 dark:hover:bg-red-900/20 dark:hover:border-red-800' : ''}`}
+                                        variant={isFollowing ? "outline" : "primary"}
+                                        onClick={handleFollowToggle}
+                                    >
+                                        {isFollowing ? 'Following' : 'Follow'}
+                                    </Button>
                                 </div>
                             </motion.div>
                         </div>

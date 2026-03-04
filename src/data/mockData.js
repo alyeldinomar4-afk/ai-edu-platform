@@ -253,3 +253,50 @@ export const testimonials = [
         avatar: "https://randomuser.me/api/portraits/men/85.jpg"
     }
 ];
+
+export const lectures = [
+    {
+        id: 1,
+        title: "Introduction to Machine Learning Concepts",
+        course: "Machine Learning Fundamentals",
+        courseId: 1,
+        views: "1.2k",
+        duration: "12:45",
+        status: "published",
+        date: "2024-02-15",
+        thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
+    },
+    {
+        id: 2,
+        title: "Advanced React Context and Hooks",
+        course: "Advanced React Patterns",
+        courseId: 2,
+        views: "856",
+        duration: "25:30",
+        status: "published",
+        date: "2024-02-10",
+        thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
+    },
+    {
+        id: 3,
+        title: "Designing for AI Trust and Transparency",
+        course: "UX Design for AI Interfaces",
+        courseId: 3,
+        views: "0",
+        duration: "18:20",
+        status: "pending",
+        date: "2024-02-25",
+        thumbnail: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        id: 4,
+        title: "Algorithmic Trading with Pandas",
+        course: "Python for Finance",
+        courseId: 4,
+        views: "2.4k",
+        duration: "45:00",
+        status: "published",
+        date: "2024-01-30",
+        thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    }
+];
