@@ -155,6 +155,36 @@ const RegisterPage = () => {
                 </Button>
             </form>
 
+            <div className="mt-6">
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-slate-200 dark:border-slate-700" />
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-2 bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400">Or continue with</span>
+                    </div>
+                </div>
+
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                    <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300"
+                        onClick={() => console.log('Google signup clicked - ready for backend integration')}
+                    >
+                        Google
+                    </Button>
+                    <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300"
+                        onClick={() => console.log('GitHub signup clicked - ready for backend integration')}
+                    >
+                        GitHub
+                    </Button>
+                </div>
+            </div>
+
             <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
                 Already have an account?{' '}
                 <Link to="/login" className="font-medium text-primary hover:text-primary-dark cursor-pointer">

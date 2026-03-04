@@ -69,15 +69,28 @@ const AdminProfilePage = () => {
                     className="lg:col-span-1 space-y-6"
                 >
                     <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm text-center">
-                        <div className="relative inline-block mb-4">
+                        <div className="relative inline-block mb-4 group cursor-pointer" onClick={() => document.getElementById('avatar-upload').click()}>
                             <img
                                 src={user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "Admin") + "&background=random"}
                                 alt="Profile"
-                                className="w-24 h-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800 shadow-sm"
+                                className="w-24 h-24 rounded-full object-cover border-4 border-slate-50 dark:border-slate-800 shadow-sm transition-opacity group-hover:opacity-75"
                             />
-                            <button className="absolute bottom-0 right-0 p-2 bg-primary text-white rounded-full hover:bg-primary-600 transition-colors shadow-md border-2 border-white dark:border-slate-900">
-                                <Camera size={14} />
-                            </button>
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 rounded-full">
+                                <Camera size={24} className="text-white drop-shadow-md" />
+                            </div>
+                            <input type="file" id="avatar-upload" className="hidden" accept="image/*" onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                    alert("Photo updated successfully! (Mock)");
+                                }
+                            }} />
+                        </div>
+                        <div className="flex flex-col gap-2 mb-4">
+                            <Button variant="outline" size="sm" onClick={() => document.getElementById('avatar-upload').click()} className="w-full justify-center">
+                                Update Photo
+                            </Button>
+                            <Button variant="outline" size="sm" className="w-full justify-center text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50">
+                                Remove
+                            </Button>
                         </div>
                         <h3 className="font-bold text-lg text-slate-900 dark:text-white">{user?.name}</h3>
                         <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">System Administrator</p>

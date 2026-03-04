@@ -149,10 +149,20 @@ const LoginPage = () => {
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300">
+                    <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300"
+                        onClick={() => console.log('Google login clicked - ready for backend integration')}
+                    >
                         Google
                     </Button>
-                    <Button variant="outline" className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300">
+                    <Button
+                        variant="outline"
+                        type="button"
+                        className="w-full justify-center font-normal dark:border-slate-700 dark:text-slate-300"
+                        onClick={() => console.log('GitHub login clicked - ready for backend integration')}
+                    >
                         GitHub
                     </Button>
                 </div>

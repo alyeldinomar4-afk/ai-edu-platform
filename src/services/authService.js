@@ -46,7 +46,7 @@ export const authService = {
                     name: 'System Admin',
                     email: 'admin@edu.com',
                     role: 'admin',
-                    avatar: 'https://i.pravatar.cc/150?u=admin'
+                    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&q=80'
                 };
                 return {
                     user: adminUser,
@@ -61,7 +61,7 @@ export const authService = {
                     name: 'Test Student',
                     email: 'user@test.com',
                     role: 'learner',
-                    avatar: 'https://i.pravatar.cc/150?u=student'
+                    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&q=80'
                 };
                 return {
                     user: studentUser,
@@ -76,7 +76,7 @@ export const authService = {
                     name: 'Test Instructor',
                     email: 'instructor@test.com',
                     role: 'instructor',
-                    avatar: 'https://i.pravatar.cc/150?u=instructor'
+                    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&q=80'
                 };
                 return {
                     user: instructorUser,

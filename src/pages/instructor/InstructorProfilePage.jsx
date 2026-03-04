@@ -87,15 +87,28 @@ const InstructorProfilePage = () => {
                     <div className="px-6 sm:px-8 pb-8">
                         {/* Avatar */}
                         <div className="relative -mt-12 sm:-mt-16 mb-4 flex justify-between items-end">
-                            <div className="relative inline-block">
+                            <div className="relative inline-block group cursor-pointer" onClick={() => document.getElementById('instructor-avatar-upload').click()}>
                                 <img
                                     src={user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "Instructor") + "&background=random"}
                                     alt="Profile"
-                                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white dark:border-slate-900 bg-white"
+                                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white dark:border-slate-900 bg-white transition-opacity group-hover:opacity-75"
                                 />
-                                <button className="absolute bottom-0 right-0 sm:bottom-2 sm:right-2 p-2 bg-primary text-white rounded-full hover:bg-primary-600 transition-colors shadow-md border-2 border-white dark:border-slate-900">
-                                    <Camera size={14} className="sm:w-4 sm:h-4" />
-                                </button>
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 rounded-full">
+                                    <Camera size={24} className="text-white drop-shadow-md" />
+                                </div>
+                                <input type="file" id="instructor-avatar-upload" className="hidden" accept="image/*" onChange={(e) => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        alert("Photo updated successfully! (Mock)");
+                                    }
+                                }} />
+                            </div>
+                            <div className="mt-2 mb-4 flex gap-2 flex-wrap">
+                                <Button onClick={() => document.getElementById('instructor-avatar-upload').click()} size="sm">
+                                    Update Photo
+                                </Button>
+                                <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50">
+                                    Remove
+                                </Button>
                             </div>
                         </div>
 

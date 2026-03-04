@@ -66,19 +66,24 @@ const LearnerProfilePage = () => {
                         <User className="text-primary w-5 h-5" /> Profile Picture
                     </h2>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                        <div className="relative">
+                        <div className="relative group cursor-pointer" onClick={() => document.getElementById('learner-avatar-upload').click()}>
                             <img
                                 src={user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "User") + "&background=random"}
                                 alt="Profile"
-                                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-100 dark:border-slate-800"
+                                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-100 dark:border-slate-800 transition-opacity group-hover:opacity-75"
                             />
-                            <button className="absolute bottom-0 right-0 sm:bottom-2 sm:right-2 p-2 bg-primary text-white rounded-full hover:bg-primary-600 transition-colors shadow-md">
-                                <Camera size={16} />
-                            </button>
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 rounded-full">
+                                <Camera size={24} className="text-white drop-shadow-md" />
+                            </div>
+                            <input type="file" id="learner-avatar-upload" className="hidden" accept="image/*" onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                    alert("Photo updated successfully! (Mock)");
+                                }
+                            }} />
                         </div>
                         <div>
                             <div className="flex flex-wrap gap-3 mb-3">
-                                <Button size="sm">Upload New Photo</Button>
+                                <Button size="sm" onClick={() => document.getElementById('learner-avatar-upload').click()}>Upload New Photo</Button>
                                 <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50">Remove</Button>
                             </div>
                             <p className="text-sm text-slate-500 dark:text-slate-400">
