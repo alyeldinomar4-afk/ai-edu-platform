@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '../../auth/useAuth';
 import { motion } from 'framer-motion';
-import { User, Mail, Camera, Lock, Save, Shield, Link as LinkIcon, Twitter, Linkedin, Globe, Briefcase } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { User, Mail, Camera, Lock, Save, Shield, Link as LinkIcon, Twitter, Linkedin, Globe, Briefcase, ExternalLink } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 const InstructorProfilePage = () => {
@@ -62,9 +63,16 @@ const InstructorProfilePage = () => {
                     <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Instructor Profile</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">Manage your public profile, bio, and security settings.</p>
                 </div>
-                <Button onClick={handleSaveProfile} disabled={isSavingProfile}>
-                    {isSavingProfile ? 'Saving...' : <><Save size={16} className="mr-2" /> Save Profile</>}
-                </Button>
+                <div className="flex gap-3 w-full sm:w-auto mt-4 sm:mt-0">
+                    <Link to={`/instructor/user/${encodeURIComponent((user?.name || '').replace(/\s+/g, '-').toLowerCase())}`} className="flex-1 sm:flex-none">
+                        <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                            <ExternalLink size={16} /> Public Profile
+                        </Button>
+                    </Link>
+                    <Button onClick={handleSaveProfile} disabled={isSavingProfile} className="flex-1 sm:flex-none">
+                        {isSavingProfile ? 'Saving...' : <><Save size={16} className="mr-2" /> Save Profile</>}
+                    </Button>
+                </div>
             </motion.div>
 
             <div className="space-y-6">

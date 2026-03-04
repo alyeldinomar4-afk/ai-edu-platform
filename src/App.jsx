@@ -22,6 +22,7 @@ import InstructorProfilePage from './pages/instructor/InstructorProfilePage';
 import InstructorQAPage from './pages/instructor/InstructorQAPage';
 import InstructorReviewsPage from './pages/instructor/InstructorReviewsPage';
 import InstructorAnnouncementsPage from './pages/instructor/InstructorAnnouncementsPage';
+import PublicInstructorProfilePage from './pages/instructor/PublicInstructorProfilePage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminProfilePage from './pages/admin/AdminProfilePage';
 
@@ -45,6 +46,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/courses" element={<CoursesPage />} />
             <Route path="/courses/:id" element={<CourseDetailsPage />} />
+            <Route path="/instructor/user/:name" element={<PublicInstructorProfilePage />} />
             <Route path="/ai-demo" element={<AIDemoPage />} />
           </Route>
 

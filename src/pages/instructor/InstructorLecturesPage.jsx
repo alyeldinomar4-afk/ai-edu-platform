@@ -14,7 +14,8 @@ import {
     Calendar,
     X,
     Edit,
-    PauseCircle
+    PauseCircle,
+    FileText
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
@@ -384,6 +385,30 @@ const InstructorLecturesPage = () => {
                                             <option value="draft">Private (Draft)</option>
                                             <option value="pending">Awaiting Review (Pending)</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Lecture Resources</label>
+                                    <div
+                                        className="w-full border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer group"
+                                        onClick={() => document.getElementById('resource-file-upload').click()}
+                                    >
+                                        <FileText className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors mb-2" />
+                                        <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Click to upload resource files</p>
+                                        <p className="text-xs text-slate-500 mt-1">PDF, DOCX, ZIP up to 50MB</p>
+                                        <input
+                                            type="file"
+                                            id="resource-file-upload"
+                                            className="hidden"
+                                            multiple
+                                            accept=".pdf,.doc,.docx,.zip,.rar"
+                                            onChange={(e) => {
+                                                if (e.target.files && e.target.files.length > 0) {
+                                                    alert(`${e.target.files.length} file(s) selected for upload.`);
+                                                }
+                                            }}
+                                        />
                                     </div>
                                 </div>
 

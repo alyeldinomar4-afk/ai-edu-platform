@@ -6,9 +6,11 @@ import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 import { courses } from '../../data/mockData';
+import { useAuth } from '../../auth/useAuth';
 
 const CourseDetailsPage = () => {
     const { id } = useParams();
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('overview');
     const [isLoading, setIsLoading] = useState(true);
     const [reviewRating, setReviewRating] = useState(0);
@@ -120,10 +122,10 @@ const CourseDetailsPage = () => {
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                     <User className="w-4 h-4 shrink-0 text-slate-400" />
-                                    <span className="truncate max-w-[150px] sm:max-w-none">
+                                    <Link to={`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`} className="truncate max-w-[150px] sm:max-w-none hover:text-primary transition-colors cursor-pointer block">
                                         <span className="hidden sm:inline text-slate-400">Created by </span>
-                                        <span className="text-white font-medium">{course.instructor}</span>
-                                    </span>
+                                        <span className="text-white font-medium underline decoration-primary/50 underline-offset-4">{course.instructor}</span>
+                                    </Link>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-slate-400">
                                     <Clock className="w-4 h-4 shrink-0" />
@@ -232,7 +234,9 @@ const CourseDetailsPage = () => {
                                                     <img src={`https://ui-avatars.com/api/?name=${course.instructor}&background=random`} alt={course.instructor} className="w-full h-full object-cover" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">{course.instructor}</h3>
+                                                    <Link to={`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`} className="block hover:opacity-80 transition-opacity">
+                                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 hover:text-primary transition-colors">{course.instructor}</h3>
+                                                    </Link>
                                                     <p className="text-primary font-medium text-sm mb-4">Senior Instructor & Developer</p>
                                                     <div className="flex gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
                                                         <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-primary text-primary" /> 4.8 Rating</div>
@@ -388,9 +392,17 @@ const CourseDetailsPage = () => {
                                     <span className="text-lg text-slate-400 dark:text-slate-500 line-through mb-1">${(course.price * 1.5).toFixed(2)}</span>
                                     <span className="text-sm font-semibold text-green-600 dark:text-green-400 mb-1 ml-auto">33% OFF</span>
                                 </div>
-                                <Link to={`/courses/${id}/learn`}>
-                                    <Button className="w-full mb-3" size="lg">Enroll Now</Button>
-                                </Link>
+
+                                {user?.role === 'instructor' && user?.name === course.instructor ? (
+                                    <Link to={`/instructor/dashboard`}>
+                                        <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)] hover:-translate-y-0.5 transition-all" size="lg">Manage Course</Button>
+                                    </Link>
+                                ) : (
+                                    <Link to={`/courses/${id}/learn`}>
+                                        <Button className="w-full mb-3" size="lg">Enroll Now</Button>
+                                    </Link>
+                                )}
+
                                 <p className="text-xs text-center text-slate-500 dark:text-slate-400">30-Day Money-Back Guarantee</p>
                             </div>
 

@@ -1,9 +1,10 @@
 import { Star, Clock, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../ui/Button';
 
 const CourseCard = ({ course }) => {
+    const navigate = useNavigate();
     return (
         <motion.div
             whileHover={{ y: -5 }}
@@ -59,7 +60,15 @@ const CourseCard = ({ course }) => {
                 </div>
 
                 <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white mb-1 line-clamp-2 leading-snug">{course.title}</h3>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-1 sm:line-clamp-1">{course.instructor}</p>
+                <button
+                    className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 px-2.5 py-1 rounded-lg transition-colors w-fit mb-4 text-left line-clamp-1 sm:line-clamp-1 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    onClick={(e) => {
+                        e.preventDefault(); // Prevent navigating if this card is inside a Link
+                        navigate(`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`);
+                    }}
+                >
+                    {course.instructor}
+                </button>
 
                 <div className="flex items-center gap-4 text-xs text-slate-400 dark:text-slate-500 mb-4 mt-auto">
                     <div className="flex items-center gap-1">
