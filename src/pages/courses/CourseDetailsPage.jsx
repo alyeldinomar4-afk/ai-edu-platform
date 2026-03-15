@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Star, Clock, BookOpen, User, DollarSign, CheckCircle, PlayCircle, BarChart, X } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Star, Clock, BookOpen, User, DollarSign, CheckCircle, PlayCircle, BarChart, X, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
@@ -10,7 +10,12 @@ import { useAuth } from '../../auth/useAuth';
 
 const CourseDetailsPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { user } = useAuth();
+
+    // TODO: Replace with real purchase check from backend
+    const purchasedCourses = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
+    const isPurchased = purchasedCourses.includes(parseInt(id));
     const [activeTab, setActiveTab] = useState('overview');
     const [isLoading, setIsLoading] = useState(true);
     const [reviewRating, setReviewRating] = useState(0);
@@ -166,7 +171,27 @@ const CourseDetailsPage = () => {
                             </div>
 
                             {/* Tab Content */}
-                            <div className="p-6 md:p-8 min-h-[400px]">
+                            <div className="p-6 md:p-8 min-h-[400px] relative">
+                                {/* Locked Course Overlay */}
+                                {!isPurchased && (
+                                    <div className="absolute inset-0 z-10 bg-white/80 dark:bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center rounded-b-xl">
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="text-center px-6"
+                                        >
+                                            <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                                <Lock className="w-9 h-9 text-slate-400 dark:text-slate-500" />
+                                            </div>
+                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">This course is locked</h3>
+                                            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-xs mx-auto">Buy the course to access videos and all course content.</p>
+                                            <Button onClick={() => navigate(`/checkout/${id}`)} size="lg" className="shadow-[0_4px_14px_0_rgb(79,70,229,0.39)]">
+                                                <Lock className="w-4 h-4" />
+                                                Unlock Course
+                                            </Button>
+                                        </motion.div>
+                                    </div>
+                                )}
                                 <AnimatePresence mode="wait">
                                     <motion.div
                                         key={activeTab}
@@ -397,9 +422,19 @@ const CourseDetailsPage = () => {
                                     <Link to={`/instructor/dashboard`}>
                                         <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)] hover:-translate-y-0.5 transition-all" size="lg">Manage Course</Button>
                                     </Link>
-                                ) : (
+                                ) : isPurchased ? (
                                     <Link to={`/courses/${id}/learn`}>
-                                        <Button className="w-full mb-3" size="lg">Enroll Now</Button>
+                                        <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 transition-all bg-green-500 hover:bg-green-600" size="lg">
+                                            <PlayCircle className="w-4 h-4" />
+                                            Continue Learning
+                                        </Button>
+                                    </Link>
+                                ) : (
+                                    <Link to={`/checkout/${id}`}>
+                                        <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 transition-all" size="lg">
+                                            <Lock className="w-4 h-4" />
+                                            Buy Course
+                                        </Button>
                                     </Link>
                                 )}
 

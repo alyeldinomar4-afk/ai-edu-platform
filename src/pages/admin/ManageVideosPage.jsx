@@ -124,14 +124,13 @@ const ManageVideosPage = () => {
     };
 
     const togglePublish = (id) => {
-        setVideos(prev => prev.map(v => {
-            if (v.id === id) {
-                const newStatus = v.status === 'published' ? 'draft' : 'published';
-                toast.success(`Video ${newStatus === 'published' ? 'published' : 'unpublished'} successfully!`);
-                return { ...v, status: newStatus };
-            }
-            return v;
-        }));
+        const video = videos.find(v => v.id === id);
+        if (!video) return;
+
+        const newStatus = video.status === 'published' ? 'draft' : 'published';
+        toast.success(`Video ${newStatus === 'published' ? 'published' : 'unpublished'} successfully!`);
+
+        setVideos(prev => prev.map(v => v.id === id ? { ...v, status: newStatus } : v));
     };
 
     const handleAddVideo = (data) => {

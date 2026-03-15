@@ -14,6 +14,8 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import AIDemoPage from './pages/AIDemoPage';
+import CheckoutPage from './pages/checkout/CheckoutPage';
+import PaymentSuccessPage from './pages/checkout/PaymentSuccessPage';
 
 // Dashboards
 import LearnerDashboardPage from './pages/learner/LearnerDashboardPage';
@@ -50,6 +52,8 @@ function App() {
             <Route path="/courses/:id" element={<CourseDetailsPage />} />
             <Route path="/instructor/user/:name" element={<PublicInstructorProfilePage />} />
             <Route path="/ai-demo" element={<AIDemoPage />} />
+            <Route path="/checkout/:courseId" element={<CheckoutPage />} />
+            <Route path="/payment-success" element={<PaymentSuccessPage />} />
           </Route>
 
           {/* Learning Route (Fullscreen) */}

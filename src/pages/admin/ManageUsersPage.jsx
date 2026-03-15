@@ -73,14 +73,13 @@ const ManageUsersPage = () => {
     };
 
     const toggleStatus = (id) => {
-        setUsers(users.map(u => {
-            if (u.id === id) {
-                const newStatus = u.status === 'active' ? 'suspended' : 'active';
-                toast.success(`User ${newStatus === 'active' ? 'activated' : 'suspended'} successfully!`);
-                return { ...u, status: newStatus };
-            }
-            return u;
-        }));
+        const userToToggle = users.find(u => u.id === id);
+        if (!userToToggle) return;
+
+        const newStatus = userToToggle.status === 'active' ? 'suspended' : 'active';
+        toast.success(`User ${newStatus === 'active' ? 'activated' : 'suspended'} successfully!`);
+
+        setUsers(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
         setShowActionMenu(null);
     };
 
