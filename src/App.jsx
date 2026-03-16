@@ -55,7 +55,7 @@ function App() {
       <ErrorBoundary>
         <Router>
           <ScrollToTop />
-          <Toaster position="top-right" />
+          <Toaster position={i18n.language === 'ar' ? 'top-left' : 'top-right'} />
           <Routes>
             {/* Public Routes */}
             <Route element={<MainLayout />}>

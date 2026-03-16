@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, MessageSquare, FileText, HelpCircle, List, Zap, Send, Clock, User } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import VideoPlayer from '../../components/features/video/VideoPlayer';
@@ -10,6 +11,7 @@ import { lectures } from '../../data/mockData';
 
 const VideoPlayerPage = () => {
     const { courseId } = useParams();
+    const { t } = useTranslation();
     const [rightSidebarTab, setRightSidebarTab] = useState('playlist'); // playlist, ai
     const [activeTab, setActiveTab] = useState('overview');
     const [videoState, setVideoState] = useState({ currentTime: 0, isPlaying: false });
@@ -61,7 +63,7 @@ const VideoPlayerPage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                     <Button size="sm" variant="outline" className="hidden md:flex bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800">
-                        <HelpCircle size={16} /> Help
+                        <HelpCircle size={16} /> {t('videoPlayer.header.help')}
                     </Button>
                 </div>
             </header>
@@ -79,12 +81,12 @@ const VideoPlayerPage = () => {
                     <div className="p-4 md:p-6">
                         <div className="border-b border-slate-800 mb-6 flex gap-6 overflow-x-auto no-scrollbar">
                             {[
-                                { id: 'playlist', label: 'Content', icon: List, mobileOnly: true },
-                                { id: 'ai', label: 'AI Tutor', icon: Zap, mobileOnly: true },
-                                { id: 'overview', label: 'Overview', icon: FileText },
-                                { id: 'quiz', label: 'Quiz', icon: HelpCircle },
-                                { id: 'comments', label: 'Q&A', icon: HelpCircle },
-                                { id: 'resources', label: 'Resources', icon: FileText },
+                                { id: 'playlist', label: t('videoPlayer.tabs.playlist'), icon: List, mobileOnly: true },
+                                { id: 'ai', label: t('videoPlayer.tabs.ai'), icon: Zap, mobileOnly: true },
+                                { id: 'overview', label: t('videoPlayer.tabs.overview'), icon: FileText },
+                                { id: 'quiz', label: t('videoPlayer.tabs.quiz'), icon: HelpCircle },
+                                { id: 'comments', label: t('videoPlayer.tabs.comments'), icon: HelpCircle },
+                                { id: 'resources', label: t('videoPlayer.tabs.resources'), icon: FileText },
                             ].map(tab => (
                                 <button
                                     key={tab.id}
@@ -119,7 +121,7 @@ const VideoPlayerPage = () => {
 
                             {activeTab === 'overview' && (
                                 <div className="max-w-3xl">
-                                    <h2 className="text-xl font-bold text-white mb-4">About this lecture</h2>
+                                    <h2 className="text-xl font-bold text-white mb-4">{t('videoPlayer.overview.title')}</h2>
                                     <p className="leading-relaxed text-slate-400">
                                         In this lecture, we explore the fundamental building blocks of neural networks.
                                         We'll start with the biological inspiration behind artificial neurons and mathematically define the perceptron.
@@ -135,18 +137,18 @@ const VideoPlayerPage = () => {
                                 <div className="space-y-6">
                                     {/* Question Submission Form */}
                                     <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 mb-8">
-                                        <h3 className="text-sm font-semibold text-slate-200 mb-3">Ask a question to the instructor</h3>
+                                        <h3 className="text-sm font-semibold text-slate-200 mb-3">{t('videoPlayer.discussion.askTitle')}</h3>
                                         <div className="flex gap-4">
-                                            <div className="w-8 h-8 rounded-full bg-slate-700 shrink-0 flex items-center justify-center text-[10px] font-bold">YOU</div>
+                                            <div className="w-8 h-8 rounded-full bg-slate-700 shrink-0 flex items-center justify-center text-[10px] font-bold">{t('videoPlayer.discussion.you')}</div>
                                             <div className="flex-1">
                                                 <textarea
-                                                    placeholder="Type your question here (e.g. Can you explain the difference between RNN and LSTM?)"
+                                                    placeholder={t('videoPlayer.discussion.placeholder')}
                                                     rows="2"
                                                     className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none mb-2"
                                                 />
                                                 <div className="flex justify-end">
                                                     <Button size="sm">
-                                                        <Send size={14} className="mr-2" /> Post Question
+                                                        <Send size={14} className="mr-2" /> {t('videoPlayer.discussion.postQuestion')}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -156,8 +158,8 @@ const VideoPlayerPage = () => {
                                     {/* Questions List */}
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <h3 className="font-bold text-white uppercase text-[10px] tracking-wider text-slate-500">Discussion forum</h3>
-                                            <span className="text-xs text-slate-500">2 questions asked</span>
+                                            <h3 className="font-bold text-white uppercase text-[10px] tracking-wider text-slate-500">{t('videoPlayer.discussion.forumTitle')}</h3>
+                                            <span className="text-xs text-slate-500">{t('videoPlayer.discussion.questionsCount', { count: 2 })}</span>
                                         </div>
 
                                         {[
@@ -195,15 +197,15 @@ const VideoPlayerPage = () => {
                                                         </div>
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-2 mb-1">
-                                                                <p className="text-xs font-bold text-primary">Instructor Reply</p>
-                                                                <span className="text-[10px] text-slate-600 px-1.5 py-0.5 bg-slate-800 rounded">Official</span>
+                                                                <p className="text-xs font-bold text-primary">{t('videoPlayer.discussion.instructorReply')}</p>
+                                                                <span className="text-[10px] text-slate-600 px-1.5 py-0.5 bg-slate-800 rounded">{t('videoPlayer.discussion.official')}</span>
                                                             </div>
                                                             <p className="text-xs text-slate-400 leading-relaxed italic">"{q.reply}"</p>
                                                         </div>
                                                     </div>
                                                 ) : (
                                                     <div className="mt-2 text-[10px] font-medium text-yellow-600/70 italic flex items-center gap-1.5">
-                                                        <Clock size={10} /> Waiting for instructor's response...
+                                                        <Clock size={10} /> {t('videoPlayer.discussion.waitingResponse')}
                                                     </div>
                                                 )}
                                             </div>
@@ -240,13 +242,13 @@ const VideoPlayerPage = () => {
                             onClick={() => setRightSidebarTab('playlist')}
                             className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${rightSidebarTab === 'playlist' ? 'text-primary bg-primary/5 dark:bg-primary/10 border-b-2 border-primary' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                         >
-                            <List size={16} /> Content
+                            <List size={16} /> {t('videoPlayer.tabs.playlist')}
                         </button>
                         <button
                             onClick={() => setRightSidebarTab('ai')}
                             className={`flex-1 py-3 text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${rightSidebarTab === 'ai' ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 border-b-2 border-purple-600 dark:border-purple-400' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                         >
-                            <Zap size={16} /> AI Tutor
+                            <Zap size={16} /> {t('videoPlayer.tabs.ai')}
                         </button>
                     </div>
 

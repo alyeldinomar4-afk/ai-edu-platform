@@ -465,6 +465,11 @@
         "createCourse": "Create Course",
         "deleteConfirm": "Delete Course?",
         "deleteHint": "This action cannot be undone. All course data will be lost."
+      },
+      "toasts": {
+        "titleRequired": "Course title is required",
+        "createSuccess": "Course created successfully!",
+        "updateSuccess": "Course updated successfully!"
       }
     }
   },
@@ -621,6 +626,53 @@
       "progress": "Question {{current}} of {{total}}",
       "next": "Next Question",
       "results": "See Results"
+    }
+  },
+  "videoPlayer": {
+    "header": {
+      "help": "Help"
+    },
+    "tabs": {
+      "playlist": "Content",
+      "ai": "AI Tutor",
+      "overview": "Overview",
+      "quiz": "Quiz",
+      "comments": "Q&A",
+      "resources": "Resources"
+    },
+    "overview": {
+      "title": "About this lecture"
+    },
+    "discussion": {
+      "askTitle": "Ask a question to the instructor",
+      "you": "YOU",
+      "placeholder": "Type your question here (e.g. Can you explain the difference between RNN and LSTM?)",
+      "postQuestion": "Post Question",
+      "forumTitle": "Discussion forum",
+      "questionsCount": "{{count}} questions asked",
+      "instructorReply": "Instructor Reply",
+      "official": "Official",
+      "waitingResponse": "Waiting for instructor's response..."
+    },
+    "aiTutor": {
+      "title": "AI Tutor",
+      "liveSync": "Live Sync",
+      "explainSection": "Explain section",
+      "skip": "Skip",
+      "summarizePart": "Summarize part",
+      "summarizePrompt": "Can you summarize what happened in the last 30 seconds?",
+      "explainScene": "Explain scene",
+      "explainScenePrompt": "What am I seeing on the screen right now?",
+      "createQuiz": "Create quiz",
+      "createQuizPrompt": "Create a quiz based on the last few minutes.",
+        "placeholder": "Ask about the video...",
+      "defaultWelcome": "Hello! I'm watching this video with you. Feel free to ask me to summarize key points or explain complex concepts.",
+      "pausePrompt": "You paused at {{timestamp}}. Would you like me to explain what's happening in this section?",
+      "analyzingResponse": "Analyzing the video at {{timestamp}}... The instructor is discussing how this specific pattern optimizes performance."
+    },
+    "playlist": {
+      "title": "Course Content",
+      "section": "Section {{number}}"
     }
   }
 }

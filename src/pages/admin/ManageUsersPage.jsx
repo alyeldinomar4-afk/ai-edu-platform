@@ -159,14 +159,14 @@ const ManageUsersPage = () => {
             {/* Users Table */}
             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm min-h-[400px]">
                 <div className="overflow-x-auto">
-                    <table className={`w-full ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
+                    <table className="w-full text-left rtl:text-right">
                         <thead>
                             <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
                                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.user')}</th>
                                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.role')}</th>
                                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.joined')}</th>
                                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.status')}</th>
-                                <th className={`px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>{t('dashboard.admin.manageUsers.table.actions')}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right rtl:text-left">{t('dashboard.admin.manageUsers.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -209,8 +209,8 @@ const ManageUsersPage = () => {
                                             )}
                                         </div>
                                     </td>
-                                    <td className={`px-6 py-4 whitespace-nowrap ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>
-                                        <div className={`flex items-center ${t('dir') === 'rtl' ? 'justify-start' : 'justify-end'} gap-1`}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right rtl:text-left">
+                                        <div className="flex items-center justify-end gap-1">
                                             {/* Edit */}
                                             <button
                                                 onClick={() => { setEditingUser(user); setShowUserModal(true); }}

@@ -252,7 +252,7 @@ const ManageVideosPage = () => {
                                     <th className="px-6 py-4">{t('dashboard.admin.manageVideos.table.instructor')}</th>
                                     <th className="px-6 py-4">{t('dashboard.admin.manageVideos.table.stats')}</th>
                                     <th className="px-6 py-4">{t('dashboard.admin.manageVideos.table.status')}</th>
-                                    <th className={`px-6 py-4 ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>{t('dashboard.admin.manageVideos.table.actions')}</th>
+                                    <th className="px-6 py-4 text-right rtl:text-left">{t('dashboard.admin.manageVideos.table.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -279,7 +279,7 @@ const ManageVideosPage = () => {
                                                 {t(`dashboard.admin.manageVideos.${video.status}`)}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                                        <td className="px-6 py-4 whitespace-nowrap text-right rtl:text-left">
                                             <div className="flex justify-end gap-1 text-slate-500">
                                                 <button onClick={() => { setEditingVideo(video); setShowVideoModal(true); }} className="p-1.5 hover:bg-slate-100 rounded-lg"><Edit size={16} /></button>
                                                 <button onClick={() => togglePublish(video.id)} className={`p-1.5 rounded-lg ${video.status === 'published' ? 'hover:bg-amber-50 text-amber-500' : 'hover:bg-green-50 text-green-500'}`}>{video.status === 'published' ? <PauseCircle size={16} /> : <CheckCircle size={16} />}</button>

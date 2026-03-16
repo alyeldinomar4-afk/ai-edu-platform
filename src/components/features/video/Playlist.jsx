@@ -1,17 +1,20 @@
 import { CheckCircle, PlayCircle, Lock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils';
 
 const Playlist = ({ sections, currentLecture, onSelect }) => {
+    const { t, i18n } = useTranslation();
+    const isRTL = i18n.language === 'ar';
     return (
         <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 overflow-hidden h-full flex flex-col transition-colors">
             <div className="p-4 border-b border-slate-100 dark:border-slate-800">
-                <h3 className="font-bold text-slate-900 dark:text-white">Course Content</h3>
+                <h3 className="font-bold text-slate-900 dark:text-white">{t('videoPlayer.playlist.title')}</h3>
             </div>
             <div className="overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
                 {sections.map((section, sIdx) => (
                     <div key={sIdx} className="border-b border-slate-50 dark:border-slate-800 last:border-0">
                         <div className="bg-slate-50/50 dark:bg-slate-800/50 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                            Section {sIdx + 1}: {section.title}
+                            {t('videoPlayer.playlist.section', { number: sIdx + 1 })}: {section.title}
                         </div>
                         <div>
                             {section.lectures.map((lecture, lIdx) => {
@@ -25,8 +28,8 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                         onClick={() => !isLocked && onSelect(lecture)}
                                         disabled={isLocked}
                                         className={cn(
-                                            "w-full text-left px-4 py-3 flex items-start gap-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer",
-                                            isActive && "bg-primary/5 dark:bg-primary/10 hover:bg-primary/10 dark:hover:bg-primary/20 border-r-2 border-primary"
+                                            `w-full px-4 py-3 flex items-start gap-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/80 cursor-pointer ${isRTL ? 'text-right' : 'text-left'}`,
+                                            isActive && `bg-primary/5 dark:bg-primary/10 hover:bg-primary/10 dark:hover:bg-primary/20 border-primary ${isRTL ? 'border-l-2' : 'border-r-2'}`
                                         )}
                                     >
                                         <div className="mt-0.5 flex-shrink-0 relative">
@@ -44,7 +47,7 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="absolute -bottom-1 -right-1 z-10">
+                                            <div className={`absolute -bottom-1 z-10 ${isRTL ? '-left-1' : '-right-1'}`}>
                                                 {isCompleted ? (
                                                     <div className="bg-white dark:bg-slate-900 rounded-full p-0.5">
                                                         <CheckCircle className="w-3.5 h-3.5 text-green-500" />

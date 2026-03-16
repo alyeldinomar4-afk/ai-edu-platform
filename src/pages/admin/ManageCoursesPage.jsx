@@ -85,14 +85,14 @@ const ManageCoursesPage = () => {
                 {filteredCourses.length > 0 ? (
                     <>
                         <div className="overflow-x-auto">
-                            <table className={`w-full ${t('dir') === 'rtl' ? 'text-right' : 'text-left'} border-collapse`}>
+                            <table className={`w-full text-left rtl:text-right border-collapse`}>
                                 <thead>
                                     <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">
                                         <th className="p-4 font-semibold">{t('dashboard.admin.manageCourses.table.course')}</th>
                                         <th className="p-4 font-semibold hidden sm:table-cell">{t('dashboard.admin.manageCourses.table.instructor')}</th>
                                         <th className="p-4 font-semibold hidden md:table-cell">{t('dashboard.admin.manageCourses.table.category')}</th>
                                         <th className="p-4 font-semibold">{t('dashboard.admin.manageCourses.table.price')}</th>
-                                        <th className={`p-4 font-semibold ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>{t('dashboard.admin.manageCourses.table.actions')}</th>
+                                        <th className="p-4 font-semibold text-right rtl:text-left">{t('dashboard.admin.manageCourses.table.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -114,7 +114,7 @@ const ManageCoursesPage = () => {
                                                 </span>
                                             </td>
                                             <td className="p-4 font-medium text-slate-900 dark:text-white">${course.price}</td>
-                                            <td className={`p-4 ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>
+                                            <td className="p-4 text-right rtl:text-left">
                                                 <div className="flex justify-end gap-1">
                                                     <button
                                                         onClick={() => openEditModal(course)}

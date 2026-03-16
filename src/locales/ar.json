@@ -465,6 +465,11 @@
         "createCourse": "إنشاء الدورة",
         "deleteConfirm": "حذف الدورة؟",
         "deleteHint": "لا يمكن التراجع عن هذا الإجراء. ستفقد جميع بيانات الدورة."
+      },
+      "toasts": {
+        "titleRequired": "عنوان الدورة مطلوب",
+        "createSuccess": "تم إنشاء الدورة بنجاح!",
+        "updateSuccess": "تم تحديث الدورة بنجاح!"
       }
     }
   },
@@ -621,6 +626,53 @@
       "progress": "السؤال {{current}} من أصل {{total}}",
       "next": "السؤال التالي",
       "results": "مشاهدة النتائج"
+    }
+  },
+  "videoPlayer": {
+    "header": {
+      "help": "مساعدة"
+    },
+    "tabs": {
+      "playlist": "المحتوى",
+      "ai": "معلم الذكاء الاصطناعي",
+      "overview": "نظرة عامة",
+      "quiz": "اختبار",
+      "comments": "سؤال وجواب",
+      "resources": "الموارد"
+    },
+    "overview": {
+      "title": "عن هذه المحاضرة"
+    },
+    "discussion": {
+      "askTitle": "اطرح سؤالاً على المعلم",
+      "you": "أنت",
+      "placeholder": "اكتب سؤالك هنا (على سبيل المثال، هل يمكنك شرح الفرق بين RNN و LSTM؟)",
+      "postQuestion": "نشر السؤال",
+      "forumTitle": "منتدى النقاش",
+      "questionsCount": "{{count}} أسئلة مطروحة",
+      "instructorReply": "رد المعلم",
+      "official": "رسمي",
+      "waitingResponse": "في انتظار رد المعلم..."
+    },
+    "aiTutor": {
+      "title": "معلم الذكاء الاصطناعي",
+      "liveSync": "مزامنة مباشرة",
+      "explainSection": "شرح القسم",
+      "skip": "تخطي",
+      "summarizePart": "تلخيص الجزء",
+      "summarizePrompt": "هل يمكنك تلخيص ما حدث في آخر 30 ثانية؟",
+      "explainScene": "شرح المشهد",
+      "explainScenePrompt": "ما الذي أراه على الشاشة الآن؟",
+      "createQuiz": "إنشاء اختبار",
+      "createQuizPrompt": "قم بإنشاء اختبار بناءً على الدقائق القليلة الماضية.",
+      "placeholder": "اسأل عن الفيديو...",
+      "defaultWelcome": "مرحباً! أنا أشاهد هذا الفيديو معك. لا تتردد في أن تطلب مني تلخيص النقاط الرئيسية أو شرح المفاهيم المعقدة.",
+      "pausePrompt": "لقد توقفت مؤقتاً عند {{timestamp}}. هل ترغب في أن أشرح لك ما يحدث في هذا القسم؟",
+      "analyzingResponse": "جاري تحليل الفيديو عند {{timestamp}}... يناقش المعلم كيف يعمل هذا النمط المحدد على تحسين الأداء."
+    },
+    "playlist": {
+      "title": "محتوى الدورة",
+      "section": "القسم {{number}}"
     }
   }
 }

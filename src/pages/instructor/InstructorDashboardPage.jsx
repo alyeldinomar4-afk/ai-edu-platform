@@ -54,7 +54,7 @@ const InstructorDashboardPage = () => {
     const handleSave = async (e) => {
         e?.preventDefault();
         if (!formData.title.trim()) {
-            toast.error(t('instructor.modals.errorTitle', { defaultValue: 'Course title is required' }));
+            toast.error(t('dashboard.instructor.toasts.titleRequired', { defaultValue: 'Course title is required' }));
             return;
         }
 
@@ -67,14 +67,14 @@ const InstructorDashboardPage = () => {
             setCourses(prev => prev.map(c =>
                 c.id === editingCourse.id ? { ...c, ...formData, students: parseInt(formData.students) || 0 } : c
             ));
-            toast.success(t('instructor.modals.successUpdate', { defaultValue: 'Course updated successfully' }));
+            toast.success(t('dashboard.instructor.toasts.updateSuccess', { defaultValue: 'Course updated successfully' }));
         } else {
             setCourses(prev => [...prev, {
                 id: Date.now(),
                 ...formData,
                 students: parseInt(formData.students) || 0
             }]);
-            toast.success(t('instructor.modals.successCreate', { defaultValue: 'Course created successfully' }));
+            toast.success(t('dashboard.instructor.toasts.createSuccess', { defaultValue: 'Course created successfully' }));
         }
 
         setIsSaving(false);
@@ -142,14 +142,14 @@ const InstructorDashboardPage = () => {
                     <h2 className="text-lg font-bold text-slate-900 dark:text-white">{t('dashboard.instructor.yourCourses')}</h2>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left rtl:text-right text-sm">
                         <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 font-medium border-b border-slate-100 dark:border-slate-800">
                             <tr>
                                 <th className="px-4 sm:px-6 py-4">{t('dashboard.instructor.courseName')}</th>
                                 <th className="px-4 sm:px-6 py-4">{t('dashboard.instructor.students')}</th>
                                 <th className="px-4 sm:px-6 py-4 hidden sm:table-cell">{t('common.status')}</th>
                                 <th className="px-4 sm:px-6 py-4 hidden sm:table-cell">{t('dashboard.instructor.revenue')}</th>
-                                <th className="px-4 sm:px-6 py-4 text-right">{t('common.actions')}</th>
+                                <th className="px-4 sm:px-6 py-4 text-right rtl:text-left">{t('common.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -184,7 +184,7 @@ const InstructorDashboardPage = () => {
                                         </span>
                                     </td>
                                     <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell">{course.revenue}</td>
-                                    <td className="px-4 sm:px-6 py-4 text-right">
+                                    <td className="px-4 sm:px-6 py-4 text-right rtl:text-left">
                                         <div className="flex justify-end gap-1">
                                             <button
                                                 onClick={() => openEditModal(course)}

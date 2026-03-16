@@ -292,7 +292,7 @@ const InstructorLecturesPage = () => {
                                                     </span>
                                                 </td>
                                                 <td className={`px-8 py-5 ${isRTL ? 'text-left' : 'text-right'}`}>
-                                                    <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'} gap-2 opacity-100 transition-opacity`}>
+                                                    <div className="flex justify-end gap-2 opacity-100 transition-opacity">
                                                         <button
                                                             onClick={() => { setEditingVideo(video); setShowVideoModal(true); }}
                                                             className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all"
@@ -364,7 +364,7 @@ const InstructorLecturesPage = () => {
                                 const formData = new FormData(e.target);
                                 const data = Object.fromEntries(formData);
                                 if (!data.title.trim()) {
-                                    toast.error('Lecture title is required');
+                                    toast.error(t('dashboard.instructor.lectures.toasts.titleRequired'));
                                     return;
                                 }
                                 const finalData = { ...data, quiz: showQuizBuilder ? quizQuestions : [] };

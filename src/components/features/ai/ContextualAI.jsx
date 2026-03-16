@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Send, Zap, Bot, User, Clock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const formatTime = (seconds) => {
     if (isNaN(seconds) || seconds < 0) return '00:00';
@@ -9,8 +10,10 @@ const formatTime = (seconds) => {
 };
 
 const ContextualAI = ({ videoState, addMarker }) => {
+    const { t, i18n } = useTranslation();
+    const isRTL = i18n.language === 'ar';
     const [messages, setMessages] = useState([
-        { id: 1, role: 'ai', text: "Hello! I'm watching this video with you. Feel free to ask me to summarize key points or explain complex concepts." }
+        { id: 1, role: 'ai', text: t('videoPlayer.aiTutor.defaultWelcome') }
     ]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -57,7 +60,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
                 setMessages(prev => [...prev, {
                     id: promptId,
                     role: 'ai',
-                    text: `You paused at ${timestamp}. Would you like me to explain what's happening in this section?`,
+                    text: t('videoPlayer.aiTutor.pausePrompt', { timestamp }),
                     isPrompt: true,
                     timestamp: currentTime
                 }]);
@@ -98,7 +101,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
             setMessages(prev => [...prev, {
                 id: Date.now() + 1,
                 role: 'ai',
-                text: `Analyzing the video at ${formatTime(currentTime)}... The instructor is discussing how this specific pattern optimizes performance.`,
+                text: t('videoPlayer.aiTutor.analyzingResponse', { timestamp: formatTime(currentTime) }),
                 timestamp: currentTime
             }]);
         }, 1500);
@@ -111,12 +114,12 @@ const ContextualAI = ({ videoState, addMarker }) => {
                     <div className="p-1.5 bg-primary/10 rounded-lg shadow-inner">
                         <Zap className="w-4 h-4 text-primary" />
                     </div>
-                    <h3 className="font-bold text-slate-900 dark:text-white">AI Tutor</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white">{t('videoPlayer.aiTutor.title')}</h3>
                 </div>
                 {videoState?.isPlaying && (
                     <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-500/10 rounded-full border border-green-500/20">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-[10px] font-bold text-green-600 dark:text-green-400 tracking-tight uppercase">Live Sync</span>
+                        <span className="text-[10px] font-bold text-green-600 dark:text-green-400 tracking-tight uppercase">{t('videoPlayer.aiTutor.liveSync')}</span>
                     </div>
                 )}
             </div>
@@ -128,8 +131,8 @@ const ContextualAI = ({ videoState, addMarker }) => {
                             {msg.role === 'ai' ? <Bot size={16} /> : <User size={16} />}
                         </div>
                         <div className={`group relative p-3 rounded-2xl max-w-[85%] text-sm transition-all duration-200 ${msg.role === 'ai'
-                            ? 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-tl-none shadow-sm'
-                            : 'bg-primary text-white rounded-tr-none shadow-md shadow-primary/10'
+                            ? `bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 shadow-sm ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'}`
+                            : `bg-primary text-white shadow-md shadow-primary/10 ${isRTL ? 'rounded-tl-none' : 'rounded-tr-none'}`
                             }`}>
 
                             {msg.timestamp !== undefined && (
@@ -146,13 +149,13 @@ const ContextualAI = ({ videoState, addMarker }) => {
                                         onClick={() => handleSend(null, "Yes, please explain this section.")}
                                         className="text-[10px] font-bold bg-primary text-white px-3.5 py-2 rounded-lg hover:bg-primary-600 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20"
                                     >
-                                        Explain section
+                                        {t('videoPlayer.aiTutor.explainSection')}
                                     </button>
                                     <button
                                         onClick={() => setMessages(prev => prev.filter(m => m.id !== msg.id))}
                                         className="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3.5 py-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-all"
                                     >
-                                        Skip
+                                        {t('videoPlayer.aiTutor.skip')}
                                     </button>
                                 </div>
                             )}
@@ -164,7 +167,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
                         <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20">
                             <Bot size={16} />
                         </div>
-                        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl rounded-tl-none shadow-sm flex gap-1.5 items-center">
+                        <div className={`bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-2xl shadow-sm flex gap-1.5 items-center ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'}`}>
                             <div className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" />
                             <div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce [animation-delay:-0.15s]" />
                             <div className="w-1.5 h-1.5 bg-primary/80 rounded-full animate-bounce [animation-delay:-0.3s]" />
@@ -177,9 +180,9 @@ const ContextualAI = ({ videoState, addMarker }) => {
             <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0">
                 <div className="mb-3 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                     {[
-                        { label: "Summarize part", text: "Can you summarize what happened in the last 30 seconds?" },
-                        { label: "Explain scene", text: "What am I seeing on the screen right now?" },
-                        { label: "Create quiz", text: "Create a quiz based on the last few minutes." }
+                        { label: t('videoPlayer.aiTutor.summarizePart'), text: t('videoPlayer.aiTutor.summarizePrompt') },
+                        { label: t('videoPlayer.aiTutor.explainScene'), text: t('videoPlayer.aiTutor.explainScenePrompt') },
+                        { label: t('videoPlayer.aiTutor.createQuiz'), text: t('videoPlayer.aiTutor.createQuizPrompt') }
                     ].map((btn, i) => (
                         <button
                             key={i}
@@ -193,15 +196,15 @@ const ContextualAI = ({ videoState, addMarker }) => {
                 <form onSubmit={handleSend} className="relative">
                     <input
                         type="text"
-                        placeholder="Ask about the video..."
+                        placeholder={t('videoPlayer.aiTutor.placeholder')}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        className="w-full pl-4 pr-12 py-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-inner"
+                        className={`w-full py-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-inner ${isRTL ? 'pr-4 pl-12' : 'pl-4 pr-12'}`}
                     />
                     <button
                         type="submit"
                         disabled={!input.trim()}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 text-primary hover:bg-primary/10 rounded-xl transition-all disabled:opacity-30 disabled:hover:bg-transparent"
+                        className={`absolute top-1/2 -translate-y-1/2 p-2 text-primary hover:bg-primary/10 rounded-xl transition-all disabled:opacity-30 disabled:hover:bg-transparent ${isRTL ? 'left-2.5' : 'right-2.5'}`}
                     >
                         <Send size={18} />
                     </button>
