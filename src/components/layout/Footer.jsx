@@ -1,9 +1,30 @@
 import { Link } from 'react-router-dom';
 import { Github, Twitter, Linkedin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import logoLight from '../../assets/logo-light.png';
 import logoDark from '../../assets/logo-dark.png';
 
 const Footer = () => {
+    const { t } = useTranslation();
+
+    const footerLinks = {
+        platform: [
+            { name: t('nav.courses'), path: '/courses' },
+            { name: t('nav.instructors'), path: '/instructors' },
+            { name: t('nav.aiDemo'), path: '/ai-demo' },
+        ],
+        company: [
+            { name: t('footer.company'), path: '/about' },
+            { name: t('footer.careers'), path: '#' },
+            { name: t('footer.blog'), path: '#' },
+        ],
+        legal: [
+            { name: t('footer.privacyPolicy'), path: '#' },
+            { name: t('footer.termsOfService'), path: '#' },
+            { name: t('footer.cookiePolicy'), path: '#' },
+        ]
+    };
+
     return (
         <footer className="bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 pt-16 pb-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,42 +44,45 @@ const Footer = () => {
                             </span>
                         </Link>
                         <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-                            Empowering the next generation of learners with AI-driven personalized education.
+                            {t('footer.tagline')}
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Platform</h3>
-                        <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-                            <li><Link to="/courses" className="hover:text-primary transition-colors">Browse Courses</Link></li>
-                            <li><Link to="/mentors" className="hover:text-primary transition-colors">Find a Mentor</Link></li>
-                            <li><Link to="/pricing" className="hover:text-primary transition-colors">Pricing</Link></li>
-                            <li><Link to="/for-business" className="hover:text-primary transition-colors">For Business</Link></li>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase text-xs tracking-widest">{t('footer.platform')}</h4>
+                        <ul className="space-y-4">
+                            {footerLinks.platform.map((link) => (
+                                <li key={link.name}>
+                                    <Link to={link.path} className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm">{link.name}</Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
-
                     <div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Resources</h3>
-                        <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-                            <li><Link to="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
-                            <li><Link to="/careers" className="hover:text-primary transition-colors">Careers</Link></li>
-                            <li><Link to="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase text-xs tracking-widest">{t('footer.company')}</h4>
+                        <ul className="space-y-4">
+                            {footerLinks.company.map((link) => (
+                                <li key={link.name}>
+                                    <Link to={link.path} className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm">{link.name}</Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
-
                     <div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Legal</h3>
-                        <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-                            <li><Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-                            <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
-                            <li><Link to="/cookies" className="hover:text-primary transition-colors">Cookie Policy</Link></li>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase text-xs tracking-widest">{t('footer.legal')}</h4>
+                        <ul className="space-y-4">
+                            {footerLinks.legal.map((link) => (
+                                <li key={link.name}>
+                                    <Link to={link.path} className="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-sm">{link.name}</Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
 
-                <div className="border-t border-gray-100 dark:border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-slate-400 dark:text-slate-500 text-sm">
-                        © {new Date().getFullYear()} Nexora AI. All rights reserved.
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-gray-100 dark:border-slate-800">
+                    <p className="text-slate-500 text-xs">
+                        © {new Date().getFullYear()} Nexora AI. {t('footer.allRightsReserved')}
                     </p>
                     <div className="flex gap-4 text-slate-400 dark:text-slate-500">
                         <a href="#" className="hover:text-primary transition-colors"><Twitter size={20} /></a>

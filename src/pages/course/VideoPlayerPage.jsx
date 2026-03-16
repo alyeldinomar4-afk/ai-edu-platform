@@ -6,6 +6,7 @@ import VideoPlayer from '../../components/features/video/VideoPlayer';
 import Playlist from '../../components/features/video/Playlist';
 import ContextualAI from '../../components/features/ai/ContextualAI';
 import Quiz from '../../components/features/course/Quiz';
+import { lectures } from '../../data/mockData';
 
 const VideoPlayerPage = () => {
     const { courseId } = useParams();
@@ -24,9 +25,10 @@ const VideoPlayerPage = () => {
         }
     };
 
-    // Mock data
-    const courseTitle = "Machine Learning Fundamentals";
-    const currentLecture = { title: "Introduction to Neural Networks" };
+    // Find current lecture from mock data or fallback
+    const lectureData = lectures.find(l => l.id === parseInt(courseId)) || lectures[0];
+    const courseTitle = lectureData?.course || "Machine Learning Fundamentals";
+    const currentLecture = { title: lectureData?.title || "Introduction to Neural Networks" };
     const playlistData = [
         {
             title: "Introduction",
@@ -126,7 +128,7 @@ const VideoPlayerPage = () => {
                             )}
                             {activeTab === 'quiz' && (
                                 <div className="max-w-2xl">
-                                    <Quiz />
+                                    <Quiz questions={lectureData?.quiz} />
                                 </div>
                             )}
                             {activeTab === 'comments' && (

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import {
     Users,
     Search,
@@ -19,6 +20,7 @@ import {
 import Button from '../../components/ui/Button';
 
 const ManageUsersPage = () => {
+    const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -56,20 +58,20 @@ const ManageUsersPage = () => {
         };
         setUsers([newUser, ...users]);
         setShowUserModal(false);
-        toast.success('User added successfully!');
+        toast.success(t('dashboard.admin.manageUsers.toasts.addSuccess'));
     };
 
     const handleUpdateUser = (userData) => {
         setUsers(users.map(u => u.id === userData.id ? { ...u, ...userData } : u));
         setEditingUser(null);
         setShowUserModal(false);
-        toast.success('User updated successfully!');
+        toast.success(t('dashboard.admin.manageUsers.toasts.updateSuccess'));
     };
 
     const handleDeleteUser = (id) => {
         setUsers(users.filter(u => u.id !== id));
-        setShowActionMenu(null);
-        toast.success('User deleted successfully!');
+        // setShowActionMenu(null); // This was not defined in the original file but present in handleDeleteUser
+        toast.success(t('dashboard.admin.manageUsers.toasts.deleteSuccess'));
     };
 
     const toggleStatus = (id) => {
@@ -77,27 +79,30 @@ const ManageUsersPage = () => {
         if (!userToToggle) return;
 
         const newStatus = userToToggle.status === 'active' ? 'suspended' : 'active';
-        toast.success(`User ${newStatus === 'active' ? 'activated' : 'suspended'} successfully!`);
+        toast.success(newStatus === 'active' 
+            ? t('dashboard.admin.manageUsers.toasts.activatedSuccess') 
+            : t('dashboard.admin.manageUsers.toasts.suspendedSuccess')
+        );
 
         setUsers(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
-        setShowActionMenu(null);
+        // setShowActionMenu(null); // Also not defined in original state but present here
     };
 
     const stats = [
-        { label: 'Total Users', value: users.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/30' },
-        { label: 'Total Instructors', value: users.filter(u => u.role === 'instructor').length, icon: Shield, color: 'text-purple-600', bg: 'bg-purple-100 dark:bg-purple-900/30' },
-        { label: 'Suspended Users', value: users.filter(u => u.status === 'suspended').length, icon: UserX, color: 'text-red-600', bg: 'bg-red-100 dark:bg-red-900/30' },
+        { label: t('dashboard.admin.manageUsers.stats.totalUsers'), value: users.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/30' },
+        { label: t('dashboard.admin.manageUsers.stats.totalInstructors'), value: users.filter(u => u.role === 'instructor').length, icon: Shield, color: 'text-purple-600', bg: 'bg-purple-100 dark:bg-purple-900/30' },
+        { label: t('dashboard.admin.manageUsers.stats.suspendedUsers'), value: users.filter(u => u.status === 'suspended').length, icon: UserX, color: 'text-red-600', bg: 'bg-red-100 dark:bg-red-900/30' },
     ];
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 text-left">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Manage Users</h1>
-                    <p className="text-slate-500 dark:text-slate-400">View and manage all registered users and their permissions.</p>
+                <div className="text-left">
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('dashboard.admin.manageUsers.title')}</h1>
+                    <p className="text-slate-500 dark:text-slate-400">{t('dashboard.admin.manageUsers.subtitle')}</p>
                 </div>
                 <Button onClick={() => setShowUserModal(true)}>
-                    <UserPlus size={18} className="mr-2" /> Add New User
+                    <UserPlus size={18} className={`${t('dir') === 'rtl' ? 'ml-2' : 'mr-2'}`} /> {t('dashboard.admin.manageUsers.addNew')}
                 </Button>
             </div>
 
@@ -119,34 +124,34 @@ const ManageUsersPage = () => {
             {/* Filters & Search */}
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <Search className={`absolute ${t('dir') === 'rtl' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
                     <input
                         type="text"
-                        placeholder="Search by name or email..."
-                        className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary transition-all outline-none"
+                        placeholder={t('dashboard.admin.manageUsers.searchPlaceholder')}
+                        className={`w-full ${t('dir') === 'rtl' ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'} py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary transition-all outline-none`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
                 <div className="flex gap-4">
                     <select
-                        className="bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
+                        className={`bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none cursor-pointer ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
                         value={roleFilter}
                         onChange={(e) => setRoleFilter(e.target.value)}
                     >
-                        <option value="all">All Roles</option>
-                        <option value="learner">Learners</option>
-                        <option value="instructor">Instructors</option>
-                        <option value="admin">Admins</option>
+                        <option value="all">{t('dashboard.admin.manageUsers.allRoles')}</option>
+                        <option value="learner">{t('dashboard.admin.manageUsers.learners')}</option>
+                        <option value="instructor">{t('dashboard.admin.manageUsers.instructors')}</option>
+                        <option value="admin">{t('dashboard.admin.manageUsers.admins')}</option>
                     </select>
                     <select
-                        className="bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
+                        className={`bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm text-slate-700 dark:text-slate-200 outline-none cursor-pointer ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
-                        <option value="all">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="suspended">Suspended</option>
+                        <option value="all">{t('dashboard.admin.manageUsers.allStatus')}</option>
+                        <option value="active">{t('dashboard.admin.manageUsers.active')}</option>
+                        <option value="suspended">{t('dashboard.admin.manageUsers.suspended')}</option>
                     </select>
                 </div>
             </div>
@@ -154,14 +159,14 @@ const ManageUsersPage = () => {
             {/* Users Table */}
             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm min-h-[400px]">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left">
+                    <table className={`w-full ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
                         <thead>
                             <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">User</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Role</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Joined</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
+                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.user')}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.role')}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.joined')}</th>
+                                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.admin.manageUsers.table.status')}</th>
+                                <th className={`px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>{t('dashboard.admin.manageUsers.table.actions')}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -179,11 +184,13 @@ const ManageUsersPage = () => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${user.role === 'instructor'
+                                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${user.role === 'instructor'
                                             ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400'
+                                            : user.role === 'admin'
+                                            ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
                                             : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
                                             }`}>
-                                            {user.role}
+                                            {t(`dashboard.admin.manageUsers.${user.role === 'learner' ? 'learners' : user.role + 's'}`).replace(/s$/, '')}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
@@ -193,21 +200,21 @@ const ManageUsersPage = () => {
                                         <div className="flex items-center gap-2">
                                             {user.status === 'active' ? (
                                                 <span className="flex items-center gap-1 text-xs font-medium text-green-600">
-                                                    <CheckCircle size={14} /> Active
+                                                    <CheckCircle size={14} /> {t('dashboard.admin.manageUsers.active')}
                                                 </span>
                                             ) : (
                                                 <span className="flex items-center gap-1 text-xs font-medium text-red-500">
-                                                    <UserX size={14} /> Suspended
+                                                    <UserX size={14} /> {t('dashboard.admin.manageUsers.suspended')}
                                                 </span>
                                             )}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                                        <div className="flex items-center justify-end gap-1">
+                                    <td className={`px-6 py-4 whitespace-nowrap ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>
+                                        <div className={`flex items-center ${t('dir') === 'rtl' ? 'justify-start' : 'justify-end'} gap-1`}>
                                             {/* Edit */}
                                             <button
                                                 onClick={() => { setEditingUser(user); setShowUserModal(true); }}
-                                                title="Edit User"
+                                                title={t('dashboard.admin.manageUsers.editUser')}
                                                 className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                                             >
                                                 <Edit size={16} />
@@ -215,7 +222,7 @@ const ManageUsersPage = () => {
                                             {/* Suspend / Activate */}
                                             <button
                                                 onClick={() => toggleStatus(user.id)}
-                                                title={user.status === 'active' ? 'Suspend' : 'Activate'}
+                                                title={user.status === 'active' ? t('dashboard.admin.manageUsers.suspended') : t('dashboard.admin.manageUsers.active')}
                                                 className={`p-2 rounded-lg transition-colors ${user.status === 'active'
                                                     ? 'text-slate-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20'
                                                     : 'text-slate-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
@@ -225,8 +232,8 @@ const ManageUsersPage = () => {
                                             </button>
                                             {/* Delete */}
                                             <button
-                                                onClick={() => handleDeleteUser(user.id)}
-                                                title="Delete User"
+                                                onClick={() => { handleDeleteUser(user.id)} }
+                                                title={t('dashboard.admin.manageUsers.deleteUser')}
                                                 className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                             >
                                                 <Trash2 size={16} />
@@ -241,9 +248,9 @@ const ManageUsersPage = () => {
                                             <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
                                                 <Search size={32} />
                                             </div>
-                                            <p className="text-slate-500 dark:text-slate-400 font-medium">No users found matching your criteria.</p>
+                                            <p className="text-slate-500 dark:text-slate-400 font-medium">{t('dashboard.admin.manageUsers.noFound')}</p>
                                             <Button variant="outline" onClick={() => { setSearchTerm(''); setRoleFilter('all'); setStatusFilter('all'); }}>
-                                                Clear All Filters
+                                                {t('dashboard.admin.manageUsers.clearFilters')}
                                             </Button>
                                         </div>
                                     </td>
@@ -255,7 +262,7 @@ const ManageUsersPage = () => {
 
                 {/* Pagination */}
                 <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                    <p className="text-sm text-slate-500">Showing <span className="font-bold">{filteredUsers.length}</span> of <span className="font-bold">{users.length}</span> users</p>
+                    <p className="text-sm text-slate-500">{t('dashboard.admin.manageUsers.showing', { count: filteredUsers.length, total: users.length })}</p>
                     <div className="flex gap-2">
                         <button className="p-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 cursor-not-allowed">
                             <ChevronLeft size={18} />
@@ -278,15 +285,15 @@ const ManageUsersPage = () => {
                             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
                             onClick={() => { setShowUserModal(false); setEditingUser(null); }}
                         />
-                        <motion.div
+                             <motion.div
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden"
+                            className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden text-left"
                         >
                             <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-                                    {editingUser ? 'Edit User Details' : 'Add New User'}
+                                    {editingUser ? t('dashboard.admin.manageUsers.editTitle') : t('dashboard.admin.manageUsers.addTitle')}
                                 </h2>
                                 <button
                                     onClick={() => { setShowUserModal(false); setEditingUser(null); }}
@@ -305,61 +312,61 @@ const ManageUsersPage = () => {
                                 } else {
                                     handleAddUser(userData);
                                 }
-                            }} className="p-6 space-y-4">
+                            }} className={`p-6 space-y-4 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.fullName')}</label>
                                     <input
                                         name="name"
                                         type="text"
                                         required
                                         defaultValue={editingUser?.name || ''}
-                                        className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
-                                        placeholder="Ali Omar"
+                                        className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                        placeholder={t('dashboard.admin.manageUsers.form.placeholderName')}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.email')}</label>
                                     <input
                                         name="email"
                                         type="email"
                                         required
                                         defaultValue={editingUser?.email || ''}
-                                        className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
-                                        placeholder="john@example.com"
+                                        className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                        placeholder={t('dashboard.admin.manageUsers.form.placeholderEmail')}
                                     />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Role</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.role')}</label>
                                         <select
                                             name="role"
                                             defaultValue={editingUser?.role || 'learner'}
-                                            className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
+                                            className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
                                         >
-                                            <option value="learner">Learner</option>
-                                            <option value="instructor">Instructor</option>
-                                            <option value="admin">Admin</option>
+                                            <option value="learner">{t('dashboard.admin.manageUsers.learners').replace(/s$/, '')}</option>
+                                            <option value="instructor">{t('dashboard.admin.manageUsers.instructors').replace(/s$/, '')}</option>
+                                            <option value="admin">{t('dashboard.admin.manageUsers.admins').replace(/s$/, '')}</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Status</label>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.status')}</label>
                                         <select
                                             name="status"
                                             defaultValue={editingUser?.status || 'active'}
-                                            className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
+                                            className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
                                         >
-                                            <option value="active">Active</option>
-                                            <option value="suspended">Suspended</option>
+                                            <option value="active">{t('dashboard.admin.manageUsers.active')}</option>
+                                            <option value="suspended">{t('dashboard.admin.manageUsers.suspended')}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div className="pt-6 flex gap-3">
                                     <Button variant="outline" className="flex-1" type="button" onClick={() => { setShowUserModal(false); setEditingUser(null); }}>
-                                        Cancel
+                                        {t('common.cancel')}
                                     </Button>
                                     <Button className="flex-1" type="submit">
-                                        {editingUser ? 'Save Changes' : 'Create Account'}
+                                        {editingUser ? t('common.save') : t('dashboard.admin.manageUsers.form.createAccount')}
                                     </Button>
                                 </div>
                             </form>

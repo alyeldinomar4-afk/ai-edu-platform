@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, Loader2, CheckCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPasswordPage = () => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
@@ -23,20 +25,20 @@ const ForgotPasswordPage = () => {
                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/30 mb-4 transition-colors">
                     <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Check your email</h2>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('auth.forgotPassword.successTitle')}</h2>
                 <p className="text-slate-500 dark:text-slate-400 mb-6">
-                    We sent a password reset link to your email address.
+                    {t('auth.forgotPassword.successSubtitle')}
                 </p>
                 <Button
                     variant="outline"
                     className="w-full justify-center"
                     onClick={() => setSubmitted(false)}
                 >
-                    Back to reset
+                    {t('auth.forgotPassword.backToReset')}
                 </Button>
                 <div className="mt-6">
                     <Link to="/login" className="font-medium text-primary hover:text-primary-dark flex items-center justify-center gap-2 cursor-pointer">
-                        <ArrowLeft size={16} /> Back to sign in
+                        <ArrowLeft size={16} /> {t('auth.forgotPassword.backToSignIn')}
                     </Link>
                 </div>
             </div>
@@ -46,14 +48,14 @@ const ForgotPasswordPage = () => {
     return (
         <div className="transition-colors duration-300">
             <div className="mb-6 text-center">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Forgot password?</h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-2">No worries, we'll send you reset instructions.</p>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t('auth.forgotPassword.title')}</h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-2">{t('auth.forgotPassword.subtitle')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                        Email address
+                        {t('auth.forgotPassword.emailLabel')}
                     </label>
                     <div className="mt-1 relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -76,13 +78,13 @@ const ForgotPasswordPage = () => {
                     disabled={loading}
                     className="w-full justify-center h-12"
                 >
-                    {loading ? <Loader2 className="animate-spin" /> : 'Send Reset Link'}
+                    {loading ? <Loader2 className="animate-spin" /> : t('auth.forgotPassword.submit')}
                 </Button>
             </form>
 
             <div className="mt-6 text-center">
                 <Link to="/login" className="font-medium text-primary hover:text-primary-dark flex items-center justify-center gap-2 cursor-pointer">
-                    <ArrowLeft size={16} /> Back to sign in
+                    <ArrowLeft size={16} /> {t('auth.forgotPassword.backToSignIn')}
                 </Link>
             </div>
         </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { User, Star, Users, PlayCircle, Clock, BookOpen, Globe, Linkedin, Twitter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton, { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
 import CourseCard from '../../components/features/course/CourseCard';
@@ -9,6 +10,7 @@ import { courses } from '../../data/mockData';
 
 const PublicInstructorProfilePage = () => {
     const { name } = useParams(); // Using the name from the URL
+    const { t } = useTranslation();
     // Decode name and handle any potential formatting issues
     const instructorName = decodeURIComponent(name).replace(/-/g, ' ');
 
@@ -160,7 +162,7 @@ const PublicInstructorProfilePage = () => {
                                     variant={isFollowing ? "outline" : "primary"}
                                     className={`shadow-lg shadow-primary/20 transition-all ${isFollowing ? 'hover:bg-red-50 hover:text-red-500 hover:border-red-200 dark:hover:bg-red-900/20 dark:hover:border-red-800' : ''}`}
                                 >
-                                    {isFollowing ? 'Following' : 'Follow'}
+                                    {isFollowing ? t('publicInstructor.following') : t('publicInstructor.follow')}
                                 </Button>
                             </motion.div>
                         </div>
@@ -176,7 +178,7 @@ const PublicInstructorProfilePage = () => {
                                 className="lg:col-span-2 space-y-6"
                             >
                                 <div>
-                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">About Me</h3>
+                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{t('publicInstructor.aboutMe')}</h3>
                                     <div className="text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed text-sm md:text-base">
                                         <p>
                                             Hi, I'm {instructorName}. I am a passionate software engineer and educator with over a decade of experience in the tech industry. My goal is to break down complex architectural concepts and programming paradigms into easily digestible lessons.
@@ -196,7 +198,7 @@ const PublicInstructorProfilePage = () => {
                                 className="lg:col-span-1"
                             >
                                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-100 dark:border-slate-700/50 space-y-4">
-                                    <h3 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs mb-4 text-slate-500">Instructor Statistics</h3>
+                                    <h3 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-xs mb-4 text-slate-500">{t('publicInstructor.statistics')}</h3>
 
                                     <div className="flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-500 flex items-center justify-center shrink-0">
@@ -205,9 +207,9 @@ const PublicInstructorProfilePage = () => {
                                         <div>
                                             <div className="font-bold text-slate-900 dark:text-white flex items-baseline gap-1">
                                                 {instructorStats.averageRating}
-                                                <span className="text-sm font-normal text-slate-500"> Instructor Rating</span>
+                                                <span className="text-sm font-normal text-slate-500"> {t('publicInstructor.rating')}</span>
                                             </div>
-                                            <div className="text-xs text-slate-500">From {instructorStats.reviews.toLocaleString()} reviews</div>
+                                            <div className="text-xs text-slate-500">{t('publicInstructor.from')} {instructorStats.reviews.toLocaleString()} {t('publicInstructor.reviews')}</div>
                                         </div>
                                     </div>
 
@@ -219,7 +221,7 @@ const PublicInstructorProfilePage = () => {
                                             <div className="font-bold text-slate-900 dark:text-white">
                                                 {instructorStats.totalStudents.toLocaleString()}
                                             </div>
-                                            <div className="text-xs text-slate-500">Students Worldwide</div>
+                                            <div className="text-xs text-slate-500">{t('publicInstructor.students')}</div>
                                         </div>
                                     </div>
 
@@ -231,7 +233,7 @@ const PublicInstructorProfilePage = () => {
                                             <div className="font-bold text-slate-900 dark:text-white">
                                                 {instructorStats.courseCount}
                                             </div>
-                                            <div className="text-xs text-slate-500">Courses Available</div>
+                                            <div className="text-xs text-slate-500">{t('publicInstructor.courses')}</div>
                                         </div>
                                     </div>
 
@@ -240,7 +242,7 @@ const PublicInstructorProfilePage = () => {
                                         variant={isFollowing ? "outline" : "primary"}
                                         onClick={handleFollowToggle}
                                     >
-                                        {isFollowing ? 'Following' : 'Follow'}
+                                        {isFollowing ? t('publicInstructor.following') : t('publicInstructor.follow')}
                                     </Button>
                                 </div>
                             </motion.div>
@@ -253,7 +255,7 @@ const PublicInstructorProfilePage = () => {
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                             <BookOpen className="w-6 h-6 text-primary" />
-                            Courses by {instructorName}
+                            {t('publicInstructor.coursesBy', { instructorName })}
                         </h2>
                     </div>
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Megaphone, Send, Users, Clock, Bold, Italic, Link as LinkIcon, List } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import InstructorNav from '../../components/layout/InstructorNav';
 import Button from '../../components/ui/Button';
 
@@ -32,6 +33,8 @@ const initialAnnouncements = [
 ];
 
 const InstructorAnnouncementsPage = () => {
+    const { t, i18n } = useTranslation();
+    const isRTL = i18n.language === 'ar';
     const [announcements, setAnnouncements] = useState(initialAnnouncements);
     const [showForm, setShowForm] = useState(false);
 
@@ -46,7 +49,7 @@ const InstructorAnnouncementsPage = () => {
 
         setIsSending(true);
         setTimeout(() => {
-            const courseName = coursesList.find(c => c.id === selectedCourse)?.title || 'Selected Course';
+            const courseName = selectedCourse === 'all' ? t('dashboard.instructor.announcements.allCourses') : (coursesList.find(c => c.id === selectedCourse)?.title || 'Selected Course');
             const newAnnouncement = {
                 id: Date.now(),
                 course: courseName,
@@ -62,20 +65,20 @@ const InstructorAnnouncementsPage = () => {
             setSelectedCourse('all');
             setShowForm(false);
             setIsSending(false);
-            toast.success('Announcement sent successfully!');
+            toast.success(t('dashboard.instructor.announcements.success'));
         }, 1500);
     };
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-300">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">Announcements</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Keep your students engaged by sending updates and news.</p>
+            <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 ${isRTL ? 'text-right' : ''}`}>
+                <div className={isRTL ? 'text-right' : ''}>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">{t('dashboard.instructor.announcements.title')}</h1>
+                    <p className="text-slate-500 dark:text-slate-400">{t('dashboard.instructor.announcements.subtitle')}</p>
                 </div>
                 {!showForm && (
                     <Button onClick={() => setShowForm(true)}>
-                        <Megaphone className="w-5 h-5 mr-2" /> New Announcement
+                        <Megaphone className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} /> {t('dashboard.instructor.announcements.new')}
                     </Button>
                 )}
             </div>
@@ -91,34 +94,35 @@ const InstructorAnnouncementsPage = () => {
                         exit={{ opacity: 0, height: 0, scale: 0.98 }}
                         className="mb-8"
                     >
-                        <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-                            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Compose Announcement</h2>
+                        <div className={`bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ${isRTL ? 'text-right' : ''}`}>
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">{t('dashboard.instructor.announcements.composeTitle')}</h2>
                             <form onSubmit={handleSend} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Select Course</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.instructor.announcements.selectCourse')}</label>
                                     <select
                                         value={selectedCourse}
                                         onChange={(e) => setSelectedCourse(e.target.value)}
-                                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                                        className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors ${isRTL ? 'text-right' : ''}`}
                                     >
-                                        {coursesList.map(c => (
+                                        <option value="all">{t('dashboard.instructor.announcements.allCourses')}</option>
+                                        {coursesList.filter(c => c.id !== 'all').map(c => (
                                             <option key={c.id} value={c.id}>{c.title}</option>
                                         ))}
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Subject</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.instructor.announcements.subject')}</label>
                                     <input
                                         type="text"
                                         required
                                         value={subject}
                                         onChange={(e) => setSubject(e.target.value)}
-                                        placeholder="e.g. Important Update: New Content Added"
-                                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors"
+                                        placeholder={t('dashboard.instructor.announcements.subjectPlaceholder')}
+                                        className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors ${isRTL ? 'text-right' : ''}`}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Message</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.instructor.announcements.message')}</label>
                                     <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-900">
                                         {/* Mock Formatting Toolbar */}
                                         <div className="flex items-center gap-1 p-2 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
@@ -127,24 +131,24 @@ const InstructorAnnouncementsPage = () => {
                                             <button type="button" className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-400" title="List"><List size={16} /></button>
                                             <button type="button" className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-400" title="Link"><LinkIcon size={16} /></button>
                                             <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-                                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold ml-1">Mock Rich Text Editor</span>
+                                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold ml-1">{t('dashboard.instructor.announcements.mockEditor')}</span>
                                         </div>
                                         <textarea
                                             required
                                             value={message}
                                             onChange={(e) => setMessage(e.target.value)}
-                                            placeholder="Write your message here..."
+                                            placeholder={t('dashboard.instructor.announcements.messagePlaceholder')}
                                             rows="6"
-                                            className="w-full px-4 py-3 bg-transparent text-slate-900 dark:text-white focus:outline-none transition-colors resize-y"
+                                            className={`w-full px-4 py-3 bg-transparent text-slate-900 dark:text-white focus:outline-none transition-colors resize-y ${isRTL ? 'text-right' : ''}`}
                                         />
                                     </div>
                                 </div>
-                                <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                <div className={`flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 ${isRTL ? 'flex-row-reverse' : ''}`}>
                                     <Button type="button" variant="ghost" onClick={() => setShowForm(false)} disabled={isSending}>
-                                        Cancel
+                                        {t('dashboard.instructor.announcements.cancel')}
                                     </Button>
                                     <Button type="submit" disabled={isSending || !subject || !message}>
-                                        {isSending ? 'Sending...' : <><Send size={16} className="mr-2" /> Send Announcement</>}
+                                        {isSending ? t('dashboard.instructor.announcements.sending') : <><Send size={16} className={isRTL ? 'ml-2' : 'mr-2'} /> {t('dashboard.instructor.announcements.send')}</>}
                                     </Button>
                                 </div>
                             </form>
@@ -154,24 +158,24 @@ const InstructorAnnouncementsPage = () => {
             </AnimatePresence>
 
             {/* History */}
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Past Announcements</h2>
+            <h2 className={`text-lg font-bold text-slate-900 dark:text-white mb-4 ${isRTL ? 'text-right' : ''}`}>{t('dashboard.instructor.announcements.history')}</h2>
             <div className="space-y-4">
                 {announcements.map((ann) => (
                     <motion.div
                         key={ann.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors"
+                        className={`bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors ${isRTL ? 'text-right' : ''}`}
                     >
-                        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4">
-                            <div>
+                        <div className={`flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className={isRTL ? 'text-right' : ''}>
                                 <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">{ann.subject}</h3>
                                 <p className="text-sm font-medium text-primary dark:text-primary-400">{ann.course}</p>
                             </div>
-                            <div className="flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
-                                <span className="flex items-center gap-1.5"><Clock size={14} /> {ann.date}</span>
+                            <div className={`flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Clock size={14} /> {ann.date}</span>
                                 <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
-                                <span className="flex items-center gap-1.5"><Users size={14} /> Sent to {ann.sentTo.toLocaleString()}</span>
+                                <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Users size={14} /> {t('dashboard.instructor.announcements.sentTo', { count: ann.sentTo.toLocaleString() })}</span>
                             </div>
                         </div>
                         <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-300">

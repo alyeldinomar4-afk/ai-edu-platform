@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 /* Enable class-based dark mode for Tailwind v4 */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -109,6 +110,19 @@ body {
   /* slate-950 */
   color: #e2e8f0;
   /* slate-200 */
+}
+
+/* Arabic Specific Styles */
+[lang="ar"] {
+  font-family: 'Tajawal', sans-serif;
+}
+
+[lang="ar"] .leading-tight {
+  line-height: 1.4 !important;
+}
+
+[lang="ar"] .leading-relaxed {
+  line-height: 1.6 !important;
 }
 
 /* Force test style to verify CSS loading */

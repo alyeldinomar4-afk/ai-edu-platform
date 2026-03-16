@@ -13,12 +13,21 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-        // Redirect based on role if they try to access unauthorized area
-        // e.g., Learner tries to access Admin
-        if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
-        if (user.role === 'instructor') return <Navigate to="/instructor/dashboard" replace />;
-        return <Navigate to="/learner/dashboard" replace />;
+    // Normalize user role (handle potential 'student' vs 'learner' mismatch)
+    const currentRole = user.role === 'student' ? 'learner' : user.role;
+
+    if (allowedRoles.length > 0 && !allowedRoles.includes(currentRole)) {
+        // Determine redirect path based on role
+        let redirectPath = '/learner/dashboard';
+        if (currentRole === 'admin') redirectPath = '/admin/dashboard';
+        else if (currentRole === 'instructor') redirectPath = '/instructor/dashboard';
+
+        // Prevent infinite redirect loops
+        if (location.pathname === redirectPath) {
+            return children;
+        }
+
+        return <Navigate to={redirectPath} replace />;
     }
 
     return children;

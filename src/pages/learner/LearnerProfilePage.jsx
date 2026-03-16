@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useAuth } from '../../auth/useAuth';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { User, Mail, Camera, Lock, Save, Shield } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 const LearnerProfilePage = () => {
     const { user } = useAuth();
+    const { t } = useTranslation();
 
     const [name, setName] = useState(user?.name || '');
     const [email, setEmail] = useState(user?.email || '');
@@ -25,20 +27,20 @@ const LearnerProfilePage = () => {
         setIsSavingProfile(true);
         setTimeout(() => {
             setIsSavingProfile(false);
-            toast.success('Profile updated successfully!');
+            toast.success(t('profile.successUpdate'));
         }, 1000);
     };
 
     const handleUpdatePassword = (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            toast.error('New passwords do not match!');
+            toast.error(t('profile.errorPasswordMatch'));
             return;
         }
         setIsSavingPassword(true);
         setTimeout(() => {
             setIsSavingPassword(false);
-            toast.success('Password updated successfully!');
+            toast.success(t('profile.successPassword'));
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -52,8 +54,8 @@ const LearnerProfilePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-8"
             >
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Profile Settings</h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-2">Manage your personal information and security.</p>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">{t('profile.title')}</h1>
+                <p className="text-slate-500 dark:text-slate-400 mt-2">{t('profile.subtitle')}</p>
             </motion.div>
 
             <div className="space-y-6">
@@ -65,7 +67,7 @@ const LearnerProfilePage = () => {
                     className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800"
                 >
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                        <User className="text-primary w-5 h-5" /> Profile Picture
+                        <User className="text-primary w-5 h-5" /> {t('profile.updatePhoto')}
                     </h2>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
                         <div className="relative group cursor-pointer" onClick={() => document.getElementById('learner-avatar-upload').click()}>
@@ -82,23 +84,23 @@ const LearnerProfilePage = () => {
                                     const reader = new FileReader();
                                     reader.onload = (event) => setAvatar(event.target.result);
                                     reader.readAsDataURL(e.target.files[0]);
-                                    toast.success("Photo updated successfully!");
+                                    toast.success(t('profile.photoUpdated'));
                                 }
                             }} />
                         </div>
                         <div>
                             <div className="flex flex-wrap gap-3 mb-3">
-                                <Button size="sm" onClick={() => document.getElementById('learner-avatar-upload').click()}>Upload New Photo</Button>
+                                <Button size="sm" onClick={() => document.getElementById('learner-avatar-upload').click()}>{t('profile.uploadPhoto')}</Button>
                                 <Button
                                     variant="outline"
                                     size="sm"
                                     className="text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50"
                                     onClick={() => {
                                         setAvatar("https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "User") + "&background=random&size=128");
-                                        toast.success("Photo removed successfully!");
+                                        toast.success(t('profile.photoRemoved'));
                                     }}
                                 >
-                                    Remove
+                                    {t('profile.removePhoto')}
                                 </Button>
                             </div>
                             <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -116,12 +118,12 @@ const LearnerProfilePage = () => {
                     className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800"
                 >
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                        <Mail className="text-primary w-5 h-5" /> Personal Information
+                        <Mail className="text-primary w-5 h-5" /> {t('profile.personalInfo')}
                     </h2>
                     <form onSubmit={handleSaveProfile} className="space-y-4">
                         <div className="grid grid-cols-1 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.fullName')}</label>
                                 <input
                                     type="text"
                                     value={name}
@@ -131,7 +133,7 @@ const LearnerProfilePage = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.email')}</label>
                                 <input
                                     type="email"
                                     value={email}
@@ -141,19 +143,19 @@ const LearnerProfilePage = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Bio</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.bio')}</label>
                                 <textarea
                                     value={bio}
                                     onChange={(e) => setBio(e.target.value)}
                                     rows="3"
-                                    placeholder="Tell us a little about yourself"
+                                    placeholder={t('profile.bioPlaceholder')}
                                     className="w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none resize-none"
                                 />
                             </div>
                         </div>
                         <div className="flex justify-end pt-4">
                             <Button type="submit" disabled={isSavingProfile}>
-                                {isSavingProfile ? 'Saving...' : <><Save size={16} className="mr-2" /> Save Changes</>}
+                                {isSavingProfile ? t('profile.saving') : <><Save size={16} className="mr-2" /> {t('profile.saveChanges')}</>}
                             </Button>
                         </div>
                     </form>
@@ -167,11 +169,11 @@ const LearnerProfilePage = () => {
                     className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800"
                 >
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                        <Shield className="text-primary w-5 h-5" /> Password & Security
+                        <Shield className="text-primary w-5 h-5" /> {t('profile.security')}
                     </h2>
                     <form onSubmit={handleUpdatePassword} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Current Password</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.currentPassword')}</label>
                             <div className="relative">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                                     <Lock size={16} />
@@ -188,7 +190,7 @@ const LearnerProfilePage = () => {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">New Password</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.newPassword')}</label>
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                                         <Lock size={16} />
@@ -204,7 +206,7 @@ const LearnerProfilePage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Confirm New Password</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.confirmPassword')}</label>
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                                         <Lock size={16} />
@@ -222,7 +224,7 @@ const LearnerProfilePage = () => {
                         </div>
                         <div className="flex justify-end pt-4">
                             <Button type="submit" disabled={isSavingPassword || !currentPassword || !newPassword || !confirmPassword}>
-                                {isSavingPassword ? 'Updating...' : 'Update Password'}
+                                {isSavingPassword ? t('profile.updating') : t('profile.updatePassword')}
                             </Button>
                         </div>
                     </form>

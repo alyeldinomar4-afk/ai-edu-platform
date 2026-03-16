@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../auth/useAuth';
 import { MessageSquare, CheckCircle, Clock, ChevronDown, ChevronUp, Reply } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import InstructorNav from '../../components/layout/InstructorNav';
 import Button from '../../components/ui/Button';
 
@@ -40,6 +41,8 @@ const initialQuestions = [
 ];
 
 const InstructorQAPage = () => {
+    const { t, i18n } = useTranslation();
+    const isRTL = i18n.language === 'ar';
     const { user } = useAuth();
     const [questions, setQuestions] = useState(initialQuestions);
     const [expandedId, setExpandedId] = useState(null);
@@ -66,9 +69,9 @@ const InstructorQAPage = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-300">
-            <div className="mb-4">
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">Q&A Management</h1>
-                <p className="text-slate-500 dark:text-slate-400">Answer student questions and keep them unblocked on their learning journey.</p>
+            <div className={`mb-4 ${isRTL ? 'text-right' : ''}`}>
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">{t('dashboard.instructor.qa.title')}</h1>
+                <p className="text-slate-500 dark:text-slate-400">{t('dashboard.instructor.qa.subtitle')}</p>
             </div>
 
             <InstructorNav />
@@ -76,17 +79,17 @@ const InstructorQAPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 {/* Stats Sidebar */}
                 <div className="md:col-span-1 space-y-4">
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center gap-3 mb-2 text-yellow-600 dark:text-yellow-500">
+                    <div className={`bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ${isRTL ? 'text-right' : ''}`}>
+                        <div className={`flex items-center gap-3 mb-2 text-yellow-600 dark:text-yellow-500 ${isRTL ? 'flex-row-reverse' : ''}`}>
                             <Clock className="w-5 h-5" />
-                            <h3 className="font-semibold">Needs Reply</h3>
+                            <h3 className="font-semibold">{t('dashboard.instructor.qa.needsReply')}</h3>
                         </div>
                         <p className="text-3xl font-bold text-slate-900 dark:text-white">{pendingCount}</p>
                     </div>
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-                        <div className="flex items-center gap-3 mb-2 text-green-600 dark:text-green-500">
+                    <div className={`bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 ${isRTL ? 'text-right' : ''}`}>
+                        <div className={`flex items-center gap-3 mb-2 text-green-600 dark:text-green-500 ${isRTL ? 'flex-row-reverse' : ''}`}>
                             <CheckCircle className="w-5 h-5" />
-                            <h3 className="font-semibold">Resolved</h3>
+                            <h3 className="font-semibold">{t('dashboard.instructor.qa.resolved')}</h3>
                         </div>
                         <p className="text-3xl font-bold text-slate-900 dark:text-white">{questions.length - pendingCount}</p>
                     </div>
@@ -106,12 +109,12 @@ const InstructorQAPage = () => {
                             {/* Header (Clickable) */}
                             <div
                                 onClick={() => toggleExpand(q)}
-                                className="p-5 sm:p-6 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center"
+                                className={`p-5 sm:p-6 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center ${isRTL ? 'flex-row-reverse text-right' : ''}`}
                             >
-                                <div className="flex items-start gap-4">
+                                <div className={`flex items-start gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                                     <img src={q.avatar} alt={q.studentName} className="w-10 h-10 rounded-full mt-1" />
                                     <div>
-                                        <div className="flex items-center gap-2 mb-1">
+                                        <div className={`flex items-center gap-2 mb-1 ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
                                             <h3 className="font-semibold text-slate-900 dark:text-white">{q.studentName}</h3>
                                             <span className="text-xs text-slate-400 dark:text-slate-500">• {q.date}</span>
                                         </div>
@@ -119,12 +122,12 @@ const InstructorQAPage = () => {
                                         <p className="text-slate-600 dark:text-slate-300 line-clamp-2">{q.question}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 self-end sm:self-auto">
+                                <div className={`flex items-center gap-3 self-end sm:self-auto ${isRTL ? 'flex-row-reverse' : ''}`}>
                                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${q.status === 'pending'
                                             ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
                                             : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                                         }`}>
-                                        {q.status === 'pending' ? 'Pending' : 'Resolved'}
+                                        {q.status === 'pending' ? t('dashboard.instructor.qa.pending') : t('dashboard.instructor.qa.resolved')}
                                     </span>
                                     {expandedId === q.id ? <ChevronUp className="text-slate-400" /> : <ChevronDown className="text-slate-400" />}
                                 </div>
@@ -152,15 +155,15 @@ const InstructorQAPage = () => {
                                                     <textarea
                                                         value={replyText}
                                                         onChange={(e) => setReplyText(e.target.value)}
-                                                        placeholder="Write your answer here..."
+                                                        placeholder={t('dashboard.instructor.qa.placeholder')}
                                                         rows="4"
-                                                        className="w-full px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none resize-y mb-3"
+                                                        className={`w-full px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none resize-y mb-3 ${isRTL ? 'text-right' : ''}`}
                                                     />
-                                                    <div className="flex justify-end gap-3">
-                                                        <Button variant="ghost" onClick={() => setExpandedId(null)}>Cancel</Button>
+                                                    <div className={`flex justify-end gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                                        <Button variant="ghost" onClick={() => setExpandedId(null)}>{t('dashboard.instructor.qa.cancel')}</Button>
                                                         <Button onClick={() => handleReply(q.id)}>
-                                                            <Reply size={16} className="mr-2" />
-                                                            {q.status === 'resolved' ? 'Update Answer' : 'Post Answer'}
+                                                            <Reply size={16} className={isRTL ? 'ml-2' : 'mr-2'} />
+                                                            {q.status === 'resolved' ? t('dashboard.instructor.qa.update') : t('dashboard.instructor.qa.post')}
                                                         </Button>
                                                     </div>
                                                 </div>
@@ -174,8 +177,8 @@ const InstructorQAPage = () => {
                     {questions.length === 0 && (
                         <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
                             <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                            <h3 className="text-lg font-medium text-slate-900 dark:text-white">No questions yet</h3>
-                            <p className="text-slate-500 dark:text-slate-400">You are all caught up!</p>
+                            <h3 className="text-lg font-medium text-slate-900 dark:text-white">{t('dashboard.instructor.qa.emptyTitle')}</h3>
+                            <p className="text-slate-500 dark:text-slate-400">{t('dashboard.instructor.qa.emptySubtitle')}</p>
                         </div>
                     )}
                 </div>

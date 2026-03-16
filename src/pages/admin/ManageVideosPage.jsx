@@ -22,10 +22,12 @@ import {
     AlertTriangle,
     PauseCircle
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
 
 // ManageVideosPage v1.3 - Fixed ReferenceError (Edit icon)
 const ManageVideosPage = () => {
+    const { t } = useTranslation();
     const [viewMode, setViewMode] = useState('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -120,7 +122,7 @@ const ManageVideosPage = () => {
     // Actions
     const handleDeleteVideo = (id) => {
         setVideos(prev => prev.filter(v => v.id !== id));
-        toast.success('Video deleted successfully!');
+        toast.success(t('dashboard.admin.manageVideos.toasts.deleteSuccess'));
     };
 
     const togglePublish = (id) => {
@@ -128,7 +130,7 @@ const ManageVideosPage = () => {
         if (!video) return;
 
         const newStatus = video.status === 'published' ? 'draft' : 'published';
-        toast.success(`Video ${newStatus === 'published' ? 'published' : 'unpublished'} successfully!`);
+        toast.success(t(`dashboard.admin.manageVideos.toasts.${newStatus === 'published' ? 'publishSuccess' : 'unpublishSuccess'}`));
 
         setVideos(prev => prev.map(v => v.id === id ? { ...v, status: newStatus } : v));
     };
@@ -143,14 +145,14 @@ const ManageVideosPage = () => {
         };
         setVideos(prev => [newVideo, ...prev]);
         setShowVideoModal(false);
-        toast.success('Video added successfully!');
+        toast.success(t('dashboard.admin.manageVideos.toasts.addSuccess'));
     };
 
     const handleUpdateVideo = (data) => {
         setVideos(prev => prev.map(v => v.id === data.id ? { ...v, ...data } : v));
         setEditingVideo(null);
         setShowVideoModal(false);
-        toast.success('Video updated successfully!');
+        toast.success(t('dashboard.admin.manageVideos.toasts.updateSuccess'));
     };
 
     const getStatusStyle = (status) => {
@@ -163,15 +165,15 @@ const ManageVideosPage = () => {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 text-left">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="text-left">
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Manage Videos</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Moderating and organizing platform content.</p>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('dashboard.admin.manageVideos.title')}</h1>
+                    <p className="text-slate-500 dark:text-slate-400">{t('dashboard.admin.manageVideos.subtitle')}</p>
                 </div>
                 <div className="flex gap-2 w-full sm:w-auto">
                     <Button onClick={() => setShowVideoModal(true)}>
-                        <Upload size={18} className="mr-2" /> Upload New
+                        <Upload size={18} className={`${t('dir') === 'rtl' ? 'ml-2' : 'mr-2'}`} /> {t('dashboard.admin.manageVideos.uploadNew')}
                     </Button>
                 </div>
             </div>
@@ -179,11 +181,11 @@ const ManageVideosPage = () => {
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <Search className={`absolute ${t('dir') === 'rtl' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
                     <input
                         type="text"
-                        placeholder="Search videos..."
-                        className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none"
+                        placeholder={t('dashboard.admin.manageVideos.searchPlaceholder')}
+                        className={`w-full ${t('dir') === 'rtl' ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'} py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -191,14 +193,14 @@ const ManageVideosPage = () => {
 
                 <div className="flex items-center gap-3">
                     <select
-                        className="bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm outline-none text-slate-700 dark:text-slate-200"
+                        className={`bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm outline-none text-slate-700 dark:text-slate-200 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
-                        <option value="all">All Status</option>
-                        <option value="published">Published</option>
-                        <option value="pending">Pending</option>
-                        <option value="draft">Draft</option>
+                        <option value="all">{t('dashboard.admin.manageVideos.allStatus')}</option>
+                        <option value="published">{t('dashboard.admin.manageVideos.published')}</option>
+                        <option value="pending">{t('dashboard.admin.manageVideos.pending')}</option>
+                        <option value="draft">{t('dashboard.admin.manageVideos.draft')}</option>
                     </select>
                     <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
                         <button onClick={() => setViewMode('grid')} className={`p-1.5 rounded-md ${viewMode === 'grid' ? 'bg-white dark:bg-slate-700 text-primary shadow-sm' : 'text-slate-500'}`}><LayoutGrid size={18} /></button>
@@ -215,8 +217,10 @@ const ManageVideosPage = () => {
                             <div key={video.id} className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col">
                                 <div className="relative aspect-video bg-slate-100 dark:bg-slate-800">
                                     {video.thumbnail && <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />}
-                                    <span className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded">{video.duration}</span>
-                                    <span className={`absolute top-2 right-2 px-1.5 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider ${getStatusStyle(video.status)}`}>{video.status}</span>
+                                    <span className={`absolute bottom-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded uppercase`}>{video.duration}</span>
+                                    <span className={`absolute top-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider ${getStatusStyle(video.status)}`}>
+                                        {t(`dashboard.admin.manageVideos.${video.status}`)}
+                                    </span>
                                 </div>
                                 <div className="p-5 flex-1 flex flex-col text-left">
                                     <h3 className="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">{video.title}</h3>
@@ -225,7 +229,7 @@ const ManageVideosPage = () => {
                                         <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 font-medium">{video.course}</div>
                                     </div>
                                     <div className="mt-auto pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between">
-                                        <div className="flex gap-3 text-[10px] text-slate-400">
+                                        <div className={`flex gap-3 text-[10px] text-slate-400 ${t('dir') === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
                                             <span className="flex items-center gap-1"><Eye size={12} /> {video.views}</span>
                                             <span className="flex items-center gap-1"><Calendar size={12} /> {video.date}</span>
                                         </div>
@@ -244,11 +248,11 @@ const ManageVideosPage = () => {
                         <table className="w-full">
                             <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
                                 <tr className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                    <th className="px-6 py-4">Video</th>
-                                    <th className="px-6 py-4">Instructor</th>
-                                    <th className="px-6 py-4">Stats</th>
-                                    <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4 text-right">Actions</th>
+                                    <th className="px-6 py-4">{t('dashboard.admin.manageVideos.table.video')}</th>
+                                    <th className="px-6 py-4">{t('dashboard.admin.manageVideos.table.instructor')}</th>
+                                    <th className="px-6 py-4">{t('dashboard.admin.manageVideos.table.stats')}</th>
+                                    <th className="px-6 py-4">{t('dashboard.admin.manageVideos.table.status')}</th>
+                                    <th className={`px-6 py-4 ${t('dir') === 'rtl' ? 'text-left' : 'text-right'}`}>{t('dashboard.admin.manageVideos.table.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -270,7 +274,11 @@ const ManageVideosPage = () => {
                                                 <span className="flex items-center gap-1"><Clock size={12} /> {video.duration}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wider ${getStatusStyle(video.status)}`}>{video.status}</span></td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wider ${getStatusStyle(video.status)}`}>
+                                                {t(`dashboard.admin.manageVideos.${video.status}`)}
+                                            </span>
+                                        </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right">
                                             <div className="flex justify-end gap-1 text-slate-500">
                                                 <button onClick={() => { setEditingVideo(video); setShowVideoModal(true); }} className="p-1.5 hover:bg-slate-100 rounded-lg"><Edit size={16} /></button>
@@ -290,9 +298,9 @@ const ManageVideosPage = () => {
                         <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
                             <Video size={32} />
                         </div>
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">No videos found</h3>
-                        <p className="text-slate-500 text-sm">Adjust search or filters.</p>
-                        <Button variant="outline" onClick={() => { setSearchTerm(''); setStatusFilter('all'); }}>Reset All Filters</Button>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t('dashboard.admin.manageVideos.noFound')}</h3>
+                        <p className="text-slate-500 text-sm">{t('dashboard.admin.manageVideos.noFoundHint')}</p>
+                        <Button variant="outline" onClick={() => { setSearchTerm(''); setStatusFilter('all'); }}>{t('dashboard.admin.manageVideos.resetFilters')}</Button>
                     </div>
                 </div>
             )}
@@ -302,9 +310,9 @@ const ManageVideosPage = () => {
                 {showVideoModal && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => { setShowVideoModal(false); setEditingVideo(null); }} />
-                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden">
+                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden text-left">
                             <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <h2 className="text-xl font-bold dark:text-white">{editingVideo ? 'Edit Video' : 'Add Video'}</h2>
+                                <h2 className="text-xl font-bold dark:text-white">{editingVideo ? t('dashboard.admin.manageVideos.editTitle') : t('dashboard.admin.manageVideos.addTitle')}</h2>
                                 <button onClick={() => { setShowVideoModal(false); setEditingVideo(null); }} className="p-2 hover:bg-slate-100 rounded-full"><X size={20} className="text-slate-500" /></button>
                             </div>
                             <form onSubmit={(e) => {
@@ -313,17 +321,39 @@ const ManageVideosPage = () => {
                                 const data = Object.fromEntries(formData);
                                 if (editingVideo) handleUpdateVideo({ ...editingVideo, ...data });
                                 else handleAddVideo(data);
-                            }} className="p-6 space-y-4 text-left">
-                                <div><label className="block text-sm font-medium mb-1 dark:text-slate-300">Title</label><input name="title" required defaultValue={editingVideo?.title || ''} className="w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none" /></div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div><label className="block text-sm font-medium mb-1 dark:text-slate-300">Instructor</label><input name="instructor" required defaultValue={editingVideo?.instructor || ''} className="w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none" /></div>
-                                    <div><label className="block text-sm font-medium mb-1 dark:text-slate-300">Course</label><input name="course" required defaultValue={editingVideo?.course || ''} className="w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none" /></div>
+                            }} className={`p-6 space-y-4 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.title')}</label>
+                                    <input name="title" required defaultValue={editingVideo?.title || ''} className={`w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div><label className="block text-sm font-medium mb-1 dark:text-slate-300">Duration</label><input name="duration" required defaultValue={editingVideo?.duration || '10:00'} className="w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none" /></div>
-                                    <div><label className="block text-sm font-medium mb-1 dark:text-slate-300">Status</label><select name="status" defaultValue={editingVideo?.status || 'published'} className="w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none"><option value="published">Published</option><option value="draft">Draft</option><option value="pending">Pending</option></select></div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.instructor')}</label>
+                                        <input name="instructor" required defaultValue={editingVideo?.instructor || ''} className={`w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.course')}</label>
+                                        <input name="course" required defaultValue={editingVideo?.course || ''} className={`w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                    </div>
                                 </div>
-                                <div className="pt-4 flex gap-3"><Button variant="outline" className="flex-1" onClick={() => { setShowVideoModal(false); setEditingVideo(null); }}>Cancel</Button><Button className="flex-1" type="submit">Save</Button></div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.duration')}</label>
+                                        <input name="duration" required defaultValue={editingVideo?.duration || '10:00'} className={`w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.status')}</label>
+                                        <select name="status" defaultValue={editingVideo?.status || 'published'} className={`w-full px-4 py-2 border rounded-xl dark:bg-slate-800 dark:border-slate-700 dark:text-white outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
+                                            <option value="published">{t('dashboard.admin.manageVideos.published')}</option>
+                                            <option value="draft">{t('dashboard.admin.manageVideos.draft')}</option>
+                                            <option value="pending">{t('dashboard.admin.manageVideos.pending')}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="pt-4 flex gap-3">
+                                    <Button variant="outline" className="flex-1" onClick={() => { setShowVideoModal(false); setEditingVideo(null); }}>{t('common.cancel')}</Button>
+                                    <Button className="flex-1" type="submit">{t('common.save')}</Button>
+                                </div>
                             </form>
                         </motion.div>
                     </div>

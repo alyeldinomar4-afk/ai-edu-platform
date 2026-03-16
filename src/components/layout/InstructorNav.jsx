@@ -1,16 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { LayoutDashboard, MessageSquare, Star, Megaphone, Video } from 'lucide-react';
 import { cn } from '../../utils';
 
 const InstructorNav = () => {
     const location = useLocation();
+    const { t } = useTranslation();
 
     const links = [
-        { name: 'Dashboard', path: '/instructor/dashboard', icon: LayoutDashboard },
-        { name: 'Lectures', path: '/instructor/videos', icon: Video },
-        { name: 'Q&A', path: '/instructor/qa', icon: MessageSquare },
-        { name: 'Reviews', path: '/instructor/reviews', icon: Star },
-        { name: 'Announcements', path: '/instructor/announcements', icon: Megaphone },
+        { name: t('instructorNav.dashboard'), path: '/instructor/dashboard', icon: LayoutDashboard },
+        { name: t('instructorNav.lectures'), path: '/instructor/videos', icon: Video },
+        { name: t('instructorNav.qa'), path: '/instructor/qa', icon: MessageSquare },
+        { name: t('instructorNav.reviews'), path: '/instructor/reviews', icon: Star },
+        { name: t('instructorNav.announcements'), path: '/instructor/announcements', icon: Megaphone },
     ];
 
     return (

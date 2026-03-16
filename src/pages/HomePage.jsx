@@ -5,10 +5,13 @@ import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials } from '../data/mockData';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
+import { useTranslation } from 'react-i18next';
 
 const HomePage = () => {
     const navigate = useNavigate();
     const { isAuthenticated, user } = useAuth();
+    const { t, i18n } = useTranslation();
+    const isAr = i18n.language === 'ar';
 
     const getStartedPath = !isAuthenticated
         ? '/register'
@@ -46,27 +49,35 @@ const HomePage = () => {
                         >
                             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-primary font-semibold text-sm mb-6">
                                 <Sparkles className="w-4 h-4" />
-                                <span>The Future of Learning is Here</span>
+                                <span>{t('home.heroBadge')}</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight">
-                                Master AI with <br />
+                            <h1 className={`text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight ${isAr ? 'leading-[1.4]' : ''}`}>
+                                {t('home.heroTitleMain')}
+                                {isAr ? ' ' : <br />}
                                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent">
-                                    Intelligent Education
+                                    {t('home.heroTitleHighlight')}
                                 </span>
+                                {t('home.heroTitleSuffix') && (
+                                    <>
+                                        <br />
+                                        {t('home.heroTitleSuffix')}
+                                    </>
+                                )}
                             </h1>
                             <p className="text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-lg leading-relaxed">
-                                Unlock your potential with <span className="font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">Nexora AI</span> — personalized learning paths,
-                                real-time feedback, and world-class instructors all in one platform.
+                                {t('home.heroSubtitle').split('Nexora AI')[0]}
+                                <span className="font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">Nexora AI</span>
+                                {t('home.heroSubtitle').split('Nexora AI')[1]}
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4">
+                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link to="/courses">
                                     <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all w-full sm:w-auto">
-                                        Start Learning Now <ArrowRight className="w-5 h-5 ml-2" />
+                                        {t('home.btnStartLearning')} <ArrowRight className="w-5 h-5 ml-2" />
                                     </Button>
                                 </Link>
                                 <Link to="/ai-demo">
                                     <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto">
-                                        <Play className="w-5 h-5 mr-2 fill-current" /> Watch Demo
+                                        <Play className="w-5 h-5 mr-2 fill-current" /> {t('home.btnWatchDemo')}
                                     </Button>
                                 </Link>
                             </div>
@@ -84,7 +95,7 @@ const HomePage = () => {
                                         </div>
                                     )))}
                                 </div>
-                                <p>Trusted by <span className="text-slate-900 dark:text-white font-bold">10,000+</span> students</p>
+                                <p>{t('home.trustedBy')} <span className="text-slate-900 dark:text-white font-bold">10,000+</span> {t('home.students')}</p>
                             </div>
                         </motion.div>
 
@@ -106,8 +117,8 @@ const HomePage = () => {
                                         <Award className="w-6 h-6" />
                                     </div>
                                     <div>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">Course Completed</p>
-                                        <p className="text-lg font-bold text-slate-900 dark:text-white">Python Mastery</p>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400">{t('home.hero.courseCompleted')}</p>
+                                        <p className="text-lg font-bold text-slate-900 dark:text-white">{t('home.hero.pythonMastery')}</p>
                                     </div>
                                 </div>
 
@@ -116,7 +127,7 @@ const HomePage = () => {
                                         <Star className="w-5 h-5 fill-current" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-bold text-slate-900 dark:text-white">4.9/5 Rating</p>
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{t('home.hero.rating')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -129,10 +140,10 @@ const HomePage = () => {
             <section className="bg-slate-900 dark:bg-black text-white py-12 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-8 text-center md:text-left">
                     {[
-                        { label: 'Active Learners', value: '50k+' },
-                        { label: 'Courses Available', value: '200+' },
-                        { label: 'Instructors', value: '50+' },
-                        { label: 'Satisfaction Rate', value: '99%' },
+                        { label: t('home.stats.learners'), value: '50k+' },
+                        { label: t('home.stats.courses'), value: '200+' },
+                        { label: t('home.stats.instructors'), value: '50+' },
+                        { label: t('home.stats.satisfaction'), value: '99%' },
                     ].map((stat, idx) => (
                         <div key={idx} className="flex-1 min-w-[150px]">
                             <h3 className="text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-primary via-secondary to-white">{stat.value}</h3>
@@ -145,9 +156,9 @@ const HomePage = () => {
             {/* Categories Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                 <div className="text-center mb-16">
-                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">Nexora AI Categories</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Explore What You Love</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto">Browse our curated categories and find the perfect course for your goals</p>
+                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.categories.badge')}</span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">{t('home.categories.title')}</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto">{t('home.categories.subtitle')}</p>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -171,8 +182,10 @@ const HomePage = () => {
                                     <span className={`text-2xl group-hover:text-primary transition-colors`}>{cat.icon || '📚'}</span>
                                 )}
                             </div>
-                            <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{cat.name}</h3>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{cat.count} Courses</p>
+                            <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
+                            </h3>
+                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{cat.count} {t('home.categories.coursesCount')}</p>
                         </motion.div>
                     ))}
                 </div>
@@ -183,12 +196,12 @@ const HomePage = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-end mb-12">
                         <div>
-                            <span className="text-primary font-semibold tracking-wider uppercase text-sm">Top Rated</span>
-                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">Featured Courses</h2>
+                            <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.featured.badge')}</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">{t('home.featured.title')}</h2>
                         </div>
                         <Link to="/courses">
                             <Button variant="ghost" className="hidden sm:flex items-center gap-1 hover:text-primary dark:text-slate-300 cursor-pointer">
-                                View All Courses <ArrowRight className="w-4 h-4" />
+                                {t('home.featured.btnViewAll')} <ArrowRight className="w-4 h-4" />
                             </Button>
                         </Link>
                     </div>
@@ -209,7 +222,7 @@ const HomePage = () => {
 
                     <div className="mt-8 text-center sm:hidden">
                         <Link to="/courses">
-                            <Button variant="outline" className="w-full h-12 dark:border-slate-700 dark:text-slate-300">View All Courses</Button>
+                            <Button variant="outline" className="w-full h-12 dark:border-slate-700 dark:text-slate-300">{t('home.featured.btnViewAll')}</Button>
                         </Link>
                     </div>
                 </div>
@@ -222,19 +235,18 @@ const HomePage = () => {
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
                                 <Zap className="w-4 h-4 text-yellow-400" />
-                                <span>AI-Powered Assistant</span>
+                                <span>{t('home.aiHighlight.badge')}</span>
                             </div>
                             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                                Learning stuck? <br />
-                                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">Ask the AI Tutor.</span>
+                                {t('home.aiHighlight.titleMain')} <br />
+                                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{t('home.aiHighlight.titleHighlight')}</span>
                             </h2>
                             <p className="text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
-                                Get instant feedback, code explanations, and personalized study plans.
-                                Our AI tutor understands your learning style and adapts to your pace.
+                                {t('home.aiHighlight.subtitle')}
                             </p>
                             <Link to="/ai-demo">
                                 <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 hover:scale-105 transition-transform border-none shadow-xl shadow-white/5">
-                                    Try AI Demo <ArrowRight className="w-5 h-5 ml-2" />
+                                    {t('home.aiHighlight.btnTryDemo')} <ArrowRight className="w-5 h-5 ml-2" />
                                 </Button>
                             </Link>
                         </div>
@@ -248,7 +260,7 @@ const HomePage = () => {
                                             <Users className="w-5 h-5" />
                                         </div>
                                         <div className="bg-slate-700/50 dark:bg-slate-800/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
-                                            <p>How do I optimize this React component for performance?</p>
+                                            <p>{t('home.aiHighlight.chatUserQuery')}</p>
                                         </div>
                                     </div>
                                     <div className="flex gap-4 items-start">
@@ -256,7 +268,7 @@ const HomePage = () => {
                                             <Zap className="w-5 h-5" />
                                         </div>
                                         <div className="bg-slate-700/50 dark:bg-slate-800/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
-                                            <p className="mb-2">You can use `useMemo` and `useCallback` to prevent unnecessary re-renders.</p>
+                                            <p className="mb-2">{t('home.aiHighlight.chatAiResponse')}</p>
                                             <div className="bg-slate-900 rounded p-2 font-mono text-xs text-green-300">
                                                 const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);
                                             </div>
@@ -275,14 +287,14 @@ const HomePage = () => {
             {/* Testimonials */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
                 <div className="text-center mb-16">
-                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">Testimonials</span>
-                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">Loved by Students</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-3">See what our community has to say about Nexora AI</p>
+                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.testimonials.badge')}</span>
+                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{t('home.testimonials.title')}</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mt-3">{t('home.testimonials.subtitle')}</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {testimonials.map((t, idx) => (
+                    {testimonials.map((testimonial, idx) => (
                         <motion.div
-                            key={t.id}
+                            key={testimonial.id}
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ delay: idx * 0.1 }}
@@ -290,16 +302,18 @@ const HomePage = () => {
                             className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                         >
                             <div className="flex items-center gap-4 mb-6">
-                                <img src={t.avatar} alt={t.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
+                                <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
                                 <div>
-                                    <h4 className="font-bold text-slate-900 dark:text-white">{t.name}</h4>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400">{t.role}</p>
+                                    <h4 className="font-bold text-slate-900 dark:text-white">{testimonial.name}</h4>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                                        {t(`home.testimonials.roles.${testimonial.role.charAt(0).toLowerCase() + testimonial.role.slice(1).replace(/\s+/g, '')}`)}
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex gap-1 mb-4">
                                 {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
                             </div>
-                            <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm">"{t.content}"</p>
+                            <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm">"{testimonial.content}"</p>
                         </motion.div>
                     ))}
                 </div>
@@ -316,12 +330,12 @@ const HomePage = () => {
                     <div className="absolute inset-0 bg-black/20" />
                     <div className="relative z-10">
                         <Sparkles className="w-8 h-8 text-white/80 mx-auto mb-4" />
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Transform Your Learning?</h2>
-                        <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">Join thousands of students already learning smarter with Nexora AI</p>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('home.cta.title')}</h2>
+                        <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">{t('home.cta.subtitle')}</p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link to={getStartedPath}>
                                 <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl h-14 px-8 text-lg">
-                                    {isAuthenticated ? 'Continue Learning' : 'Get Started Free'} <ArrowRight className="w-5 h-5 ml-2" />
+                                    {isAuthenticated ? t('home.cta.btnContinue') : t('home.cta.btnGetStarted')} <ArrowRight className="w-5 h-5 ml-2" />
                                 </Button>
                             </Link>
                         </div>

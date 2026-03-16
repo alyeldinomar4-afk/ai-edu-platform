@@ -264,7 +264,21 @@ export const lectures = [
         duration: "12:45",
         status: "published",
         date: "2024-02-15",
-        thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
+        thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+        quiz: [
+            {
+                id: 1,
+                question: "What is the main goal of Supervised Learning?",
+                options: ["Pattern recognition in unlabeled data", "Predicting a target value from labeled data", "Maximizing a reward signal", "Compressing data"],
+                correctAnswer: 1
+            },
+            {
+                id: 2,
+                question: "Which of these is a regression task?",
+                options: ["Spam detection", "Digit recognition", "House price prediction", "Cluster analysis"],
+                correctAnswer: 2
+            }
+        ]
     },
     {
         id: 2,

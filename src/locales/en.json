@@ -1,0 +1,626 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "dashboard": "Dashboard",
+    "login": "Log in",
+    "getStarted": "Get Started",
+    "logout": "Logout",
+    "instructors": "Instructors",
+    "aiDemo": "AI Demo",
+    "switchToArabic": "العربية"
+  },
+  "home": {
+    "heroBadge": "The Future of Learning is Here",
+    "heroTitleMain": "Master AI with",
+    "heroTitleHighlight": "Intelligent Education",
+    "heroTitleSuffix": "",
+    "heroSubtitle": "Unlock your potential with Nexora AI — personalized learning paths, real-time feedback, and world-class instructors all in one platform.",
+    "btnStartLearning": "Start Learning Now",
+    "btnWatchDemo": "Watch Demo",
+    "trustedBy": "Trusted by",
+    "students": "students",
+    "hero": {
+      "courseCompleted": "Course Completed",
+      "pythonMastery": "Python Mastery",
+      "rating": "4.9/5 Rating"
+    },
+    "stats": {
+      "learners": "Active Learners",
+      "courses": "Courses Available",
+      "instructors": "Instructors",
+      "satisfaction": "Satisfaction Rate"
+    },
+    "categories": {
+      "badge": "Nexora AI Categories",
+      "title": "Explore What You Love",
+      "subtitle": "Browse our curated categories and find the perfect course for your goals",
+      "coursesCount": "Courses"
+    },
+    "featured": {
+      "badge": "Top Rated",
+      "title": "Featured Courses",
+      "btnViewAll": "View All Courses"
+    },
+    "aiHighlight": {
+      "badge": "AI-Powered Assistant",
+      "titleMain": "Learning stuck?",
+      "titleHighlight": "Ask the AI Tutor.",
+      "subtitle": "Get instant feedback, code explanations, and personalized study plans. Our AI tutor understands your learning style and adapts to your pace.",
+      "btnTryDemo": "Try AI Demo",
+      "chatUserQuery": "How do I optimize this React component for performance?",
+      "chatAiResponse": "You can use `useMemo` and `useCallback` to prevent unnecessary re-renders."
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "Loved by Students",
+      "subtitle": "See what our community has to say about Nexora AI",
+      "roles": {
+        "softwareEngineer": "Software Engineer",
+        "dataAnalyst": "Data Analyst",
+        "student": "Student"
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Learning?",
+      "subtitle": "Join thousands of students already learning smarter with Nexora AI",
+      "btnContinue": "Continue Learning",
+      "btnGetStarted": "Get Started Free",
+      "free": "Free"
+    }
+  },
+  "footer": {
+    "tagline": "Empowering the next generation of learners with AI-driven personalized education.",
+    "platform": "Platform",
+    "company": "Company",
+    "careers": "Careers",
+    "blog": "Blog",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy",
+    "allRightsReserved": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "actions": "Actions",
+    "status": "Status",
+    "back": "Back",
+    "welcome": "Welcome back",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "error_title": "Oops! Something went wrong",
+    "error_subtitle": "An unexpected error occurred. Please try refreshing the page or going back to the home page.",
+    "refresh_page": "Refresh Page",
+    "justNow": "Just now"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your learning journey",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "orContinue": "Or continue with",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Start your AI learning journey today",
+      "nameLabel": "Full Name",
+      "roleLabel": "I am a...",
+      "roleStudent": "Student",
+      "roleInstructor": "Instructor",
+      "roleHint": "* Choose 'Student' to learn or 'Instructor' to teach.",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "forgotPassword": {
+      "title": "Forgot password?",
+      "subtitle": "No worries, we'll send you reset instructions.",
+      "emailLabel": "Email address",
+      "submit": "Send Reset Link",
+      "backToSignIn": "Back to sign in",
+      "successTitle": "Check your email",
+      "successSubtitle": "We sent a password reset link to your email address.",
+      "backToReset": "Back to reset"
+    }
+  },
+  "dashboard": {
+    "learner": {
+      "welcomePrompt": "Ready to continue your learning journey?",
+      "stats": {
+        "inProgress": "Courses in Progress",
+        "learningTime": "Learning Time",
+        "certificates": "Certificates Earned"
+      },
+      "continueLearning": "Continue Learning",
+      "resume": "Resume",
+      "noCourses": "No courses in progress",
+      "noCoursesHint": "Start learning by enrolling in a course!",
+      "browseCourses": "Browse Courses",
+      "recommended": "Recommended for You",
+      "noRecs": "No recommendations yet",
+      "noRecsHint": "Start exploring courses and we'll personalize your recommendations.",
+      "announcements": "Instructor Announcements",
+      "quickActions": "Quick Actions",
+      "aiTutor": "AI Tutor",
+      "aiTutorHint": "Get help from AI",
+      "profile": "Profile",
+      "profileHint": "Manage details"
+    },
+    "admin": {
+      "panel": "Admin Panel",
+      "dashboard": "Dashboard",
+      "courses": "Courses",
+      "videos": "Videos",
+      "users": "Users",
+      "profile": "Profile",
+      "logout": "Logout",
+      "title": "Admin Dashboard",
+      "lastUpdated": "Last updated",
+      "stats": {
+        "totalUsers": "Total Users",
+        "activeCourses": "Active Courses",
+        "videosUploaded": "Videos Uploaded",
+        "totalRevenue": "Total Revenue"
+      },
+      "revenueOverview": "Revenue Overview",
+      "recentActivity": "Recent Activity",
+      "newUser": "New user registered",
+      "manageCourses": {
+        "title": "Manage Courses",
+        "addNew": "Add New Course",
+        "searchPlaceholder": "Search courses by title, instructor, or category...",
+        "table": {
+          "course": "Course",
+          "instructor": "Instructor",
+          "category": "Category",
+          "price": "Price",
+          "actions": "Actions"
+        },
+        "showing": "Showing {{count}} of {{total}} courses",
+        "noFound": "No courses found",
+        "searchHint": "Try adjusting your search term.",
+        "emptyHint": "Click 'Add New Course' to create your first course.",
+        "clearSearch": "Clear Search",
+        "editCourse": "Edit Course",
+        "addCourse": "Add New Course",
+        "courseTitle": "Course Title",
+        "instructor": "Instructor",
+        "category": "Category",
+        "priceLabel": "Price ($)",
+        "titlePlaceholder": "e.g. Introduction to Machine Learning",
+        "instructorPlaceholder": "e.g. Dr. Sarah Smith",
+        "pricePlaceholder": "19.99",
+        "deleteTitle": "Delete Course?",
+        "deleteContent": "This action cannot be undone. The course and all its data will be permanently removed."
+      },
+      "manageVideos": {
+        "title": "Manage Videos",
+        "subtitle": "Moderating and organizing platform content.",
+        "uploadNew": "Upload New",
+        "searchPlaceholder": "Search videos...",
+        "allStatus": "All Status",
+        "published": "Published",
+        "pending": "Pending",
+        "draft": "Draft",
+        "table": {
+          "video": "Video",
+          "instructor": "Instructor",
+          "stats": "Stats",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "noFound": "No videos found",
+        "resetFilters": "Reset All Filters",
+        "editTitle": "Edit Video",
+        "addTitle": "Add Video",
+        "form": {
+          "title": "Title",
+          "instructor": "Instructor",
+          "course": "Course",
+          "duration": "Duration",
+          "status": "Status"
+        },
+        "noFoundHint": "We couldn't find any videos matching your search criteria.",
+        "toasts": {
+          "deleteSuccess": "Video deleted successfully!",
+          "addSuccess": "Video added successfully!",
+          "updateSuccess": "Video updated successfully!",
+          "publishSuccess": "Video published successfully!",
+          "unpublishSuccess": "Video unpublished successfully!"
+        }
+      },
+      "manageUsers": {
+        "title": "Manage Users",
+        "subtitle": "View and manage all registered users and their permissions.",
+        "addNew": "Add New User",
+        "stats": {
+          "totalUsers": "Total Users",
+          "totalInstructors": "Total Instructors",
+          "suspendedUsers": "Suspended Users"
+        },
+        "searchPlaceholder": "Search by name or email...",
+        "allRoles": "All Roles",
+        "learners": "Learners",
+        "instructors": "Instructors",
+        "admins": "Admins",
+        "allStatus": "All Status",
+        "active": "Active",
+        "suspended": "Suspended",
+        "table": {
+          "user": "User",
+          "role": "Role",
+          "joined": "Joined",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "editTitle": "Edit User Details",
+        "editUser": "Edit User",
+        "deleteUser": "Delete User",
+        "addTitle": "Add New User",
+        "form": {
+          "fullName": "Full Name",
+          "email": "Email Address",
+          "role": "Role",
+          "status": "Status",
+          "placeholderName": "Ali Omar",
+          "placeholderEmail": "john@example.com",
+          "createAccount": "Create Account"
+        },
+        "showing": "Showing {{count}} of {{total}} users",
+        "noFound": "No users found matching your criteria.",
+        "clearFilters": "Clear All Filters",
+        "toasts": {
+          "addSuccess": "User added successfully!",
+          "updateSuccess": "User updated successfully!",
+          "deleteSuccess": "User deleted successfully!",
+          "activatedSuccess": "User activated successfully!",
+          "suspendedSuccess": "User suspended successfully!"
+        }
+      },
+      "settings": {
+        "title": "Platform Settings",
+        "subtitle": "Configure platform-wide settings, AI behavior, and integrations.",
+        "saveSuccess": "Settings saved successfully!",
+        "tabs": {
+          "general": "General",
+          "ai": "AI Configuration",
+          "workflow": "Workflow",
+          "integrations": "Integrations"
+        },
+        "general": {
+          "title": "General Settings",
+          "platformName": "Platform Name",
+          "supportEmail": "Support Email",
+          "maintenanceMode": "Maintenance Mode",
+          "maintenanceHint": "When active, the platform will be offline for maintenance."
+        },
+        "ai": {
+          "title": "AI Configuration",
+          "enableTutor": "Enable AI Tutor",
+          "tutorHint": "Enable the smart assistant for all students.",
+          "model": "Default AI Model",
+          "feedbackIntensity": "Feedback Intensity",
+          "intensityLow": "Low",
+          "intensityMedium": "Medium",
+          "intensityHigh": "High"
+        },
+        "workflow": {
+          "title": "Platform Workflow",
+          "autoApprove": "Auto-approve Courses",
+          "currency": "Default Currency",
+          "currencyHint": "Primary currency for all transactions."
+        },
+        "integrations": {
+          "title": "Integrations & Security",
+          "googleLogin": "Google Social Login",
+          "githubLogin": "GitHub Social Login"
+        }
+      }
+    },
+    "instructor": {
+      "lectures": {
+        "title": "Course Lectures",
+        "subtitle": "Manage and organize your educational video content.",
+        "uploadNew": "Upload Lecture",
+        "searchPlaceholder": "Search by title or course...",
+        "allStatus": "All Status",
+        "published": "Published",
+        "pending": "Pending",
+        "draft": "Draft",
+        "table": {
+          "details": "Lecture Details",
+          "engagement": "Engagement",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "noFound": "No lectures found",
+        "noFoundHint": "We couldn't find any lectures matching your current search or filters.",
+        "clearFilters": "Clear All Filters",
+        "addTitle": "Upload New Lecture",
+        "editTitle": "Edit Lecture",
+        "modalSubtitle": "Set the core details for your course content.",
+        "form": {
+          "title": "Lecture Title",
+          "titlePlaceholder": "e.g. Understanding Neural Networks",
+          "course": "Assigned Course",
+          "coursePlaceholder": "e.g. AI Mastery 101",
+          "duration": "Duration (MM:SS)",
+          "privacy": "Privacy Status",
+          "public": "Public (Published)",
+          "private": "Private (Draft)",
+          "pending": "Awaiting Review (Pending)",
+          "resources": "Lecture Resources",
+          "uploadResources": "Click to upload resource files",
+          "uploadHint": "PDF, DOCX, ZIP up to 50MB",
+          "discard": "Discard",
+          "saving": "Saving...",
+          "confirm": "Confirm Upload",
+          "update": "Update Lecture"
+        },
+        "toasts": {
+          "deleteSuccess": "Lecture deleted successfully",
+          "statusUpdate": "Lecture marked as {{status}}",
+          "uploadSuccess": "Lecture uploaded successfully!",
+          "updateSuccess": "Lecture updated successfully!",
+          "titleRequired": "Lecture title is required"
+        },
+        "quiz": {
+          "title": "Lecture Quiz",
+          "add": "Add Quiz to Lecture",
+          "active": "Quiz Active",
+          "question": "Question",
+          "questionPlaceholder": "Type your question here...",
+          "option": "Option",
+          "addQuestion": "Add New Question"
+        }
+      },
+      "announcements": {
+        "title": "Announcements",
+        "subtitle": "Keep your students engaged by sending updates and news.",
+        "new": "New Announcement",
+        "composeTitle": "Compose Announcement",
+        "selectCourse": "Select Course",
+        "subject": "Subject",
+        "subjectPlaceholder": "e.g. Important Update: New Content Added",
+        "message": "Message",
+        "messagePlaceholder": "Write your message here...",
+        "mockEditor": "Mock Rich Text Editor",
+        "cancel": "Cancel",
+        "send": "Send Announcement",
+        "sending": "Sending...",
+        "history": "Past Announcements",
+        "sentTo": "Sent to {{count}}",
+        "success": "Announcement sent successfully!",
+        "allCourses": "All Courses"
+      },
+      "qa": {
+        "title": "Q&A Management",
+        "subtitle": "Answer student questions and keep them unblocked on their learning journey.",
+        "needsReply": "Needs Reply",
+        "resolved": "Resolved",
+        "pending": "Pending",
+        "placeholder": "Write your answer here...",
+        "cancel": "Cancel",
+        "update": "Update Answer",
+        "post": "Post Answer",
+        "emptyTitle": "No questions yet",
+        "emptySubtitle": "You are all caught up!"
+      },
+      "reviews": {
+        "title": "Student Reviews",
+        "subtitle": "See what your students think and reply to their feedback.",
+        "avgRating": "Course Rating",
+        "instructor": "Instructor",
+        "yourReply": "Your Reply",
+        "editReply": "Edit Reply",
+        "respond": "Respond",
+        "cancel": "Cancel",
+        "updateReply": "Update Reply",
+        "sendReply": "Send Reply",
+        "placeholder": "Acknowledge the review and thank the student...",
+        "emptyTitle": "No reviews yet",
+        "emptySubtitle": "Keep teaching! Reviews will appear here soon."
+      },
+      "title": "Instructor Dashboard",
+      "subtitle": "Manage your courses and track performance.",
+      "newCourse": "New Course",
+      "stats": {
+        "totalStudents": "Total Students",
+        "totalRevenue": "Total Revenue",
+        "courseRating": "Course Rating",
+        "activeCourses": "Active Courses",
+        "vsLastMonth": "vs last month",
+        "avgFrom": "Average from {{count}} reviews",
+        "pendingReview": "{{count}} pending review"
+      },
+      "yourCourses": "Your Courses",
+      "courseName": "Course Name",
+      "students": "Students",
+      "revenue": "Revenue",
+      "published": "Published",
+      "draft": "Draft",
+      "noCourses": "No courses yet",
+      "noCoursesHint": "Create your first course to start teaching!",
+      "modals": {
+        "createTitle": "Create New Course",
+        "editTitle": "Edit Course",
+        "courseTitle": "Course Title *",
+        "titlePlaceholder": "e.g. Advanced Python Masterclass",
+        "pricePlaceholder": "$0",
+        "price": "Price",
+        "saveChanges": "Save Changes",
+        "createCourse": "Create Course",
+        "deleteConfirm": "Delete Course?",
+        "deleteHint": "This action cannot be undone. All course data will be lost."
+      }
+    }
+  },
+  "courseDetails": {
+    "tabs": {
+      "overview": "Overview",
+      "curriculum": "Curriculum",
+      "instructor": "Instructor",
+      "reviews": "Reviews"
+    },
+    "locked": {
+      "title": "This course is locked",
+      "subtitle": "Buy the course to access videos and all course content.",
+      "unlock": "Unlock Course"
+    },
+    "description": "Course Description",
+    "description_short": "Master {{title}} with this comprehensive course. Learn from industry experts and build real-world projects.",
+    "description_full": "This course will take you through a comprehensive journey in {{category}}. From the very first lecture to the advanced modules, you will gain hands-on experience and deep insights from {{instructor}}.",
+    "createdBy": "Created by",
+    "whatLearn": "What you'll learn",
+    "masterCore": "Master core concepts and advanced techniques",
+    "content": "Course Content",
+    "lectures": "lectures",
+    "lecture": "Lecture",
+    "gettingStarted": "Getting Started",
+    "totalLength": "total length",
+    "section": "Section",
+    "min": "m",
+    "aboutInstructor": "About the Instructor",
+    "seniorInstructor": "Senior Instructor & Developer",
+    "students": "Students",
+    "courses": "Courses",
+    "rating": "Rating",
+    "instructorBio": "Expert instructor with over 10 years of experience teaching {{instructor}}.",
+    "courseRating": "Course Rating",
+    "leaveReview": "Leave a Review",
+    "ratePrompt": "How would you rate this course?",
+    "feedbackPrompt": "Write your feedback",
+    "feedbackPlaceholder": "What did you like or dislike about this course? How can the instructor improve?",
+    "submitReview": "Submit Review",
+    "recentReviews": "Recent Reviews",
+    "buyCourse": "Buy Course",
+    "manageCourse": "Manage Course",
+    "includes": "This course includes",
+    "onDemandVideo": "on-demand video",
+    "articlesResources": "articles & resources",
+    "lifetimeAccess": "Full lifetime access",
+    "certificate": "Certificate of completion",
+    "moneyBack": "30-Day Money-Back Guarantee",
+    "ratings": {
+      "poor": "Poor",
+      "fair": "Fair",
+      "good": "Good",
+      "veryGood": "Very Good",
+      "excellent": "Excellent"
+    }
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "instructorTitle": "Instructor Profile",
+    "adminTitle": "Admin Profile",
+    "subtitle": "Manage your personal information and security.",
+    "instructorSubtitle": "Manage your public profile, bio, and security settings.",
+    "defaultHeadline": "Senior AI Instructor & Consultant",
+    "defaultBio": "Passionate about teaching Artificial Intelligence and Machine Learning to the next generation of developers. With over 10 years of industry experience, I focus on practical, hands-on learning.",
+    "adminSubtitle": "Manage your administrator account settings.",
+    "personalInfo": "Personal Information",
+    "security": "Password & Security",
+    "changePassword": "Change Password",
+    "bio": "About Me (Bio)",
+    "bioHint": "Write a brief biography. This will be shown on your public instructor page and course details.",
+    "bioPlaceholder": "Share your experience, achievements, and teaching philosophy...",
+    "headline": "Professional Headline",
+    "headlinePlaceholder": "e.g. Senior Machine Learning Engineer",
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "socials": "Social Profiles",
+    "website": "Personal Website",
+    "linkedin": "LinkedIn Profile",
+    "twitter": "Twitter Profile",
+    "saveChanges": "Save Changes",
+    "saveProfile": "Save Profile",
+    "updatePassword": "Update Password",
+    "uploadPhoto": "Upload New Photo",
+    "removePhoto": "Remove",
+    "updatePhoto": "Update Photo",
+    "updateCover": "Update Cover Photo",
+    "saving": "Saving...",
+    "updating": "Updating...",
+    "successUpdate": "Profile updated successfully!",
+    "successPassword": "Password updated successfully!",
+    "errorPasswordMatch": "New passwords do not match!",
+    "photoUpdated": "Photo updated successfully!",
+    "photoRemoved": "Photo removed successfully!"
+  },
+  "instructorNav": {
+    "dashboard": "Dashboard",
+    "lectures": "Lectures",
+    "qa": "Q&A",
+    "reviews": "Reviews",
+    "announcements": "Announcements"
+  },
+  "courses": {
+    "title": "Explore Courses",
+    "subtitle": "Discover new skills with AI-assisted learning",
+    "searchPlaceholder": "Search by course name...",
+    "filters": "Filters",
+    "clearAll": "Clear all",
+    "categoriesLabel": "Categories",
+    "allCategories": "All Categories",
+    "difficulty": "Difficulty",
+    "noCoursesFound": "No courses found",
+    "noCoursesHint": "We couldn't find any courses matching your search criteria. Try adjusting your filters or search term.",
+    "clearFilters": "Clear All Filters",
+    "lessons": "Lessons",
+    "viewCourse": "View Course",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "categories": {
+      "development": "Development",
+      "dataScience": "Data Science",
+      "design": "Design",
+      "marketing": "Marketing",
+      "photography": "Photography",
+      "finance": "Finance"
+    }
+  },
+  "publicInstructor": {
+    "aboutMe": "About Me",
+    "statistics": "Instructor Statistics",
+    "rating": "Instructor Rating",
+    "students": "Students Worldwide",
+    "courses": "Courses Available",
+    "coursesBy": "Courses by {{instructorName}}",
+    "follow": "Follow",
+    "following": "Following",
+    "reviews": "reviews",
+    "from": "From"
+  },
+  "course": {
+    "quiz": {
+      "title": "Lecture Quiz",
+      "completed": "Quiz Completed!",
+      "score": "You scored {{score}} out of {{total}}",
+      "retry": "Retry Quiz",
+      "noQuiz": "No Quiz Available",
+      "noQuizDesc": "The instructor hasn't added a quiz for this lecture yet.",
+      "progress": "Question {{current}} of {{total}}",
+      "next": "Next Question",
+      "results": "See Results"
+    }
+  }
+}

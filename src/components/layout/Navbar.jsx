@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, BookOpen, LogOut } from 'lucide-react';
+import { Menu, X, BookOpen, LogOut, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import logoLight from '../../assets/logo-light.png';
 import logoDark from '../../assets/logo-dark.png';
 import Button from '../ui/Button';
@@ -14,6 +15,7 @@ const Navbar = () => {
     const { user, logout } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     const handleLogout = () => {
         logout();
@@ -26,13 +28,13 @@ const Navbar = () => {
     };
 
     const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'Courses', path: '/courses' },
+        { name: t('nav.home'), path: '/' },
+        { name: t('nav.courses'), path: '/courses' },
     ];
 
     // Add dashboard link if logged in
     if (user) {
-        navLinks.push({ name: 'Dashboard', path: getDashboardPath() });
+        navLinks.push({ name: t('nav.dashboard'), path: getDashboardPath() });
     }
 
     return (
@@ -72,6 +74,14 @@ const Navbar = () => {
 
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-3">
+                        <button
+                            onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}
+                            className="p-2 rounded-full text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors flex items-center gap-2"
+                            title={t('nav.switchToArabic')}
+                        >
+                            <Globe size={20} />
+                            <span className="text-sm font-medium">{i18n.language === 'en' ? 'العربية' : 'EN'}</span>
+                        </button>
                         <ThemeToggle />
 
                         {user ? (
@@ -80,17 +90,17 @@ const Navbar = () => {
                                     <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden lg:block">{user.name}</span>
                                     <img src={user.avatar} alt={user.name} className="w-9 h-9 rounded-full border border-slate-200 dark:border-slate-600" />
                                 </Link>
-                                <Button variant="ghost" size="sm" onClick={handleLogout} title="Logout">
+                                <Button variant="ghost" size="sm" onClick={handleLogout} title={t('nav.logout')}>
                                     <LogOut size={18} className="text-slate-500 hover:text-red-500 dark:text-slate-400" />
                                 </Button>
                             </div>
                         ) : (
                             <>
                                 <Link to="/login">
-                                    <Button variant="ghost" size="sm">Log in</Button>
+                                    <Button variant="ghost" size="sm">{t('nav.login')}</Button>
                                 </Link>
                                 <Link to="/register">
-                                    <Button size="sm">Get Started</Button>
+                                    <Button size="sm">{t('nav.getStarted')}</Button>
                                 </Link>
                             </>
                         )}
@@ -98,6 +108,12 @@ const Navbar = () => {
 
                     {/* Mobile menu button */}
                     <div className="md:hidden flex items-center gap-2">
+                        <button
+                            onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}
+                            className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        >
+                            <Globe size={20} />
+                        </button>
                         <ThemeToggle />
                         <button
                             onClick={() => setIsOpen(!isOpen)}
@@ -142,16 +158,16 @@ const Navbar = () => {
                                             <span className="font-medium text-slate-900 dark:text-white">{user.name}</span>
                                         </Link>
                                         <Button variant="ghost" className="w-full justify-start text-red-500" onClick={() => { handleLogout(); setIsOpen(false); }}>
-                                            <LogOut size={16} className="mr-2" /> Logout
+                                            <LogOut size={16} className="mr-2" /> {t('nav.logout')}
                                         </Button>
                                     </>
                                 ) : (
                                     <>
                                         <Link to="/login" onClick={() => setIsOpen(false)}>
-                                            <Button variant="ghost" className="w-full justify-start">Log in</Button>
+                                            <Button variant="ghost" className="w-full justify-start">{t('nav.login')}</Button>
                                         </Link>
                                         <Link to="/register" onClick={() => setIsOpen(false)}>
-                                            <Button className="w-full justify-start">Get Started</Button>
+                                            <Button className="w-full justify-start">{t('nav.getStarted')}</Button>
                                         </Link>
                                     </>
                                 )}

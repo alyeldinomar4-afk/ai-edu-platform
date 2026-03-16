@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Star, Clock, BookOpen, User, DollarSign, CheckCircle, PlayCircle, BarChart, X, Lock } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { Star, Clock, BookOpen, User, Users, DollarSign, CheckCircle, PlayCircle, BarChart, X, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
@@ -12,6 +13,7 @@ const CourseDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
 
     // TODO: Replace with real purchase check from backend
     const purchasedCourses = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
@@ -50,10 +52,10 @@ const CourseDetailsPage = () => {
     }, [id]);
 
     const tabs = [
-        { id: 'overview', label: 'Overview' },
-        { id: 'curriculum', label: 'Curriculum' },
-        { id: 'instructor', label: 'Instructor' },
-        { id: 'reviews', label: 'Reviews' },
+        { id: 'overview', label: t('courseDetails.tabs.overview') },
+        { id: 'curriculum', label: t('courseDetails.tabs.curriculum') },
+        { id: 'instructor', label: t('courseDetails.tabs.instructor') },
+        { id: 'reviews', label: t('courseDetails.tabs.reviews') },
     ];
 
     if (isLoading) {
@@ -115,7 +117,7 @@ const CourseDetailsPage = () => {
                         <div className="flex-1 min-w-0">
                             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight wrap-break-word">{course.title}</h1>
                             <p className="text-slate-300 dark:text-slate-400 text-base sm:text-lg mb-6">
-                                Master {course.title} with this comprehensive course. Learn from industry experts and build real-world projects.
+                                {t('courseDetails.description_short', { title: course.title })}
                             </p>
 
                             <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm text-slate-300 dark:text-slate-400">
@@ -128,7 +130,7 @@ const CourseDetailsPage = () => {
                                 <div className="flex items-center gap-1.5">
                                     <User className="w-4 h-4 shrink-0 text-slate-400" />
                                     <Link to={`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`} className="truncate max-w-[150px] sm:max-w-none hover:text-primary transition-colors cursor-pointer block">
-                                        <span className="hidden sm:inline text-slate-400">Created by </span>
+                                        <span className="hidden sm:inline text-slate-400">{t('courseDetails.createdBy')} </span>
                                         <span className="text-white font-medium underline decoration-primary/50 underline-offset-4">{course.instructor}</span>
                                     </Link>
                                 </div>
@@ -183,11 +185,11 @@ const CourseDetailsPage = () => {
                                             <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                                                 <Lock className="w-9 h-9 text-slate-400 dark:text-slate-500" />
                                             </div>
-                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">This course is locked</h3>
-                                            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-xs mx-auto">Buy the course to access videos and all course content.</p>
+                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{t('courseDetails.locked.title')}</h3>
+                                            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-xs mx-auto">{t('courseDetails.locked.subtitle')}</p>
                                             <Button onClick={() => navigate(`/checkout/${id}`)} size="lg" className="shadow-[0_4px_14px_0_rgb(79,70,229,0.39)]">
                                                 <Lock className="w-4 h-4" />
-                                                Unlock Course
+                                                {t('courseDetails.locked.unlock')}
                                             </Button>
                                         </motion.div>
                                     </div>
@@ -202,22 +204,21 @@ const CourseDetailsPage = () => {
                                     >
                                         {activeTab === 'overview' && (
                                             <div className="space-y-6">
-                                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">Course Description</h3>
+                                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.description')}</h3>
                                                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                                                     {course.description}
                                                 </p>
                                                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                                                    This course will take you through a comprehensive journey in {course.category}.
-                                                    From the very first lecture to the advanced modules, you will gain hands-on experience and deep insights from {course.instructor}.
+                                                    {t('courseDetails.description_full', { category: course.category, instructor: course.instructor })}
                                                 </p>
 
-                                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">What you'll learn</h3>
+                                                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.whatLearn')}</h3>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     {(course.highlights || [1, 2, 3, 4, 5, 6]).map((item, index) => (
                                                         <div key={index} className="flex items-start gap-3">
                                                             <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
                                                             <span className="text-slate-600 dark:text-slate-300 text-sm">
-                                                                {typeof item === 'string' ? item : "Master core concepts and advanced techniques"}
+                                                                {typeof item === 'string' ? item : t('courseDetails.masterCore')}
                                                             </span>
                                                         </div>
                                                     ))}
@@ -228,21 +229,21 @@ const CourseDetailsPage = () => {
                                         {activeTab === 'curriculum' && (
                                             <div className="space-y-4">
                                                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-1 mb-4">
-                                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Course Content</h3>
-                                                    <span className="text-sm text-slate-500 dark:text-slate-400">{course.lessons} lectures • {course.duration} total length</span>
+                                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.content')}</h3>
+                                                    <span className="text-sm text-slate-500 dark:text-slate-400">{course.lessons} {t('courseDetails.lectures')} • {course.duration} {t('courseDetails.totalLength')}</span>
                                                 </div>
                                                 {[1, 2, 3, 4].map((section) => (
                                                     <div key={section} className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
                                                         <div className="bg-slate-50 dark:bg-slate-800 px-4 py-3 font-semibold text-slate-700 dark:text-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                                                            <span>Section {section}: Introduction to Module</span>
-                                                            <span className="text-xs text-slate-500 dark:text-slate-400">3 lectures • 45m</span>
+                                                            <span>{t('courseDetails.section')} {section}</span>
+                                                            <span className="text-xs text-slate-500 dark:text-slate-400">3 {t('courseDetails.lectures')} • 45{t('courseDetails.min')}</span>
                                                         </div>
                                                         <div className="divide-y divide-slate-100 dark:divide-slate-800">
                                                             {[1, 2, 3].map((lecture) => (
                                                                 <div key={lecture} className="px-4 py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
                                                                     <div className="flex items-center gap-3">
                                                                         <PlayCircle className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors" />
-                                                                        <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white">Lecture {lecture}: Getting Started</span>
+                                                                        <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white">{t('courseDetails.lecture')} {lecture}: {t('courseDetails.gettingStarted')}</span>
                                                                     </div>
                                                                     <span className="text-xs text-slate-400 dark:text-slate-500">15:00</span>
                                                                 </div>
@@ -262,15 +263,14 @@ const CourseDetailsPage = () => {
                                                     <Link to={`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`} className="block hover:opacity-80 transition-opacity">
                                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 hover:text-primary transition-colors">{course.instructor}</h3>
                                                     </Link>
-                                                    <p className="text-primary font-medium text-sm mb-4">Senior Instructor & Developer</p>
+                                                    <p className="text-primary font-medium text-sm mb-4">{t('courseDetails.seniorInstructor')}</p>
                                                     <div className="flex gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
-                                                        <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-primary text-primary" /> 4.8 Rating</div>
-                                                        <div className="flex items-center gap-1"><User className="w-4 h-4" /> 25k Students</div>
-                                                        <div className="flex items-center gap-1"><PlayCircle className="w-4 h-4" /> 12 Courses</div>
+                                                        <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-primary text-primary" /> 4.8 {t('courseDetails.rating')}</div>
+                                                        <div className="flex items-center gap-1"><Users className="w-4 h-4" /> 25k {t('courseDetails.students')}</div>
+                                                        <div className="flex items-center gap-1"><PlayCircle className="w-4 h-4" /> 12 {t('courseDetails.courses')}</div>
                                                     </div>
                                                     <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                                        {course.instructor} is a seasoned software engineer with over 10 years of experience in the industry.
-                                                        They have taught thousands of students and are passionate about making complex topics easy to understand.
+                                                        {t('courseDetails.instructorBio', { instructor: course.instructor })}
                                                     </p>
                                                 </div>
                                             </div>
@@ -287,7 +287,7 @@ const CourseDetailsPage = () => {
                                                                 <Star key={i} className={`w-5 h-5 ${i <= Math.round(course.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300 dark:text-slate-600'}`} />
                                                             ))}
                                                         </div>
-                                                        <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Course Rating</div>
+                                                        <div className="text-sm font-medium text-slate-500 dark:text-slate-400">{t('courseDetails.courseRating')}</div>
                                                     </div>
                                                     <div className="flex-1 w-full space-y-3">
                                                         {[5, 4, 3, 2, 1].map((rating) => (
@@ -304,10 +304,10 @@ const CourseDetailsPage = () => {
 
                                                 {/* NEW: Leave a Review Form */}
                                                 <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border-2 border-primary/10 shadow-sm">
-                                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Leave a Review</h3>
+                                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{t('courseDetails.leaveReview')}</h3>
                                                     <div className="space-y-4">
                                                         <div>
-                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">How would you rate this course?</label>
+                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('courseDetails.ratePrompt')}</label>
                                                             <div className="flex gap-1">
                                                                 {[1, 2, 3, 4, 5].map(i => (
                                                                     <button
@@ -328,17 +328,21 @@ const CourseDetailsPage = () => {
                                                                 ))}
                                                                 {reviewRating > 0 && (
                                                                     <span className="ml-2 self-center text-sm font-semibold text-yellow-500">
-                                                                        {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][reviewRating]}
+                                                                        {reviewRating === 1 ? t('courseDetails.ratings.poor') :
+                                                                         reviewRating === 2 ? t('courseDetails.ratings.fair') :
+                                                                         reviewRating === 3 ? t('courseDetails.ratings.good') :
+                                                                         reviewRating === 4 ? t('courseDetails.ratings.veryGood') :
+                                                                         t('courseDetails.ratings.excellent')}
                                                                     </span>
                                                                 )}
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Write your feedback</label>
+                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('courseDetails.feedbackPrompt')}</label>
                                                             <textarea
                                                                 value={reviewText}
                                                                 onChange={(e) => { setReviewText(e.target.value); setReviewError(''); }}
-                                                                placeholder="What did you like or dislike about this course? How can the instructor improve?"
+                                                                placeholder={t('courseDetails.feedbackPlaceholder')}
                                                                 rows="4"
                                                                 className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
                                                             />
@@ -356,14 +360,14 @@ const CourseDetailsPage = () => {
                                                             </motion.p>
                                                         )}
                                                         <div className="flex justify-end">
-                                                            <Button onClick={handleSubmitReview}>Submit Review</Button>
+                                                            <Button onClick={handleSubmitReview}>{t('courseDetails.submitReview')}</Button>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 {/* Reviews List */}
                                                 <div className="space-y-6 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
-                                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Recent Reviews</h3>
+                                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.recentReviews')}</h3>
                                                     <AnimatePresence>
                                                         {reviews.map((r, i) => (
                                                             <motion.div
@@ -433,21 +437,21 @@ const CourseDetailsPage = () => {
                                     <Link to={`/checkout/${id}`}>
                                         <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 transition-all" size="lg">
                                             <Lock className="w-4 h-4" />
-                                            Buy Course
+                                            {t('courseDetails.buyCourse')}
                                         </Button>
                                     </Link>
                                 )}
 
-                                <p className="text-xs text-center text-slate-500 dark:text-slate-400">30-Day Money-Back Guarantee</p>
+                                <p className="text-xs text-center text-slate-500 dark:text-slate-400">{t('courseDetails.moneyBack')}</p>
                             </div>
 
                             <div className="space-y-4 pt-6 border-t border-slate-100 dark:border-slate-800">
-                                <h4 className="font-bold text-slate-900 dark:text-white">This course includes:</h4>
+                                <h4 className="font-bold text-slate-900 dark:text-white">{t('courseDetails.includes')}:</h4>
                                 <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
-                                    <li className="flex items-center gap-3"><PlayCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {course.duration} on-demand video</li>
-                                    <li className="flex items-center gap-3"><BookOpen className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {course.lessons} articles & resources</li>
-                                    <li className="flex items-center gap-3"><CheckCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" /> Full lifetime access</li>
-                                    <li className="flex items-center gap-3"><BarChart className="w-4 h-4 text-slate-400 dark:text-slate-500" /> Certificate of completion</li>
+                                    <li className="flex items-center gap-3"><PlayCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {course.duration} {t('courseDetails.onDemandVideo')}</li>
+                                    <li className="flex items-center gap-3"><BookOpen className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {course.lessons} {t('courseDetails.articlesResources')}</li>
+                                    <li className="flex items-center gap-3"><CheckCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {t('courseDetails.lifetimeAccess')}</li>
+                                    <li className="flex items-center gap-3"><BarChart className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {t('courseDetails.certificate')}</li>
                                 </ul>
                             </div>
                         </div>

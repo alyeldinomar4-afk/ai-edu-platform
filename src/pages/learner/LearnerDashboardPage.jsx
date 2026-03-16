@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/useAuth';
 import { BookOpen, Clock, Award, Play, Sparkles, TrendingUp, User, Camera, Shield, ChevronRight, Megaphone, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
 import { api } from '../../services/api';
 
 const LearnerDashboardPage = () => {
     const { user } = useAuth();
+    const { t } = useTranslation();
     const [stats, setStats] = useState({ hoursWatched: 0, certificates: 0, coursesInProgress: 0 });
     const [progress, setProgress] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
@@ -34,9 +36,9 @@ const LearnerDashboardPage = () => {
     }, []);
 
     const statCards = [
-        { label: 'Courses in Progress', value: stats.coursesInProgress, icon: BookOpen, color: 'bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400' },
-        { label: 'Learning Time', value: `${stats.hoursWatched}h`, icon: Clock, color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400' },
-        { label: 'Certificates Earned', value: stats.certificates, icon: Award, color: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' },
+        { label: t('dashboard.learner.stats.inProgress'), value: stats.coursesInProgress, icon: BookOpen, color: 'bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400' },
+        { label: t('dashboard.learner.stats.learningTime'), value: `${stats.hoursWatched}${t('common.h', { defaultValue: 'h' })}`, icon: Clock, color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400' },
+        { label: t('dashboard.learner.stats.certificates'), value: stats.certificates, icon: Award, color: 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' },
     ];
 
     return (
@@ -48,9 +50,9 @@ const LearnerDashboardPage = () => {
                 className="mb-8"
             >
                 <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                    Welcome back, <Link to="/learner/profile" className="text-primary hover:underline">{user?.name}</Link>!
+                    {t('common.welcome')}, <Link to="/learner/profile" className="text-primary hover:underline">{user?.name}</Link>!
                 </h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-2">Ready to continue your learning journey?</p>
+                <p className="text-slate-500 dark:text-slate-400 mt-2">{t('dashboard.learner.welcomePrompt')}</p>
             </motion.div>
 
             {/* Stats Overview */}
@@ -77,7 +79,7 @@ const LearnerDashboardPage = () => {
             {/* Continue Learning */}
             <section className="mb-10">
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                    <Play className="w-5 h-5 text-primary" /> Continue Learning
+                    <Play className="w-5 h-5 text-primary" /> {t('dashboard.learner.continueLearning')}
                 </h2>
                 <div className="space-y-4">
                     {progress.length > 0 ? progress.map((course) => (
@@ -95,19 +97,19 @@ const LearnerDashboardPage = () => {
                             <div className="flex-1 w-full text-left">
                                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
                                     <h3 className="font-bold text-lg text-slate-900 dark:text-white">{course.title}</h3>
-                                    <span className="text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 px-2 py-1 rounded-full w-fit">In Progress</span>
+                                    <span className="text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-primary dark:text-blue-400 px-2 py-1 rounded-full w-fit">{t('common.inProgress')}</span>
                                 </div>
                                 <p className="text-slate-500 dark:text-slate-400 text-sm mb-3">{course.lastLesson}</p>
                                 <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mb-2">
                                     <div className="bg-primary h-2 rounded-full transition-all duration-500" style={{ width: `${course.progress}%` }}></div>
                                 </div>
                                 <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500">
-                                    <span>{course.progress}% Completed</span>
+                                    <span>{course.progress}% {t('common.completed')}</span>
                                 </div>
                             </div>
                             <Link to={`/courses/${course.courseId}/learn`}>
                                 <Button>
-                                    <Play className="w-4 h-4 mr-2" /> Resume
+                                    <Play className="w-4 h-4 mr-2" /> {t('dashboard.learner.resume')}
                                 </Button>
                             </Link>
                         </motion.div>
@@ -116,10 +118,10 @@ const LearnerDashboardPage = () => {
                             <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary mx-auto mb-4">
                                 <BookOpen size={28} />
                             </div>
-                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">No courses in progress</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Start learning by enrolling in a course!</p>
+                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">{t('dashboard.learner.noCourses')}</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t('dashboard.learner.noCoursesHint')}</p>
                             <Link to="/courses">
-                                <Button>Browse Courses</Button>
+                                <Button>{t('dashboard.learner.browseCourses')}</Button>
                             </Link>
                         </div>
                     )}
@@ -129,7 +131,7 @@ const LearnerDashboardPage = () => {
             {/* Recommended Courses */}
             <section className="mb-10">
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-yellow-500" /> Recommended for You
+                    <Sparkles className="w-5 h-5 text-yellow-500" /> {t('dashboard.learner.recommended')}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {recommendations.length > 0 ? recommendations.map((course, i) => (
@@ -160,8 +162,8 @@ const LearnerDashboardPage = () => {
                             <div className="w-16 h-16 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-500 mx-auto mb-4">
                                 <Sparkles size={28} />
                             </div>
-                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">No recommendations yet</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Start exploring courses and we'll personalize your recommendations.</p>
+                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">{t('dashboard.learner.noRecs')}</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('dashboard.learner.noRecsHint')}</p>
                         </div>
                     )}
                 </div>
@@ -171,9 +173,9 @@ const LearnerDashboardPage = () => {
             <section className="mb-10">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <Megaphone className="w-5 h-5 text-primary" /> Instructor Announcements
+                        <Megaphone className="w-5 h-5 text-primary" /> {t('dashboard.learner.announcements')}
                     </h2>
-                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">New</span>
+                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">{t('common.new', { defaultValue: 'New' })}</span>
                 </div>
                 <div className="space-y-4">
                     <motion.div
@@ -191,7 +193,7 @@ const LearnerDashboardPage = () => {
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">Hi everyone! I just uploaded 3 new videos covering the latest React 19 hooks. Make sure to check them out in Section 8...</p>
                             <Link to="/courses/2" className="text-xs font-bold text-primary hover:underline flex items-center gap-1 group">
-                                View Course <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                                {t('common.viewCourse', { defaultValue: 'View Course' })} <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
                             </Link>
                         </div>
                     </motion.div>
@@ -201,7 +203,7 @@ const LearnerDashboardPage = () => {
             {/* Quick Actions */}
             <section>
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-green-500" /> Quick Actions
+                    <TrendingUp className="w-5 h-5 text-green-500" /> {t('dashboard.learner.quickActions')}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Link to="/courses" className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors flex items-center gap-4">
@@ -209,8 +211,8 @@ const LearnerDashboardPage = () => {
                             <BookOpen className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-slate-900 dark:text-white">Browse Courses</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">Explore new topics</p>
+                            <h3 className="font-semibold text-slate-900 dark:text-white">{t('dashboard.learner.browseCourses')}</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">{t('dashboard.learner.browseCoursesHint', { defaultValue: 'Explore new topics' })}</p>
                         </div>
                     </Link>
                     <Link to="/ai-demo" className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors flex items-center gap-4">
@@ -218,8 +220,8 @@ const LearnerDashboardPage = () => {
                             <Sparkles className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-slate-900 dark:text-white">AI Tutor</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">Get help from AI</p>
+                            <h3 className="font-semibold text-slate-900 dark:text-white">{t('dashboard.learner.aiTutor')}</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">{t('dashboard.learner.aiTutorHint')}</p>
                         </div>
                     </Link>
                     <Link to="/learner/profile" className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:border-primary/30 transition-colors flex items-center gap-4">
@@ -227,8 +229,8 @@ const LearnerDashboardPage = () => {
                             <User className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-slate-900 dark:text-white">Profile</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">Manage details</p>
+                            <h3 className="font-semibold text-slate-900 dark:text-white">{t('dashboard.learner.profile')}</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 text-left">{t('dashboard.learner.profileHint')}</p>
                         </div>
                     </Link>
                 </div>

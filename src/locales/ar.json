@@ -1,0 +1,626 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "courses": "الدورات",
+    "dashboard": "لوحة التحكم",
+    "login": "تسجيل الدخول",
+    "getStarted": "ابدأ الآن",
+    "logout": "تسجيل الخروج",
+    "instructors": "المعلمين",
+    "aiDemo": "عرض الذكاء الاصطناعي",
+    "switchToEnglish": "English"
+  },
+  "home": {
+    "heroBadge": "مستقبل التعلم يبدأ هنا",
+    "heroTitleMain": "انطلق في عالم",
+    "heroTitleHighlight": "الذكاء الاصطناعي",
+    "heroTitleSuffix": "بتجربة تعلّم ذكية",
+    "heroSubtitle": "طوّر مهاراتك مع Nexora AI من خلال مسارات تعلّم مخصصة، وتفاعل مع ملاحظات فورية، وتعلّم من نخبة الخبراء — كل ذلك في منصة تعليمية متكاملة.",
+    "btnStartLearning": "ابدأ رحلتك الآن",
+    "btnWatchDemo": "شاهد العرض",
+    "trustedBy": "موثوق من قبل",
+    "students": "طالب",
+    "hero": {
+      "courseCompleted": "تم إكمال الدورة",
+      "pythonMastery": "إتقان بايثون",
+      "rating": "تقييم 4.9 من 5"
+    },
+    "stats": {
+      "learners": "متعلم نشط",
+      "courses": "دورة متاحة",
+      "instructors": "معلم",
+      "satisfaction": "نسبة الرضا"
+    },
+    "categories": {
+      "badge": "تصنيفات Nexora AI",
+      "title": "استكشف ما تحب",
+      "subtitle": "تصفح تصنيفاتنا المختارة وابحث عن الدورة المثالية لأهدافك",
+      "coursesCount": "دورة"
+    },
+    "featured": {
+      "badge": "الأعلى تقييماً",
+      "title": "الدورات المميزة",
+      "btnViewAll": "عرض جميع الدورات"
+    },
+    "aiHighlight": {
+      "badge": "مساعد مدعوم بالذكاء الاصطناعي",
+      "titleMain": "عالق في التعلم؟",
+      "titleHighlight": "اسأل معلم الذكاء الاصطناعي.",
+      "subtitle": "احصل على ملاحظات فورية، شرح للكود، وخطط دراسة مخصصة. معلمنا الذكي يفهم أسلوبك في التعلم ويتكيف مع سرعتك.",
+      "btnTryDemo": "جرب عرض الذكاء الاصطناعي",
+      "chatUserQuery": "كيف يمكنني تحسين أداء مكون React هذا؟",
+      "chatAiResponse": "يمكنك استخدام `useMemo` و `useCallback` لمنع عمليات إعادة الرندر غير الضرورية."
+    },
+    "testimonials": {
+      "badge": "آراء الطلاب",
+      "title": "محبوب من قبل الطلاب",
+      "subtitle": "شاهد ما يقوله مجتمعنا عن Nexora AI",
+      "roles": {
+        "softwareEngineer": "مهندس برمجيات",
+        "dataAnalyst": "محلل بيانات",
+        "student": "طالب"
+      }
+    },
+    "cta": {
+      "title": "جاهز لتحويل رحلة تعلمك؟",
+      "subtitle": "انضم إلى آلاف الطلاب الذين يتعلمون بذكاء أكبر مع Nexora AI",
+      "btnContinue": "متابعة التعلم",
+      "btnGetStarted": "ابدأ مجاناً",
+      "free": "مجانًا"
+    }
+  },
+  "footer": {
+    "tagline": "تمكين الجيل القادم من المتعلمين من خلال التعليم الشخصي المدعوم بالذكاء الاصطناعي.",
+    "platform": "المنصة",
+    "company": "الشركة",
+    "careers": "الوظائف",
+    "blog": "المدونة",
+    "legal": "قانوني",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة",
+    "cookiePolicy": "سياسة ملفات الارتباط",
+    "allRightsReserved": "جميع الحقوق محفوظة."
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ ما",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "actions": "إجراءات",
+    "status": "الحالة",
+    "back": "رجوع",
+    "welcome": "مرحباً بعودتك",
+    "inProgress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "error_title": "عذراً! حدث خطأ ما",
+    "error_subtitle": "حدث خطأ غير متوقع. يرجى محاولة تحديث الصفحة أو العودة إلى الصفحة الرئيسية.",
+    "refresh_page": "تحديث الصفحة",
+    "justNow": "الآن"
+  },
+  "auth": {
+    "login": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "سجل الدخول للمتابعة في رحلة تعلمك",
+      "emailLabel": "البريد الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "submit": "تسجيل الدخول",
+      "orContinue": "أو المتابعة باستخدام",
+      "noAccount": "ليس لديك حساب؟",
+      "signUp": "إنشاء حساب"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "subtitle": "ابدأ رحلة تعلمك بالذكاء الاصطناعي اليوم",
+      "nameLabel": "الاسم الكامل",
+      "roleLabel": "أنا...",
+      "roleStudent": "طالب",
+      "roleInstructor": "معلم",
+      "roleHint": "* اختر 'طالب' للتعلم أو 'معلم' للتدريس.",
+      "submit": "إنشاء الحساب",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول"
+    },
+    "forgotPassword": {
+      "title": "نسيت كلمة المرور؟",
+      "subtitle": "لا تقلق، سنرسل لك تعليمات إعادة التعيين.",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "submit": "إرسال رابط إعادة التعيين",
+      "backToSignIn": "العودة لتسجيل الدخول",
+      "successTitle": "تحقق من بريدك الإلكتروني",
+      "successSubtitle": "لقد أرسلنا رابط إعادة تعيين كلمة المرور إلى عنوان بريدك الإلكتروني.",
+      "backToReset": "العودة لإعادة التعيين"
+    }
+  },
+  "dashboard": {
+    "learner": {
+      "welcomePrompt": "هل أنت مستعد لمواصلة رحلة تعلمك؟",
+      "stats": {
+        "inProgress": "دوات قيد التنفيذ",
+        "learningTime": "وقت التعلم",
+        "certificates": "الشهادات المكتسبة"
+      },
+      "continueLearning": "متابعة التعلم",
+      "resume": "استئناف",
+      "noCourses": "لا توجد دورات قيد التنفيذ",
+      "noCoursesHint": "ابدأ التعلم عن طريق التسجيل في دورة!",
+      "browseCourses": "تصفح الدورات",
+      "recommended": "موصى به لك",
+      "noRecs": "لا توجد توصيات بعد",
+      "noRecsHint": "ابدأ في استكشاف الدورات وسنقوم بتخصيص توصياتك.",
+      "announcements": "إعلانات المعلم",
+      "quickActions": "إجراءات سريعة",
+      "aiTutor": "مساعد الذكاء الاصطناعي",
+      "aiTutorHint": "احصل على مساعدة من الذكاء الاصطناعي",
+      "profile": "الملف الشخصي",
+      "profileHint": "إدارة التفاصيل"
+    },
+    "admin": {
+      "panel": "لوحة الإدارة",
+      "dashboard": "لوحة التحكم",
+      "courses": "الدورات",
+      "videos": "الفيديوهات",
+      "users": "المستخدمين",
+      "profile": "الملف الشخصي",
+      "logout": "تسجيل الخروج",
+      "title": "لوحة تحكم المسؤول",
+      "lastUpdated": "آخر تحديث",
+      "stats": {
+        "totalUsers": "إجمالي المستخدمين",
+        "activeCourses": "الدورات النشطة",
+        "videosUploaded": "الفيديوهات المرفوعة",
+        "totalRevenue": "إجمالي الإيرادات"
+      },
+      "revenueOverview": "نظرة عامة على الإيرادات",
+      "recentActivity": "النشاط الأخير",
+      "newUser": "مستخدم جديد سجل في الموقع",
+      "manageCourses": {
+        "title": "إدارة الدورات",
+        "addNew": "إضافة دورة جديدة",
+        "searchPlaceholder": "البحث عن الدورات بالعنوان أو المعلم أو التصنيف...",
+        "table": {
+          "course": "الدورة",
+          "instructor": "المعلم",
+          "category": "التصنيف",
+          "price": "السعر",
+          "actions": "الإجراءات"
+        },
+        "showing": "عرض {{count}} من {{total}} دورات",
+        "noFound": "لم يتم العثور على دورات",
+        "searchHint": "حاول تعديل مصطلح البحث الخاص بك.",
+        "emptyHint": "انقر فوق 'إضافة دورة جديدة' لإنشاء دورتك الأولى.",
+        "clearSearch": "مسح البحث",
+        "editCourse": "تعديل الدورة",
+        "addCourse": "إضافة دورة جديدة",
+        "courseTitle": "عنوان الدورة",
+        "instructor": "المعلم",
+        "category": "التصنيف",
+        "priceLabel": "السعر ($)",
+        "titlePlaceholder": "مثلاً: مقدمة في تعلم الآلة",
+        "instructorPlaceholder": "مثلاً: د. سارة سميث",
+        "pricePlaceholder": "19.99",
+        "deleteTitle": "حذف الدورة؟",
+        "deleteContent": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف الدورة وجميع بياناتها بشكل نهائي."
+      },
+      "manageVideos": {
+        "title": "إدارة الفيديوهات",
+        "subtitle": "الإشراف على محتوى المنصة وتنظيمه.",
+        "uploadNew": "رفع جديد",
+        "searchPlaceholder": "البحث عن الفيديوهات...",
+        "allStatus": "كل الحالات",
+        "published": "منشور",
+        "pending": "قيد المراجعة",
+        "draft": "مسودة",
+        "table": {
+          "video": "الفيديو",
+          "instructor": "المعلم",
+          "stats": "الإحصائيات",
+          "status": "الحالة",
+          "actions": "الإجراءات"
+        },
+        "noFound": "لم يتم العثور على فيديوهات",
+        "resetFilters": "إعادة تعيين الفلاتر",
+        "editTitle": "تعديل الفيديو",
+        "addTitle": "إضافة فيديو",
+        "form": {
+          "title": "العنوان",
+          "instructor": "المعلم",
+          "course": "الدورة",
+          "duration": "المدة",
+          "status": "الحالة"
+        },
+        "noFoundHint": "لم نتمكن من العثور على أي فيديوهات تطابق معايير البحث الخاصة بك.",
+        "toasts": {
+          "deleteSuccess": "تم حذف الفيديو بنجاح!",
+          "addSuccess": "تم إضافة الفيديو بنجاح!",
+          "updateSuccess": "تم تحديث الفيديو بنجاح!",
+          "publishSuccess": "تم نشر الفيديو بنجاح!",
+          "unpublishSuccess": "تم إلغاء نشر الفيديو بنجاح!"
+        }
+      },
+      "manageUsers": {
+        "title": "إدارة المستخدمين",
+        "subtitle": "عرض وإدارة جميع المستخدمين المسجلين وصلاحياتهم.",
+        "addNew": "إضافة مستخدم جديد",
+        "stats": {
+          "totalUsers": "إجمالي المستخدمين",
+          "totalInstructors": "إجمالي المعلمين",
+          "suspendedUsers": "المستخدمون الموقوفون"
+        },
+        "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني...",
+        "allRoles": "كل الأدوار",
+        "learners": "الطلاب",
+        "instructors": "المعلمون",
+        "admins": "المسؤولون",
+        "allStatus": "كل الحالات",
+        "active": "نشط",
+        "suspended": "موقوف",
+        "table": {
+          "user": "المستخدم",
+          "role": "الدور",
+          "joined": "تاريخ الانضمام",
+          "status": "الحالة",
+          "actions": "الإجراءات"
+        },
+        "editTitle": "تعديل بيانات المستخدم",
+        "editUser": "تعديل المستخدم",
+        "deleteUser": "حذف المستخدم",
+        "addTitle": "إضافة مستخدم جديد",
+        "form": {
+          "fullName": "الاسم الكامل",
+          "email": "البريد الإلكتروني",
+          "role": "الدور",
+          "status": "الحالة",
+          "placeholderName": "علي عمر",
+          "placeholderEmail": "john@example.com",
+          "createAccount": "إنشاء الحساب"
+        },
+        "showing": "عرض {{count}} من {{total}} مستخدمين",
+        "noFound": "لم يتم العثور على مستخدمين يطابقون معاييرك.",
+        "clearFilters": "مسح كل الفلاتر",
+        "toasts": {
+          "addSuccess": "تم إضافة المستخدم بنجاح!",
+          "updateSuccess": "تم تحديث بيانات المستخدم بنجاح!",
+          "deleteSuccess": "تم حذف المستخدم بنجاح!",
+          "activatedSuccess": "تم تفعيل المستخدم بنجاح!",
+          "suspendedSuccess": "تم إيقاف المستخدم بنجاح!"
+        }
+      },
+      "settings": {
+        "title": "إعدادات المنصة",
+        "subtitle": "تكوين إعدادات المنصة والذكاء الاصطناعي والربط.",
+        "saveSuccess": "تم حفظ الإعدادات بنجاح!",
+        "tabs": {
+          "general": "عام",
+          "ai": "الذكاء الاصطناعي",
+          "workflow": "سير العمل",
+          "integrations": "الربط والأمان"
+        },
+        "general": {
+          "title": "الإعدادات العامة",
+          "platformName": "اسم المنصة",
+          "supportEmail": "بريد الدعم الفني",
+          "maintenanceMode": "وضع الصيانة",
+          "maintenanceHint": "عند التفعيل، سيتم إيقاف المنصة للصيانة."
+        },
+        "ai": {
+          "title": "تهيئة الذكاء الاصطناعي",
+          "enableTutor": "تفعيل معلم الذكاء الاصطناعي",
+          "tutorHint": "تمكين المساعد الذكي لجميع الطلاب.",
+          "model": "مودل الذكاء الاصطناعي الافتراضي",
+          "feedbackIntensity": "قوة الملاحظات فورية",
+          "intensityLow": "منخفضة",
+          "intensityMedium": "متوسطة",
+          "intensityHigh": "عالية"
+        },
+        "workflow": {
+          "title": "سير عمل المنصة",
+          "autoApprove": "قبول الكورسات تلقائياً",
+          "currency": "العملة الافتراضية",
+          "currencyHint": "العملة المستخدمة في جميع المعاملات."
+        },
+        "integrations": {
+          "title": "الربط والأمان",
+          "googleLogin": "تسجيل الدخول عبر Google",
+          "githubLogin": "تسجيل الدخول عبر GitHub"
+        }
+      }
+    },
+    "instructor": {
+      "lectures": {
+        "title": "محاضرات الدورة",
+        "subtitle": "إدارة وتنظيم محتوى الفيديو التعليمي الخاص بك.",
+        "uploadNew": "رفع محاضرة",
+        "searchPlaceholder": "البحث بالعنوان أو الدورة...",
+        "allStatus": "كل الحالات",
+        "published": "منشور",
+        "pending": "قيد المراجعة",
+        "draft": "مسودة",
+        "table": {
+          "details": "تفاصيل المحاضرة",
+          "engagement": "التفاعل",
+          "status": "الحالة",
+          "actions": "الإجراءات"
+        },
+        "noFound": "لم يتم العثور على محاضرات",
+        "noFoundHint": "لم نتمكن من العثور على أي محاضرات تطابق بحثك أو فلاترك الحالية.",
+        "clearFilters": "مسح كل الفلاتر",
+        "addTitle": "رفع محاضرة جديدة",
+        "editTitle": "تعديل المحاضرة",
+        "modalSubtitle": "قم بتعيين التفاصيل الأساسية لمحتوى دورتك.",
+        "form": {
+          "title": "عنوان المحاضرة",
+          "titlePlaceholder": "مثال: فهم الشبكات العصبية",
+          "course": "الدورة المخصصة",
+          "coursePlaceholder": "مثال: إتقان الذكاء الاصطناعي 101",
+          "duration": "المدة (دقائق:ثواني)",
+          "privacy": "حالة الخصوصية",
+          "public": "عام (منشور)",
+          "private": "خاص (مسودة)",
+          "pending": "في انتظار المراجعة (قيد المراجعة)",
+          "resources": "موارد المحاضرة",
+          "uploadResources": "انقر لرفع ملفات الموارد",
+          "uploadHint": "PDF, DOCX, ZIP حتى 50 ميجابايت",
+          "discard": "تجاهل",
+          "saving": "جاري الحفظ...",
+          "confirm": "تأكيد الرفع",
+          "update": "تحديث المحاضرة"
+        },
+        "toasts": {
+          "deleteSuccess": "تم حذف المحاضرة بنجاح",
+          "statusUpdate": "تم تحديد المحاضرة كـ {{status}}",
+          "uploadSuccess": "تم رفع المحاضرة بنجاح!",
+          "updateSuccess": "تم تحديث المحاضرة بنجاح!",
+          "titleRequired": "عنوان المحاضرة مطلوب"
+        },
+        "quiz": {
+          "title": "اختبار المحاضرة",
+          "add": "إضافة اختبار للمحاضرة",
+          "active": "الاختبار نشط",
+          "question": "السؤال",
+          "questionPlaceholder": "اكتب سؤالك هنا...",
+          "option": "الخيار",
+          "addQuestion": "إضافة سؤال جديد"
+        }
+      },
+      "announcements": {
+        "title": "الإعلانات",
+        "subtitle": "حافظ على تفاعل طلابك من خلال إرسال التحديثات والأخبار.",
+        "new": "إعلان جديد",
+        "composeTitle": "كتابة إعلان",
+        "selectCourse": "اختر الدورة",
+        "subject": "الموضوع",
+        "subjectPlaceholder": "مثال: تحديث هام: تم إضافة محتوى جديد",
+        "message": "الرسالة",
+        "messagePlaceholder": "اكتب رسالتك هنا...",
+        "mockEditor": "محرر نصوص تجريبي",
+        "cancel": "إلغاء",
+        "send": "إرسال الإعلان",
+        "sending": "جاري الإرسال...",
+        "history": "الإعلانات السابقة",
+        "sentTo": "تم الإرسال إلى {{count}}",
+        "success": "تم إرسال الإعلان بنجاح!",
+        "allCourses": "كل الدورات"
+      },
+      "qa": {
+        "title": "إدارة الأسئلة والأجوبة",
+        "subtitle": "أجب على أسئلة الطلاب وساعدهم في رحلتهم التعليمية.",
+        "needsReply": "بحاجة لرد",
+        "resolved": "تم الحل",
+        "pending": "معلق",
+        "placeholder": "اكتب إجابتك هنا...",
+        "cancel": "إلغاء",
+        "update": "تحديث الإجابة",
+        "post": "نشر الإجابة",
+        "emptyTitle": "لا توجد أسئلة بعد",
+        "emptySubtitle": "أنت متابع لكل شيء!"
+      },
+      "reviews": {
+        "title": "تقييمات الطلاب",
+        "subtitle": "شاهد ما يعتقده طلابك ورد على ملاحظاتهم.",
+        "avgRating": "تقييم الدورة",
+        "instructor": "المحاضر",
+        "yourReply": "ردك",
+        "editReply": "تعديل الرد",
+        "respond": "الرد",
+        "cancel": "إلغاء",
+        "updateReply": "تحديث الرد",
+        "sendReply": "إرسال الرد",
+        "placeholder": "قم بالرد على التقييم واشكر الطالب...",
+        "emptyTitle": "لا توجد تقييمات بعد",
+        "emptySubtitle": "استمر في التدريس! ستظهر التقييمات هنا قريباً."
+      },
+      "title": "لوحة تحكم المعلم",
+      "subtitle": "إدارة دوراتك وتتبع الأداء.",
+      "newCourse": "دورة جديدة",
+      "stats": {
+        "totalStudents": "إجمالي الطلاب",
+        "totalRevenue": "إجمالي الإيرادات",
+        "courseRating": "تقييم الدورة",
+        "activeCourses": "الدورات النشطة",
+        "vsLastMonth": "مقارنة بالشهر الماضي",
+        "avgFrom": "متوسط من {{count}} تقييم",
+        "pendingReview": "{{count}} في انتظار المراجعة"
+      },
+      "yourCourses": "دوراتك",
+      "courseName": "اسم الدورة",
+      "students": "الطلاب",
+      "revenue": "الإيرادات",
+      "published": "منشور",
+      "draft": "مسودة",
+      "noCourses": "لا توجد دورات بعد",
+      "noCoursesHint": "أنشئ دورتك الأولى للبدء في التدريس!",
+      "modals": {
+        "createTitle": "إنشاء دورة جديدة",
+        "editTitle": "تعديل الدورة",
+        "courseTitle": "عنوان الدورة *",
+        "titlePlaceholder": "مثلاً: تعلم الآلة المتقدم",
+        "pricePlaceholder": "0$",
+        "price": "السعر",
+        "saveChanges": "حفظ التغييرات",
+        "createCourse": "إنشاء الدورة",
+        "deleteConfirm": "حذف الدورة؟",
+        "deleteHint": "لا يمكن التراجع عن هذا الإجراء. ستفقد جميع بيانات الدورة."
+      }
+    }
+  },
+  "courseDetails": {
+    "tabs": {
+      "overview": "نظرة عامة",
+      "curriculum": "المنهج الدراسي",
+      "instructor": "المدرب",
+      "reviews": "المراجعات"
+    },
+    "locked": {
+      "title": "هذه الدورة مغلقة",
+      "subtitle": "اشترِ الدورة للوصول إلى الفيديوهات وجميع محتويات الدورة.",
+      "unlock": "فتح الدورة"
+    },
+    "description": "وصف الدورة",
+    "description_short": "اتقن {{title}} مع هذه الدورة التدريبية الشاملة. تعلم من خبراء الصناعة وابنِ مشاريع حقيقية.",
+    "description_full": "ستأخذك هذه الدورة في رحلة شاملة في {{category}}. من المحاضرة الأولى إلى الوحدات المتقدمة، ستكتسب خبرة عملية ورؤى عميقة من {{instructor}}.",
+    "createdBy": "أنشئ بواسطة",
+    "whatLearn": "ماذا ستتعلم",
+    "masterCore": "إتقان المفاهيم الأساسية والتقنيات المتقدمة",
+    "content": "محتوى الدورة",
+    "lectures": "محاضرات",
+    "lecture": "محاضرة",
+    "gettingStarted": "البدء",
+    "totalLength": "إجمالي الطول",
+    "section": "القسم",
+    "min": "دقيقة",
+    "aboutInstructor": "عن المدرب",
+    "seniorInstructor": "مدرب أول ومطور",
+    "students": "طلاب",
+    "courses": "دورات",
+    "rating": "تقييم",
+    "instructorBio": "مدرب خبير يتمتع بخبرة تزيد عن 10 سنوات في تدريس {{instructor}}.",
+    "courseRating": "تقييم الدورة",
+    "leaveReview": "اترك تقييماً",
+    "ratePrompt": "كيف تقيم هذه الدورة؟",
+    "feedbackPrompt": "اكتب ملاحظاتك",
+    "feedbackPlaceholder": "ما الذي أعجبك أو لم يعجبك في هذه الدورة؟ كيف يمكن للمدرب أن يتحسن؟",
+    "submitReview": "إرسال التقييم",
+    "recentReviews": "المراجعات الأخيرة",
+    "buyCourse": "شراء الدورة",
+    "manageCourse": "إدارة الدورة",
+    "includes": "تشمل هذه الدورة",
+    "onDemandVideo": "فيديو حسب الطلب",
+    "articlesResources": "مقالات وموارد",
+    "lifetimeAccess": "وصول كامل مدى الحياة",
+    "certificate": "شهادة إتمام",
+    "moneyBack": "ضمان استرداد الأموال لمدة 30 يومًا",
+    "ratings": {
+      "poor": "سيء",
+      "fair": "مقبول",
+      "good": "جيد",
+      "veryGood": "جيد جداً",
+      "excellent": "ممتاز"
+    }
+  },
+  "profile": {
+    "title": "إعدادات الملف الشخصي",
+    "instructorTitle": "ملف المدرب",
+    "adminTitle": "ملف المسؤول",
+    "subtitle": "إدارة معلوماتك الشخصية والأمان.",
+    "instructorSubtitle": "إدارة ملفك الشخصي العام، السيرة الذاتية، وإعدادات الأمان.",
+    "defaultHeadline": "مدرب واستشاري ذكاء اصطناعي أول",
+    "defaultBio": "شغوف بتدريس الذكاء الاصطناعي وتعلم الآلة للجيل القادم من المطورين. مع أكثر من 10 سنوات من الخبرة في الصناعة، أركز على التعلم العملي والتجريبي.",
+    "adminSubtitle": "إدارة إعدادات حساب المسؤول الخاص بك.",
+    "personalInfo": "المعلومات الشخصية",
+    "security": "كلمة المرور والأمان",
+    "changePassword": "تغيير كلمة المرور",
+    "bio": "عني (السيرة الذاتية)",
+    "bioHint": "اكتب سيرة ذاتية قصيرة. ستظهر في صفحة المدرب العامة وتفاصيل الدورة.",
+    "bioPlaceholder": "شارك خبراتك، إنجازاتك، وفلسفتك التدريسية...",
+    "headline": "العنوان المهني",
+    "headlinePlaceholder": "مثلاً: مهندس تعلم آلي أول",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "currentPassword": "كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور الجديدة",
+    "socials": "الملفات الشخصية الاجتماعية",
+    "website": "الموقع الشخصي",
+    "linkedin": "ملف LinkedIn",
+    "twitter": "ملف Twitter",
+    "saveChanges": "حفظ التغييرات",
+    "saveProfile": "حفظ الملف الشخصي",
+    "updatePassword": "تحديث كلمة المرور",
+    "uploadPhoto": "رفع صورة جديدة",
+    "removePhoto": "إزالة",
+    "updatePhoto": "تحديث الصورة",
+    "updateCover": "تحديث صورة الغلاف",
+    "saving": "جاري الحفظ...",
+    "updating": "جاري التحديث...",
+    "successUpdate": "تم تحديث الملف الشخصي بنجاح!",
+    "successPassword": "تم تحديث كلمة المرور بنجاح!",
+    "errorPasswordMatch": "كلمات المرور الجديدة غير متطابقة!",
+    "photoUpdated": "تم تحديث الصورة بنجاح!",
+    "photoRemoved": "تمت إزالة الصورة بنجاح!"
+  },
+  "instructorNav": {
+    "dashboard": "لوحة التحكم",
+    "lectures": "المحاضرات",
+    "qa": "الأسئلة والأجوبة",
+    "reviews": "المراجعات",
+    "announcements": "الإعلانات"
+  },
+  "courses": {
+    "title": "استكشف الدورات",
+    "subtitle": "اكتشف مهارات جديدة مع التعلم المدعوم بالذكاء الاصطناعي",
+    "searchPlaceholder": "البحث باسم الدورة...",
+    "filters": "الفلاتر",
+    "clearAll": "مسح الكل",
+    "categoriesLabel": "التصنيفات",
+    "allCategories": "جميع التصنيفات",
+    "difficulty": "الصعوبة",
+    "noCoursesFound": "لم يتم العثور على دورات",
+    "noCoursesHint": "لم نتمكن من العثور على أي دورات تطابق معايير البحث الخاصة بك. حاول تعديل الفلاتر أو مصطلح البحث.",
+    "clearFilters": "مسح جميع الفلاتر",
+    "lessons": "دروس",
+    "viewCourse": "عرض الدورة",
+    "levels": {
+      "beginner": "مبتدئ",
+      "intermediate": "متوسط",
+      "advanced": "متقدم"
+    },
+    "categories": {
+      "development": "التطوير",
+      "dataScience": "علم البيانات",
+      "design": "التصميم",
+      "marketing": "التسويق",
+      "photography": "التصوير",
+      "finance": "المالية"
+    }
+  },
+  "publicInstructor": {
+    "aboutMe": "عني",
+    "statistics": "إحصائيات المدرب",
+    "rating": "تقييم المدرب",
+    "students": "الطلاب في جميع أنحاء العالم",
+    "courses": "الدورات المتاحة",
+    "coursesBy": "دورات بواسطة {{instructorName}}",
+    "follow": "متابعة",
+    "following": "تتم المتابعة",
+    "reviews": "مراجعة",
+    "from": "من"
+  },
+  "course": {
+    "quiz": {
+      "title": "اختبار المحاضرة",
+      "completed": "تم إكمال الاختبار!",
+      "score": "لقد حصلت على {{score}} من أصل {{total}}",
+      "retry": "إعادة المحاولة",
+      "noQuiz": "لا يوجد اختبار متاح",
+      "noQuizDesc": "لم يضف المعلم اختباراً لهذه المحاضرة بعد.",
+      "progress": "السؤال {{current}} من أصل {{total}}",
+      "next": "السؤال التالي",
+      "results": "مشاهدة النتائج"
+    }
+  }
+}

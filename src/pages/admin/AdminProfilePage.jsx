@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useAuth } from '../../auth/useAuth';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { User, Mail, Camera, Lock, Save, Shield } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
 const AdminProfilePage = () => {
     const { user } = useAuth();
+    const { t } = useTranslation();
 
     // Basic Details
     const [name, setName] = useState(user?.name || '');
@@ -26,20 +28,20 @@ const AdminProfilePage = () => {
         setIsSavingProfile(true);
         setTimeout(() => {
             setIsSavingProfile(false);
-            toast.success('Admin profile updated successfully!');
+            toast.success(t('profile.successUpdate'));
         }, 1000);
     };
 
     const handleUpdatePassword = (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            toast.error('New passwords do not match!');
+            toast.error(t('profile.errorPasswordMatch'));
             return;
         }
         setIsSavingPassword(true);
         setTimeout(() => {
             setIsSavingPassword(false);
-            toast.success('Password updated successfully!');
+            toast.success(t('profile.successPassword'));
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -54,11 +56,11 @@ const AdminProfilePage = () => {
                 className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
             >
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Admin Profile</h1>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1">Manage your administrator account settings.</p>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('profile.adminTitle')}</h1>
+                    <p className="text-slate-500 dark:text-slate-400 mt-1">{t('profile.adminSubtitle')}</p>
                 </div>
                 <Button onClick={handleSaveProfile} disabled={isSavingProfile}>
-                    {isSavingProfile ? 'Saving...' : <><Save size={16} className="mr-2" /> Save Changes</>}
+                    {isSavingProfile ? t('profile.saving') : <><Save size={16} className="mr-2" /> {t('profile.saveChanges')}</>}
                 </Button>
             </motion.div>
 
@@ -85,13 +87,13 @@ const AdminProfilePage = () => {
                                     const reader = new FileReader();
                                     reader.onload = (event) => setAvatar(event.target.result);
                                     reader.readAsDataURL(e.target.files[0]);
-                                    toast.success("Photo updated successfully!");
+                                    toast.success(t('profile.photoUpdated'));
                                 }
                             }} />
                         </div>
                         <div className="flex flex-col gap-2 mb-4">
                             <Button variant="outline" size="sm" onClick={() => document.getElementById('avatar-upload').click()} className="w-full justify-center">
-                                Update Photo
+                                {t('profile.updatePhoto')}
                             </Button>
                             <Button
                                 variant="outline"
@@ -99,10 +101,10 @@ const AdminProfilePage = () => {
                                 className="w-full justify-center text-red-500 hover:text-red-600 border-red-200 hover:border-red-300 dark:border-red-900/30 dark:hover:border-red-800/50"
                                 onClick={() => {
                                     setAvatar("https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.name || "Admin") + "&background=random&size=128");
-                                    toast.success("Photo removed successfully!");
+                                    toast.success(t('profile.photoRemoved'));
                                 }}
                             >
-                                Remove
+                                {t('profile.removePhoto')}
                             </Button>
                         </div>
                         <h3 className="font-bold text-lg text-slate-900 dark:text-white">{user?.name}</h3>
@@ -122,11 +124,11 @@ const AdminProfilePage = () => {
                         className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm"
                     >
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                            <User className="text-primary" size={18} /> General Information
+                            <User className="text-primary" size={18} /> {t('profile.personalInfo')}
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.fullName')}</label>
                                 <input
                                     type="text"
                                     value={name}
@@ -135,7 +137,7 @@ const AdminProfilePage = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.email')}</label>
                                 <input
                                     type="email"
                                     value={email}
@@ -153,11 +155,11 @@ const AdminProfilePage = () => {
                         className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm"
                     >
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                            <Lock className="text-primary" size={18} /> Security
+                            <Lock className="text-primary" size={18} /> {t('profile.security')}
                         </h2>
                         <form onSubmit={handleUpdatePassword} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Current Password</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.currentPassword')}</label>
                                 <input
                                     type="password"
                                     value={currentPassword}
@@ -168,7 +170,7 @@ const AdminProfilePage = () => {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">New Password</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.newPassword')}</label>
                                     <input
                                         type="password"
                                         value={newPassword}
@@ -178,7 +180,7 @@ const AdminProfilePage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Confirm New Password</label>
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('profile.confirmPassword')}</label>
                                     <input
                                         type="password"
                                         value={confirmPassword}
@@ -190,7 +192,7 @@ const AdminProfilePage = () => {
                             </div>
                             <div className="flex justify-end pt-4">
                                 <Button type="submit" disabled={isSavingPassword || !currentPassword || !newPassword || !confirmPassword}>
-                                    {isSavingPassword ? 'Updating...' : 'Update Password'}
+                                    {isSavingPassword ? t('profile.updating') : t('profile.updatePassword')}
                                 </Button>
                             </div>
                         </form>

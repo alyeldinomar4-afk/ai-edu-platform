@@ -1,10 +1,13 @@
 import { Star, Clock, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Button from '../../ui/Button';
 
 const CourseCard = ({ course }) => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
     return (
         <motion.div
             whileHover={{ y: -5 }}
@@ -19,14 +22,14 @@ const CourseCard = ({ course }) => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute top-3 left-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200">
-                    {course.category}
+                    {t(`courses.categories.${course.category.charAt(0).toLowerCase() + course.category.slice(1).replace(/\s+/g, '')}`)}
                 </div>
             </div>
 
             <div className="p-5 flex flex-col h-[calc(100%-12rem)]">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">
-                        {course.level}
+                        {t(`courses.levels.${course.level.toLowerCase()}`)}
                     </span>
                     <div className="flex items-center gap-1">
                         {[1, 2, 3, 4, 5].map((star) => {
@@ -55,7 +58,7 @@ const CourseCard = ({ course }) => {
                             );
                         })}
                         <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 ml-0.5">{course.rating}</span>
-                        <span className="text-xs text-slate-400 dark:text-slate-500">({course.reviews})</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500">({course.reviews} {t('publicInstructor.reviews')})</span>
                     </div>
                 </div>
 
@@ -63,7 +66,7 @@ const CourseCard = ({ course }) => {
                 <button
                     className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 px-2.5 py-1 rounded-lg transition-colors w-fit mb-4 text-left line-clamp-1 sm:line-clamp-1 focus:outline-none focus:ring-2 focus:ring-primary/50"
                     onClick={(e) => {
-                        e.preventDefault(); // Prevent navigating if this card is inside a Link
+                        e.preventDefault();
                         navigate(`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`);
                     }}
                 >
@@ -73,7 +76,7 @@ const CourseCard = ({ course }) => {
                 <div className="flex items-center gap-4 text-xs text-slate-400 dark:text-slate-500 mb-4 mt-auto">
                     <div className="flex items-center gap-1">
                         <BookOpen className="w-3 h-3" />
-                        <span>{course.lessons} Lessons</span>
+                        <span>{course.lessons} {t('courses.lessons')}</span>
                     </div>
                     <div className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
@@ -82,9 +85,11 @@ const CourseCard = ({ course }) => {
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
-                    <span className="text-xl font-bold text-slate-900 dark:text-white">${course.price}</span>
+                    <span className="text-xl font-bold text-slate-900 dark:text-white">
+                        {course.price === 0 ? t('home.cta.free') : `$${course.price}`}
+                    </span>
                     <Link to={`/courses/${course.id}`}>
-                        <Button variant="outline" size="sm">View Course</Button>
+                        <Button variant="outline" size="sm">{t('courses.viewCourse')}</Button>
                     </Link>
                 </div>
             </div>
