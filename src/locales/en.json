@@ -7,7 +7,7 @@
     "getStarted": "Get Started",
     "logout": "Logout",
     "instructors": "Instructors",
-    "aiDemo": "AI Demo",
+    "aiDemo": "AI Assistant",
     "switchToArabic": "العربية"
   },
   "home": {
@@ -60,6 +60,16 @@
         "dataAnalyst": "Data Analyst",
         "student": "Student"
       }
+    },
+    "instructors": {
+      "titleMain": "Meet our",
+      "titleHighlight": "Top Instructors",
+      "subtitle": "Learn from the best in the industry. Our instructors are experts with years of real-world experience.",
+      "viewAll": "Explore All Instructors",
+      "viewProfile": "View Profile",
+      "courses": "Courses",
+      "rating": "Rating",
+      "students": "Students"
     },
     "cta": {
       "title": "Ready to Transform Your Learning?",
@@ -604,6 +614,10 @@
       "photography": "Photography",
       "finance": "Finance"
     }
+  },
+  "instructorsPage": {
+    "title": "Our Expert Instructors",
+    "subtitle": "Learn from industry professionals with years of real-world experience and a passion for teaching."
   },
   "publicInstructor": {
     "aboutMe": "About Me",

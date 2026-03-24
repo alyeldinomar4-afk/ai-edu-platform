@@ -225,13 +225,38 @@ export const courses = [
     },
 ];
 
+export const instructors = [
+    {
+        id: 1,
+        name: 'Dr. Laila Hassan',
+        role: 'AI Researcher & Educator',
+        avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
+        coursesCount: 15,
+        rating: 4.8,
+        studentsCount: '2.5k',
+        category: 'Data Science',
+        bio: 'Specializing in Machine Learning and AI Ethics with over 10 years of experience in both academia and industry.'
+    },
+    {
+        id: 2,
+        name: 'Ahmed Mansour',
+        role: 'Senior Full-Stack Developer',
+        avatar: 'https://randomuser.me/api/portraits/men/46.jpg',
+        coursesCount: 12,
+        rating: 4.9,
+        studentsCount: '3.8k',
+        category: 'Development',
+        bio: 'Passionate about building scalable web applications and teaching modern frameworks to the next generation of developers.'
+    }
+];
+
 export const categories = [
-    { id: 1, name: 'Development', count: 120, icon: 'Code2' },
-    { id: 2, name: 'Data Science', count: 85, icon: 'BarChart3' },
-    { id: 3, name: 'Design', count: 64, icon: 'Palette' },
-    { id: 4, name: 'Marketing', count: 42, icon: 'Megaphone' },
-    { id: 5, name: 'Photography', count: 56, icon: 'Camera' },
-    { id: 6, name: 'Finance', count: 38, icon: 'DollarSign' },
+    { id: 1, name: 'Development', count: 120, icon: 'Code2', color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
+    { id: 2, name: 'Data Science', count: 85, icon: 'BarChart3', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
+    { id: 3, name: 'Design', count: 64, icon: 'Palette', color: 'text-pink-500', bgColor: 'bg-pink-500/10' },
+    { id: 4, name: 'Marketing', count: 42, icon: 'Megaphone', color: 'text-orange-500', bgColor: 'bg-orange-500/10' },
+    { id: 5, name: 'Photography', count: 56, icon: 'Camera', color: 'text-cyan-500', bgColor: 'bg-cyan-500/10' },
+    { id: 6, name: 'Finance', count: 38, icon: 'DollarSign', color: 'text-yellow-500', bgColor: 'bg-yellow-500/10' },
 ];
 
 export const testimonials = [

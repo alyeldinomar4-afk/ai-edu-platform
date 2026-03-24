@@ -64,13 +64,20 @@ const CourseCard = ({ course }) => {
 
                 <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white mb-1 line-clamp-2 leading-snug">{course.title}</h3>
                 <button
-                    className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700/50 dark:hover:bg-slate-700 px-2.5 py-1 rounded-lg transition-colors w-fit mb-4 text-left line-clamp-1 sm:line-clamp-1 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 bg-slate-100 hover:bg-primary/10 dark:bg-slate-700/50 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary-light px-2.5 py-1.5 rounded-xl transition-all w-fit mb-4 text-left focus:outline-none focus:ring-2 focus:ring-primary/50 group/instructor"
                     onClick={(e) => {
                         e.preventDefault();
                         navigate(`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`);
                     }}
                 >
-                    {course.instructor}
+                    <div className="w-5 h-5 rounded-full overflow-hidden border border-white dark:border-slate-800 shadow-sm shrink-0">
+                        <img 
+                            src={course.instructor === 'Dr. Laila Hassan' ? 'https://randomuser.me/api/portraits/women/65.jpg' : 'https://randomuser.me/api/portraits/men/46.jpg'} 
+                            alt={course.instructor}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <span className="font-medium group-hover/instructor:underline decoration-primary/30 underline-offset-2">{course.instructor}</span>
                 </button>
 
                 <div className="flex items-center gap-4 text-xs text-slate-400 dark:text-slate-500 mb-4 mt-auto">

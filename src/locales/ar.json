@@ -7,7 +7,7 @@
     "getStarted": "ابدأ الآن",
     "logout": "تسجيل الخروج",
     "instructors": "المعلمين",
-    "aiDemo": "عرض الذكاء الاصطناعي",
+    "aiDemo": "مساعد الذكاء الاصطناعي",
     "switchToEnglish": "English"
   },
   "home": {
@@ -60,6 +60,16 @@
         "dataAnalyst": "محلل بيانات",
         "student": "طالب"
       }
+    },
+    "instructors": {
+      "titleMain": "تعرّف على",
+      "titleHighlight": "نخبة المعلمين",
+      "subtitle": "تعلم من أفضل الخبراء في المجال. معلمونا ممارسون لديهم سنوات من الخبرة العملية.",
+      "viewAll": "استكشف جميع المعلمين",
+      "viewProfile": "عرض الملف الشخصي",
+      "courses": "دورة",
+      "rating": "تقييم",
+      "students": "طالب"
     },
     "cta": {
       "title": "جاهز لتحويل رحلة تعلمك؟",
@@ -604,6 +614,10 @@
       "photography": "التصوير",
       "finance": "المالية"
     }
+  },
+  "instructorsPage": {
+    "title": "نخبة مدرسينا",
+    "subtitle": "تعلم من محترفي الصناعة الذين يتمتعون بسنوات من الخبرة العملية وشغف التدريس."
   },
   "publicInstructor": {
     "aboutMe": "عني",

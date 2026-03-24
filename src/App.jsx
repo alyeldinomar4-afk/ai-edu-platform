@@ -17,6 +17,7 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import AIDemoPage from './pages/AIDemoPage';
+import InstructorsPage from './pages/instructor/InstructorsPage';
 import CheckoutPage from './pages/checkout/CheckoutPage';
 import PaymentSuccessPage from './pages/checkout/PaymentSuccessPage';
 
@@ -62,6 +63,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/courses" element={<CoursesPage />} />
               <Route path="/courses/:id" element={<CourseDetailsPage />} />
+              <Route path="/instructors" element={<InstructorsPage />} />
               <Route path="/instructor/user/:name" element={<PublicInstructorProfilePage />} />
               <Route path="/ai-demo" element={<AIDemoPage />} />
               <Route path="/checkout/:courseId" element={<CheckoutPage />} />

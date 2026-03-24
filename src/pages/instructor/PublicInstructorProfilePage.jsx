@@ -8,7 +8,7 @@ import { useAuth } from '../../auth/useAuth';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton, { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
 import CourseCard from '../../components/features/course/CourseCard';
-import { courses } from '../../data/mockData';
+import { courses, instructors } from '../../data/mockData';
 
 const PublicInstructorProfilePage = () => {
     const { name } = useParams(); // Using the name from the URL
@@ -22,9 +22,17 @@ const PublicInstructorProfilePage = () => {
     const [instructorCourses, setInstructorCourses] = useState([]);
     const [isFollowing, setIsFollowing] = useState(false);
 
+    const [instructorData, setInstructorData] = useState(null);
+
     // Simulate loading and fetching instructor's courses
     useEffect(() => {
         setIsLoading(true);
+        // Find instructor data
+        const foundInstructor = instructors.find(inst => 
+            inst.name.toLowerCase() === instructorName.toLowerCase()
+        );
+        setInstructorData(foundInstructor || null);
+
         // Find courses taught by this instructor
         const foundCourses = courses.filter(course =>
             course.instructor.toLowerCase() === instructorName.toLowerCase()
@@ -60,10 +68,10 @@ const PublicInstructorProfilePage = () => {
 
     // Mock instructor details based on name
     const instructorStats = {
-        totalStudents: 25400,
+        totalStudents: instructorData?.studentsCount ? parseInt(instructorData.studentsCount.toString().replace('k', '000')) : 25400,
         reviews: 4800,
-        averageRating: 4.8,
-        courseCount: instructorCourses.length || 12
+        averageRating: instructorData?.rating || 4.8,
+        courseCount: instructorData?.coursesCount || instructorCourses.length || 12
     };
 
     if (isLoading) {
@@ -79,7 +87,7 @@ const PublicInstructorProfilePage = () => {
                                 <LoadingSkeleton className="w-32 h-4" />
                             </div>
                         </div>
-                        <div className="mt-2 text-center md:text-left">
+                        <div className="mt-2 text-center md:text-start">
                             <LoadingSkeleton className="w-full h-24 mb-6" />
                         </div>
                     </div>
@@ -114,7 +122,7 @@ const PublicInstructorProfilePage = () => {
                             >
                                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-white dark:bg-slate-800 shadow-xl overflow-hidden border-4 border-white dark:border-slate-900 mx-auto md:mx-0 z-10 relative">
                                     <img
-                                        src={`https://ui-avatars.com/api/?name=${instructorName}&background=0D8ABC&color=fff&size=200`}
+                                        src={instructorData?.avatar || `https://ui-avatars.com/api/?name=${instructorName}&background=0D8ABC&color=fff&size=200`}
                                         alt={instructorName}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
@@ -123,14 +131,14 @@ const PublicInstructorProfilePage = () => {
                             </motion.div>
 
                             {/* Info beside image (desktop) / below image (mobile) */}
-                            <div className="flex-1 pb-4 md:pb-2 text-center md:text-left mt-2 md:mt-0 w-full">
+                            <div className="flex-1 pb-4 md:pb-2 text-center md:text-start mt-2 md:mt-0 w-full">
                                 <motion.h1
                                     initial={{ y: 10, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.1 }}
                                     className="text-3xl md:text-5xl font-bold text-white capitalize mb-2"
                                 >
-                                    {instructorName}
+                                    {instructorData?.name || instructorName}
                                 </motion.h1>
                                 <motion.p
                                     initial={{ y: 10, opacity: 0 }}
@@ -139,7 +147,7 @@ const PublicInstructorProfilePage = () => {
                                     className="text-primary font-medium text-sm md:text-base flex items-center justify-center md:justify-start gap-2 mb-4"
                                 >
                                     <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                                    Senior Technical Instructor
+                                    {instructorData?.role || 'Senior Technical Instructor'}
                                 </motion.p>
 
                                 {/* Social Links */}
@@ -189,14 +197,20 @@ const PublicInstructorProfilePage = () => {
                                 className="lg:col-span-2 space-y-6"
                             >
                                 <div>
-                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{t('publicInstructor.aboutMe')}</h3>
-                                    <div className="text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed text-sm md:text-base">
-                                        <p>
-                                            Hi, I'm {instructorName}. I am a passionate software engineer and educator with over a decade of experience in the tech industry. My goal is to break down complex architectural concepts and programming paradigms into easily digestible lessons.
-                                        </p>
-                                        <p>
-                                            I believe that learning should be practical and hands-on. In my courses, you won't just learn the theory—you will build real-world applications that solve actual problems. Let's build something amazing together!
-                                        </p>
+                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 text-start">{t('publicInstructor.aboutMe')}</h3>
+                                    <div className="text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed text-sm md:text-base text-start" dir="auto">
+                                        {instructorData?.bio ? (
+                                            <p>{instructorData.bio}</p>
+                                        ) : (
+                                            <>
+                                                <p>
+                                                    Hi, I'm {instructorName}. I am a passionate software engineer and educator with over a decade of experience in the tech industry. My goal is to break down complex architectural concepts and programming paradigms into easily digestible lessons.
+                                                </p>
+                                                <p>
+                                                    I believe that learning should be practical and hands-on. In my courses, you won't just learn the theory—you will build real-world applications that solve actual problems. Let's build something amazing together!
+                                                </p>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>
