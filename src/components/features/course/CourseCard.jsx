@@ -85,9 +85,17 @@ const CourseCard = ({ course }) => {
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
-                    <span className="text-xl font-bold text-slate-900 dark:text-white">
-                        {course.price === 0 ? t('home.cta.free') : `$${course.price}`}
-                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl font-bold text-slate-900 dark:text-white">
+                            {course.price === 0 ? t('home.cta.free') : `$${course.discount ? (course.price * (1 - course.discount / 100)).toFixed(2) : course.price}`}
+                        </span>
+                        {course.discount > 0 && course.price > 0 && (
+                            <>
+                                <span className="text-sm text-slate-400 line-through">${course.price}</span>
+                                <span className="text-[10px] font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-1.5 py-0.5 rounded-md">-{course.discount}%</span>
+                            </>
+                        )}
+                    </div>
                     <Link to={`/courses/${course.id}`}>
                         <Button variant="outline" size="sm">{t('courses.viewCourse')}</Button>
                     </Link>

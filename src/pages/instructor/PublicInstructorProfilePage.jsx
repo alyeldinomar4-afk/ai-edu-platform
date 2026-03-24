@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { User, Star, Users, PlayCircle, Clock, BookOpen, Globe, Linkedin, Twitter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
+import { useAuth } from '../../auth/useAuth';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton, { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
 import CourseCard from '../../components/features/course/CourseCard';
@@ -11,6 +13,8 @@ import { courses } from '../../data/mockData';
 const PublicInstructorProfilePage = () => {
     const { name } = useParams(); // Using the name from the URL
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
     // Decode name and handle any potential formatting issues
     const instructorName = decodeURIComponent(name).replace(/-/g, ' ');
 
@@ -38,9 +42,16 @@ const PublicInstructorProfilePage = () => {
     }, [instructorName]);
 
     const handleFollowToggle = () => {
+        if (!isAuthenticated) {
+            toast.error(t('publicInstructor.loginRequiredToFollow'));
+            navigate('/login', { state: { from: window.location.pathname } });
+            return;
+        }
+
         setIsFollowing(!isFollowing);
         // Simulate API call or toast notification here
         if (!isFollowing) {
+            toast.success(`${t('publicInstructor.following')} ${instructorName}`);
             console.log(`Now following ${instructorName}`);
         } else {
             console.log(`Unfollowed ${instructorName}`);

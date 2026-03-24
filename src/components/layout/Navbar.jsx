@@ -30,6 +30,7 @@ const Navbar = () => {
     const navLinks = [
         { name: t('nav.home'), path: '/' },
         { name: t('nav.courses'), path: '/courses' },
+        { name: t('nav.aiDemo'), path: '/ai-demo' },
     ];
 
     // Add dashboard link if logged in

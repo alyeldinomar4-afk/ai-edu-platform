@@ -11,7 +11,7 @@ const ManageCoursesPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
-    const [formData, setFormData] = useState({ title: '', instructor: '', category: '', price: '' });
+    const [formData, setFormData] = useState({ title: '', instructor: '', category: '', price: '', discount: '' });
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredCourses = useMemo(() => {
@@ -25,13 +25,13 @@ const ManageCoursesPage = () => {
 
     const openAddModal = () => {
         setEditingCourse(null);
-        setFormData({ title: '', instructor: '', category: '', price: '' });
+        setFormData({ title: '', instructor: '', category: '', price: '', discount: '' });
         setShowModal(true);
     };
 
     const openEditModal = (course) => {
         setEditingCourse(course);
-        setFormData({ title: course.title, instructor: course.instructor, category: course.category, price: String(course.price) });
+        setFormData({ title: course.title, instructor: course.instructor, category: course.category, price: String(course.price), discount: String(course.discount || '') });
         setShowModal(true);
     };
 
@@ -39,13 +39,14 @@ const ManageCoursesPage = () => {
         if (!formData.title.trim()) return;
         if (editingCourse) {
             setCourseList(prev => prev.map(c =>
-                c.id === editingCourse.id ? { ...c, ...formData, price: parseFloat(formData.price) || 0 } : c
+                c.id === editingCourse.id ? { ...c, ...formData, price: parseFloat(formData.price) || 0, discount: parseInt(formData.discount) || 0 } : c
             ));
         } else {
             setCourseList(prev => [...prev, {
                 id: Date.now(),
                 ...formData,
                 price: parseFloat(formData.price) || 0,
+                discount: parseInt(formData.discount) || 0,
                 image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
                 rating: 0, reviews: 0, level: 'Beginner', lessons: 0, duration: '0h 0m'
             }]);
@@ -231,6 +232,20 @@ const ManageCoursesPage = () => {
                                             onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
                                             className={`w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
                                             placeholder={t('dashboard.admin.manageCourses.pricePlaceholder')}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageCourses.discountLabel')}</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={formData.discount}
+                                            onChange={e => setFormData(prev => ({ ...prev, discount: e.target.value }))}
+                                            className={`w-full px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                            placeholder={t('dashboard.admin.manageCourses.discountPlaceholder')}
                                         />
                                     </div>
                                 </div>

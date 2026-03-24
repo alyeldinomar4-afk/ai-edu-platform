@@ -203,6 +203,8 @@
         "titlePlaceholder": "e.g. Introduction to Machine Learning",
         "instructorPlaceholder": "e.g. Dr. Sarah Smith",
         "pricePlaceholder": "19.99",
+        "discountLabel": "Discount (%)",
+        "discountPlaceholder": "e.g. 20",
         "deleteTitle": "Delete Course?",
         "deleteContent": "This action cannot be undone. The course and all its data will be permanently removed."
       },
@@ -613,7 +615,8 @@
     "follow": "Follow",
     "following": "Following",
     "reviews": "reviews",
-    "from": "From"
+    "from": "From",
+    "loginRequiredToFollow": "Please log in to follow this instructor"
   },
   "course": {
     "quiz": {
@@ -668,11 +671,34 @@
         "placeholder": "Ask about the video...",
       "defaultWelcome": "Hello! I'm watching this video with you. Feel free to ask me to summarize key points or explain complex concepts.",
       "pausePrompt": "You paused at {{timestamp}}. Would you like me to explain what's happening in this section?",
-      "analyzingResponse": "Analyzing the video at {{timestamp}}... The instructor is discussing how this specific pattern optimizes performance."
+      "analyzingResponse": "Analyzing the video at {{timestamp}}... The instructor is discussing how this specific pattern optimizes performance.",
+      "explainSectionConfirm": "Yes, please explain this section."
     },
     "playlist": {
       "title": "Course Content",
       "section": "Section {{number}}"
+    },
+    "aiDemo": {
+      "title": "AI Learning Assistant",
+      "subtitle": "Your personal tutor, available 24/7",
+      "backToHome": "Back to Home",
+      "tryAsking": "Try asking:",
+      "placeholder": "Ask me anything about your courses...",
+      "demoMode": "Demo Mode: Simulated AI responses",
+      "welcome": "Hi! I'm your AI Learning Assistant. 👋\n\nI can help you with:\n• Explaining complex concepts\n• Answering questions about courses\n• Providing code examples\n• Summarizing video lessons\n\nWhat would you like to learn today?",
+      "questions": {
+        "react": "Explain React components",
+        "python": "How do Python loops work?",
+        "ml": "What is Machine Learning?",
+        "js": "Help me learn JavaScript"
+      },
+      "responses": {
+        "react": "Great question about React! 🚀\n\nReact components are the building blocks of React applications. Here's a simple example:\n\n```jsx\nfunction Welcome({ name }) {\n  return <h1>Hello, {name}!</h1>;\n}\n```\n\nComponents can be:\n• **Functional** (like above) - simpler, use hooks\n• **Class-based** - older style, more verbose\n\nWould you like me to explain hooks like useState or useEffect?",
+        "python": "Python is awesome for beginners! 🐍\n\nHere's a simple for loop example:\n\n```python\nfor i in range(5):\n    print(f\"Number: {i}\")\n```\n\nThis will print numbers 0 through 4. The `range()` function generates a sequence of numbers.\n\nNeed help with something specific in Python?",
+        "ml": "Machine Learning is fascinating! 🤖\n\nHere are the main types:\n\n**1. Supervised Learning**\n   - Learn from labeled data\n   - Examples: Classification, Regression\n\n**2. Unsupervised Learning**\n   - Find patterns in unlabeled data\n   - Examples: Clustering, Dimensionality Reduction\n\n**3. Reinforcement Learning**\n   - Learn through trial and error\n   - Examples: Game AI, Robotics\n\nWhich area interests you most?",
+        "help": "I'm here to make learning easier! ✨\n\nI can help you with:\n\n📚 **Course Content**\n   - Explain difficult concepts\n   - Provide additional examples\n   - Summarize video lessons\n\n💻 **Code Help**\n   - Debug your code\n   - Explain syntax\n   - Suggest best practices\n\n🎯 **Learning Path**\n   - Recommend courses\n   - Create study plans\n   - Track your progress\n\nJust ask me anything!",
+        "default": "That's an interesting question! 💡\n\nWhile this is a demo, in the full version I would provide detailed explanations about \"{{message}}\".\n\nI can help with topics like:\n• Programming (Python, JavaScript, React)\n• Machine Learning & AI\n• Web Development\n• Data Science\n\nTry asking about one of these topics!"
+      }
     }
   }
 }

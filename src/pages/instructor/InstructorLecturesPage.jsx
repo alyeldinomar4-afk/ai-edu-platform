@@ -257,7 +257,7 @@ const InstructorLecturesPage = () => {
                                 exit={{ opacity: 0, y: -20 }}
                                 className="bg-white dark:bg-slate-900 p-1 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 shadow-xl overflow-hidden overflow-x-auto text-left"
                             >
-                                <table className={`w-full ${isRTL ? 'text-right' : 'text-left'}`}>
+                                <table className={`w-full min-w-[700px] ${isRTL ? 'text-right' : 'text-left'}`}>
                                     <thead>
                                         <tr className="border-b border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                             <th className="px-8 py-5">{t('dashboard.instructor.lectures.table.details')}</th>
@@ -479,7 +479,7 @@ const InstructorLecturesPage = () => {
                                                     className="overflow-hidden space-y-4"
                                                 >
                                                     {quizQuestions.map((q, qIdx) => (
-                                                        <div key={qIdx} className="p-5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-4 relative shadow-sm">
+                                                        <div key={qIdx} className="p-5 pt-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-4 relative shadow-sm">
                                                             <button
                                                                 type="button"
                                                                 onClick={() => removeQuestion(qIdx)}
@@ -534,7 +534,7 @@ const InstructorLecturesPage = () => {
                                         </AnimatePresence>
                                     </div>
 
-                                    <div className="pt-6 flex gap-4 sticky bottom-0 bg-white dark:bg-slate-900 pb-2">
+                                    <div className={`pt-6 flex gap-4 sticky bottom-0 bg-white dark:bg-slate-900 pb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                                         <Button type="button" variant="outline" className="flex-1 py-3.5 rounded-2xl font-bold" onClick={() => { setShowVideoModal(false); setEditingVideo(null); setSelectedFiles([]); setShowQuizBuilder(false); setQuizQuestions([]); }} disabled={isSaving}>{t('dashboard.instructor.lectures.form.discard')}</Button>
                                         <Button className="flex-1 py-3.5 rounded-2xl font-bold shadow-lg shadow-primary/20" type="submit" disabled={isSaving}>
                                             {isSaving ? t('dashboard.instructor.lectures.form.saving') : (editingVideo ? t('dashboard.instructor.lectures.form.update') : t('dashboard.instructor.lectures.form.confirm'))}

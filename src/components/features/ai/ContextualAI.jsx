@@ -15,6 +15,16 @@ const ContextualAI = ({ videoState, addMarker }) => {
     const [messages, setMessages] = useState([
         { id: 1, role: 'ai', text: t('videoPlayer.aiTutor.defaultWelcome') }
     ]);
+
+    // Update initial message when language changes
+    useEffect(() => {
+        setMessages(prev => prev.map(m => {
+            if (m.id === 1 && m.role === 'ai') {
+                return { ...m, text: t('videoPlayer.aiTutor.defaultWelcome') };
+            }
+            return m;
+        }));
+    }, [t]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
 
@@ -146,7 +156,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
                             {msg.isPrompt && (
                                 <div className="mt-3.5 flex gap-2">
                                     <button
-                                        onClick={() => handleSend(null, "Yes, please explain this section.")}
+                                        onClick={() => handleSend(null, t('videoPlayer.aiTutor.explainSectionConfirm'))}
                                         className="text-[10px] font-bold bg-primary text-white px-3.5 py-2 rounded-lg hover:bg-primary-600 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20"
                                     >
                                         {t('videoPlayer.aiTutor.explainSection')}

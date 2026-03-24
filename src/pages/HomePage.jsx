@@ -230,7 +230,7 @@ const HomePage = () => {
 
             {/* AI Feature Highlight */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-                <div className="bg-linear-to-br from-slate-900 via-slate-800 to-black rounded-[2.5rem] p-8 sm:p-10 md:p-20 overflow-hidden relative text-white dark:from-black dark:via-slate-950 dark:to-slate-900 border dark:border-slate-800">
+                <div className="bg-linear-to-br from-slate-900 via-slate-800 to-black rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-20 overflow-hidden relative text-white dark:from-black dark:via-slate-950 dark:to-slate-900 border dark:border-slate-800">
                     <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
@@ -253,23 +253,23 @@ const HomePage = () => {
 
                         <div className="relative">
                             {/* Abstract UI representation of chat */}
-                            <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl p-6 border border-slate-700 dark:border-slate-800 shadow-2xl relative z-20">
+                            <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-slate-700 dark:border-slate-800 shadow-2xl relative z-20">
                                 <div className="space-y-4">
-                                    <div className="flex gap-4 items-start">
-                                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                                            <Users className="w-5 h-5" />
+                                    <div className="flex gap-3 sm:gap-4 items-start">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0">
+                                            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
                                         </div>
-                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
+                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-2xl rounded-tl-none text-slate-300 text-xs sm:text-sm flex-1 min-w-0">
                                             <p>{t('home.aiHighlight.chatUserQuery')}</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-4 items-start">
-                                        <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                                            <Zap className="w-5 h-5" />
+                                    <div className="flex gap-3 sm:gap-4 items-start">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 shrink-0">
+                                            <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
                                         </div>
-                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-4 rounded-2xl rounded-tl-none text-slate-300 text-sm flex-1">
+                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-2xl rounded-tl-none text-slate-300 text-xs sm:text-sm flex-1 min-w-0">
                                             <p className="mb-2">{t('home.aiHighlight.chatAiResponse')}</p>
-                                            <div className="bg-slate-900 rounded p-2 font-mono text-xs text-green-300">
+                                            <div className="bg-slate-900 rounded p-2 font-mono text-[10px] sm:text-xs text-green-300 overflow-x-auto">
                                                 const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);
                                             </div>
                                         </div>

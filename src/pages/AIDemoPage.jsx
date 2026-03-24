@@ -2,17 +2,29 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Sparkles, User, Bot, Loader2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Button from '../components/ui/Button';
 
 const AIDemoPage = () => {
+    const { t } = useTranslation();
     const [messages, setMessages] = useState([
         {
             id: 1,
             role: 'assistant',
-            content: 'Hi! I\'m your AI Learning Assistant. 👋\n\nI can help you with:\n• Explaining complex concepts\n• Answering questions about courses\n• Providing code examples\n• Summarizing video lessons\n\nWhat would you like to learn today?',
+            content: t('videoPlayer.aiDemo.welcome'),
             timestamp: new Date()
         }
     ]);
+
+    // Update initial message when language changes
+    useEffect(() => {
+        setMessages(prev => prev.map(m => {
+            if (m.id === 1 && m.role === 'assistant') {
+                return { ...m, content: t('videoPlayer.aiDemo.welcome') };
+            }
+            return m;
+        }));
+    }, [t]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const chatContainerRef = useRef(null);
@@ -49,23 +61,23 @@ const AIDemoPage = () => {
     const getDemoResponse = (userMessage) => {
         const msg = userMessage.toLowerCase();
 
-        if (msg.includes('react') || msg.includes('component')) {
-            return 'Great question about React! 🚀\n\nReact components are the building blocks of React applications. Here\'s a simple example:\n\n```jsx\nfunction Welcome({ name }) {\n  return <h1>Hello, {name}!</h1>;\n}\n```\n\nComponents can be:\n• **Functional** (like above) - simpler, use hooks\n• **Class-based** - older style, more verbose\n\nWould you like me to explain hooks like useState or useEffect?';
+        if (msg.includes('react') || msg.includes('component') || msg.includes('ريأكت')) {
+            return t('videoPlayer.aiDemo.responses.react');
+        }
+        
+        if (msg.includes('python') || msg.includes('loop') || msg.includes('بايثون')) {
+            return t('videoPlayer.aiDemo.responses.python');
+        }
+        
+        if (msg.includes('machine learning') || msg.includes('ml') || msg.includes('ai') || msg.includes('تعلم الآلة') || msg.includes('ذكاء اصطناعي')) {
+            return t('videoPlayer.aiDemo.responses.ml');
+        }
+        
+        if (msg.includes('help') || msg.includes('what can you do') || msg.includes('مساعدة')) {
+            return t('videoPlayer.aiDemo.responses.help');
         }
 
-        if (msg.includes('python') || msg.includes('loop')) {
-            return 'Python is awesome for beginners! 🐍\n\nHere\'s a simple for loop example:\n\n```python\nfor i in range(5):\n    print(f"Number: {i}")\n```\n\nThis will print numbers 0 through 4. The `range()` function generates a sequence of numbers.\n\nNeed help with something specific in Python?';
-        }
-
-        if (msg.includes('machine learning') || msg.includes('ml') || msg.includes('ai')) {
-            return 'Machine Learning is fascinating! 🤖\n\nHere are the main types:\n\n**1. Supervised Learning**\n   - Learn from labeled data\n   - Examples: Classification, Regression\n\n**2. Unsupervised Learning**\n   - Find patterns in unlabeled data\n   - Examples: Clustering, Dimensionality Reduction\n\n**3. Reinforcement Learning**\n   - Learn through trial and error\n   - Examples: Game AI, Robotics\n\nWhich area interests you most?';
-        }
-
-        if (msg.includes('help') || msg.includes('what can you do')) {
-            return 'I\'m here to make learning easier! ✨\n\nI can help you with:\n\n📚 **Course Content**\n   - Explain difficult concepts\n   - Provide additional examples\n   - Summarize video lessons\n\n💻 **Code Help**\n   - Debug your code\n   - Explain syntax\n   - Suggest best practices\n\n🎯 **Learning Path**\n   - Recommend courses\n   - Create study plans\n   - Track your progress\n\nJust ask me anything!';
-        }
-
-        return `That's an interesting question! 💡\n\nWhile this is a demo, in the full version I would provide detailed explanations about "${userMessage}".\n\nI can help with topics like:\n• Programming (Python, JavaScript, React)\n• Machine Learning & AI\n• Web Development\n• Data Science\n\nTry asking about one of these topics!`;
+        return t('videoPlayer.aiDemo.responses.default', { message: userMessage });
     };
 
     const handleSend = async () => {
@@ -102,10 +114,10 @@ const AIDemoPage = () => {
     };
 
     const suggestedQuestions = [
-        "Explain React components",
-        "How do Python loops work?",
-        "What is Machine Learning?",
-        "Help me learn JavaScript"
+        t('videoPlayer.aiDemo.questions.react'),
+        t('videoPlayer.aiDemo.questions.python'),
+        t('videoPlayer.aiDemo.questions.ml'),
+        t('videoPlayer.aiDemo.questions.js')
     ];
 
     return (
@@ -115,7 +127,7 @@ const AIDemoPage = () => {
                 <div className="mb-6">
                     <Link to="/" className="inline-flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors mb-4">
                         <ArrowLeft className="w-4 h-4" />
-                        <span className="text-sm font-medium">Back to Home</span>
+                        <span className="text-sm font-medium">{t('videoPlayer.aiDemo.backToHome')}</span>
                     </Link>
 
                     <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-colors">
@@ -124,8 +136,8 @@ const AIDemoPage = () => {
                                 <Sparkles className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">AI Learning Assistant</h1>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">Your personal tutor, available 24/7</p>
+                                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('videoPlayer.aiDemo.title')}</h1>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">{t('videoPlayer.aiDemo.subtitle')}</p>
                             </div>
                         </div>
                     </div>
@@ -201,7 +213,7 @@ const AIDemoPage = () => {
                     {/* Suggested Questions */}
                     {messages.length <= 2 && (
                         <div className="px-6 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 transition-colors">
-                            <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500 mb-2">Try asking:</p>
+                            <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500 mb-2">{t('videoPlayer.aiDemo.tryAsking')}</p>
                             <div className="flex flex-wrap gap-2">
                                 {suggestedQuestions.map((question, idx) => (
                                     <button
@@ -225,7 +237,7 @@ const AIDemoPage = () => {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                placeholder="Ask me anything about your courses..."
+                                placeholder={t('videoPlayer.aiDemo.placeholder')}
                                 className="flex-1 px-4 py-3 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                                 disabled={isTyping}
                             />
@@ -242,7 +254,7 @@ const AIDemoPage = () => {
                             </Button>
                         </div>
                         <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 text-center italic">
-                            Demo Mode: Simulated AI responses
+                            {t('videoPlayer.aiDemo.demoMode')}
                         </p>
                     </div>
                 </div>
