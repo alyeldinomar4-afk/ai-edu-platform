@@ -22,3 +22,27 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# ─── Build & Debug Output ────────────────────
+build_debug.txt
+build_output.txt
+
+# ─── ESLint Reports (temporary) ──────────────
+eslint.json
+eslint_error_logs.txt
+eslint_out.json
+eslint_output.json
+eslint_output.txt
+eslint_unix_report.txt
+filtered_eslint.json
+
+
+# ─── Local Team Docs (not for GitHub) ────────
+BACKEND_HANDOFF.md
+
+# ─── Environment & Secrets ───────────────────
+.env
+.env.*
+
+# ─── Gemini / AI Agent ──────────────────────
+.gemini/
