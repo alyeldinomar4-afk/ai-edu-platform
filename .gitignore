@@ -35,6 +35,7 @@ eslint_output.json
 eslint_output.txt
 eslint_unix_report.txt
 filtered_eslint.json
+full_eslint_report.txt
 
 
 # ─── Local Team Docs (not for GitHub) ────────
