@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Video,
@@ -18,7 +19,9 @@ import {
     FileText,
     UploadCloud,
     Bot,
-    Zap
+    Zap,
+    ArrowLeft,
+    ArrowRight
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { lectures } from '../../data/mockData';
@@ -29,6 +32,7 @@ import { useTranslation } from 'react-i18next';
 // InstructorLecturesPage v1.3 - Localized and RTL support
 const InstructorLecturesPage = () => {
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
     const isRTL = i18n.language === 'ar';
     const [viewMode, setViewMode] = useState('list');
     const [searchTerm, setSearchTerm] = useState('');
@@ -133,6 +137,22 @@ const InstructorLecturesPage = () => {
         <div className="min-h-screen transition-colors duration-300">
             {/* Main Container */}
             <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 mb-24">
+                {/* Navigation Back */}
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <button
+                        onClick={() => navigate('/instructor/dashboard')}
+                        className={`group flex items-center gap-2.5 text-slate-500 hover:text-primary transition-all font-semibold text-sm ${isRTL ? 'flex-row-reverse text-right' : 'text-left'}`}
+                    >
+                        <div className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                            {isRTL ? <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" /> : <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />}
+                        </div>
+                        {t('dashboard.instructor.lectures.backToDashboard')}
+                    </button>
+                </motion.div>
 
                 {/* Header Section */}
                 <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 ${isRTL ? 'text-right' : 'text-left'}`}>

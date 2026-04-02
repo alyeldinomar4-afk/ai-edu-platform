@@ -72,13 +72,13 @@ const HomePage = () => {
                             </p>
                              <div className="flex flex-col sm:flex-row gap-4">
                                 <Link to="/courses">
-                                    <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all w-full sm:w-auto">
-                                        {t('home.btnStartLearning')} <ArrowRight className="w-5 h-5 ml-2" />
+                                    <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all w-full sm:w-auto flex items-center justify-center gap-2">
+                                        {t('home.btnStartLearning')} <ArrowRight className={cn("w-5 h-5", isAr && "rotate-180")} />
                                     </Button>
                                 </Link>
                                 <Link to="/ai-demo">
-                                    <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto">
-                                        <Play className="w-5 h-5 mr-2 fill-current" /> {t('home.btnWatchDemo')}
+                                    <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto flex items-center justify-center gap-2">
+                                        <Play className="w-5 h-5 fill-current" /> {t('home.btnWatchDemo')}
                                     </Button>
                                 </Link>
                             </div>
@@ -252,8 +252,8 @@ const HomePage = () => {
                                 {t('home.aiHighlight.subtitle')}
                             </p>
                             <Link to="/ai-demo">
-                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 hover:scale-105 transition-transform border-none shadow-xl shadow-white/5">
-                                    {t('home.aiHighlight.btnTryDemo')} <ArrowRight className="w-5 h-5 ml-2" />
+                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 hover:scale-105 transition-transform border-none shadow-xl shadow-white/5 flex items-center gap-2">
+                                    {t('home.aiHighlight.btnTryDemo')} <ArrowRight className={cn("w-5 h-5", isAr && "rotate-180")} />
                                 </Button>
                             </Link>
                         </div>
@@ -414,14 +414,14 @@ const HomePage = () => {
                     className="relative text-center py-16 px-8 rounded-3xl bg-linear-to-r from-primary via-secondary to-accent overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-black/20" />
-                    <div className="relative z-10">
+                    <div className="relative z-10 flex flex-col items-center">
                         <Sparkles className="w-8 h-8 text-white/80 mx-auto mb-4" />
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('home.cta.title')}</h2>
                         <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">{t('home.cta.subtitle')}</p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                             <Link to={getStartedPath}>
-                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl h-14 px-8 text-lg">
-                                    {isAuthenticated ? t('home.cta.btnContinue') : t('home.cta.btnGetStarted')} <ArrowRight className="w-5 h-5 ml-2" />
+                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl h-14 px-8 text-lg flex items-center justify-center gap-2">
+                                    {isAuthenticated ? t('home.cta.btnContinue') : t('home.cta.btnGetStarted')} <ArrowRight className={cn("w-5 h-5", isAr && "rotate-180")} />
                                 </Button>
                             </Link>
                         </div>

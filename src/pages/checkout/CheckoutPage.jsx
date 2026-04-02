@@ -66,13 +66,15 @@ const CheckoutPage = () => {
 
     // Mock payment: save purchased courseId to localStorage
     const handlePayNow = () => {
-        // Mark all fields as touched to show errors
-        setTouched({ cardNumber: true, expiry: true, cvv: true });
-        const validationErrors = validateForm();
-        setErrors(validationErrors);
+        if (course.price > 0) {
+            // Mark all fields as touched to show errors
+            setTouched({ cardNumber: true, expiry: true, cvv: true });
+            const validationErrors = validateForm();
+            setErrors(validationErrors);
 
-        if (Object.keys(validationErrors).length > 0) {
-            return; // Don't proceed if there are errors
+            if (Object.keys(validationErrors).length > 0) {
+                return; // Don't proceed if there are errors
+            }
         }
 
         const purchased = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
@@ -80,7 +82,12 @@ const CheckoutPage = () => {
             purchased.push(course.id);
             localStorage.setItem('purchasedCourses', JSON.stringify(purchased));
         }
-        navigate('/payment-success');
+        
+        if (course.price === 0) {
+            navigate(`/courses/${courseId}/learn`);
+        } else {
+            navigate('/payment-success');
+        }
     };
 
     const formatCardNumber = (value) => {
@@ -214,10 +221,10 @@ const CheckoutPage = () => {
                                 <Button
                                     onClick={handlePayNow}
                                     size="lg"
-                                    className={`w-full mt-2 transition-all text-lg ${isFormValid() ? 'shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5' : 'opacity-60 cursor-not-allowed'}`}
+                                    className={`w-full mt-2 transition-all text-lg ${isFormValid() || course.price === 0 ? 'shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5' : 'opacity-60 cursor-not-allowed'}`}
                                 >
                                     <Lock className="w-5 h-5" />
-                                    Pay Now — ${course.price}
+                                    {course.price === 0 ? 'Enroll Now' : `Pay Now — $${course.price}`}
                                 </Button>
 
                                 {/* Security Badge */}
@@ -274,7 +281,7 @@ const CheckoutPage = () => {
                                 </div>
                                 <div className="border-t border-slate-100 dark:border-slate-800 pt-3 flex justify-between">
                                     <span className="font-bold text-slate-900 dark:text-white">Total</span>
-                                    <span className="text-2xl font-bold text-primary">${course.price}</span>
+                                    <span className="text-2xl font-bold text-primary">{course.price === 0 ? 'Free' : `$${course.price}`}</span>
                                 </div>
                             </div>
 

@@ -5,8 +5,8 @@ export const courses = [
         instructor: 'Dr. Laila Hassan',
         rating: 4.8,
         reviews: 124,
-        price: 19.99,
-        discount: 20,
+        price: 0,
+        discount: 0,
         image: 'https://images.unsplash.com/photo-1527474305487-b87b222841cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
         category: 'Data Science',
         level: 'Beginner',
@@ -51,7 +51,7 @@ export const courses = [
         instructor: 'Dr. Laila Hassan',
         rating: 4.7,
         reviews: 62,
-        price: 14.99,
+        price: 0,
         image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
         category: 'Design',
         level: 'Intermediate',
@@ -95,7 +95,7 @@ export const courses = [
         instructor: 'Ahmed Mansour',
         rating: 4.7,
         reviews: 210,
-        price: 12.99,
+        price: 0,
         image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
         category: 'Development',
         level: 'Beginner',
@@ -290,9 +290,10 @@ export const lectures = [
         course: "Machine Learning Fundamentals",
         courseId: 1,
         views: "1.2k",
-        duration: "12:45",
+        duration: "09:00",
         status: "published",
         date: "2024-02-15",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
         thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
         quiz: [
             {
@@ -310,6 +311,33 @@ export const lectures = [
         ]
     },
     {
+        id: 102,
+        title: "Understanding Neural Networks and Deep Learning",
+        course: "Machine Learning Fundamentals",
+        courseId: 1,
+        views: "956",
+        duration: "15:20",
+        status: "published",
+        date: "2024-02-18",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        quiz: []
+    },
+    {
+        id: 103,
+        title: "Training Models: Backpropagation",
+        course: "Machine Learning Fundamentals",
+        courseId: 1,
+        views: "720",
+        duration: "22:15",
+        status: "published",
+        date: "2024-02-22",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        quiz: [],
+        locked: true
+    },
+    {
         id: 2,
         title: "Advanced React Context and Hooks",
         course: "Advanced React Patterns",
@@ -318,6 +346,7 @@ export const lectures = [
         duration: "25:30",
         status: "published",
         date: "2024-02-10",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
         thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
     },
     {
@@ -329,6 +358,7 @@ export const lectures = [
         duration: "18:20",
         status: "pending",
         date: "2024-02-25",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
         thumbnail: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     },
     {
@@ -340,6 +370,7 @@ export const lectures = [
         duration: "45:00",
         status: "published",
         date: "2024-01-30",
+        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
         thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     }
 ];

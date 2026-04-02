@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings, SkipBack, SkipForward, Zap } from 'lucide-react';
 
-const SAMPLE_VIDEO = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+const SAMPLE_VIDEO = 'https://www.w3schools.com/html/mov_bbb.mp4';
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
 const formatTime = (seconds) => {
@@ -254,16 +254,16 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [] }) => {
                 onClick={togglePlay}
             />
 
-            {/* Big Center Play Button (when paused) */}
+            {/* Big Center Play Button & AI Indicator (when paused) */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center bg-black/40 z-10 pointer-events-none transition-all duration-700 ease-in-out ${!isPlaying ? 'opacity-100' : 'opacity-0 scale-105'}`}>
                 {/* Pulsing AI Indicator */}
                 <div className={`mb-6 flex flex-col items-center transition-all duration-700 delay-100 ${!isPlaying ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                    <div className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 backdrop-blur-md border border-purple-500/30 rounded-full mb-3 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
-                        <Zap className="w-4 h-4 text-purple-400 animate-pulse" />
-                        <span className="text-[10px] md:text-xs font-bold text-purple-100 uppercase tracking-widest">AI is analyzing this moment...</span>
+                    <div className="flex items-center gap-2 px-6 py-2.5 bg-purple-600/30 backdrop-blur-xl border border-purple-400/40 rounded-full mb-6 shadow-[0_0_30px_rgba(168,85,247,0.6)] animate-pulse">
+                        <Zap className="w-5 h-5 text-purple-300 fill-purple-300/20" />
+                        <span className="text-xs md:text-sm font-black text-white uppercase tracking-[0.2em] drop-shadow-sm">AI IS ANALYZING THIS MOMENT...</span>
                     </div>
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 shadow-2xl">
-                        <Play className="w-8 h-8 md:w-10 md:h-10 text-white ml-1 opacity-80" />
+                    <div className="w-20 h-20 md:w-24 md:h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-2xl hover:bg-white/20 transition-all duration-300">
+                        <Play className="w-10 h-10 md:w-12 md:h-12 text-white ml-2 opacity-90 drop-shadow-lg" />
                     </div>
                 </div>
             </div>

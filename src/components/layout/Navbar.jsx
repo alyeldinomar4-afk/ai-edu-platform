@@ -41,9 +41,9 @@ const Navbar = () => {
     return (
         <nav className="sticky top-0 z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg border-b border-slate-200/50 dark:border-slate-800/60 shadow-xs transition-all duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16 relative">
-                    <div className="flex items-center">
-                        {/* Logo */}
+                <div className="flex justify-between items-center h-16">
+                    {/* Left side: Logo */}
+                    <div className="flex-1 flex items-center justify-start">
                         <Link to="/" className="flex items-center gap-2.5 group shrink-0 relative z-10">
                             {/* Light mode logo */}
                             <div className="w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-105 dark:hidden">
@@ -59,31 +59,33 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Desktop Navigation Cluster - Unified & Centered */}
-                    <div className="hidden md:flex items-center gap-9 absolute left-1/2 -translate-x-1/2 py-2 px-1 bg-slate-50/50 dark:bg-slate-800/20 rounded-full border border-slate-200/40 dark:border-slate-700/40 backdrop-blur-sm shadow-xs transition-all duration-500">
-                        {navLinks.map((link) => {
-                            const isActive = location.pathname === link.path;
-                            
-                            return (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    className={cn(
-                                        "relative px-4 py-1.5 rounded-full text-[11px] font-bold transition-all duration-300 uppercase tracking-widest",
-                                        isActive 
-                                            ? "bg-primary text-white shadow-[0_4px_12px_rgba(79,70,229,0.3)] scale-[1.02]" 
-                                            : "text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary-light"
-                                    )}
-                                >
-                                    {link.name}
-                                </Link>
-                            );
-                        })}
+                    {/* Center side: Navigation Links */}
+                    <div className="hidden md:flex flex-none items-center justify-center">
+                        <div className="flex items-center gap-1 py-1.5 px-1 bg-slate-50/50 dark:bg-slate-800/20 rounded-full border border-slate-200/40 dark:border-slate-700/40 backdrop-blur-sm shadow-xs transition-all duration-500">
+                            {navLinks.map((link) => {
+                                const isActive = location.pathname === link.path;
+                                
+                                return (
+                                    <Link
+                                        key={link.path}
+                                        to={link.path}
+                                        className={cn(
+                                            "relative px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300",
+                                            isActive 
+                                                ? "bg-primary text-white shadow-[0_4px_12px_rgba(79,70,229,0.3)] scale-[1.02]" 
+                                                : "text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary-light"
+                                        )}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                );
+                            })}
+                        </div>
                     </div>
 
-                    {/* Desktop Actions - Right Side */}
-                    <div className="hidden md:flex items-center gap-2 relative z-10">
-                        <div className="flex items-center bg-slate-100/50 dark:bg-slate-800/50 rounded-full px-1 py-1 border border-slate-200/50 dark:border-slate-700/50">
+                    {/* Right side: Actions */}
+                    <div className="flex-1 flex items-center justify-end gap-2">
+                        <div className="hidden md:flex items-center bg-slate-100/50 dark:bg-slate-800/50 rounded-full px-1 py-1 border border-slate-200/50 dark:border-slate-700/50">
                             <button
                                 onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}
                                 className="p-1.5 rounded-full text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary-light transition-colors flex items-center gap-1.5"
@@ -96,55 +98,56 @@ const Navbar = () => {
                             <ThemeToggle />
                         </div>
 
-                        {user ? (
-                            <div className="flex items-center border-l-0 sm:border-l border-slate-200 dark:border-slate-800 sm:pl-3 ml-1">
-                                <div className="flex items-center gap-3 group cursor-pointer bg-slate-50/50 dark:bg-slate-800/20 hover:bg-white dark:hover:bg-slate-800 rounded-full py-1 pr-2 pl-3.5 transition-all duration-300 border border-slate-200/50 dark:border-slate-700/50 shadow-xs">
-                                    <Link to={getDashboardPath()} className="flex items-center gap-2.5">
-                                        <div className="flex flex-col items-end leading-none opacity-70 group-hover:opacity-100 transition-opacity">
-                                            <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 uppercase tracking-tight">{user.name}</span>
-                                        </div>
-                                        <div className="relative">
-                                            <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-sm transition-transform duration-300 group-hover:scale-105" />
-                                            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-slate-800 rounded-full"></div>
-                                        </div>
-                                    </Link>
-                                    <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700/80 mx-0.5" />
-                                    <button onClick={handleLogout} title={t('nav.logout')} className="p-1.5 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-300">
-                                        <LogOut size={13} />
-                                    </button>
+                        <div className="hidden md:flex items-center">
+                            {user ? (
+                                <div className="flex items-center border-l-0 sm:border-l border-slate-200 dark:border-slate-800 sm:pl-3 ml-1">
+                                    <div className="flex items-center gap-3 group cursor-pointer bg-slate-50/50 dark:bg-slate-800/20 hover:bg-white dark:hover:bg-slate-800 rounded-full py-1 pr-2 pl-3.5 transition-all duration-300 border border-slate-200/50 dark:border-slate-700/50 shadow-xs">
+                                        <Link to={getDashboardPath()} className="flex items-center gap-2.5">
+                                            <div className="flex flex-col items-end leading-none opacity-80 group-hover:opacity-100 transition-opacity">
+                                                <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 tracking-tight">{user.name}</span>
+                                            </div>
+                                            <div className="relative">
+                                                <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover border-2 border-white dark:border-slate-700 shadow-sm transition-transform duration-300 group-hover:scale-105" />
+                                                <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-white dark:border-slate-800 rounded-full"></div>
+                                            </div>
+                                        </Link>
+                                        <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-700/80 mx-0.5" />
+                                        <button onClick={handleLogout} title={t('nav.logout')} className="p-1.5 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-300">
+                                            <LogOut size={13} />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <>
-                                <Link to="/login">
-                                    <Button variant="ghost" size="sm">{t('nav.login')}</Button>
-                                </Link>
-                                <Link to="/register">
-                                    <Button size="sm">{t('nav.getStarted')}</Button>
-                                </Link>
-                            </>
-                        )}
-                    </div>
+                            ) : (
+                                <div className="flex items-center gap-2">
+                                    <Link to="/login">
+                                        <Button variant="ghost" size="sm">{t('nav.login')}</Button>
+                                    </Link>
+                                    <Link to="/register">
+                                        <Button size="sm">{t('nav.getStarted')}</Button>
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
 
-                    {/* Mobile menu button */}
-                    <div className="md:hidden flex items-center gap-2">
-                        <button
-                            onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}
-                            className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                        >
-                            <Globe size={20} />
-                        </button>
-                        <ThemeToggle />
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-                        >
-                            {isOpen ? <X /> : <Menu />}
-                        </button>
+                        {/* Mobile menu button */}
+                        <div className="md:hidden flex items-center gap-2">
+                            <button
+                                onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}
+                                className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                            >
+                                <Globe size={20} />
+                            </button>
+                            <ThemeToggle />
+                            <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                            >
+                                {isOpen ? <X /> : <Menu />}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-
             {/* Mobile Menu */}
             <AnimatePresence>
                 {isOpen && (

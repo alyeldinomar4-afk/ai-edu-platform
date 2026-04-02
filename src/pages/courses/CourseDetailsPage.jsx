@@ -8,6 +8,7 @@ import Breadcrumb from '../../components/ui/Breadcrumb';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
 import { courses } from '../../data/mockData';
 import { useAuth } from '../../auth/useAuth';
+import { cn } from '../../utils';
 
 const CourseDetailsPage = () => {
     const { id } = useParams();
@@ -174,26 +175,6 @@ const CourseDetailsPage = () => {
 
                             {/* Tab Content */}
                             <div className="p-6 md:p-8 min-h-[400px] relative">
-                                {/* Locked Course Overlay */}
-                                {!isPurchased && (
-                                    <div className="absolute inset-0 z-10 bg-white/80 dark:bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center rounded-b-xl">
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            className="text-center px-6"
-                                        >
-                                            <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                                                <Lock className="w-9 h-9 text-slate-400 dark:text-slate-500" />
-                                            </div>
-                                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{t('courseDetails.locked.title')}</h3>
-                                            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-xs mx-auto">{t('courseDetails.locked.subtitle')}</p>
-                                            <Button onClick={() => navigate(`/checkout/${id}`)} size="lg" className="shadow-[0_4px_14px_0_rgb(79,70,229,0.39)]">
-                                                <Lock className="w-4 h-4" />
-                                                {t('courseDetails.locked.unlock')}
-                                            </Button>
-                                        </motion.div>
-                                    </div>
-                                )}
                                 <AnimatePresence mode="wait">
                                     <motion.div
                                         key={activeTab}
@@ -277,125 +258,148 @@ const CourseDetailsPage = () => {
                                         )}
 
                                         {activeTab === 'reviews' && (
-                                            <div className="space-y-8">
-                                                {/* Summary Stats */}
-                                                <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50 dark:bg-slate-800/50 p-8 rounded-2xl border border-slate-100 dark:border-slate-800">
-                                                    <div className="text-center md:border-r md:border-slate-200 dark:md:border-slate-700 md:pr-12">
-                                                        <div className="text-6xl font-bold text-slate-900 dark:text-white mb-2">{course.rating}</div>
-                                                        <div className="flex justify-center gap-1 mb-2">
-                                                            {[1, 2, 3, 4, 5].map(i => (
-                                                                <Star key={i} className={`w-5 h-5 ${i <= Math.round(course.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300 dark:text-slate-600'}`} />
+                                            <div className="relative">
+                                                {/* Locked Reviews Overlay */}
+                                                {!isPurchased && course.price > 0 && (
+                                                    <div className="absolute inset-0 z-10 bg-white/80 dark:bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center rounded-2xl">
+                                                        <motion.div
+                                                            initial={{ opacity: 0, scale: 0.9 }}
+                                                            animate={{ opacity: 1, scale: 1 }}
+                                                            className="text-center px-6"
+                                                        >
+                                                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                                                <Lock className="w-7 h-7 text-slate-400 dark:text-slate-500" />
+                                                            </div>
+                                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{t('courseDetails.locked.title')}</h3>
+                                                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 max-w-[250px] mx-auto">{t('courseDetails.locked.reviews_subtitle', 'Purchase this course to see what other students are saying and leave your own feedback.')}</p>
+                                                            <Button onClick={() => navigate(`/checkout/${id}`)} size="sm" className="shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] bg-primary hover:bg-primary-dark">
+                                                                <Lock className="w-3 h-3" />
+                                                                {t('courseDetails.locked.unlock')}
+                                                            </Button>
+                                                        </motion.div>
+                                                    </div>
+                                                )}
+                                                
+                                                <div className={cn("space-y-8", !isPurchased && course.price > 0 && "opacity-20 pointer-events-none blur-[2px]")}>
+                                                    {/* Summary Stats */}
+                                                    <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50 dark:bg-slate-800/50 p-8 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                                        <div className="text-center md:border-r md:border-slate-200 dark:md:border-slate-700 md:pr-12">
+                                                            <div className="text-6xl font-bold text-slate-900 dark:text-white mb-2">{course.rating}</div>
+                                                            <div className="flex justify-center gap-1 mb-2">
+                                                                {[1, 2, 3, 4, 5].map(i => (
+                                                                    <Star key={i} className={`w-5 h-5 ${i <= Math.round(course.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300 dark:text-slate-600'}`} />
+                                                                ))}
+                                                            </div>
+                                                            <div className="text-sm font-medium text-slate-500 dark:text-slate-400">{t('courseDetails.courseRating')}</div>
+                                                        </div>
+                                                        <div className="flex-1 w-full space-y-3">
+                                                            {[5, 4, 3, 2, 1].map((rating) => (
+                                                                <div key={rating} className="flex items-center gap-4 text-sm">
+                                                                    <span className="w-12 font-medium text-slate-600 dark:text-slate-400">{rating} Stars</span>
+                                                                    <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                                                        <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${rating === 5 ? 75 : rating === 4 ? 15 : 5}%` }} />
+                                                                    </div>
+                                                                    <span className="w-10 text-right text-slate-400">{rating === 5 ? '75%' : rating === 4 ? '15%' : '5%'}</span>
+                                                                </div>
                                                             ))}
                                                         </div>
-                                                        <div className="text-sm font-medium text-slate-500 dark:text-slate-400">{t('courseDetails.courseRating')}</div>
                                                     </div>
-                                                    <div className="flex-1 w-full space-y-3">
-                                                        {[5, 4, 3, 2, 1].map((rating) => (
-                                                            <div key={rating} className="flex items-center gap-4 text-sm">
-                                                                <span className="w-12 font-medium text-slate-600 dark:text-slate-400">{rating} Stars</span>
-                                                                <div className="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                                                                    <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${rating === 5 ? 75 : rating === 4 ? 15 : 5}%` }} />
-                                                                </div>
-                                                                <span className="w-10 text-right text-slate-400">{rating === 5 ? '75%' : rating === 4 ? '15%' : '5%'}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
 
-                                                {/* NEW: Leave a Review Form */}
-                                                <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border-2 border-primary/10 shadow-sm">
-                                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{t('courseDetails.leaveReview')}</h3>
-                                                    <div className="space-y-4">
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('courseDetails.ratePrompt')}</label>
-                                                            <div className="flex gap-1">
-                                                                {[1, 2, 3, 4, 5].map(i => (
-                                                                    <button
-                                                                        key={i}
-                                                                        type="button"
-                                                                        onClick={() => setReviewRating(i)}
-                                                                        onMouseEnter={() => setReviewHover(i)}
-                                                                        onMouseLeave={() => setReviewHover(0)}
-                                                                        className="p-1 transition-transform hover:scale-110 active:scale-95"
-                                                                    >
-                                                                        <Star
-                                                                            className={`w-8 h-8 transition-colors duration-150 ${i <= (reviewHover || reviewRating)
-                                                                                ? 'fill-yellow-400 text-yellow-400'
-                                                                                : 'fill-slate-200 text-slate-200 dark:fill-slate-700 dark:text-slate-700'
-                                                                                }`}
-                                                                        />
-                                                                    </button>
-                                                                ))}
-                                                                {reviewRating > 0 && (
-                                                                    <span className="ml-2 self-center text-sm font-semibold text-yellow-500">
-                                                                        {reviewRating === 1 ? t('courseDetails.ratings.poor') :
-                                                                         reviewRating === 2 ? t('courseDetails.ratings.fair') :
-                                                                         reviewRating === 3 ? t('courseDetails.ratings.good') :
-                                                                         reviewRating === 4 ? t('courseDetails.ratings.veryGood') :
-                                                                         t('courseDetails.ratings.excellent')}
-                                                                    </span>
-                                                                )}
+                                                    {/* NEW: Leave a Review Form */}
+                                                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border-2 border-primary/10 shadow-sm">
+                                                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">{t('courseDetails.leaveReview')}</h3>
+                                                        <div className="space-y-4">
+                                                            <div>
+                                                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('courseDetails.ratePrompt')}</label>
+                                                                <div className="flex gap-1">
+                                                                    {[1, 2, 3, 4, 5].map(i => (
+                                                                        <button
+                                                                            key={i}
+                                                                            type="button"
+                                                                            onClick={() => setReviewRating(i)}
+                                                                            onMouseEnter={() => setReviewHover(i)}
+                                                                            onMouseLeave={() => setReviewHover(0)}
+                                                                            className="p-1 transition-transform hover:scale-110 active:scale-95"
+                                                                        >
+                                                                            <Star
+                                                                                className={`w-8 h-8 transition-colors duration-150 ${i <= (reviewHover || reviewRating)
+                                                                                    ? 'fill-yellow-400 text-yellow-400'
+                                                                                    : 'fill-slate-200 text-slate-200 dark:fill-slate-700 dark:text-slate-700'
+                                                                                    }`}
+                                                                            />
+                                                                        </button>
+                                                                    ))}
+                                                                    {reviewRating > 0 && (
+                                                                        <span className="ml-2 self-center text-sm font-semibold text-yellow-500">
+                                                                            {reviewRating === 1 ? t('courseDetails.ratings.poor') :
+                                                                             reviewRating === 2 ? t('courseDetails.ratings.fair') :
+                                                                             reviewRating === 3 ? t('courseDetails.ratings.good') :
+                                                                             reviewRating === 4 ? t('courseDetails.ratings.veryGood') :
+                                                                             t('courseDetails.ratings.excellent')}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('courseDetails.feedbackPrompt')}</label>
+                                                                <textarea
+                                                                    value={reviewText}
+                                                                    onChange={(e) => { setReviewText(e.target.value); setReviewError(''); }}
+                                                                    placeholder={t('courseDetails.feedbackPlaceholder')}
+                                                                    rows="4"
+                                                                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                                                                />
+                                                            </div>
+                                                            {reviewError && (
+                                                                <p className="text-sm text-red-500 font-medium">{reviewError}</p>
+                                                            )}
+                                                            {reviewSuccess && (
+                                                                <motion.p
+                                                                    initial={{ opacity: 0, y: -8 }}
+                                                                    animate={{ opacity: 1, y: 0 }}
+                                                                    className="text-sm text-green-600 font-semibold flex items-center gap-2"
+                                                                >
+                                                                    <CheckCircle className="w-4 h-4" /> Thank you! Your review has been submitted.
+                                                                </motion.p>
+                                                            )}
+                                                            <div className="flex justify-end">
+                                                                <Button onClick={handleSubmitReview}>{t('courseDetails.submitReview')}</Button>
                                                             </div>
                                                         </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('courseDetails.feedbackPrompt')}</label>
-                                                            <textarea
-                                                                value={reviewText}
-                                                                onChange={(e) => { setReviewText(e.target.value); setReviewError(''); }}
-                                                                placeholder={t('courseDetails.feedbackPlaceholder')}
-                                                                rows="4"
-                                                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
-                                                            />
-                                                        </div>
-                                                        {reviewError && (
-                                                            <p className="text-sm text-red-500 font-medium">{reviewError}</p>
-                                                        )}
-                                                        {reviewSuccess && (
-                                                            <motion.p
-                                                                initial={{ opacity: 0, y: -8 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                className="text-sm text-green-600 font-semibold flex items-center gap-2"
-                                                            >
-                                                                <CheckCircle className="w-4 h-4" /> Thank you! Your review has been submitted.
-                                                            </motion.p>
-                                                        )}
-                                                        <div className="flex justify-end">
-                                                            <Button onClick={handleSubmitReview}>{t('courseDetails.submitReview')}</Button>
-                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                {/* Reviews List */}
-                                                <div className="space-y-6 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
-                                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.recentReviews')}</h3>
-                                                    <AnimatePresence>
-                                                        {reviews.map((r, i) => (
-                                                            <motion.div
-                                                                key={r.name + i}
-                                                                initial={{ opacity: 0, y: -12 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                className="flex gap-4 pb-6 border-b border-slate-50 dark:border-slate-800/50 last:border-0 transition-colors"
-                                                            >
-                                                                <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden">
-                                                                    <img src={`https://ui-avatars.com/api/?name=${r.name}&background=random`} alt={r.name} />
-                                                                </div>
-                                                                <div className="flex-1">
-                                                                    <div className="flex justify-between items-start mb-2">
-                                                                        <div>
-                                                                            <h4 className="font-bold text-slate-900 dark:text-white text-sm">{r.name}</h4>
-                                                                            <div className="flex gap-0.5 mt-1">
-                                                                                {[1, 2, 3, 4, 5].map(star => (
-                                                                                    <Star key={star} className={`w-3 h-3 ${star <= r.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-200 dark:text-slate-700'}`} />
-                                                                                ))}
-                                                                            </div>
-                                                                        </div>
-                                                                        <span className="text-[10px] text-slate-400 font-medium">{r.date}</span>
+                                                    {/* Reviews List */}
+                                                    <div className="space-y-6 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
+                                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.recentReviews')}</h3>
+                                                        <AnimatePresence>
+                                                            {reviews.map((r, i) => (
+                                                                <motion.div
+                                                                    key={r.name + i}
+                                                                    initial={{ opacity: 0, y: -12 }}
+                                                                    animate={{ opacity: 1, y: 0 }}
+                                                                    className="flex gap-4 pb-6 border-b border-slate-50 dark:border-slate-800/50 last:border-0 transition-colors"
+                                                                >
+                                                                    <div className="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden">
+                                                                        <img src={`https://ui-avatars.com/api/?name=${r.name}&background=random`} alt={r.name} />
                                                                     </div>
-                                                                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{r.comment}</p>
-                                                                </div>
-                                                            </motion.div>
-                                                        ))}
-                                                    </AnimatePresence>
+                                                                    <div className="flex-1">
+                                                                        <div className="flex justify-between items-start mb-2">
+                                                                            <div>
+                                                                                <h4 className="font-bold text-slate-900 dark:text-white text-sm">{r.name}</h4>
+                                                                                <div className="flex gap-0.5 mt-1">
+                                                                                    {[1, 2, 3, 4, 5].map(star => (
+                                                                                        <Star key={star} className={`w-3 h-3 ${star <= r.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-200 dark:text-slate-700'}`} />
+                                                                                    ))}
+                                                                                </div>
+                                                                            </div>
+                                                                            <span className="text-[10px] text-slate-400 font-medium">{r.date}</span>
+                                                                        </div>
+                                                                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{r.comment}</p>
+                                                                    </div>
+                                                                </motion.div>
+                                                            ))}
+                                                        </AnimatePresence>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
@@ -417,9 +421,15 @@ const CourseDetailsPage = () => {
 
                             <div>
                                 <div className="flex items-end gap-2 mb-4">
-                                    <span className="text-3xl font-bold text-slate-900 dark:text-white">${course.price}</span>
-                                    <span className="text-lg text-slate-400 dark:text-slate-500 line-through mb-1">${(course.price * 1.5).toFixed(2)}</span>
-                                    <span className="text-sm font-semibold text-green-600 dark:text-green-400 mb-1 ml-auto">33% OFF</span>
+                                    <span className="text-3xl font-bold text-slate-900 dark:text-white">
+                                        {course.price === 0 ? t('home.cta.free') : `$${course.price}`}
+                                    </span>
+                                    {course.price > 0 && (
+                                        <>
+                                            <span className="text-lg text-slate-400 dark:text-slate-500 line-through mb-1">${(course.price * 1.5).toFixed(2)}</span>
+                                            <span className="text-sm font-semibold text-green-600 dark:text-green-400 mb-1 ml-auto">33% OFF</span>
+                                        </>
+                                    )}
                                 </div>
 
                                 {user?.role === 'instructor' && user?.name === course.instructor ? (
@@ -430,9 +440,25 @@ const CourseDetailsPage = () => {
                                     <Link to={`/courses/${id}/learn`}>
                                         <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 transition-all bg-green-500 hover:bg-green-600" size="lg">
                                             <PlayCircle className="w-4 h-4" />
-                                            Continue Learning
+                                            {t('courseDetails.continueLearning', 'Continue Learning')}
                                         </Button>
                                     </Link>
+                                ) : course.price === 0 ? (
+                                    <Button 
+                                        className="w-full mb-3 shadow-[0_4px_14px_0_rgb(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 transition-all bg-green-500 hover:bg-green-600" 
+                                        size="lg"
+                                        onClick={() => {
+                                            const purchased = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
+                                            if (!purchased.includes(course.id)) {
+                                                purchased.push(course.id);
+                                                localStorage.setItem('purchasedCourses', JSON.stringify(purchased));
+                                            }
+                                            navigate(`/courses/${id}/learn`);
+                                        }}
+                                    >
+                                        <CheckCircle className="w-4 h-4" />
+                                        {t('courseDetails.enrollFree', 'Enroll for Free')}
+                                    </Button>
                                 ) : (
                                     <Link to={`/checkout/${id}`}>
                                         <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(79,70,229,0.39)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.23)] hover:-translate-y-0.5 transition-all" size="lg">

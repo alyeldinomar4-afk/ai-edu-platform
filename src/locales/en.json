@@ -344,6 +344,7 @@
     },
     "instructor": {
       "lectures": {
+        "backToDashboard": "Back to Dashboard",
         "title": "Course Lectures",
         "subtitle": "Manage and organize your educational video content.",
         "uploadNew": "Upload Lecture",
@@ -495,6 +496,7 @@
     "locked": {
       "title": "This course is locked",
       "subtitle": "Buy the course to access videos and all course content.",
+      "reviews_subtitle": "Purchase this course to see what other students are saying and leave your own feedback.",
       "unlock": "Unlock Course"
     },
     "description": "Course Description",
@@ -669,7 +671,11 @@
       "questionsCount": "{{count}} questions asked",
       "instructorReply": "Instructor Reply",
       "official": "Official",
-      "waitingResponse": "Waiting for instructor's response..."
+      "waitingResponse": "Waiting for instructor's response...",
+      "justNow": "Just Now",
+      "toasts": {
+        "postSuccess": "Your question has been posted successfully!"
+      }
     },
     "aiTutor": {
       "title": "AI Tutor",
@@ -682,6 +688,8 @@
       "explainScenePrompt": "What am I seeing on the screen right now?",
       "createQuiz": "Create quiz",
       "createQuizPrompt": "Create a quiz based on the last few minutes.",
+      "showCode": "Show Code Example",
+      "showCodePrompt": "Can you provide a code block example for what you're explaining?",
         "placeholder": "Ask about the video...",
       "defaultWelcome": "Hello! I'm watching this video with you. Feel free to ask me to summarize key points or explain complex concepts.",
       "pausePrompt": "You paused at {{timestamp}}. Would you like me to explain what's happening in this section?",
@@ -690,7 +698,10 @@
     },
     "playlist": {
       "title": "Course Content",
-      "section": "Section {{number}}"
+      "courseContent": "Course Content",
+      "section": "Section {{number}}",
+      "intro": "Introduction & Basics",
+      "advanced": "Advanced Concepts"
     },
     "aiDemo": {
       "title": "AI Learning Assistant",
@@ -705,6 +716,17 @@
         "python": "How do Python loops work?",
         "ml": "What is Machine Learning?",
         "js": "Help me learn JavaScript"
+      },
+      "description": "Experience our advanced AI that understands video context and provides real-time learning support.",
+      "features": {
+        "context": {
+          "title": "Context Aware",
+          "desc": "The AI understands exactly what's happening in the video."
+        },
+        "interactive": {
+          "title": "Interactive Learning",
+          "desc": "Ask questions and get instant, relevant answers."
+        }
       },
       "responses": {
         "react": "Great question about React! 🚀\n\nReact components are the building blocks of React applications. Here's a simple example:\n\n```jsx\nfunction Welcome({ name }) {\n  return <h1>Hello, {name}!</h1>;\n}\n```\n\nComponents can be:\n• **Functional** (like above) - simpler, use hooks\n• **Class-based** - older style, more verbose\n\nWould you like me to explain hooks like useState or useEffect?",
