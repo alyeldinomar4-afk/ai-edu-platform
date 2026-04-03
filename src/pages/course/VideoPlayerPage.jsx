@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, MessageSquare, FileText, HelpCircle, List, Zap, Send, Clock, User } from 'lucide-react';
@@ -98,11 +99,13 @@ const VideoPlayerPage = () => {
             <header className="h-16 bg-[#0A0F1C] border-b border-slate-800 flex items-center justify-between px-6 flex-shrink-0">
                 <div className="flex items-center gap-4">
                     <Link to={`/courses/${courseId}`} className="text-slate-400 hover:text-white transition-colors">
-                        <ArrowLeft strokeWidth={1.5} size={20} />
+                        <motion.div whileHover={{ x: -3, scale: 1.1 }} whileTap={{ scale: 0.9 }} transition={{ type: 'spring', stiffness: 400, damping: 20 }}>
+                            <ArrowLeft strokeWidth={1.5} size={20} />
+                        </motion.div>
                     </Link>
                     <div>
                         <h1 className="text-white font-bold text-[15px] leading-tight tracking-wide">{currentLecture.title}</h1>
-                        <p className="text-slate-500 text-xs leading-tight mt-0.5">{courseTitle}</p>
+                        <p className="text-transparent bg-clip-text bg-gradient-to-r from-slate-400 to-slate-500 text-xs leading-tight mt-0.5 font-medium">{courseTitle}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -143,7 +146,11 @@ const VideoPlayerPage = () => {
                                     <tab.icon size={16} />
                                     {tab.label}
                                     {activeTab === tab.id && (
-                                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                                        <motion.div
+                                            layoutId="video-tab-indicator"
+                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full shadow-[0_0_8px_rgba(99,102,241,0.5)]"
+                                            transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                                        />
                                     )}
                                 </button>
                             ))}
@@ -277,15 +284,32 @@ const VideoPlayerPage = () => {
                     <div className="flex border-b border-slate-800 h-[60px] shrink-0 bg-[#0A0F1C]">
                         <button
                             onClick={() => setRightSidebarTab('playlist')}
-                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all ${rightSidebarTab === 'playlist' ? 'text-indigo-400 border-b-2 border-indigo-500 bg-indigo-500/5' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
+                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'playlist' ? 'text-indigo-400 bg-indigo-500/5' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
                         >
                             <List size={16} /> {t('videoPlayer.tabs.playlist')}
+                            {rightSidebarTab === 'playlist' && (
+                                <motion.div
+                                    layoutId="sidebar-tab"
+                                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"
+                                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                                />
+                            )}
                         </button>
                         <button
                             onClick={() => setRightSidebarTab('ai')}
-                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all ${rightSidebarTab === 'ai' ? 'text-purple-400 border-b-2 border-purple-500 bg-purple-500/5' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
+                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'ai' ? 'text-purple-400 bg-purple-500/5' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
                         >
-                            <Zap size={16} /> {t('videoPlayer.tabs.ai')}
+                            <motion.div animate={rightSidebarTab === 'ai' ? { rotate: [0, 10, -10, 0] } : {}} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
+                                <Zap size={16} />
+                            </motion.div>
+                            {t('videoPlayer.tabs.ai')}
+                            {rightSidebarTab === 'ai' && (
+                                <motion.div
+                                    layoutId="sidebar-tab"
+                                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                                />
+                            )}
                         </button>
                     </div>
 

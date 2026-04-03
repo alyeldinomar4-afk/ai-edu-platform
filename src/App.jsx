@@ -42,6 +42,7 @@ import AdminManageVideosPage from './pages/admin/ManageVideosPage';
 import InstructorLecturesPage from './pages/instructor/InstructorLecturesPage';
 import ComingSoon from './components/common/ComingSoon';
 import ScrollToTop from './components/common/ScrollToTop';
+import ScrollProgress from './components/ui/ScrollProgress';
 
 function App() {
   const { i18n } = useTranslation();
@@ -55,6 +56,7 @@ function App() {
     <AuthProvider>
       <ErrorBoundary>
         <Router>
+          <ScrollProgress />
           <ScrollToTop />
           <Toaster position={i18n.language === 'ar' ? 'top-left' : 'top-right'} />
           <Routes>

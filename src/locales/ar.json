@@ -153,6 +153,11 @@
   "dashboard": {
     "learner": {
       "welcomePrompt": "هل أنت مستعد لمواصلة رحلة تعلمك؟",
+      "greeting": {
+        "morning": "صباح الخير",
+        "afternoon": "مساء الخير",
+        "evening": "مساء الخير"
+      },
       "stats": {
         "inProgress": "دوات قيد التنفيذ",
         "learningTime": "وقت التعلم",

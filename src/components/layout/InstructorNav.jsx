@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LayoutDashboard, MessageSquare, Star, Megaphone, Video } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { cn } from '../../utils';
 
 const InstructorNav = () => {
@@ -16,8 +17,8 @@ const InstructorNav = () => {
     ];
 
     return (
-        <div className="mb-8 border-b border-slate-200 dark:border-slate-800">
-            <nav className="-mb-px flex space-x-6 sm:space-x-8 overflow-x-auto">
+        <div className="mb-8">
+            <nav className="flex gap-1 p-1 bg-slate-100/80 dark:bg-slate-800/50 rounded-xl overflow-x-auto scrollbar-hide">
                 {links.map((link) => {
                     const isActive = location.pathname === link.path ||
                         (link.path === '/instructor/dashboard' && location.pathname === '/instructor');
@@ -26,16 +27,24 @@ const InstructorNav = () => {
                             key={link.path}
                             to={link.path}
                             className={cn(
-                                "whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors",
+                                "relative whitespace-nowrap px-4 py-2.5 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors z-10",
                                 isActive
-                                    ? "border-primary text-primary"
-                                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:border-slate-700"
+                                    ? "text-primary"
+                                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
                             )}
                         >
-                            <link.icon className={cn("w-4 h-4", isActive ? "text-primary" : "text-slate-400 group-hover:text-slate-500")} />
+                            {isActive && (
+                                <motion.div
+                                    layoutId="instructor-tab"
+                                    className="absolute inset-0 bg-white dark:bg-slate-900 rounded-lg shadow-sm"
+                                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                                    style={{ zIndex: -1 }}
+                                />
+                            )}
+                            <link.icon className={cn("w-4 h-4", isActive ? "text-primary" : "")} />
                             {link.name}
                         </Link>
-                    )
+                    );
                 })}
             </nav>
         </div>

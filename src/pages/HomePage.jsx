@@ -3,6 +3,7 @@ import { Zap, Sparkles, Star, Code2, BarChart3, Palette, Megaphone, Camera, Doll
 import React from 'react';
 import Button from '../components/ui/Button';
 import HeroSection from '../components/sections/HeroSection';
+import AnimatedCounter from '../components/ui/AnimatedCounter';
 import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials, instructors } from '../data/mockData';
 import { useNavigate, Link } from 'react-router-dom';
@@ -10,6 +11,53 @@ import { useAuth } from '../auth/useAuth';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../utils';
 
+/* ─── Shared Framer Motion variants ─── */
+const staggerContainer = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.1,
+        },
+    },
+};
+
+const fadeSlideUp = {
+    hidden: { opacity: 0, y: 30, filter: 'blur(4px)' },
+    visible: {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+};
+
+const fadeScale = {
+    hidden: { opacity: 0, scale: 0.85 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+};
+
+const slideFromLeft = {
+    hidden: { opacity: 0, x: -40 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+};
+
+const slideFromRight = {
+    hidden: { opacity: 0, x: 40 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+};
 
 
 const HomePage = () => {
@@ -41,68 +89,132 @@ const HomePage = () => {
             <HeroSection getStartedPath={getStartedPath} />
 
 
-            {/* Stats Section */}
+            {/* Stats Section — Animated Counters */}
             <section className="bg-slate-900 dark:bg-black text-white py-12 transition-colors duration-300">
-                <div className="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-8 text-center md:text-left">
+                <motion.div
+                    variants={staggerContainer}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: '-50px' }}
+                    className="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-8 text-center md:text-left"
+                >
                     {[
-                        { label: t('home.stats.learners'), value: '50k+' },
-                        { label: t('home.stats.courses'), value: '200+' },
-                        { label: t('home.stats.instructors'), value: '50+' },
-                        { label: t('home.stats.satisfaction'), value: '99%' },
+                        { label: t('home.stats.learners'), value: 50, suffix: 'k+' },
+                        { label: t('home.stats.courses'), value: 200, suffix: '+' },
+                        { label: t('home.stats.instructors'), value: 50, suffix: '+' },
+                        { label: t('home.stats.satisfaction'), value: 99, suffix: '%' },
                     ].map((stat, idx) => (
-                        <div key={idx} className="flex-1 min-w-[150px]">
-                            <h3 className="text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-primary via-secondary to-white">{stat.value}</h3>
-                            <p className="text-slate-400 text-sm mt-1 uppercase tracking-wider">{stat.label}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Categories Section */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                <div className="text-center mb-16">
-                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.categories.badge')}</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">{t('home.categories.title')}</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto">{t('home.categories.subtitle')}</p>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {categories.map((cat, idx) => (
-                        <motion.div
-                            key={cat.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: idx * 0.05 }}
-                            viewport={{ once: true }}
-                            onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
-                            className="group cursor-pointer p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl dark:hover:shadow-primary/10 hover:border-primary/20 transition-all text-center"
-                        >
-                            <div className={cn(
-                                "w-14 h-14 mx-auto rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-300 shadow-sm",
-                                cat.bgColor || "bg-slate-50 dark:bg-slate-800"
-                            )}>
-                                {cat.icon && iconMap[cat.icon] ? (
-                                    (() => {
-                                        const IconComponent = iconMap[cat.icon];
-                                        return <IconComponent className={cn("w-7 h-7 transition-colors", cat.color || "text-slate-600 dark:text-slate-400")} />;
-                                    })()
-                                ) : (
-                                    <span className="text-2xl transition-colors">{cat.icon || '📚'}</span>
-                                )}
-                            </div>
-                            <h3 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                                {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
+                        <motion.div key={idx} variants={fadeSlideUp} className="flex-1 min-w-[150px]">
+                            <h3 className="text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-primary via-secondary to-white">
+                                <AnimatedCounter target={stat.value} suffix={stat.suffix} duration={2.5} />
                             </h3>
-                            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{cat.count} {t('home.categories.coursesCount')}</p>
+                            <p className="text-slate-400 text-sm mt-1 uppercase tracking-wider">{stat.label}</p>
                         </motion.div>
                     ))}
+                </motion.div>
+            </section>
+
+            {/* Categories Section — Premium Redesign */}
+            <section className="relative py-24 overflow-hidden">
+                {/* Background */}
+                <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-[#0c1020] dark:to-slate-950 transition-colors duration-500" />
+                <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center mb-16"
+                    >
+                        <motion.span
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 dark:bg-primary/15 border border-primary/20 text-primary font-semibold tracking-wider uppercase text-xs mb-4"
+                        >
+                            <motion.span animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 3, repeat: Infinity }}>
+                                <Sparkles className="w-3.5 h-3.5" />
+                            </motion.span>
+                            {t('home.categories.badge')}
+                        </motion.span>
+                        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3 tracking-tight">{t('home.categories.title')}</h2>
+                        <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-xl mx-auto text-base leading-relaxed">{t('home.categories.subtitle')}</p>
+                    </motion.div>
+
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: '-30px' }}
+                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5"
+                    >
+                        {categories.map((cat, idx) => {
+                            const IconComponent = cat.icon && iconMap[cat.icon] ? iconMap[cat.icon] : null;
+                            return (
+                                <motion.div
+                                    key={cat.id}
+                                    variants={fadeScale}
+                                    onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
+                                    whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
+                                    className="group cursor-pointer relative"
+                                >
+                                    {/* Gradient border glow on hover */}
+                                    <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-primary/0 via-secondary/0 to-accent/0 group-hover:from-primary/40 group-hover:via-secondary/40 group-hover:to-accent/40 transition-all duration-500 blur-[1px] opacity-0 group-hover:opacity-100" />
+                                    
+                                    <div className="relative p-6 rounded-2xl bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-slate-100 dark:border-slate-800 group-hover:border-transparent shadow-sm group-hover:shadow-xl group-hover:shadow-primary/5 dark:group-hover:shadow-primary/10 transition-all duration-400 text-center overflow-hidden">
+                                        {/* Subtle radial glow inside card on hover */}
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-secondary/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        
+                                        {/* Icon */}
+                                        <motion.div
+                                            whileHover={{ scale: 1.18, rotate: [0, -8, 8, 0] }}
+                                            transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                                            className={cn(
+                                                "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-5 relative group-hover:shadow-lg transition-shadow duration-300",
+                                                cat.bgColor || "bg-slate-50 dark:bg-slate-800"
+                                            )}
+                                        >
+                                            {IconComponent ? (
+                                                <IconComponent className={cn("w-7 h-7 transition-all duration-300 group-hover:scale-110", cat.color || "text-slate-600 dark:text-slate-400")} />
+                                            ) : (
+                                                <span className="text-2xl transition-all duration-300 group-hover:scale-110">{cat.icon || '📚'}</span>
+                                            )}
+                                        </motion.div>
+                                        
+                                        {/* Title */}
+                                        <h3 className="font-bold text-[15px] text-slate-800 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors duration-300 mb-2 relative z-10">
+                                            {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
+                                        </h3>
+                                        
+                                        {/* Course count pill */}
+                                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800/60 px-2.5 py-1 rounded-full relative z-10">
+                                            {cat.count} {t('home.categories.coursesCount')}
+                                        </span>
+                                        
+                                        {/* Hover arrow indicator */}
+                                        <div className="mt-3 flex justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                            <ArrowRight className={cn("w-4 h-4 text-primary", isAr && "rotate-180")} />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </motion.div>
                 </div>
             </section>
 
-            {/* Featured Courses */}
+            {/* Featured Courses — Stagger Grid */}
             <section className="bg-slate-50 dark:bg-slate-900/50 py-20 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-end mb-12">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="flex justify-between items-end mb-12"
+                    >
                         <div>
                             <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.featured.badge')}</span>
                             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">{t('home.featured.title')}</h2>
@@ -112,21 +224,21 @@ const HomePage = () => {
                                 {t('home.featured.btnViewAll')} <ArrowRight className="w-4 h-4" />
                             </Button>
                         </Link>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: '-30px' }}
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+                    >
                         {courses.slice(0, 4).map((course, idx) => (
-                            <motion.div
-                                key={course.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: idx * 0.1 }}
-                                viewport={{ once: true }}
-                            >
+                            <motion.div key={course.id} variants={fadeSlideUp}>
                                 <CourseCard course={course} />
                             </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
 
                     <div className="mt-8 text-center sm:hidden">
                         <Link to="/courses">
@@ -136,14 +248,25 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* AI Feature Highlight */}
+            {/* AI Feature Highlight — Cinematic Entrance */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative overflow-visible">
                 {/* Enhanced Neon Glow behind the content */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-linear-to-r from-primary/20 via-purple-500/10 to-transparent blur-[140px] rounded-full pointer-events-none z-0 animate-pulse" style={{ animationDuration: '4s' }} />
                 
-                <div className="bg-[#050505] rounded-2xl sm:rounded-[3rem] p-6 sm:p-10 md:p-20 overflow-hidden relative text-white border border-slate-800 shadow-[0_0_80px_-20px_rgba(138,43,226,0.25)] z-10">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.92, y: 40 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="bg-[#050505] rounded-2xl sm:rounded-[3rem] p-6 sm:p-10 md:p-20 overflow-hidden relative text-white border border-slate-800 shadow-[0_0_80px_-20px_rgba(138,43,226,0.25)] z-10"
+                >
                     <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-                        <div>
+                        <motion.div
+                            initial={{ opacity: 0, x: isAr ? 30 : -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        >
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
                                 <Zap className="w-4 h-4 text-yellow-400" />
                                 <span>{t('home.aiHighlight.badge')}</span>
@@ -156,13 +279,30 @@ const HomePage = () => {
                                 {t('home.aiHighlight.subtitle')}
                             </p>
                             <Link to="/ai-demo">
-                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 hover:scale-105 transition-transform border-none shadow-xl shadow-white/5 flex items-center gap-2">
-                                    {t('home.aiHighlight.btnTryDemo')} <ArrowRight className={cn("w-5 h-5", isAr && "rotate-180")} />
-                                </Button>
+                                <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
+                                    <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl shadow-white/10 flex items-center gap-2 relative overflow-hidden group/ai">
+                                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/ai:translate-x-full transition-transform duration-700" />
+                                        <motion.span
+                                            animate={{ rotate: [0, 15, -15, 0] }}
+                                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                                            className="relative z-10"
+                                        >
+                                            <Sparkles className="w-5 h-5 text-primary" />
+                                        </motion.span>
+                                        <span className="relative z-10">{t('home.aiHighlight.btnTryDemo')}</span>
+                                        <ArrowRight className={cn("w-5 h-5 relative z-10 transition-transform group-hover/ai:translate-x-1", isAr && "rotate-180 group-hover/ai:-translate-x-1")} />
+                                    </Button>
+                                </motion.div>
                             </Link>
-                        </div>
+                        </motion.div>
 
-                        <div className="relative">
+                        <motion.div
+                            initial={{ opacity: 0, x: isAr ? -30 : 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                            className="relative"
+                        >
                             {/* Abstract UI representation of chat */}
                             <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-slate-700 dark:border-slate-800 shadow-2xl relative z-20">
                                 <div className="space-y-4">
@@ -190,19 +330,25 @@ const HomePage = () => {
 
                             {/* Decorative blurred circles behind */}
                             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-linear-to-r from-primary to-purple-600 blur-[80px] opacity-20 -z-10 rounded-full animate-pulse" />
-                        </div>
+                        </motion.div>
                     </div>
-                </div>
+                </motion.div>
             </section>
 
-            {/* Top Instructors Section - Theme Responsive */}
+            {/* Top Instructors Section - Stagger with Alternating Slides */}
             <section className="relative py-20 overflow-hidden bg-white dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
-                {/* Decorative background elements - Only visible in dark or very subtle in light */}
+                {/* Decorative background elements */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/5 rounded-full blur-[100px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
                 <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[400px] h-[400px] bg-secondary/10 dark:bg-secondary/5 rounded-full blur-[80px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
                 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 gap-6 text-center md:text-start">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 gap-6 text-center md:text-start"
+                    >
                         <div className="max-w-2xl">
                             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                                 {t('home.instructors.titleMain')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{t('home.instructors.titleHighlight')}</span>
@@ -216,16 +362,19 @@ const HomePage = () => {
                                 {t('home.instructors.viewAll')} <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ${document.documentElement.dir === 'rtl' ? 'mr-1.5 rotate-180 group-hover:-translate-x-1' : 'ml-1.5'}`} />
                             </Button>
                         </Link>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: '-50px' }}
+                        className="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto"
+                    >
                         {instructors.slice(0, 2).map((instructor, idx) => (
                             <motion.div
                                 key={instructor.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: idx * 0.15, duration: 0.4 }}
-                                viewport={{ once: true }}
+                                variants={idx % 2 === 0 ? slideFromLeft : slideFromRight}
                                 className="group relative rounded-2xl p-[1px] bg-slate-200 dark:bg-slate-800 hover:bg-gradient-to-r hover:from-primary/50 hover:to-secondary/50 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-xl dark:shadow-2xl"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -246,7 +395,7 @@ const HomePage = () => {
                                         <p className="text-primary dark:text-secondary font-medium text-xs mb-3 truncate w-full">{instructor.role}</p>
                                         <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-4 line-clamp-1 w-full">{instructor.bio}</p>
                                         
-                                        {/* Restored Stats Row with Icons */}
+                                        {/* Stats Row */}
                                         <div className="flex items-center gap-3 mb-5 text-slate-500 dark:text-slate-400 text-xs font-medium w-full truncate justify-center sm:justify-start">
                                             <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-700/50 shadow-sm">
                                                 <BookOpen className="w-3.5 h-3.5 text-primary" />
@@ -270,26 +419,36 @@ const HomePage = () => {
                                 </div>
                             </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
-            {/* Testimonials */}
+            {/* Testimonials — Stagger with Scale */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-                <div className="text-center mb-16">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-16"
+                >
                     <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.testimonials.badge')}</span>
                     <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{t('home.testimonials.title')}</h2>
                     <p className="text-slate-500 dark:text-slate-400 mt-3">{t('home.testimonials.subtitle')}</p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                </motion.div>
+                <motion.div
+                    variants={staggerContainer}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: '-50px' }}
+                    className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                >
                     {testimonials.map((testimonial, idx) => (
                         <motion.div
                             key={testimonial.id}
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: idx * 0.1 }}
-                            viewport={{ once: true }}
-                            className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                            variants={fadeScale}
+                            whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                            className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
                         >
                             <div className="flex items-center gap-4 mb-6">
                                 <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
@@ -306,27 +465,55 @@ const HomePage = () => {
                             <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm">"{testimonial.content}"</p>
                         </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </section>
 
-            {/* CTA Section */}
+            {/* CTA Section — Cinematic Zoom */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
                     viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     className="relative text-center py-16 px-8 rounded-3xl bg-linear-to-r from-primary via-secondary to-accent overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-black/20" />
+                    {/* Animated floating particles */}
+                    <motion.div
+                        animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
+                        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                        className="absolute top-8 left-[15%] w-3 h-3 bg-white/20 rounded-full blur-[1px]"
+                    />
+                    <motion.div
+                        animate={{ y: [0, 12, 0], x: [0, -8, 0] }}
+                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                        className="absolute bottom-12 right-[20%] w-4 h-4 bg-white/15 rounded-full blur-[1px]"
+                    />
+                    <motion.div
+                        animate={{ y: [0, -10, 0], x: [0, -5, 0] }}
+                        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+                        className="absolute top-1/2 right-[10%] w-2 h-2 bg-white/25 rounded-full"
+                    />
                     <div className="relative z-10 flex flex-col items-center">
-                        <Sparkles className="w-8 h-8 text-white/80 mx-auto mb-4" />
+                        <motion.div
+                            initial={{ scale: 0, rotate: -180 }}
+                            whileInView={{ scale: 1, rotate: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 200 }}
+                        >
+                            <Sparkles className="w-8 h-8 text-white/80 mx-auto mb-4" />
+                        </motion.div>
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('home.cta.title')}</h2>
                         <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">{t('home.cta.subtitle')}</p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                             <Link to={getStartedPath}>
-                                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl h-14 px-8 text-lg flex items-center justify-center gap-2">
-                                    {isAuthenticated ? t('home.cta.btnContinue') : t('home.cta.btnGetStarted')} <ArrowRight className={cn("w-5 h-5", isAr && "rotate-180")} />
-                                </Button>
+                                <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
+                                    <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl shadow-white/20 h-14 px-8 text-lg flex items-center justify-center gap-2 relative overflow-hidden group/cta">
+                                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700" />
+                                        <span className="relative z-10">{isAuthenticated ? t('home.cta.btnContinue') : t('home.cta.btnGetStarted')}</span>
+                                        <ArrowRight className={cn("w-5 h-5 relative z-10 transition-transform group-hover/cta:translate-x-1", isAr && "rotate-180 group-hover/cta:-translate-x-1")} />
+                                    </Button>
+                                </motion.div>
                             </Link>
                         </div>
                     </div>

@@ -1,6 +1,17 @@
-import { CheckCircle, PlayCircle, Lock } from 'lucide-react';
+import { CheckCircle, PlayCircle, Lock, Play } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../../utils';
+
+const listStagger = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+};
+
+const listItem = {
+    hidden: { opacity: 0, x: -12 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } },
+};
 
 const Playlist = ({ sections, currentLecture, onSelect }) => {
     const { t, i18n } = useTranslation();
@@ -20,26 +31,39 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                             {t('videoPlayer.playlist.section', { number: sIdx + 1 })}: {section.title}
                         </div>
 
-                        <div>
+                        <motion.div variants={listStagger} initial="hidden" animate="visible">
                             {section.lectures.map((lecture, lIdx) => {
                                 const isActive = currentLecture === lecture.id;
                                 const isCompleted = lecture.completed;
                                 const isLocked = lecture.locked;
 
                                 return (
-                                    <button
+                                    <motion.button
                                         key={lecture.id}
+                                        variants={listItem}
                                         onClick={() => !isLocked && onSelect(lecture)}
                                         disabled={isLocked}
+                                        whileHover={!isLocked ? { x: isRTL ? -4 : 4 } : {}}
+                                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                                         className={cn(
-                                            `w-full px-5 py-4 flex items-center gap-4 transition-all hover:bg-slate-800/80 cursor-pointer border-b border-slate-800/50 last:border-0 ${isRTL ? 'text-right' : 'text-left'}`,
-                                            isActive && `bg-indigo-600/10 hover:bg-indigo-600/20 border-indigo-500 ${isRTL ? 'border-r-[3px]' : 'border-l-[3px]'}`
+                                            `w-full px-5 py-4 flex items-center gap-4 transition-all cursor-pointer border-b border-slate-800/50 last:border-0 group ${isRTL ? 'text-right' : 'text-left'}`,
+                                            isActive
+                                                ? `bg-indigo-600/10 hover:bg-indigo-600/20 ${isRTL ? 'border-r-[3px] border-r-indigo-500' : 'border-l-[3px] border-l-indigo-500'}`
+                                                : 'hover:bg-slate-800/80'
                                         )}
                                     >
                                         <div className="flex-shrink-0 relative">
-                                            <div className={`w-[80px] h-[50px] rounded-lg bg-slate-800 overflow-hidden shadow-md border ${isActive ? 'border-indigo-500/50' : 'border-slate-700'}`}>
+                                            <div className={`w-[80px] h-[50px] rounded-lg bg-slate-800 overflow-hidden shadow-md border transition-all duration-300 ${isActive ? 'border-indigo-500/50 shadow-indigo-500/10' : 'border-slate-700 group-hover:border-slate-600'}`}>
                                                 {lecture.thumbnail ? (
-                                                    <img src={lecture.thumbnail} className="w-full h-full object-cover transition-transform hover:scale-110 duration-500" alt="" />
+                                                    <div className="relative w-full h-full">
+                                                        <img src={lecture.thumbnail} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" alt="" />
+                                                        {/* Play overlay on hover */}
+                                                        {!isLocked && (
+                                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                                <Play size={16} className="text-white fill-white" />
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-slate-500">
                                                         <PlayCircle size={16} />
@@ -51,6 +75,7 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                                     </div>
                                                 )}
                                             </div>
+                                            {/* Status indicator */}
                                             <div className={`absolute -bottom-1 z-10 ${isRTL ? '-right-2' : '-left-2'}`}>
                                                 {isCompleted ? (
                                                     <div className="bg-[#0F172A] rounded-full p-0.5 shadow-sm">
@@ -60,6 +85,17 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                                     <div className="w-3 h-3 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.8)] border border-[#0F172A]" />
                                                 ) : null}
                                             </div>
+                                            {/* Mock progress bar */}
+                                            {!isLocked && (
+                                                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-700 rounded-full overflow-hidden">
+                                                    <motion.div
+                                                        initial={{ width: 0 }}
+                                                        animate={{ width: isCompleted ? '100%' : isActive ? '35%' : '0%' }}
+                                                        transition={{ duration: 0.8, ease: 'easeOut' }}
+                                                        className={`h-full rounded-full ${isCompleted ? 'bg-emerald-500' : 'bg-indigo-500'}`}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="flex-1 min-w-0 flex flex-col justify-center">
                                             <p className={cn(
@@ -69,15 +105,15 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                                 {lIdx + 1}. {lecture.title}
                                             </p>
                                             <div className="flex items-center gap-2 mt-1.5 opacity-80">
-                                                <span className={`text-[11px] font-semibold flex items-center gap-1.5 px-2 py-0.5 rounded-full ${isActive ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-400'}`}>
+                                                <span className={`text-[11px] font-semibold flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-colors ${isActive ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
                                                     <PlayCircle size={12} /> {lecture.duration}
                                                 </span>
                                             </div>
                                         </div>
-                                    </button>
+                                    </motion.button>
                                 );
                             })}
-                        </div>
+                        </motion.div>
                     </div>
                 ))}
             </div>

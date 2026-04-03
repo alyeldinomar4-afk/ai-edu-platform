@@ -1,9 +1,29 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, BookOpen, Video, Users, Settings, LogOut, Menu, X, User, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/useAuth';
 import ThemeToggle from '../ui/ThemeToggle';
+
+const sidebarStagger = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.06,
+            delayChildren: 0.15,
+        },
+    },
+};
+
+const sidebarItem = {
+    hidden: { opacity: 0, x: -16 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+};
 
 const AdminLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -28,40 +48,85 @@ const AdminLayout = () => {
 
     const SidebarContent = () => (
         <>
+            {/* Logo / Title */}
             <div className="p-6 border-b border-slate-800">
-                <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                    <LayoutDashboard className="text-primary" /> {t('dashboard.admin.panel')}
-                </h1>
+                <motion.h1
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="text-xl font-bold text-white flex items-center gap-2"
+                >
+                    <motion.div
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
+                    >
+                        <LayoutDashboard className="text-primary" />
+                    </motion.div>
+                    {t('dashboard.admin.panel')}
+                </motion.h1>
             </div>
 
-            <nav className="flex-1 p-4 space-y-1">
+            {/* Navigation Links */}
+            <motion.nav
+                variants={sidebarStagger}
+                initial="hidden"
+                animate="visible"
+                className="flex-1 p-4 space-y-1"
+            >
                 {links.map((link) => {
                     const isActive = location.pathname === link.path;
                     return (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            onClick={() => setSidebarOpen(false)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors cursor-pointer ${isActive
-                                ? 'bg-primary text-white font-medium'
-                                : 'hover:bg-slate-800 hover:text-white'
-                                }`}
-                        >
-                            <link.icon size={20} />
-                            {link.name}
-                        </Link>
+                        <motion.div key={link.path} variants={sidebarItem}>
+                            <Link
+                                to={link.path}
+                                onClick={() => setSidebarOpen(false)}
+                                className={`relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer group overflow-hidden ${isActive
+                                    ? 'bg-primary text-white font-medium shadow-lg shadow-primary/25'
+                                    : 'hover:bg-slate-800 hover:text-white text-slate-400'
+                                    }`}
+                            >
+                                {/* Active glow indicator */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="admin-sidebar-active"
+                                        className="absolute inset-0 bg-primary rounded-xl"
+                                        transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                                        style={{ zIndex: -1 }}
+                                    />
+                                )}
+                                <motion.div
+                                    whileHover={{ scale: 1.15, rotate: 5 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                                >
+                                    <link.icon size={20} />
+                                </motion.div>
+                                <span className="relative z-10">{link.name}</span>
+                                {/* Hover shine effect */}
+                                {!isActive && (
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                                )}
+                            </Link>
+                        </motion.div>
                     );
                 })}
-            </nav>
+            </motion.nav>
 
+            {/* Logout */}
             <div className="p-4 border-t border-slate-800">
-                <button
+                <motion.button
+                    whileHover={{ x: 4 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition-colors text-red-400 cursor-pointer"
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 transition-colors text-red-400 hover:text-red-300 cursor-pointer group"
                 >
-                    <LogOut size={20} />
+                    <motion.div
+                        whileHover={{ rotate: -12 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                        <LogOut size={20} />
+                    </motion.div>
                     {t('dashboard.admin.logout')}
-                </button>
+                </motion.button>
             </div>
         </>
     );
@@ -69,12 +134,17 @@ const AdminLayout = () => {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
             {/* Mobile Sidebar Overlay */}
-            {sidebarOpen && (
-                <div
-                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-                    onClick={() => setSidebarOpen(false)}
-                />
-            )}
+            <AnimatePresence>
+                {sidebarOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Sidebar - Desktop: always visible, Mobile: slide-in */}
             <aside className={`

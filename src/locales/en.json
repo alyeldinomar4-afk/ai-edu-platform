@@ -153,6 +153,11 @@
   "dashboard": {
     "learner": {
       "welcomePrompt": "Ready to continue your learning journey?",
+      "greeting": {
+        "morning": "Good Morning",
+        "afternoon": "Good Afternoon",
+        "evening": "Good Evening"
+      },
       "stats": {
         "inProgress": "Courses in Progress",
         "learningTime": "Learning Time",

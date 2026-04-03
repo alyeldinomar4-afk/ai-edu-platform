@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, BookOpen, LogOut, Globe, User, ChevronDown } from 'lucide-react';
+import { Menu, X, BookOpen, LogOut, Globe, User, ChevronDown, Home, Users, LayoutDashboard, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import logoLight from '../../assets/logo-light.png';
 import logoDark from '../../assets/logo-dark.png';
@@ -47,14 +47,14 @@ const Navbar = () => {
     };
 
     const navLinks = [
-        { name: t('nav.home'), path: '/' },
-        { name: t('nav.courses'), path: '/courses' },
-        { name: t('nav.instructors'), path: '/instructors' },
+        { name: t('nav.home'), path: '/', icon: Home },
+        { name: t('nav.courses'), path: '/courses', icon: BookOpen },
+        { name: t('nav.instructors'), path: '/instructors', icon: Users },
     ];
 
     // Add dashboard link if logged in
     if (user) {
-        navLinks.push({ name: t('nav.dashboard'), path: getDashboardPath() });
+        navLinks.push({ name: t('nav.dashboard'), path: getDashboardPath(), icon: LayoutDashboard });
     }
 
     return (
@@ -82,18 +82,26 @@ const Navbar = () => {
                     <div className="hidden md:flex flex-none items-center justify-center gap-10">
                         {navLinks.map((link) => {
                             const isActive = location.pathname === link.path;
+                            const IconComp = link.icon;
                             return (
                                 <Link
                                     key={link.path}
                                     to={link.path}
                                     className={cn(
-                                        "relative py-2 text-[15px] font-bold tracking-wide transition-all duration-300",
+                                        "relative py-2 text-[15px] font-bold tracking-wide transition-all duration-300 group/nav",
                                         isActive 
                                             ? "text-primary dark:text-primary-light" 
-                                            : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                                            : "text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary"
                                     )}
                                 >
-                                    {link.name}
+                                    {/* Text — visible by default, hides on hover */}
+                                    <span className="inline-block transition-all duration-300 group-hover/nav:opacity-0 group-hover/nav:scale-75 group-hover/nav:blur-[2px]">
+                                        {link.name}
+                                    </span>
+                                    {/* Icon — hidden by default, appears on hover in same position */}
+                                    <span className="absolute inset-0 flex items-center justify-center opacity-0 scale-50 transition-all duration-300 group-hover/nav:opacity-100 group-hover/nav:scale-100 pointer-events-none">
+                                        <IconComp className="w-5 h-5" />
+                                    </span>
                                     {isActive && (
                                         <motion.div 
                                             layoutId="nav-underline" 

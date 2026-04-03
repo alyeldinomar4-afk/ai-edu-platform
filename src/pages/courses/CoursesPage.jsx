@@ -9,8 +9,29 @@ import Breadcrumb from '../../components/ui/Breadcrumb';
 import { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
 import { courses, categories } from '../../data/mockData';
 
+const staggerContainer = {
+    hidden: {},
+    visible: {
+        transition: {
+            staggerChildren: 0.07,
+            delayChildren: 0.05,
+        },
+    },
+};
+
+const fadeSlideUp = {
+    hidden: { opacity: 0, y: 24, filter: 'blur(3px)' },
+    visible: {
+        opacity: 1,
+        y: 0,
+        filter: 'blur(0px)',
+        transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+};
+
 const CoursesPage = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const isAr = i18n.language === 'ar';
     const [searchParams, setSearchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All');
@@ -72,7 +93,12 @@ const CoursesPage = () => {
             <Breadcrumb items={[{ label: t('nav.courses') }]} />
 
             {/* Header & Search */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8"
+            >
                 <div>
                     <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">{t('courses.title')}</h1>
                     <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-1">{t('courses.subtitle')}</p>
@@ -104,11 +130,16 @@ const CoursesPage = () => {
                         )}
                     </Button>
                 </div>
-            </div>
+            </motion.div>
 
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                {/* Filters Sidebar */}
-                <aside className={`lg:w-64 flex-shrink-0 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+                {/* Filters Sidebar — Slide In */}
+                <motion.aside
+                    initial={{ opacity: 0, x: isAr ? 30 : -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className={`lg:w-64 flex-shrink-0 ${showFilters ? 'block' : 'hidden lg:block'}`}
+                >
                     <div className="bg-white dark:bg-slate-900 p-5 md:p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm sticky top-24">
                         <div className="flex items-center justify-between mb-5">
                             <div className="flex items-center gap-2">
@@ -178,9 +209,9 @@ const CoursesPage = () => {
                             </div>
                         </div>
                     </div>
-                </aside>
+                </motion.aside>
 
-                {/* Course Grid */}
+                {/* Course Grid — Stagger */}
                 <div className="flex-1">
                     {isLoading ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -189,22 +220,22 @@ const CoursesPage = () => {
                             ))}
                         </div>
                     ) : filteredCourses.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <AnimatePresence mode="popLayout">
-                                {filteredCourses.map((course) => (
-                                    <motion.div
-                                        key={course.id}
-                                        layout
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <CourseCard course={course} />
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
-                        </div>
+                        <motion.div
+                            key={`${selectedCategory}-${selectedLevels.join(',')}`}
+                            variants={staggerContainer}
+                            initial="hidden"
+                            animate="visible"
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        >
+                            {filteredCourses.map((course) => (
+                                <motion.div
+                                    key={course.id}
+                                    variants={fadeSlideUp}
+                                >
+                                    <CourseCard course={course} />
+                                </motion.div>
+                            ))}
+                        </motion.div>
                     ) : (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -212,9 +243,14 @@ const CoursesPage = () => {
                             className="text-center py-16 md:py-24 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 transition-colors"
                         >
                             <div className="max-w-md mx-auto px-4">
-                                <div className="w-16 h-16 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                                    className="w-16 h-16 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4"
+                                >
                                     <BookX className="w-8 h-8 text-slate-400 dark:text-slate-500" />
-                                </div>
+                                </motion.div>
                                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">{t('courses.noCoursesFound')}</h3>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
                                     {t('courses.noCoursesHint')}

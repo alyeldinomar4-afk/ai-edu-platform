@@ -301,7 +301,9 @@ const HeroSection = ({ getStartedPath }) => {
                                 {t('home.heroBadge')}
                             </div>
 
-                            <h1 className={`text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight ${isAr ? 'leading-[1.4]' : ''}`}>
+                            <h1
+                                className={`text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight dark:[text-shadow:_0_0_40px_rgba(255,255,255,0.12),_0_2px_10px_rgba(0,0,0,0.4)] ${isAr ? 'leading-[1.4]' : ''}`}
+                            >
                                 {t('home.heroTitleMain')}
                                 {isAr ? ' ' : <br />}
                                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent">
@@ -323,15 +325,38 @@ const HeroSection = ({ getStartedPath }) => {
 
                             <div className="flex flex-col sm:flex-row gap-4 mb-12">
                                 <Link to="/courses">
-                                    <Button size="lg" className="h-14 px-8 text-lg w-full sm:w-auto flex items-center justify-center gap-2">
-                                        {t('home.btnStartLearning')} <ArrowRight className={cn("w-5 h-5", isAr && "rotate-180")} />
-                                    </Button>
+                                    <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                                        <Button size="lg" className="h-14 px-8 text-lg w-full sm:w-auto flex items-center justify-center gap-2 relative overflow-hidden group/btn">
+                                            {/* Shine sweep */}
+                                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                                            <span className="relative z-10 flex items-center gap-2">
+                                                {t('home.btnStartLearning')}
+                                                <ArrowRight className={cn("w-5 h-5 transition-transform group-hover/btn:translate-x-1", isAr && "rotate-180 group-hover/btn:-translate-x-1")} />
+                                            </span>
+                                        </Button>
+                                    </motion.div>
                                 </Link>
-                                <button onClick={() => setShowDemo(true)} className="cursor-pointer">
-                                    <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto flex items-center justify-center gap-2 pointer-events-none">
-                                        <Play className="w-5 h-5 fill-current" /> {t('home.btnWatchDemo')}
+                                <motion.button
+                                    onClick={() => setShowDemo(true)}
+                                    whileHover={{ scale: 1.04 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className="cursor-pointer relative group/demo"
+                                >
+                                    {/* Animated glow ring */}
+                                    <span className="absolute -inset-[2px] rounded-xl bg-gradient-to-r from-primary via-purple-500 to-pink-500 opacity-0 group-hover/demo:opacity-60 blur-[3px] transition-opacity duration-500 animate-pulse" />
+                                    <Button variant="outline" size="lg" className="relative h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto flex items-center justify-center gap-2 pointer-events-none overflow-hidden">
+                                        {/* Shine sweep */}
+                                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/demo:translate-x-full transition-transform duration-700" />
+                                        <motion.span
+                                            animate={{ scale: [1, 1.2, 1] }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                            className="relative z-10"
+                                        >
+                                            <Play className="w-5 h-5 fill-current" />
+                                        </motion.span>
+                                        <span className="relative z-10">{t('home.btnWatchDemo')}</span>
                                     </Button>
-                                </button>
+                                </motion.button>
                             </div>
 
                             {/* Social Proof */}
@@ -380,13 +405,10 @@ const HeroSection = ({ getStartedPath }) => {
                                         
                                         {/* The Generated Image */}
                                         <img 
-                                            src="http://localhost:5173/cute_ai_group.png" 
-                                            onError={(e) => {
-                                                // If running dev server without image moved, fallback to the absolute path for local dev preview
-                                                e.target.src = "file:///C:/Users/m/.gemini/antigravity/brain/6ec997e0-8958-421a-b5d8-9e2a1429ce4a/premium_ai_hologram_1775193751168.png";
-                                            }}
+                                            src="/cute_ai_group.png" 
                                             alt="Premium AI Companion with University Students" 
-                                            className="w-full h-full object-cover rounded-[36px] group-hover:scale-105 transition-transform duration-700" 
+                                            className="w-full h-full object-cover rounded-[36px] group-hover:scale-105 transition-all duration-700" 
+                                            style={{ filter: 'brightness(1.4) saturate(1.25)' }}
                                         />
                                         
                                         {/* Glossy Overlay */}
