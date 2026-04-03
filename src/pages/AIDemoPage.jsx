@@ -4,7 +4,6 @@ import { Send, Sparkles, User, Bot, Loader2, ArrowLeft, Zap, Code } from 'lucide
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Button from '../components/ui/Button';
-import VideoPlayer from '../components/features/video/VideoPlayer';
 import TypewriterMessage from '../components/features/ai/TypewriterMessage';
 
 const AIDemoPage = () => {
@@ -156,41 +155,10 @@ const AIDemoPage = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-8 items-start">
-                    {/* Left side: Video Player */}
-                    <div className="w-full lg:flex-1 lg:sticky lg:top-8 order-2 lg:order-1">
-                        <div className="group relative bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 dark:border-slate-800 p-2 transition-all hover:shadow-primary/5">
-                            <div className="aspect-video w-full rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-slate-950">
-                                <VideoPlayer 
-                                    src="https://www.w3schools.com/html/mov_bbb.mp4"
-                                    title={t('videoPlayer.aiDemo.title')}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Feature Cards */}
-                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3">
-                                    <Zap size={16} className="text-blue-600 dark:text-blue-400" />
-                                </div>
-                                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">{t('videoPlayer.aiDemo.features.context.title')}</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{t('videoPlayer.aiDemo.features.context.desc')}</p>
-                            </div>
-                            <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
-                                <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-3">
-                                    <Sparkles size={16} className="text-purple-600 dark:text-purple-400" />
-                                </div>
-                                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">{t('videoPlayer.aiDemo.features.interactive.title')}</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">{t('videoPlayer.aiDemo.features.interactive.desc')}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right side: Chat */}
+                <div className="flex justify-center">
                     <div
-                        className="w-full lg:w-[450px] bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col transition-all order-1 lg:order-2"
-                        style={{ height: 'calc(100vh - 120px)', maxHeight: '750px' }}
+                        className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col transition-all"
+                        style={{ height: 'calc(100vh - 200px)', maxHeight: '750px' }}
                     >
                         {/* Messages Area */}
                         <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">

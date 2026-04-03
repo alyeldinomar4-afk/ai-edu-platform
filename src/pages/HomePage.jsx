@@ -1,12 +1,107 @@
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star, Code2, BarChart3, Palette, Megaphone, Camera, DollarSign, BookOpen } from 'lucide-react';
+import React, { Suspense, useRef } from 'react';
 import Button from '../components/ui/Button';
+import NeuralBackground from '../components/ui/NeuralBackground';
 import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials, instructors } from '../data/mockData';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../utils';
+
+/**
+ * HeroImageTilt - Interactive 3D tilt effect for the Hero image.
+ * Uses Framer Motion (no Three.js/drei) for safe, performant mouse tracking.
+ */
+const HeroImageTilt = ({ t }) => {
+    const cardRef = useRef(null);
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 });
+    const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15 });
+
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
+    const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
+    const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
+
+    const handleMouseMove = (e) => {
+        if (!cardRef.current) return;
+        const rect = cardRef.current.getBoundingClientRect();
+        const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+        const yPct = (e.clientY - rect.top) / rect.height - 0.5;
+        x.set(xPct);
+        y.set(yPct);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
+
+    return (
+        <motion.div
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            initial={{ opacity: 0, scale: 0.8, rotate: -2 }}
+            animate={{ opacity: 1, scale: 1, rotate: -2 }}
+            whileHover={{ rotate: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+            }}
+            className="relative group cursor-pointer"
+        >
+            <div className="relative z-10 bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 transition-shadow duration-500 group-hover:shadow-primary/20">
+                <img
+                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                    alt="Students learning"
+                    className="rounded-2xl w-full object-cover h-[400px] md:h-[500px] brightness-90 dark:brightness-75 group-hover:brightness-100 transition-all duration-500"
+                />
+
+                {/* Glassmorphism glare overlay */}
+                <motion.div
+                    className="absolute inset-4 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                        background: useTransform(
+                            [glareX, glareY],
+                            ([gx, gy]) => `radial-gradient(circle at ${gx} ${gy}, rgba(255,255,255,0.15), transparent 60%)`
+                        ),
+                    }}
+                />
+
+                {/* Course Completed Badge */}
+                <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-4 animate-float pointer-events-none" style={{ animationDelay: '1s', transform: 'translateZ(40px)' }}>
+                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
+                        <Award className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">{t('home.hero.courseCompleted')}</p>
+                        <p className="text-lg font-bold text-slate-900 dark:text-white">{t('home.hero.pythonMastery')}</p>
+                    </div>
+                </div>
+
+                {/* Rating Badge */}
+                <div className="absolute top-10 -right-8 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-3 animate-float pointer-events-none" style={{ animationDelay: '0.5s', transform: 'translateZ(60px)' }}>
+                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+                        <Star className="w-5 h-5 fill-current" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{t('home.hero.rating')}</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Glow behind the card that follows tilt */}
+            <div className="absolute inset-4 rounded-3xl bg-gradient-to-r from-primary/15 via-secondary/10 to-accent/15 blur-[40px] -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        </motion.div>
+    );
+};
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -34,11 +129,23 @@ const HomePage = () => {
     return (
         <div className="space-y-0 pb-24 overflow-x-hidden transition-colors duration-300">
             {/* Hero Section */}
-            <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
-                {/* Abstract Background Shapes */}
-                <div className="absolute inset-0 z-0 opacity-30 dark:opacity-20 pointer-events-none">
-                    <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-linear-to-br from-primary to-accent rounded-full blur-[100px] animate-float" />
-                    <div className="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-linear-to-tr from-secondary to-primary-dark rounded-full blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+            <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-slate-50 dark:bg-[#090d1a] transition-colors duration-500">
+                {/* Pure CSS Glowing Orbs — zero deps, no white screen */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+                    {/* Top-left primary orb */}
+                    <div className="orb orb-primary w-[600px] h-[600px] -top-32 -left-32 opacity-60 dark:opacity-80" />
+                    {/* Top-right purple orb */}
+                    <div className="orb orb-purple w-[500px] h-[500px] -top-20 right-0 opacity-50 dark:opacity-70" />
+                    {/* Center-bottom blue orb */}
+                    <div className="orb orb-blue w-[400px] h-[400px] bottom-0 left-1/3 opacity-40 dark:opacity-60" />
+                    {/* Subtle grid overlay (dark only) */}
+                    <div
+                        className="absolute inset-0 opacity-0 dark:opacity-[0.03]"
+                        style={{
+                            backgroundImage: 'linear-gradient(rgba(99,102,241,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.8) 1px, transparent 1px)',
+                            backgroundSize: '60px 60px',
+                        }}
+                    />
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -47,10 +154,12 @@ const HomePage = () => {
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6 }}
+                            whileHover={{ rotateX: 5, rotateY: -5, perspective: 1000 }}
+                            className="transition-transform duration-300"
                         >
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 text-primary font-semibold text-sm mb-6">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700 text-primary font-semibold text-sm mb-6">
                                 <Sparkles className="w-4 h-4" />
-                                <span>{t('home.heroBadge')}</span>
+                                {t('home.heroBadge')}
                             </div>
                             <h1 className={`text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight ${isAr ? 'leading-[1.4]' : ''}`}>
                                 {t('home.heroTitleMain')}
@@ -100,39 +209,7 @@ const HomePage = () => {
                             </div>
                         </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="relative"
-                        >
-                            <div className="relative z-10 bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 transform -rotate-2 hover:rotate-0 transition-transform duration-500">
-                                <img
-                                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                                    alt="Students learning"
-                                    className="rounded-2xl w-full object-cover h-[400px] md:h-[500px] brightness-90 dark:brightness-75"
-                                />
-
-                                <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-4 animate-float pointer-events-none" style={{ animationDelay: '1s' }}>
-                                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
-                                        <Award className="w-6 h-6" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">{t('home.hero.courseCompleted')}</p>
-                                        <p className="text-lg font-bold text-slate-900 dark:text-white">{t('home.hero.pythonMastery')}</p>
-                                    </div>
-                                </div>
-
-                                <div className="absolute top-10 -right-8 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-3 animate-float pointer-events-none" style={{ animationDelay: '0.5s' }}>
-                                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400">
-                                        <Star className="w-5 h-5 fill-current" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{t('home.hero.rating')}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
+                        <HeroImageTilt t={t} />
                     </div>
                 </div>
             </section>

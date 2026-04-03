@@ -293,7 +293,7 @@ export const lectures = [
         duration: "09:00",
         status: "published",
         date: "2024-02-15",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
         thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
         quiz: [
             {
@@ -319,7 +319,7 @@ export const lectures = [
         duration: "15:20",
         status: "published",
         date: "2024-02-18",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
         thumbnail: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         quiz: []
     },
@@ -332,7 +332,7 @@ export const lectures = [
         duration: "22:15",
         status: "published",
         date: "2024-02-22",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
         thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
         quiz: [],
         locked: true
@@ -346,8 +346,35 @@ export const lectures = [
         duration: "25:30",
         status: "published",
         date: "2024-02-10",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
         thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
+    },
+    {
+        id: 201,
+        title: "Custom Hooks and Reusable Logic",
+        course: "Advanced React Patterns",
+        courseId: 2,
+        views: "641",
+        duration: "19:45",
+        status: "published",
+        date: "2024-02-14",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=800&q=80",
+        quiz: []
+    },
+    {
+        id: 202,
+        title: "Performance Optimization with useMemo & useCallback",
+        course: "Advanced React Patterns",
+        courseId: 2,
+        views: "523",
+        duration: "22:10",
+        status: "published",
+        date: "2024-02-18",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=800&q=80",
+        quiz: [],
+        locked: true
     },
     {
         id: 3,
@@ -358,8 +385,35 @@ export const lectures = [
         duration: "18:20",
         status: "pending",
         date: "2024-02-25",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
         thumbnail: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        id: 301,
+        title: "User Research for AI Products",
+        course: "UX Design for AI Interfaces",
+        courseId: 3,
+        views: "312",
+        duration: "14:50",
+        status: "published",
+        date: "2024-02-28",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&q=80",
+        quiz: []
+    },
+    {
+        id: 302,
+        title: "Prototyping Conversational Interfaces",
+        course: "UX Design for AI Interfaces",
+        courseId: 3,
+        views: "198",
+        duration: "20:35",
+        status: "published",
+        date: "2024-03-02",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80",
+        quiz: [],
+        locked: true
     },
     {
         id: 4,
@@ -370,7 +424,34 @@ export const lectures = [
         duration: "45:00",
         status: "published",
         date: "2024-01-30",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
         thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    },
+    {
+        id: 401,
+        title: "Stock Data Analysis with NumPy",
+        course: "Python for Finance",
+        courseId: 4,
+        views: "1.8k",
+        duration: "32:15",
+        status: "published",
+        date: "2024-02-03",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+        quiz: []
+    },
+    {
+        id: 402,
+        title: "Portfolio Risk Assessment & Visualization",
+        course: "Python for Finance",
+        courseId: 4,
+        views: "1.1k",
+        duration: "28:40",
+        status: "published",
+        date: "2024-02-07",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&q=80",
+        quiz: [],
+        locked: true
     }
 ];

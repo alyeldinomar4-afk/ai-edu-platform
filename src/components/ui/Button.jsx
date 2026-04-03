@@ -1,12 +1,13 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../utils';
+import { useState } from 'react';
 
 const variants = {
-    primary: 'bg-primary text-white hover:bg-primary-dark shadow-md shadow-primary/20',
-    secondary: 'bg-secondary text-white hover:bg-sky-600 shadow-md shadow-secondary/20',
-    outline: 'border-2 border-primary text-primary hover:bg-primary/5 dark:hover:bg-primary/10',
+    primary: 'bg-primary text-white hover:bg-primary-dark btn-3d',
+    secondary: 'bg-secondary text-white hover:bg-violet-600 btn-3d',
+    outline: 'border-2 border-primary text-primary hover:bg-primary/5 dark:hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(79,70,229,0.25)] transition-shadow duration-300',
     ghost: 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white',
-    danger: 'bg-red-500 text-white hover:bg-red-600',
+    danger: 'bg-red-500 text-white hover:bg-red-600 btn-3d',
 };
 
 const sizes = {
@@ -21,27 +22,44 @@ const Button = ({
     size = 'md',
     className,
     onClick,
-    disabled,
+    disabled = false,
     type = 'button',
     icon: Icon
 }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const hasGlint = variant === 'primary' || variant === 'secondary';
+
     return (
         <motion.button
             whileTap={{ scale: 0.98 }}
             whileHover={{ scale: 1.02 }}
+            onHoverStart={() => setIsHovered(true)}
+            onHoverEnd={() => setIsHovered(false)}
             type={type}
             onClick={onClick}
             disabled={disabled}
             className={cn(
-                'rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer',
+                'relative rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer overflow-hidden group',
                 variants[variant],
                 sizes[size],
                 disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
                 className
             )}
         >
-            {Icon && <Icon size={size === 'sm' ? 16 : 20} />}
-            {children}
+            {/* Holographic Glint Effect */}
+            {hasGlint && (
+                <motion.div
+                    initial={{ x: '-100%', skewX: -20 }}
+                    animate={isHovered ? { x: '200%' } : { x: '-100%' }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    className="absolute inset-0 w-1/2 h-full bg-linear-to-r from-transparent via-white/30 to-transparent pointer-events-none z-10"
+                />
+            )}
+            
+            <span className="relative z-20 flex items-center gap-2">
+                {Icon && <Icon size={size === 'sm' ? 16 : 20} />}
+                {children}
+            </span>
         </motion.button>
     );
 };

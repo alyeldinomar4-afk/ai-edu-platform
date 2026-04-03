@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings, SkipBack, SkipForward, Zap } from 'lucide-react';
 
-const SAMPLE_VIDEO = 'https://www.w3schools.com/html/mov_bbb.mp4';
+const SAMPLE_VIDEO = 'https://media.w3.org/2010/05/sintel/trailer_hd.mp4';
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
 const formatTime = (seconds) => {
@@ -299,9 +299,14 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [] }) => {
                     {duration > 0 && markers.map((time, i) => (
                         <div
                             key={i}
-                            className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-purple-500 rounded-full shadow-[0_0_8px_rgba(168,85,247,0.8)] border border-white/20 pointer-events-none z-10"
+                            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-10"
                             style={{ left: `${(time / duration) * 100}%` }}
-                        />
+                        >
+                            <div className="relative w-3 h-3">
+                                <div className="absolute inset-0 rounded-full bg-purple-500 animate-ping opacity-75" />
+                                <div className="relative rounded-full w-3 h-3 bg-purple-400" />
+                            </div>
+                        </div>
                     ))}
                 </div>
 
