@@ -1,8 +1,8 @@
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, Zap, Sparkles, Play, Award, Users, Star, Code2, BarChart3, Palette, Megaphone, Camera, DollarSign, BookOpen } from 'lucide-react';
-import React, { Suspense, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { Zap, Sparkles, Star, Code2, BarChart3, Palette, Megaphone, Camera, DollarSign, BookOpen, ArrowRight, Users, Award } from 'lucide-react';
+import React from 'react';
 import Button from '../components/ui/Button';
-import NeuralBackground from '../components/ui/NeuralBackground';
+import HeroSection from '../components/sections/HeroSection';
 import CourseCard from '../components/features/course/CourseCard';
 import { courses, categories, testimonials, instructors } from '../data/mockData';
 import { useNavigate, Link } from 'react-router-dom';
@@ -10,98 +10,7 @@ import { useAuth } from '../auth/useAuth';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../utils';
 
-/**
- * HeroImageTilt - Interactive 3D tilt effect for the Hero image.
- * Uses Framer Motion (no Three.js/drei) for safe, performant mouse tracking.
- */
-const HeroImageTilt = ({ t }) => {
-    const cardRef = useRef(null);
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
 
-    const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 });
-    const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15 });
-
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
-    const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
-    const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
-
-    const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-        const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-        x.set(xPct);
-        y.set(yPct);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
-
-    return (
-        <motion.div
-            ref={cardRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            initial={{ opacity: 0, scale: 0.8, rotate: -2 }}
-            animate={{ opacity: 1, scale: 1, rotate: -2 }}
-            whileHover={{ rotate: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            style={{
-                rotateX,
-                rotateY,
-                transformStyle: "preserve-3d",
-            }}
-            className="relative group cursor-pointer"
-        >
-            <div className="relative z-10 bg-white dark:bg-slate-900 p-4 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 transition-shadow duration-500 group-hover:shadow-primary/20">
-                <img
-                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                    alt="Students learning"
-                    className="rounded-2xl w-full object-cover h-[400px] md:h-[500px] brightness-90 dark:brightness-75 group-hover:brightness-100 transition-all duration-500"
-                />
-
-                {/* Glassmorphism glare overlay */}
-                <motion.div
-                    className="absolute inset-4 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{
-                        background: useTransform(
-                            [glareX, glareY],
-                            ([gx, gy]) => `radial-gradient(circle at ${gx} ${gy}, rgba(255,255,255,0.15), transparent 60%)`
-                        ),
-                    }}
-                />
-
-                {/* Course Completed Badge */}
-                <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-4 animate-float pointer-events-none" style={{ animationDelay: '1s', transform: 'translateZ(40px)' }}>
-                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400">
-                        <Award className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">{t('home.hero.courseCompleted')}</p>
-                        <p className="text-lg font-bold text-slate-900 dark:text-white">{t('home.hero.pythonMastery')}</p>
-                    </div>
-                </div>
-
-                {/* Rating Badge */}
-                <div className="absolute top-10 -right-8 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl border border-slate-50 dark:border-slate-700 flex items-center gap-3 animate-float pointer-events-none" style={{ animationDelay: '0.5s', transform: 'translateZ(60px)' }}>
-                    <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400">
-                        <Star className="w-5 h-5 fill-current" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-bold text-slate-900 dark:text-white">{t('home.hero.rating')}</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Glow behind the card that follows tilt */}
-            <div className="absolute inset-4 rounded-3xl bg-gradient-to-r from-primary/15 via-secondary/10 to-accent/15 blur-[40px] -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-        </motion.div>
-    );
-};
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -128,91 +37,9 @@ const HomePage = () => {
 
     return (
         <div className="space-y-0 pb-24 overflow-x-hidden transition-colors duration-300">
-            {/* Hero Section */}
-            <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-slate-50 dark:bg-[#090d1a] transition-colors duration-500">
-                {/* Pure CSS Glowing Orbs — zero deps, no white screen */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-                    {/* Top-left primary orb */}
-                    <div className="orb orb-primary w-[600px] h-[600px] -top-32 -left-32 opacity-60 dark:opacity-80" />
-                    {/* Top-right purple orb */}
-                    <div className="orb orb-purple w-[500px] h-[500px] -top-20 right-0 opacity-50 dark:opacity-70" />
-                    {/* Center-bottom blue orb */}
-                    <div className="orb orb-blue w-[400px] h-[400px] bottom-0 left-1/3 opacity-40 dark:opacity-60" />
-                    {/* Subtle grid overlay (dark only) */}
-                    <div
-                        className="absolute inset-0 opacity-0 dark:opacity-[0.03]"
-                        style={{
-                            backgroundImage: 'linear-gradient(rgba(99,102,241,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.8) 1px, transparent 1px)',
-                            backgroundSize: '60px 60px',
-                        }}
-                    />
-                </div>
+            {/* Hero Section — Clean & Minimal */}
+            <HeroSection getStartedPath={getStartedPath} />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6 }}
-                            whileHover={{ rotateX: 5, rotateY: -5, perspective: 1000 }}
-                            className="transition-transform duration-300"
-                        >
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700 text-primary font-semibold text-sm mb-6">
-                                <Sparkles className="w-4 h-4" />
-                                {t('home.heroBadge')}
-                            </div>
-                            <h1 className={`text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight ${isAr ? 'leading-[1.4]' : ''}`}>
-                                {t('home.heroTitleMain')}
-                                {isAr ? ' ' : <br />}
-                                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent">
-                                    {t('home.heroTitleHighlight')}
-                                </span>
-                                {t('home.heroTitleSuffix') && (
-                                    <>
-                                        <br />
-                                        {t('home.heroTitleSuffix')}
-                                    </>
-                                )}
-                            </h1>
-                            <p className="text-xl text-slate-600 dark:text-slate-400 mb-8 max-w-lg leading-relaxed">
-                                {t('home.heroSubtitle').split('Nexora AI')[0]}
-                                <span className="font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">Nexora AI</span>
-                                {t('home.heroSubtitle').split('Nexora AI')[1]}
-                            </p>
-                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link to="/courses">
-                                    <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all w-full sm:w-auto flex items-center justify-center gap-2">
-                                        {t('home.btnStartLearning')} <ArrowRight className={cn("w-5 h-5", isAr && "rotate-180")} />
-                                    </Button>
-                                </Link>
-                                <Link to="/ai-demo">
-                                    <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto flex items-center justify-center gap-2">
-                                        <Play className="w-5 h-5 fill-current" /> {t('home.btnWatchDemo')}
-                                    </Button>
-                                </Link>
-                            </div>
-
-                            <div className="mt-12 flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400">
-                                <div className="flex -space-x-3">
-                                    {[
-                                        "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=100&q=80",
-                                        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80",
-                                        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80",
-                                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-                                    ].map(((src, i) => (
-                                        <div key={i} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
-                                            <img src={src} alt="User" className="w-full h-full object-cover" />
-                                        </div>
-                                    )))}
-                                </div>
-                                <p>{t('home.trustedBy')} <span className="text-slate-900 dark:text-white font-bold">10,000+</span> {t('home.students')}</p>
-                            </div>
-                        </motion.div>
-
-                        <HeroImageTilt t={t} />
-                    </div>
-                </div>
-            </section>
 
             {/* Stats Section */}
             <section className="bg-slate-900 dark:bg-black text-white py-12 transition-colors duration-300">
