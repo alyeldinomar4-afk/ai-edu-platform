@@ -382,10 +382,10 @@ const HeroSection = ({ getStartedPath }) => {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                            className="hidden lg:flex items-center justify-center relative"
+                            className="flex items-center justify-center relative mt-12 lg:mt-0 w-full"
                         >
                             <div 
-                                className="relative w-full max-w-[620px] h-[520px] flex items-center justify-center mx-auto lg:ml-auto"
+                                className="relative w-full max-w-[620px] h-[340px] sm:h-[420px] lg:h-[520px] flex items-center justify-center mx-auto lg:ml-auto"
                                 ref={imageRef}
                                 onMouseMove={handleMouseMove}
                                 onMouseLeave={handleMouseLeave}

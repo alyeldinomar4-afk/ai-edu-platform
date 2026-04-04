@@ -99,7 +99,7 @@ const AIDemoPage = () => {
                     {t('videoPlayer.aiDemo.backToHome')}
                 </Link>
 
-                <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-120px)]">
+                <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[calc(100vh-120px)]">
 
                     {/* ========== LEFT SIDEBAR ========== */}
                     <motion.div
@@ -114,7 +114,7 @@ const AIDemoPage = () => {
                                 <motion.div
                                     animate={{ rotate: [0, 360] }}
                                     transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                                    className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20"
+                                    className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0"
                                 >
                                     <Sparkles className="w-6 h-6 text-white" />
                                 </motion.div>
@@ -127,9 +127,9 @@ const AIDemoPage = () => {
                         </div>
 
                         {/* Features */}
-                        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm dark:shadow-none hidden lg:block">
+                        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm dark:shadow-none">
                             <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">{isRTL ? 'المميزات' : 'Features'}</h3>
-                            <div className="space-y-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                                 {features.map((feat, i) => (
                                     <motion.div
                                         key={i}
@@ -156,10 +156,10 @@ const AIDemoPage = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="flex-1 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden min-h-0 shadow-sm dark:shadow-none"
+                        className="flex-1 h-[600px] lg:h-auto bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden min-h-0 shadow-sm dark:shadow-none mb-6 lg:mb-0"
                     >
                         {/* Chat Header */}
-                        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0 bg-white/60 dark:bg-slate-900/60">
+                        <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0 bg-white/60 dark:bg-slate-900/60">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                                     <Bot className="w-4 h-4 text-white" />
@@ -172,9 +172,9 @@ const AIDemoPage = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-full">
-                                <Zap className="w-3 h-3 text-amber-500" />
-                                <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">{isRTL ? 'وضع تجريبي' : 'Demo Mode'}</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-full">
+                                <Zap className="w-3 h-3 text-amber-500 flex-shrink-0" />
+                                <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium whitespace-nowrap">{isRTL ? 'وضع تجريبي' : 'Demo Mode'}</span>
                             </div>
                         </div>
 
