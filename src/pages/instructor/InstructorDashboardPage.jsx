@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../auth/useAuth';
-import { Plus, Users, BarChart3, DollarSign, Video, X, Edit2, Trash2, User, TrendingUp, ArrowUpRight } from 'lucide-react';
+import { Plus, Users, BarChart3, DollarSign, Video, X, Edit, Edit2, Trash2, User, TrendingUp, ArrowUpRight, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence, useInView, useSpring, useMotionValue } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -50,7 +50,7 @@ const InstructorDashboardPage = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
-    const [formData, setFormData] = useState({ title: '', students: '', status: 'Draft', revenue: '$0' });
+    const [formData, setFormData] = useState({ title: '', students: '', status: 'Draft', revenue: '$0', image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
 
     useEffect(() => {
         const loadData = async () => {
@@ -72,13 +72,13 @@ const InstructorDashboardPage = () => {
 
     const openAddModal = () => {
         setEditingCourse(null);
-        setFormData({ title: '', students: '', status: 'Draft', revenue: '$0' });
+        setFormData({ title: '', students: '', status: 'Draft', revenue: '$0', image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
         setShowModal(true);
     };
 
     const openEditModal = (course) => {
         setEditingCourse(course);
-        setFormData({ title: course.title, students: String(course.students), status: course.status, revenue: course.revenue });
+        setFormData({ title: course.title, students: String(course.students), status: course.status, revenue: course.revenue, image: course.image || '', description: course.description || '' });
         setShowModal(true);
     };
 
@@ -131,15 +131,20 @@ const InstructorDashboardPage = () => {
                 <div className="flex gap-3 w-full sm:w-auto">
                     <Link to="/instructor/profile" className="flex-1 sm:flex-none">
                         <Button variant="outline" className="w-full">
-                            <User className="w-5 h-5 mr-2" /> {t('dashboard.learner.profile')}
+                            <User className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" /> {t('dashboard.learner.profile')}
                         </Button>
                     </Link>
-                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="flex-1 sm:flex-none">
-                        <Button onClick={openAddModal} className="w-full relative overflow-hidden group">
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                            <Plus className="w-5 h-5 mr-2" /> {t('dashboard.instructor.newCourse')}
-                        </Button>
-                    </motion.div>
+                    <motion.button 
+                        whileHover={{ scale: 1.02 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={openAddModal} 
+                        className="relative flex-1 sm:flex-none group flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium tracking-wide text-white bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50 overflow-hidden transition-all duration-300 cursor-pointer"
+                    >
+                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 delay-[50ms]" />
+                        <Plus className="w-5 h-5 relative z-10" /> 
+                        <span className="relative z-10">{t('dashboard.instructor.newCourse')}</span>
+                    </motion.button>
                 </div>
             </motion.div>
 
@@ -255,15 +260,16 @@ const InstructorDashboardPage = () => {
                                     <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell font-semibold">{course.revenue}</td>
                                     <td className="px-4 sm:px-6 py-4 text-right rtl:text-left">
                                         <div className="flex justify-end gap-1">
-                                            <motion.button
-                                                whileHover={{ scale: 1.1 }}
-                                                whileTap={{ scale: 0.9 }}
+                                            <button
                                                 onClick={() => openEditModal(course)}
-                                                className="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                                                className="group relative flex items-center justify-center h-9 px-3 rounded-full bg-gradient-to-r from-slate-100 to-slate-50 hover:from-indigo-50 hover:to-purple-50 dark:from-slate-800 dark:to-slate-800/80 dark:hover:from-indigo-900/40 dark:hover:to-purple-900/40 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-200/50 hover:border-indigo-300/50 dark:border-slate-700/50 dark:hover:border-indigo-500/50 shadow-sm hover:shadow-md hover:shadow-indigo-500/10 transition-all duration-300 cursor-pointer overflow-hidden"
                                                 title={t('common.edit')}
                                             >
-                                                <Edit2 size={16} />
-                                            </motion.button>
+                                                <Edit size={16} className="shrink-0 group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-300 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
+                                                <span className="max-w-0 w-0 overflow-hidden opacity-0 group-hover:max-w-[100px] group-hover:w-auto group-hover:opacity-100 group-hover:ml-2 rtl:group-hover:mr-2 rtl:group-hover:ml-0 whitespace-nowrap text-xs font-bold transition-all duration-500 ease-in-out">
+                                                    {t('common.edit')}
+                                                </span>
+                                            </button>
                                             <motion.button
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.9 }}
@@ -301,80 +307,167 @@ const InstructorDashboardPage = () => {
                 </div>
             </motion.section>
 
-            {/* Add/Edit Modal */}
+            {/* Add/Edit Side Panel */}
             <AnimatePresence>
                 {showModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-50 flex justify-end">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm cursor-pointer"
                             onClick={() => setShowModal(false)}
                         />
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                            className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-lg p-6 relative z-10 border border-slate-100 dark:border-slate-800"
+                            initial={{ x: isAr ? '-100%' : '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: isAr ? '-100%' : '100%' }}
+                            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                            className="relative z-10 w-full max-w-5xl bg-slate-50 dark:bg-slate-950 h-full shadow-2xl flex flex-col md:flex-row overflow-hidden border-l border-slate-200 dark:border-slate-800 rtl:border-l-0 rtl:border-r"
                         >
-                            <div className="flex justify-between items-center mb-6">
-                                <div>
+                            {/* Editor Side */}
+                            <div className="w-full md:w-1/2 h-full bg-white dark:bg-slate-900 flex flex-col border-r border-slate-200 dark:border-slate-800 rtl:border-r-0 rtl:border-l">
+                                <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-800">
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                                         {editingCourse ? t('dashboard.instructor.modals.editTitle') : t('dashboard.instructor.modals.createTitle')}
                                     </h2>
+                                    <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer">
+                                        <X size={20} className="text-slate-500" />
+                                    </button>
                                 </div>
-                                <motion.button whileHover={{ scale: 1.1, rotate: 90 }} whileTap={{ scale: 0.9 }} onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                                    <X size={20} className="text-slate-500" />
-                                </motion.button>
-                            </div>
-                            <form onSubmit={handleSave}>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">{t('dashboard.instructor.modals.courseTitle')}</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            value={formData.title}
-                                            onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                            placeholder={t('dashboard.instructor.modals.titlePlaceholder')}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
+                                
+                                <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
+                                    <form id="course-form" onSubmit={handleSave} className="space-y-6">
+
+
                                         <div>
-                                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">{t('common.status')}</label>
-                                            <select
-                                                value={formData.status}
-                                                onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
-                                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                            >
-                                                <option value="Draft">{t('dashboard.instructor.draft')}</option>
-                                                <option value="Published">{t('dashboard.instructor.published')}</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">{t('dashboard.instructor.modals.price')}</label>
+                                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('dashboard.instructor.modals.courseTitle')}</label>
                                             <input
                                                 type="text"
-                                                value={formData.revenue}
-                                                onChange={e => setFormData(prev => ({ ...prev, revenue: e.target.value }))}
-                                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                                                placeholder={t('dashboard.instructor.modals.pricePlaceholder')}
+                                                required
+                                                value={formData.title}
+                                                onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium"
+                                                placeholder={t('dashboard.instructor.modals.titlePlaceholder')}
                                             />
                                         </div>
-                                    </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('dashboard.admin.manageCourses.descriptionLabel') || (isAr ? 'وصف الدورة' : 'Course Description')}</label>
+                                            <textarea
+                                                rows="3"
+                                                value={formData.description || ''}
+                                                onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                                                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium resize-none"
+                                                placeholder={t('dashboard.admin.manageCourses.descriptionPlaceholder') || (isAr ? 'أدخل وصف الدورة...' : 'Enter course description...')}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('dashboard.admin.manageCourses.thumbnailLabel') || (isAr ? 'رابط صورة الغلاف' : 'Thumbnail URL')}</label>
+                                            <div className="relative">
+                                                <input
+                                                    type="text"
+                                                    value={formData.image || ''}
+                                                    onChange={e => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                                                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
+                                                    placeholder="https://example.com/image.jpg"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('common.status')}</label>
+                                                <select
+                                                    value={formData.status}
+                                                    onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                                                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
+                                                >
+                                                    <option value="Draft">{t('dashboard.instructor.draft')}</option>
+                                                    <option value="Published">{t('dashboard.instructor.published')}</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('dashboard.instructor.modals.price')}</label>
+                                                <input
+                                                    type="text"
+                                                    value={formData.revenue}
+                                                    onChange={e => setFormData(prev => ({ ...prev, revenue: e.target.value }))}
+                                                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
+                                                    placeholder={t('dashboard.instructor.modals.pricePlaceholder')}
+                                                />
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div className="flex gap-3 mt-8">
+
+                                <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex gap-3">
                                     <Button type="button" variant="ghost" onClick={() => setShowModal(false)} className="flex-1" disabled={isSaving}>{t('common.cancel')}</Button>
-                                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
-                                        <Button type="submit" className="w-full" disabled={isSaving}>
-                                            {isSaving ? t('common.loading') : (editingCourse ? t('dashboard.instructor.modals.saveChanges') : t('dashboard.instructor.modals.createCourse'))}
-                                        </Button>
-                                    </motion.div>
+                                    <Button type="submit" form="course-form" className="flex-1" disabled={isSaving}>
+                                        {isSaving ? t('common.loading') : (editingCourse ? t('dashboard.instructor.modals.saveChanges') : t('dashboard.instructor.modals.createCourse'))}
+                                    </Button>
                                 </div>
-                            </form>
+                            </div>
+
+                            {/* Live Preview Side */}
+                            <div className="hidden md:flex w-1/2 h-full bg-slate-100/50 dark:bg-slate-950 flex-col items-center justify-center p-10 relative">
+                                <div className="absolute inset-0 bg-transparent bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_at_center,black,transparent)] pointer-events-none"></div>
+                                
+                                <div className="relative w-full max-w-sm">
+                                    <div className="absolute -top-10 left-0 right-0 flex justify-center">
+                                        <span className="bg-white/80 dark:bg-slate-900/80 text-primary text-xs font-bold px-4 py-1.5 rounded-full border border-primary/20 dark:border-primary/50 shadow-sm backdrop-blur-md relative z-20 flex items-center gap-1.5 animate-pulse">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                            {isAr ? 'معاينة حية' : 'Live Preview'}
+                                        </span>
+                                    </div>
+                                    <motion.div 
+                                        layout
+                                        className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 overflow-hidden group hover:-translate-y-1 transition-transform duration-300"
+                                    >
+                                        <div className="h-48 bg-slate-50 dark:bg-slate-800 relative overflow-hidden flex items-center justify-center">
+                                            {formData.image ? (
+                                                <img src={formData.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                            ) : (
+                                                <>
+                                                    {formData.title.includes('AI') || formData.title.includes('الذكاء') ? (
+                                                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 mix-blend-overlay"></div>
+                                                    ) : null}
+                                                    <ImageIcon className="w-16 h-16 text-slate-200 dark:text-slate-700 transition-transform duration-500 group-hover:scale-110" />
+                                                </>
+                                            )}
+                                            
+                                            {/* Status Badge */}
+                                            <AnimatePresence>
+                                                {formData.status === 'Published' && (
+                                                    <motion.div 
+                                                        initial={{ opacity: 0, scale: 0.8 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        exit={{ opacity: 0, scale: 0.8 }}
+                                                        className="absolute top-4 right-4 rtl:left-4 rtl:right-auto bg-emerald-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-sm tracking-wider uppercase"
+                                                    >
+                                                        {t('dashboard.instructor.published')}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                        <div className="p-6">
+                                            <h3 className="font-bold text-xl text-slate-900 dark:text-white mb-3 line-clamp-2 min-h-[56px] leading-tight">
+                                                {formData.title || (isAr ? 'عنوان الدورة...' : 'Course Title...')}
+                                            </h3>
+                                            <div className="flex items-center justify-between mt-5 pt-5 border-t border-slate-100 dark:border-slate-800">
+                                                <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg">
+                                                    <Users size={16} className="text-primary" />
+                                                    {formData.students || 0}
+                                                </div>
+                                                <div className="text-xl font-black bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">
+                                                    {formData.revenue || '$0'}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                    
+                                    {/* Abstract glow behind the card */}
+                                    <div className="absolute -inset-4 bg-primary/20 blur-3xl -z-10 rounded-full opacity-50 dark:opacity-30 mix-blend-multiply dark:mix-blend-screen"></div>
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
                 )}

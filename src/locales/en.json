@@ -220,10 +220,14 @@
         "category": "Category",
         "priceLabel": "Price ($)",
         "titlePlaceholder": "e.g. Introduction to Machine Learning",
-        "instructorPlaceholder": "e.g. Dr. Sarah Smith",
+        "instructorPlaceholder": "Enter instructor name...",
         "pricePlaceholder": "19.99",
         "discountLabel": "Discount (%)",
         "discountPlaceholder": "e.g. 20",
+        "thumbnailLabel": "Thumbnail URL",
+        "thumbnailPlaceholder": "https://example.com/image.jpg",
+        "descriptionLabel": "Course Description",
+        "descriptionPlaceholder": "Enter course description...",
         "deleteTitle": "Delete Course?",
         "deleteContent": "This action cannot be undone. The course and all its data will be permanently removed."
       },
@@ -297,7 +301,7 @@
           "role": "Role",
           "status": "Status",
           "placeholderName": "Ali Omar",
-          "placeholderEmail": "john@example.com",
+          "placeholderEmail": "ali@example.com",
           "createAccount": "Create Account"
         },
         "showing": "Showing {{count}} of {{total}} users",
@@ -390,7 +394,15 @@
           "discard": "Discard",
           "saving": "Saving...",
           "confirm": "Confirm Upload",
-          "update": "Update Lecture"
+          "update": "Update Lecture",
+          "aiQuizBuilder": "AI Quiz Builder",
+          "aiQuizSub": "Automatically generate a short quiz based on the lecture title",
+          "enable": "Enable",
+          "enabled": "Enabled",
+          "generatedQuestions": "Generated Questions",
+          "regenerate": "Regenerate Questions",
+          "clickToGenerate": "Click regenerate to build a new quiz",
+          "uploadBtn": "Upload Lecture"
         },
         "toasts": {
           "deleteSuccess": "Lecture deleted successfully",

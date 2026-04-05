@@ -292,17 +292,17 @@ body {
 }
 
 .orb-primary {
-  background: radial-gradient(circle, rgba(79,70,229,0.55) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(79,70,229,0.35) 0%, transparent 70%);
   animation: orb-drift-1 18s ease-in-out infinite;
 }
 
 .orb-purple {
-  background: radial-gradient(circle, rgba(139,92,246,0.45) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);
   animation: orb-drift-2 22s ease-in-out infinite;
 }
 
 .orb-blue {
-  background: radial-gradient(circle, rgba(56,189,248,0.35) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(56,189,248,0.2) 0%, transparent 70%);
   animation: orb-drift-3 26s ease-in-out infinite;
 }
 

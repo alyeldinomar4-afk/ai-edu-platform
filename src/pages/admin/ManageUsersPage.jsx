@@ -101,9 +101,15 @@ const ManageUsersPage = () => {
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t('dashboard.admin.manageUsers.title')}</h1>
                     <p className="text-slate-500 dark:text-slate-400">{t('dashboard.admin.manageUsers.subtitle')}</p>
                 </div>
-                <Button onClick={() => setShowUserModal(true)}>
-                    <UserPlus size={18} className={`${t('dir') === 'rtl' ? 'ml-2' : 'mr-2'}`} /> {t('dashboard.admin.manageUsers.addNew')}
-                </Button>
+                <button 
+                    onClick={() => setShowUserModal(true)}
+                    className="relative group flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium tracking-wide text-white bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50 overflow-hidden transition-all duration-300 active:scale-[0.98] cursor-pointer"
+                >
+                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 delay-[50ms]" />
+                    <UserPlus size={18} className={`relative z-10 shrink-0 ${t('dir') === 'rtl' ? 'ml-2' : 'mr-2'}`} /> 
+                    <span className="relative z-10">{t('dashboard.admin.manageUsers.addNew')}</span>
+                </button>
             </div>
 
             {/* Quick Stats */}
@@ -215,9 +221,10 @@ const ManageUsersPage = () => {
                                             <button
                                                 onClick={() => { setEditingUser(user); setShowUserModal(true); }}
                                                 title={t('dashboard.admin.manageUsers.editUser')}
-                                                className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                                                className="group flex items-center justify-center h-8 px-2 rounded-full overflow-hidden text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all duration-300 hover:shadow-sm focus:outline-none cursor-pointer"
                                             >
-                                                <Edit size={16} />
+                                                <Edit size={16} className="shrink-0" />
+                                                <span className="max-w-0 w-0 overflow-hidden opacity-0 group-hover:max-w-[100px] group-hover:w-auto group-hover:opacity-100 group-hover:ml-1.5 rtl:group-hover:mr-1.5 rtl:group-hover:ml-0 whitespace-nowrap text-xs font-semibold transition-all duration-300 ease-in-out">{t('common.edit')}</span>
                                             </button>
                                             {/* Suspend / Activate */}
                                             <button

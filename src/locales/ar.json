@@ -220,10 +220,14 @@
         "category": "التصنيف",
         "priceLabel": "السعر ($)",
         "titlePlaceholder": "مثلاً: مقدمة في تعلم الآلة",
-        "instructorPlaceholder": "مثلاً: د. سارة سميث",
+        "instructorPlaceholder": "أدخل اسم المدرب...",
         "pricePlaceholder": "19.99",
         "discountLabel": "الخصم (%)",
         "discountPlaceholder": "مثلاً: 20",
+        "thumbnailLabel": "رابط صورة الغلاف",
+        "thumbnailPlaceholder": "https://example.com/image.jpg",
+        "descriptionLabel": "وصف الدورة",
+        "descriptionPlaceholder": "أدخل وصف الدورة...",
         "deleteTitle": "حذف الدورة؟",
         "deleteContent": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف الدورة وجميع بياناتها بشكل نهائي."
       },
@@ -297,7 +301,7 @@
           "role": "الدور",
           "status": "الحالة",
           "placeholderName": "علي عمر",
-          "placeholderEmail": "john@example.com",
+          "placeholderEmail": "ali@example.com",
           "createAccount": "إنشاء الحساب"
         },
         "showing": "عرض {{count}} من {{total}} مستخدمين",
@@ -390,7 +394,15 @@
           "discard": "إلغاء",
           "saving": "جاري الحفظ...",
           "confirm": "تأكيد الرفع",
-          "update": "تحديث المحاضرة"
+          "update": "تحديث المحاضرة",
+          "aiQuizBuilder": "منشئ الاختبارات بالذكاء الاصطناعي",
+          "aiQuizSub": "إنشاء اختبار قصير تلقائيًا بناءً على عنوان المحاضرة",
+          "enable": "تفعيل",
+          "enabled": "مفعل",
+          "generatedQuestions": "الأسئلة المولدة",
+          "regenerate": "إعادة التوليد",
+          "clickToGenerate": "انقر على إعادة التوليد لإنشاء اختبار جديد",
+          "uploadBtn": "رفع المحاضرة"
         },
         "toasts": {
           "deleteSuccess": "تم حذف المحاضرة بنجاح",

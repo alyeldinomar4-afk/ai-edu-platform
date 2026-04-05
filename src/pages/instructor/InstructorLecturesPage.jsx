@@ -21,7 +21,9 @@ import {
     Bot,
     Zap,
     ArrowLeft,
-    ArrowRight
+    ArrowRight,
+    Sparkles,
+    Youtube
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { lectures } from '../../data/mockData';
@@ -34,11 +36,12 @@ const InstructorLecturesPage = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const isRTL = i18n.language === 'ar';
-    const [viewMode, setViewMode] = useState('list');
+    const [viewMode, setViewMode] = useState('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [showVideoModal, setShowVideoModal] = useState(false);
     const [editingVideo, setEditingVideo] = useState(null);
+    const [thumbnailUrl, setThumbnailUrl] = useState('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
     const [isSaving, setIsSaving] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [showQuizBuilder, setShowQuizBuilder] = useState(false);
@@ -98,7 +101,7 @@ const InstructorLecturesPage = () => {
             id: Date.now(),
             views: "0",
             date: new Date().toISOString().split('T')[0],
-            thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
+            thumbnail: data.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
         };
         setVideos(prev => [newVideo, ...prev]);
         setShowVideoModal(false);
@@ -173,17 +176,17 @@ const InstructorLecturesPage = () => {
                             {t('dashboard.instructor.lectures.subtitle')}
                         </motion.p>
                     </div>
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                    <motion.button 
+                        whileHover={{ scale: 1.02 }} 
+                        whileTap={{ scale: 0.98 }} 
+                        onClick={() => { setEditingVideo(null); setThumbnailUrl('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); setShowVideoModal(true); }}
+                        className="relative flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium tracking-wide text-white bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50 overflow-hidden transition-all duration-300 cursor-pointer"
                     >
-                        <Button
-                            onClick={() => setShowVideoModal(true)}
-                            className="shadow-lg shadow-primary/25 hover:shadow-primary/40 px-6 py-2.5"
-                        >
-                            <Upload size={20} className={isRTL ? 'ml-2' : 'mr-2'} /> {t('dashboard.instructor.lectures.uploadNew')}
-                        </Button>
-                    </motion.div>
+                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 delay-[50ms]" />
+                        <Upload size={20} className="relative z-10 shrink-0" /> 
+                        <span className="relative z-10">{t('dashboard.instructor.lectures.uploadNew')}</span>
+                    </motion.button>
                 </div>
 
                 {/* Filters Row */}
@@ -260,7 +263,10 @@ const InstructorLecturesPage = () => {
                                                     <span className="flex items-center gap-1.5"><Calendar size={14} /> {video.date}</span>
                                                 </div>
                                                 <div className="flex gap-2">
-                                                    <button onClick={() => { setEditingVideo(video); setShowVideoModal(true); }} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-500"><Edit size={18} /></button>
+                                                    <button onClick={() => { setEditingVideo(video); setThumbnailUrl(video.thumbnail || ''); setShowVideoModal(true); }} className="group flex items-center justify-center h-9 px-2 rounded-full overflow-hidden text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all duration-300 hover:shadow-sm focus:outline-none cursor-pointer" title={t('common.edit')}>
+                                                        <Edit size={18} className="shrink-0" />
+                                                        <span className="max-w-0 w-0 overflow-hidden opacity-0 group-hover:max-w-[100px] group-hover:w-auto group-hover:opacity-100 group-hover:ml-1.5 rtl:group-hover:mr-1.5 rtl:group-hover:ml-0 whitespace-nowrap text-xs font-semibold transition-all duration-300 ease-in-out">{t('common.edit')}</span>
+                                                    </button>
                                                     <button onClick={() => togglePublish(video.id)} className={`p-2 rounded-xl transition-colors ${video.status === 'published' ? 'hover:bg-amber-50 dark:hover:bg-amber-900/20 text-amber-500' : 'hover:bg-green-50 dark:hover:bg-green-900/20 text-green-500'}`}>{video.status === 'published' ? <PauseCircle size={18} /> : <CheckCircle size={18} />}</button>
                                                     <button onClick={() => handleDeleteVideo(video.id)} className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition-colors"><Trash2 size={18} /></button>
                                                 </div>
@@ -314,10 +320,12 @@ const InstructorLecturesPage = () => {
                                                 <td className={`px-8 py-5 ${isRTL ? 'text-left' : 'text-right'}`}>
                                                     <div className="flex justify-end gap-2 opacity-100 transition-opacity">
                                                         <button
-                                                            onClick={() => { setEditingVideo(video); setShowVideoModal(true); }}
-                                                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-all"
+                                                            onClick={() => { setEditingVideo(video); setThumbnailUrl(video.thumbnail || ''); setShowVideoModal(true); }}
+                                                            className="group flex items-center justify-center h-9 px-2 rounded-full overflow-hidden text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all duration-300 hover:shadow-sm focus:outline-none cursor-pointer"
+                                                            title={t('common.edit')}
                                                         >
-                                                            <Edit size={18} />
+                                                            <Edit size={18} className="shrink-0" />
+                                                            <span className="max-w-0 w-0 overflow-hidden opacity-0 group-hover:max-w-[100px] group-hover:w-auto group-hover:opacity-100 group-hover:ml-1.5 rtl:group-hover:mr-1.5 rtl:group-hover:ml-0 whitespace-nowrap text-xs font-semibold transition-all duration-300 ease-in-out">{t('common.edit')}</span>
                                                         </button>
                                                         <button
                                                             onClick={() => togglePublish(video.id)}
@@ -366,202 +374,272 @@ const InstructorLecturesPage = () => {
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => { setShowVideoModal(false); setEditingVideo(null); }} />
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl overflow-hidden border border-white/20"
+                            initial={{ x: isRTL ? '-100%' : '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: isRTL ? '-100%' : '100%' }}
+                            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                            className="relative z-10 w-full max-w-5xl bg-slate-50 dark:bg-slate-950 h-full shadow-2xl flex flex-col md:flex-row overflow-hidden border-l border-slate-200 dark:border-slate-800 rtl:border-l-0 rtl:border-r"
                         >
-                            <div className="p-8 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{editingVideo ? t('dashboard.instructor.lectures.editTitle') : t('dashboard.instructor.lectures.addTitle')}</h2>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{t('dashboard.instructor.lectures.modalSubtitle')}</p>
+                            {/* Editor Side */}
+                            <div className="w-full md:w-1/2 h-full bg-white dark:bg-slate-900 flex flex-col border-r border-slate-200 dark:border-slate-800 rtl:border-r-0 rtl:border-l">
+                                <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-800 shrink-0">
+                                    <div>
+                                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">{editingVideo ? t('dashboard.instructor.lectures.editTitle') : t('dashboard.instructor.lectures.addTitle')}</h2>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{t('dashboard.instructor.lectures.modalSubtitle')}</p>
+                                    </div>
+                                    <button onClick={() => { setShowVideoModal(false); setEditingVideo(null); }} className="p-2 hover:bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors cursor-pointer">
+                                        <X size={20} className="text-slate-500" />
+                                    </button>
                                 </div>
-                                <button onClick={() => { setShowVideoModal(false); setEditingVideo(null); }} className={`p-3 hover:bg-white dark:hover:bg-slate-700 rounded-full shadow-sm transition-all ${isRTL ? 'mr-auto' : 'ml-auto'}`}><X size={20} className="text-slate-500" /></button>
-                            </div>
 
-                            <form onSubmit={(e) => {
-                                e.preventDefault();
-                                const formData = new FormData(e.target);
-                                const data = Object.fromEntries(formData);
-                                if (!data.title.trim()) {
-                                    toast.error(t('dashboard.instructor.lectures.toasts.titleRequired'));
-                                    return;
-                                }
-                                const finalData = { ...data, quiz: showQuizBuilder ? quizQuestions : [] };
-                                if (editingVideo) handleUpdateVideo({ ...editingVideo, ...finalData });
-                                else handleAddVideo(finalData);
-                            }} className="overflow-y-auto max-h-[80vh]">
-                                <div className="p-8 space-y-6 text-left">
-                                    <div className="space-y-2">
-                                        <label className={`text-sm font-semibold text-slate-700 dark:text-slate-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>{t('dashboard.instructor.lectures.form.title')}</label>
-                                        <input name="title" required defaultValue={editingVideo?.title || ''} placeholder={t('dashboard.instructor.lectures.form.titlePlaceholder')} className={`w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl dark:text-white outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all ${isRTL ? 'text-right' : 'text-left'}`} />
-                                    </div>
+                                <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
+                                    <form id="lecture-form" onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const formData = new FormData(e.target);
+                                        const data = Object.fromEntries(formData);
+                                        if (!data.title.trim()) {
+                                            toast.error(t('dashboard.instructor.lectures.toasts.titleRequired'));
+                                            return;
+                                        }
+                                        const finalData = { ...data, quiz: showQuizBuilder ? quizQuestions : [] };
+                                        if (editingVideo) handleUpdateVideo({ ...editingVideo, ...finalData });
+                                        else handleAddVideo(finalData);
+                                    }} className="space-y-6">
+                                        
 
-                                    <div className="space-y-2">
-                                        <label className={`text-sm font-semibold text-slate-700 dark:text-slate-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>{t('dashboard.instructor.lectures.form.course')}</label>
-                                        <input name="course" required defaultValue={editingVideo?.course || ''} placeholder={t('dashboard.instructor.lectures.form.coursePlaceholder')} className={`w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl dark:text-white outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all ${isRTL ? 'text-right' : 'text-left'}`} />
-                                    </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                         <div className="space-y-2">
-                                            <label className={`text-sm font-semibold text-slate-700 dark:text-slate-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>{t('dashboard.instructor.lectures.form.duration')}</label>
-                                            <div className="relative">
-                                                <Clock className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={16} />
-                                                <input name="duration" required defaultValue={editingVideo?.duration || '10:00'} className={`w-full ${isRTL ? 'pr-11 pl-4 text-right' : 'pl-11 pr-4 text-left'} py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl dark:text-white outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all`} />
-                                            </div>
+                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.title')}</label>
+                                            <input name="title" required defaultValue={editingVideo?.title || ''} placeholder={t('dashboard.instructor.lectures.form.titlePlaceholder')} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                         </div>
+
                                         <div className="space-y-2">
-                                            <label className={`text-sm font-semibold text-slate-700 dark:text-slate-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>{t('dashboard.instructor.lectures.form.privacy')}</label>
-                                            <select name="status" defaultValue={editingVideo?.status || 'published'} className={`w-full px-5 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl dark:text-white outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${isRTL ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${isRTL ? 'text-right' : 'text-left'}`}>
-                                                <option value="published">{t('dashboard.instructor.lectures.form.public')}</option>
-                                                <option value="draft">{t('dashboard.instructor.lectures.form.private')}</option>
-                                                <option value="pending">{t('dashboard.instructor.lectures.form.pending')}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className={`text-sm font-semibold text-slate-700 dark:text-slate-300 ${isRTL ? 'mr-1' : 'ml-1'}`}>{t('dashboard.instructor.lectures.form.resources')}</label>
-                                        <div
-                                            className="w-full border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer group"
-                                            onClick={() => document.getElementById('resource-file-upload').click()}
-                                        >
-                                            <UploadCloud className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors mb-2" />
-                                            <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                                                {selectedFiles.length > 0
-                                                    ? `${selectedFiles.length} file(s) selected`
-                                                    : t('dashboard.instructor.lectures.form.uploadResources')}
-                                            </p>
-                                            <p className="text-xs text-slate-500 mt-1">{t('dashboard.instructor.lectures.form.uploadHint')}</p>
-                                            <input
-                                                type="file"
-                                                id="resource-file-upload"
-                                                className="hidden"
-                                                multiple
-                                                accept=".pdf,.doc,.docx,.zip,.rar"
-                                                onChange={(e) => {
-                                                    if (e.target.files && e.target.files.length > 0) {
-                                                        setSelectedFiles(Array.from(e.target.files));
-                                                    }
-                                                }}
-                                            />
+                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.course')}</label>
+                                            <input name="course" required defaultValue={editingVideo?.course || ''} placeholder={t('dashboard.instructor.lectures.form.coursePlaceholder')} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                         </div>
 
-                                        {selectedFiles.length > 0 && (
-                                            <div className="mt-4 space-y-2">
-                                                {selectedFiles.map((file, idx) => (
-                                                    <div key={idx} className="flex justify-between items-center bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-lg text-sm">
-                                                        <span className="truncate text-slate-700 dark:text-slate-300">{file.name}</span>
-                                                        <button
-                                                            type="button"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setSelectedFiles(prev => prev.filter((_, i) => i !== idx));
-                                                            }}
-                                                            className="text-slate-400 hover:text-red-500 transition-colors"
-                                                        >
-                                                            <X size={14} />
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
+                                        <div className="space-y-2">
+                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.thumbnailLabel') || (isRTL ? 'رابط صورة الغلاف' : 'Thumbnail URL')}</label>
+                                            <input name="thumbnail" value={thumbnailUrl} onChange={(e) => setThumbnailUrl(e.target.value)} placeholder={isRTL ? 'https://example.com/image.jpg' : 'https://example.com/image.jpg'} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
+                                        </div>
 
-                                    {/* Quiz Section Inline */}
-                                    <div className="pt-4 space-y-4">
-                                        <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700">
-                                            <div className="flex items-center gap-3">
-                                                <Bot className="text-primary" size={24} />
-                                                <div>
-                                                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">{t('dashboard.instructor.lectures.quiz.title')}</h3>
-                                                    <p className="text-xs text-slate-500">{t('dashboard.instructor.lectures.quiz.add')}</p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.duration')}</label>
+                                                <div className="relative">
+                                                    <Clock className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={16} />
+                                                    <input name="duration" required defaultValue={editingVideo?.duration || '10:00'} className={`w-full ${isRTL ? 'pr-11 pl-4 text-right' : 'pl-11 pr-4 text-left'} py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium`} />
                                                 </div>
                                             </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setShowQuizBuilder(!showQuizBuilder);
-                                                    if (!showQuizBuilder && quizQuestions.length === 0) addQuestion();
-                                                }}
-                                                className={`px-4 py-2 rounded-xl transition-all font-bold text-xs ${showQuizBuilder ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
-                                            >
-                                                {showQuizBuilder ? t('dashboard.instructor.lectures.quiz.active') : t('dashboard.instructor.lectures.quiz.add')}
-                                            </button>
+                                            <div className="space-y-2">
+                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.privacy')}</label>
+                                                <select name="status" defaultValue={editingVideo?.status || 'published'} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${isRTL ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${isRTL ? 'text-right' : 'text-left'} font-medium`}>
+                                                    <option value="published">{t('dashboard.instructor.lectures.form.public')}</option>
+                                                    <option value="draft">{t('dashboard.instructor.lectures.form.private')}</option>
+                                                    <option value="pending">{t('dashboard.instructor.lectures.form.pending')}</option>
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        <AnimatePresence>
-                                            {showQuizBuilder && (
-                                                <motion.div
-                                                    initial={{ height: 0, opacity: 0 }}
-                                                    animate={{ height: 'auto', opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }}
-                                                    className="overflow-hidden space-y-4"
-                                                >
-                                                    {quizQuestions.map((q, qIdx) => (
-                                                        <div key={qIdx} className="p-5 pt-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-4 relative shadow-sm">
+                                        <div className="space-y-2">
+                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.resources')}</label>
+                                            <div
+                                                className="w-full border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-6 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950/50 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors cursor-pointer group"
+                                                onClick={() => document.getElementById('resource-file-upload').click()}
+                                            >
+                                                <UploadCloud className="w-8 h-8 text-slate-400 group-hover:text-primary transition-colors mb-2" />
+                                                <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                                                    {selectedFiles.length > 0
+                                                        ? `${selectedFiles.length} file(s) selected`
+                                                        : t('dashboard.instructor.lectures.form.uploadResources')}
+                                                </p>
+                                                <p className="text-xs text-slate-500 mt-1">{t('dashboard.instructor.lectures.form.uploadHint')}</p>
+                                                <input
+                                                    type="file"
+                                                    id="resource-file-upload"
+                                                    className="hidden"
+                                                    multiple
+                                                    accept=".pdf,.doc,.docx,.zip,.rar"
+                                                    onChange={(e) => {
+                                                        if (e.target.files && e.target.files.length > 0) {
+                                                            setSelectedFiles(Array.from(e.target.files));
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+
+                                            {selectedFiles.length > 0 && (
+                                                <div className="mt-4 space-y-2">
+                                                    {selectedFiles.map((file, idx) => (
+                                                        <div key={idx} className="flex justify-between items-center bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-lg text-sm">
+                                                            <span className="truncate text-slate-700 dark:text-slate-300">{file.name}</span>
                                                             <button
                                                                 type="button"
-                                                                onClick={() => removeQuestion(qIdx)}
-                                                                className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} p-2 text-slate-300 hover:text-red-500 transition-colors`}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setSelectedFiles(prev => prev.filter((_, i) => i !== idx));
+                                                                }}
+                                                                className="text-slate-400 hover:text-red-500 transition-colors"
                                                             >
-                                                                <X size={16} />
+                                                                <X size={14} />
                                                             </button>
-                                                            <div className="space-y-2">
-                                                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('dashboard.instructor.lectures.quiz.question')} {qIdx + 1}</label>
-                                                                <input
-                                                                    value={q.question}
-                                                                    onChange={(e) => updateQuestion(qIdx, 'question', e.target.value)}
-                                                                    placeholder={t('dashboard.instructor.lectures.quiz.questionPlaceholder')}
-                                                                    className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl outline-none focus:ring-2 focus:ring-primary/20 dark:text-white text-sm ${isRTL ? 'text-right' : 'text-left'}`}
-                                                                />
-                                                            </div>
-                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                                {q.options.map((opt, oIdx) => (
-                                                                    <div key={oIdx} className="flex items-center gap-2 group">
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => updateQuestion(qIdx, 'correctAnswer', oIdx)}
-                                                                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${q.correctAnswer === oIdx ? 'bg-primary border-primary text-white font-bold' : 'border-slate-200 dark:border-slate-700 hover:border-primary'}`}
-                                                                        >
-                                                                            {q.correctAnswer === oIdx && <CheckCircle size={12} />}
-                                                                        </button>
-                                                                        <input
-                                                                            value={opt}
-                                                                            onChange={(e) => {
-                                                                                const newOptions = [...q.options];
-                                                                                newOptions[oIdx] = e.target.value;
-                                                                                updateQuestion(qIdx, 'options', newOptions);
-                                                                            }}
-                                                                            placeholder={`${t('dashboard.instructor.lectures.quiz.option')} ${oIdx + 1}`}
-                                                                            className={`flex-1 px-3 py-2 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 dark:text-white ${isRTL ? 'text-right' : 'text-left'}`}
-                                                                        />
-                                                                    </div>
-                                                                ))}
-                                                            </div>
                                                         </div>
                                                     ))}
-                                                    <button
-                                                        type="button"
-                                                        onClick={addQuestion}
-                                                        className="w-full py-4 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-center gap-2 text-slate-400 hover:text-primary hover:border-primary/50 transition-all font-bold text-sm"
-                                                    >
-                                                        <Zap size={16} />
-                                                        {t('dashboard.instructor.lectures.quiz.addQuestion')}
-                                                    </button>
-                                                </motion.div>
+                                                </div>
                                             )}
-                                        </AnimatePresence>
-                                    </div>
+                                        </div>
 
-                                    <div className={`pt-6 flex gap-4 sticky bottom-0 bg-white dark:bg-slate-900 pb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                        <Button type="button" variant="outline" className="flex-1 py-3.5 rounded-2xl font-bold" onClick={() => { setShowVideoModal(false); setEditingVideo(null); setSelectedFiles([]); setShowQuizBuilder(false); setQuizQuestions([]); }} disabled={isSaving}>{t('dashboard.instructor.lectures.form.discard')}</Button>
-                                        <Button className="flex-1 py-3.5 rounded-2xl font-bold shadow-lg shadow-primary/20" type="submit" disabled={isSaving}>
-                                            {isSaving ? t('dashboard.instructor.lectures.form.saving') : (editingVideo ? t('dashboard.instructor.lectures.form.update') : t('dashboard.instructor.lectures.form.confirm'))}
-                                        </Button>
-                                    </div>
+                                        {/* Quiz Builder */}
+                                        <div className="pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
+                                                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400">
+                                                        <FileText size={20} />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="font-bold text-slate-900 dark:text-white leading-none">{t('dashboard.instructor.lectures.quiz.title')}</h3>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('dashboard.instructor.lectures.quiz.add')}</p>
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowQuizBuilder(!showQuizBuilder)}
+                                                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer ${showQuizBuilder ? 'bg-primary text-white' : 'bg-primary/10 text-primary hover:bg-primary/20'}`}
+                                                >
+                                                    {showQuizBuilder ? t('dashboard.instructor.lectures.quiz.active') : t('dashboard.instructor.lectures.quiz.add')}
+                                                </button>
+                                            </div>
+
+                                            <AnimatePresence>
+                                                {showQuizBuilder && (
+                                                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                                        <div className="space-y-4 mt-4">
+                                                            {quizQuestions.map((q, qIndex) => (
+                                                                <div key={qIndex} className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                                                                    <div className="flex justify-between items-start mb-3">
+                                                                        <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 w-full flex flex-col gap-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                                                                            <span>{t('dashboard.instructor.lectures.quiz.question')} {qIndex + 1}</span>
+                                                                            <input 
+                                                                                type="text"
+                                                                                value={q.question}
+                                                                                onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
+                                                                                placeholder={t('dashboard.instructor.lectures.quiz.questionPlaceholder')}
+                                                                                className={`w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-normal ${isRTL ? 'text-right' : 'text-left'}`}
+                                                                            />
+                                                                        </label>
+                                                                        <button type="button" onClick={() => removeQuestion(qIndex)} className="ml-3 rtl:ml-0 rtl:mr-3 mt-1 text-slate-400 hover:text-red-500 transition-colors p-1" title="Remove Question">
+                                                                            <Trash2 size={16} />
+                                                                        </button>
+                                                                    </div>
+                                                                    <div className="space-y-2 mt-4 ml-1 rtl:ml-0 rtl:mr-1">
+                                                                        {q.options.map((opt, oIndex) => (
+                                                                            <label key={oIndex} className="flex items-center gap-3 cursor-pointer group">
+                                                                                <div className="relative flex items-center justify-center">
+                                                                                    <input 
+                                                                                        type="radio" 
+                                                                                        name={`correct-${qIndex}`}
+                                                                                        checked={q.correctAnswer === oIndex}
+                                                                                        onChange={() => updateQuestion(qIndex, 'correctAnswer', oIndex)}
+                                                                                        className="peer sr-only"
+                                                                                    />
+                                                                                    <div className="w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded-full peer-checked:border-primary peer-checked:bg-primary transition-all flex items-center justify-center">
+                                                                                        <div className="w-2 h-2 bg-white rounded-full scale-0 peer-checked:scale-100 transition-transform"/>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <input 
+                                                                                    type="text"
+                                                                                    value={opt}
+                                                                                    onChange={(e) => {
+                                                                                        const newOptions = [...q.options];
+                                                                                        newOptions[oIndex] = e.target.value;
+                                                                                        updateQuestion(qIndex, 'options', newOptions);
+                                                                                    }}
+                                                                                    placeholder={`${t('dashboard.instructor.lectures.quiz.option')} ${oIndex + 1}`}
+                                                                                    className={`flex-1 px-3 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-normal transition-all ${q.correctAnswer === oIndex ? 'ring-1 ring-primary/30 border-primary/50 text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400'} ${isRTL ? 'text-right' : 'text-left'}`}
+                                                                                />
+                                                                            </label>
+                                                                        ))}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                            
+                                                            <button
+                                                                type="button"
+                                                                onClick={addQuestion}
+                                                                className="w-full py-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-primary transition-colors text-sm font-semibold cursor-pointer"
+                                                            >
+                                                                <FileText size={16} /> {t('dashboard.instructor.lectures.quiz.addQuestion')}
+                                                            </button>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
+                                <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex gap-3 shrink-0">
+                                    <Button type="button" variant="ghost" className="flex-1" onClick={() => setShowVideoModal(false)}>{t('common.cancel')}</Button>
+                                    <Button type="submit" form="lecture-form" className="flex-1 disabled:opacity-50 disabled:cursor-not-allowed" disabled={isSaving}>
+                                        {isSaving ? t('dashboard.instructor.lectures.form.saving') : editingVideo ? t('common.save') : t('dashboard.instructor.lectures.form.uploadBtn')}
+                                    </Button>
+                                </div>
+                            </div>
+
+                            {/* Live Preview Side (Right in LTR) */}
+                            <div className="hidden md:flex w-1/2 h-full bg-slate-100/50 dark:bg-slate-950 flex-col items-center justify-center p-10 relative">
+                                <div className="absolute inset-0 bg-transparent bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_at_center,black,transparent)] pointer-events-none"></div>
+                                
+                                <div className="relative w-full max-w-sm">
+                                    <div className="absolute -top-10 left-0 right-0 flex justify-center">
+                                        <span className="bg-white/80 dark:bg-slate-900/80 text-primary text-xs font-bold px-4 py-1.5 rounded-full border border-primary/20 dark:border-primary/50 shadow-sm backdrop-blur-md relative z-20 flex items-center gap-1.5 animate-pulse">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                            {isRTL ? 'معاينة الفيديو' : 'Video Preview'}
+                                        </span>
+                                    </div>
+                                    <motion.div 
+                                        layout
+                                        className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 overflow-hidden group hover:-translate-y-1 transition-transform duration-300"
+                                    >
+                                        <div className="h-44 bg-slate-900 relative overflow-hidden flex items-center justify-center">
+                                            {thumbnailUrl ? (
+                                                <img src={thumbnailUrl} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                            ) : (
+                                                <>
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 mix-blend-overlay"></div>
+                                                    <Youtube className="w-16 h-16 text-slate-700 transition-transform duration-500 group-hover:scale-110" />
+                                                </>
+                                            )}
+                                            
+                                            {/* Duration indicator */}
+                                            <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-md">
+                                                {document.querySelector('input[name="duration"]')?.value || '10:00'}
+                                            </div>
+                                        </div>
+                                        <div className="p-5">
+                                            <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2 line-clamp-2 leading-tight">
+                                                {document.querySelector('input[name="title"]')?.value || (isRTL ? 'عنوان الفيديو...' : 'Video Title...')}
+                                            </h3>
+                                            <p className="text-sm font-medium text-slate-500 line-clamp-1 mb-4">
+                                                {document.querySelector('input[name="course"]')?.value || (isRTL ? 'اسم الدورة...' : 'Course Name...')}
+                                            </p>
+
+                                            <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                                <span className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300">
+                                                    <Clock size={14} /> {t('dashboard.instructor.lectures.form.duration')}
+                                                </span>
+                                                {showQuizBuilder && (
+                                                    <span className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 px-3 py-1.5 rounded-lg text-xs font-semibold">
+                                                        <Bot size={14} /> AI Quiz
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                    
+                                    {/* Abstract glow behind the card */}
+                                    <div className="absolute -inset-4 bg-primary/20 blur-3xl -z-10 rounded-full opacity-50 flex-shrink-0 dark:opacity-30 mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
                 )}
