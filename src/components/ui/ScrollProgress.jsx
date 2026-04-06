@@ -4,8 +4,10 @@ import { motion, useScroll, useSpring } from 'framer-motion';
  * ScrollProgress — A thin gradient bar at the top of the viewport 
  * that fills as the user scrolls down the page.
  */
-const ScrollProgress = () => {
-    const { scrollYProgress } = useScroll();
+const ScrollProgress = ({ container }) => {
+    const { scrollYProgress } = useScroll({
+        container: container // This will be the ref of the scrollable element
+    });
     const scaleX = useSpring(scrollYProgress, {
         stiffness: 200,
         damping: 50,

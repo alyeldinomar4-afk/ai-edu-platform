@@ -56,7 +56,6 @@ function App() {
     <AuthProvider>
       <ErrorBoundary>
         <Router>
-          <ScrollProgress />
           <ScrollToTop />
           <Toaster position={i18n.language === 'ar' ? 'top-left' : 'top-right'} />
           <Routes>

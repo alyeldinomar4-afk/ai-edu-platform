@@ -127,14 +127,14 @@ const ContextualAI = ({ videoState, addMarker }) => {
 
         setTimeout(() => {
             setIsTyping(false);
-            
+
             let responseText = t('videoPlayer.aiTutor.analyzingResponse', { timestamp: formatTime(currentTime) });
 
             if (textToSend === t('videoPlayer.aiTutor.explainScenePrompt')) {
-                responseText = isRTL 
+                responseText = isRTL
                     ? "أرى شرحًا لبنية الـ React Context تظهر على الشاشة. يتحدث المعلم في هذه اللحظة عن كيفية تمرير البيانات عبر شجرة المكونات دون الحاجة لاستخدام الـ Props يدوياً."
                     : "I see a structural diagram showing React Context architecture. The instructor is explaining how data is passed through the component tree without manually passing props at every level.";
-            } 
+            }
             else if (textToSend === t('videoPlayer.aiTutor.showCodePrompt')) {
                 responseText = isRTL
                     ? "بالتأكيد! إليك كود برمجي يوضح المفهوم الذي يتم شرحه في الفيديو:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nويمكنك نسخه مباشرة وتجربته في مشروعك! 🚀"
@@ -159,7 +159,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
     ];
 
     return (
-        <div className="flex flex-col h-full bg-[#0F172A] border-l border-slate-800 overflow-hidden text-slate-200 font-sans">
+        <div className="flex flex-col flex-1 min-h-0 bg-[#0F172A] border-l border-slate-800 overflow-hidden text-slate-200 font-sans">
             {/* Header */}
             <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-[#131C31]">
                 <div className="flex items-center gap-3">
@@ -185,7 +185,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+            <div className="flex-1 overflow-y-auto min-h-0 p-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                 <AnimatePresence>
                     {messages.map((msg) => (
                         <motion.div
@@ -199,15 +199,14 @@ const ContextualAI = ({ videoState, addMarker }) => {
                             {/* Avatar */}
                             <motion.div
                                 whileHover={{ scale: 1.1 }}
-                                className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ${
-                                    msg.role === 'ai'
-                                        ? 'bg-gradient-to-br from-indigo-600 to-purple-600 outline outline-2 outline-indigo-500/30'
-                                        : 'bg-slate-700'
-                                }`}
+                                className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ${msg.role === 'ai'
+                                    ? 'bg-gradient-to-br from-indigo-600 to-purple-600 outline outline-2 outline-indigo-500/30'
+                                    : 'bg-slate-700'
+                                    }`}
                             >
                                 {msg.role === 'ai' ? <Bot size={20} className="text-white" /> : <User size={20} className="text-slate-300" />}
                             </motion.div>
-                            
+
                             <div className={`group relative p-4 rounded-2xl max-w-[80%] min-w-[30%] text-[15px] leading-relaxed transition-all duration-300 ${msg.role === 'ai'
                                 ? `bg-[#1E293B] border border-slate-700/50 text-slate-300 ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'} shadow-md`
                                 : `bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/20 ${isRTL ? 'rounded-tl-none' : 'rounded-tr-none'}`
@@ -256,7 +255,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
                         </motion.div>
                     ))}
                 </AnimatePresence>
-                
+
                 {/* Typing Indicator — Premium */}
                 <AnimatePresence>
                     {isTyping && (
@@ -305,7 +304,7 @@ const ContextualAI = ({ videoState, addMarker }) => {
                         </motion.button>
                     ))}
                 </div>
-                
+
                 <form onSubmit={handleSend} className="relative">
                     <input
                         type="text"

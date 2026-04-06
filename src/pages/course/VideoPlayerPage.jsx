@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import ContextualAI from '../../components/features/ai/ContextualAI';
 import Quiz from '../../components/features/course/Quiz';
 import { lectures } from '../../data/mockData';
 import toast from 'react-hot-toast';
+import ScrollProgress from '../../components/ui/ScrollProgress';
 
 const VideoPlayerPage = () => {
     const { courseId } = useParams();
@@ -38,6 +39,14 @@ const VideoPlayerPage = () => {
     const currentCourseId = parseInt(courseId) || 1;
     const courseLectures = lectures.filter(l => l.courseId === currentCourseId);
     const [activeLectureId, setActiveLectureId] = useState(courseLectures[0]?.id || 1);
+    const scrollContainerRef = useRef(null);
+
+    // Reset scroll when lecture or course changes
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = 0;
+        }
+    }, [activeLectureId, courseId]);
 
     const handleLectureSelect = (lecture) => {
         setActiveLectureId(lecture.id);
@@ -75,7 +84,7 @@ const VideoPlayerPage = () => {
     const lectureData = lectures.find(l => l.id === activeLectureId) || courseLectures[0] || lectures[0];
     const courseTitle = lectureData?.course || "Machine Learning Fundamentals";
     const currentLecture = { title: lectureData?.title || "Introduction to Neural Networks" };
-    
+
     // Group lectures into sections for the playlist
     const playlistData = courseLectures.length >= 3 ? [
         {
@@ -94,7 +103,7 @@ const VideoPlayerPage = () => {
     ];
 
     return (
-        <div className="flex flex-col h-screen bg-slate-900 overflow-hidden transition-colors duration-300">
+        <div className="flex flex-col h-screen h-[100dvh] bg-slate-900 overflow-hidden transition-colors duration-300">
             {/* Top Bar */}
             <header className="h-16 bg-[#0A0F1C] border-b border-slate-800 flex items-center justify-between px-6 flex-shrink-0">
                 <div className="flex items-center gap-4">
@@ -117,7 +126,11 @@ const VideoPlayerPage = () => {
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Main Content (Video + Tabs) */}
-                <div className="flex-1 flex flex-col overflow-y-auto bg-slate-950 transition-colors">
+                <div 
+                    ref={scrollContainerRef}
+                    className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-950 transition-colors"
+                >
+                    <ScrollProgress container={scrollContainerRef} />
                     <div className="p-4 md:p-6 pb-0">
                         <VideoPlayer
                             src={lectureData?.videoUrl}
@@ -164,7 +177,7 @@ const VideoPlayerPage = () => {
                                 </div>
                             )}
                             {activeTab === 'ai' && (
-                                <div className="lg:hidden h-[500px]">
+                                <div className="lg:hidden min-h-[500px] flex flex-col">
                                     <ContextualAI
                                         videoState={videoState}
                                         addMarker={addMarker}
@@ -202,7 +215,7 @@ const VideoPlayerPage = () => {
                                                     className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none mb-2"
                                                 />
                                                 <div className="flex justify-end">
-                                                    <Button 
+                                                    <Button
                                                         size="sm"
                                                         onClick={handlePostQuestion}
                                                         disabled={!questionInput.trim()}
@@ -313,7 +326,7 @@ const VideoPlayerPage = () => {
                         </button>
                     </div>
 
-                    <div className="flex-1 overflow-hidden relative">
+                    <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
                         {rightSidebarTab === 'playlist' ? (
                             <Playlist sections={playlistData} currentLecture={activeLectureId} onSelect={handleLectureSelect} />
                         ) : (

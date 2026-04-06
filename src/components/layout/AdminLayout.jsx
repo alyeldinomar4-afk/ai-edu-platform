@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutDashboard, BookOpen, Video, Users, Settings, LogOut, Menu, X, User, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/useAuth';
 import ThemeToggle from '../ui/ThemeToggle';
+import ScrollProgress from '../ui/ScrollProgress';
 
 const sidebarStagger = {
     hidden: {},
@@ -31,8 +32,17 @@ const AdminLayout = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
     const { t, i18n } = useTranslation();
+    const mainContentRef = useRef(null);
+
+    // Reset scroll when path changes
+    useEffect(() => {
+        if (mainContentRef.current) {
+            mainContentRef.current.scrollTop = 0;
+        }
+    }, [location.pathname]);
 
     const handleLogout = () => {
+
         logout();
         navigate('/');
     };
@@ -159,7 +169,11 @@ const AdminLayout = () => {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 overflow-auto min-w-0">
+            <div 
+                ref={mainContentRef}
+                className="flex-1 overflow-auto min-w-0"
+            >
+                <ScrollProgress container={mainContentRef} />
                 <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 h-16 flex items-center justify-between px-4 sm:px-8">
                     <div className="flex items-center gap-3">
                         {/* Mobile hamburger */}
