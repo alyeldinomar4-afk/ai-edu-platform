@@ -276,9 +276,9 @@ const HeroSection = ({ getStartedPath }) => {
             <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-[linear-gradient(135deg,#F5F3FF_0%,#EDE9FE_50%,#DDD6FE_100%)] dark:bg-none dark:bg-[#090d1a] transition-colors duration-500">
                 {/* Glowing Orbs Background */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-                    <div className="orb orb-primary w-[600px] h-[600px] -top-32 -left-32 opacity-60 dark:opacity-80" />
-                    <div className="orb orb-purple w-[500px] h-[500px] -top-20 right-0 opacity-50 dark:opacity-70" />
-                    <div className="orb orb-blue w-[400px] h-[400px] bottom-0 left-1/3 opacity-40 dark:opacity-60" />
+                    <div className="orb orb-primary w-[600px] h-[600px] -top-32 -left-32 opacity-30 dark:opacity-40" />
+                    <div className="orb orb-purple w-[500px] h-[500px] -top-20 right-0 opacity-25 dark:opacity-35" />
+                    <div className="orb orb-blue w-[400px] h-[400px] bottom-0 left-1/3 opacity-20 dark:opacity-30" />
                     <div
                         className="absolute inset-0 opacity-0 dark:opacity-[0.03]"
                         style={{
@@ -392,7 +392,7 @@ const HeroSection = ({ getStartedPath }) => {
                                 style={{ perspective: "1200px" }}
                             >
                                 {/* Ambient Glow Behind Image */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/30 via-purple-500/20 to-cyan-500/30 blur-[100px] rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
+                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/10 to-cyan-500/20 blur-[100px] rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
 
                                 {/* The Floating Image Frame */}
                                 <motion.div
@@ -405,14 +405,28 @@ const HeroSection = ({ getStartedPath }) => {
                                         
                                         {/* The Generated Image */}
                                         <img 
-                                            src="/cute_ai_group.png" 
-                                            alt="Premium AI Companion with University Students" 
+                                            src="/premium_hero_nexora_subtle_neon_1775433853183.png" 
+                                            alt="Nexora AI - Premium AI Learning Platform" 
                                             className="w-full h-full object-cover rounded-[36px] group-hover:scale-105 transition-all duration-700" 
-                                            style={{ filter: 'brightness(1.4) saturate(1.25)' }}
+                                            style={{ filter: 'brightness(1.1) saturate(1.1) contrast(1.05)' }}
                                         />
                                         
                                         {/* Glossy Overlay */}
                                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/20 pointer-events-none" />
+
+                                        {/* Optional subtle glow for the Robot if it's centrally located */}
+                                        <motion.div 
+                                            className="absolute pointer-events-none z-[5]"
+                                            style={{
+                                                top: '48%',
+                                                left: '52%',
+                                                width: '120px',
+                                                height: '120px',
+                                                background: 'radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)',
+                                                filter: 'blur(45px)',
+                                                transform: 'translate(-50%, -50%)'
+                                            }}
+                                        />
                                     </div>
                                 </motion.div>
 

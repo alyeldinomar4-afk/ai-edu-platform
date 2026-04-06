@@ -89,8 +89,8 @@ const Navbar = () => {
                                     to={link.path}
                                     className={cn(
                                         "relative py-2 text-[15px] font-bold tracking-wide transition-all duration-300 group/nav",
-                                        isActive 
-                                            ? "text-primary dark:text-primary-light" 
+                                        isActive
+                                            ? "text-primary dark:text-primary-light"
                                             : "text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary"
                                     )}
                                 >
@@ -103,9 +103,9 @@ const Navbar = () => {
                                         <IconComp className="w-5 h-5" />
                                     </span>
                                     {isActive && (
-                                        <motion.div 
-                                            layoutId="nav-underline" 
-                                            className="absolute -bottom-[2px] left-0 right-0 h-[3px] bg-primary rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)]" 
+                                        <motion.div
+                                            layoutId="nav-underline"
+                                            className="absolute -bottom-[2px] left-0 right-0 h-[3px] bg-primary rounded-full shadow-[0_0_10px_rgba(79,70,229,0.5)]"
                                             transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                         />
                                     )}
@@ -132,7 +132,7 @@ const Navbar = () => {
                         <div className="hidden md:flex items-center">
                             {user ? (
                                 <div className="relative" ref={profileRef}>
-                                    <div 
+                                    <div
                                         onClick={() => setIsProfileOpen(!isProfileOpen)}
                                         className="flex items-center gap-3 cursor-pointer group px-2 py-1 rounded-full hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
                                     >
@@ -145,10 +145,10 @@ const Navbar = () => {
                                         </div>
                                         <ChevronDown size={16} className={`text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-transform duration-300 ${isProfileOpen ? 'rotate-180' : ''}`} />
                                     </div>
-                                    
+
                                     <AnimatePresence>
                                         {isProfileOpen && (
-                                            <motion.div 
+                                            <motion.div
                                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
