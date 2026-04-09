@@ -11,7 +11,7 @@
     "logoutConfirmMessage": "هل أنت متأكد أنك تريد إنهاء جلستك الحالية بأمان والمغادرة؟",
     "cancel": "إلغاء",
     "instructors": "المعلمين",
-    "aiDemo": "مساعد الذكاء الاصطناعي",
+    "aiDemo": "المعلم الذكي",
     "switchToEnglish": "English"
   },
   "home": {
@@ -51,7 +51,7 @@
       "titleMain": "عالق في التعلم؟",
       "titleHighlight": "اسأل معلم الذكاء الاصطناعي.",
       "subtitle": "احصل على ملاحظات فورية، شرح للكود، وخطط دراسة مخصصة. معلمنا الذكي يفهم أسلوبك في التعلم ويتكيف مع سرعتك.",
-      "btnTryDemo": "جرب عرض الذكاء الاصطناعي",
+      "btnTryDemo": "جرب المعلم الذكي",
       "chatUserQuery": "كيف يمكنني تحسين أداء مكون React هذا؟",
       "chatAiResponse": "يمكنك استخدام `useMemo` و `useCallback` لمنع عمليات إعادة الرندر غير الضرورية."
     },
@@ -274,6 +274,7 @@
         "stats": {
           "totalUsers": "إجمالي المستخدمين",
           "totalInstructors": "إجمالي المعلمين",
+          "totalAdmins": "إجمالي المسؤولين",
           "suspendedUsers": "المستخدمون الموقوفون"
         },
         "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني...",
@@ -330,7 +331,9 @@
           "platformName": "اسم المنصة",
           "supportEmail": "بريد الدعم الفني",
           "maintenanceMode": "وضع الصيانة",
-          "maintenanceHint": "عند التفعيل، سيتم إيقاف المنصة للصيانة."
+          "maintenanceHint": "عند التفعيل، سيتم إيقاف المنصة للصيانة.",
+          "maintenanceConfirmTitle": "تغيير وضع الصيانة؟",
+          "maintenanceConfirmMessage": "هل أنت متأكد من تغيير حالة المنصة؟ هذا الإجراء سيؤثر على جميع المستخدمين فوراً."
         },
         "ai": {
           "title": "تهيئة الذكاء الاصطناعي",

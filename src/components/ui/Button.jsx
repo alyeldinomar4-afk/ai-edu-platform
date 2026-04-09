@@ -24,7 +24,8 @@ const Button = ({
     onClick,
     disabled = false,
     type = 'button',
-    icon: Icon
+    icon: Icon,
+    ...props
 }) => {
     const [isHovered, setIsHovered] = useState(false);
     const hasGlint = variant === 'primary' || variant === 'secondary';
@@ -38,6 +39,7 @@ const Button = ({
             type={type}
             onClick={onClick}
             disabled={disabled}
+            {...props}
             className={cn(
                 'relative rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer overflow-hidden group',
                 variants[variant],

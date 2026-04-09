@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import {
@@ -35,6 +35,33 @@ const ManageVideosPage = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [showVideoModal, setShowVideoModal] = useState(false);
     const [editingVideo, setEditingVideo] = useState(null);
+    const [formValues, setFormValues] = useState({
+        title: '',
+        instructor: '',
+        course: '',
+        thumbnail: '',
+        duration: '',
+        status: 'published'
+    });
+
+    // Reset/Sync form values when modal opens or editingVideo changes
+    useEffect(() => {
+        if (showVideoModal) {
+            setFormValues({
+                title: editingVideo?.title || '',
+                instructor: editingVideo?.instructor || '',
+                course: editingVideo?.course || '',
+                thumbnail: editingVideo?.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80',
+                duration: editingVideo?.duration || '10:00',
+                status: editingVideo?.status || 'published'
+            });
+        }
+    }, [showVideoModal, editingVideo]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues(prev => ({ ...prev, [name]: value }));
+    };
 
     // Initial Videos state
     const [videos, setVideos] = useState([
@@ -143,7 +170,7 @@ const ManageVideosPage = () => {
             id: Date.now(),
             views: "0",
             date: new Date().toISOString().split('T')[0],
-            thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
+            thumbnail: data.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
         };
         setVideos(prev => [newVideo, ...prev]);
         setShowVideoModal(false);
@@ -358,26 +385,39 @@ const ManageVideosPage = () => {
 
                                         <div className="space-y-2">
                                             <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.title')}</label>
-                                            <input name="title" required defaultValue={editingVideo?.title || ''} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                            <input name="title" required value={formValues.title} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.instructor')}</label>
-                                                <input name="instructor" required defaultValue={editingVideo?.instructor || ''} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                                <input name="instructor" required value={formValues.instructor} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.course')}</label>
-                                                <input name="course" required defaultValue={editingVideo?.course || ''} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                                <input name="course" required value={formValues.course} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
                                             </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="block text-sm font-semibold mb-2 dark:text-slate-300">
+                                                {t('dir') === 'rtl' ? 'رابط الصورة المصغرة' : 'Thumbnail URL'}
+                                            </label>
+                                            <input 
+                                                name="thumbnail" 
+                                                value={formValues.thumbnail}
+                                                onChange={handleInputChange}
+                                                placeholder="https://example.com/image.jpg"
+                                                className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} 
+                                            />
+                                            <p className="text-[10px] text-slate-500 mt-1">{t('dir') === 'rtl' ? 'مثال: https://images.unsplash.com/...' : 'Example: https://images.unsplash.com/...'}</p>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.duration')}</label>
-                                                <input name="duration" required defaultValue={editingVideo?.duration || '10:00'} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                                <input name="duration" required value={formValues.duration} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.status')}</label>
-                                                <select name="status" defaultValue={editingVideo?.status || 'published'} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${t('dir') === 'rtl' ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
+                                                <select name="status" value={formValues.status} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${t('dir') === 'rtl' ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
                                                     <option value="published">{t('dashboard.admin.manageVideos.published')}</option>
                                                     <option value="draft">{t('dashboard.admin.manageVideos.draft')}</option>
                                                     <option value="pending">{t('dashboard.admin.manageVideos.pending')}</option>
@@ -409,8 +449,8 @@ const ManageVideosPage = () => {
                                         className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 overflow-hidden group hover:-translate-y-1 transition-transform duration-300"
                                     >
                                         <div className="h-44 bg-slate-900 relative overflow-hidden flex items-center justify-center">
-                                            {editingVideo?.thumbnail ? (
-                                                <img src={editingVideo.thumbnail} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                            {formValues.thumbnail ? (
+                                                <img src={formValues.thumbnail} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                             ) : (
                                                 <>
                                                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 mix-blend-overlay"></div>
@@ -420,18 +460,18 @@ const ManageVideosPage = () => {
                                         </div>
                                         <div className="p-5 flex-1 flex flex-col text-left text-slate-900 dark:text-white">
                                             <h3 className="font-bold text-lg mb-2 line-clamp-2 leading-tight">
-                                                {document.querySelector('input[name="title"]')?.value || (t('dir') === 'rtl' ? 'عنوان الفيديو...' : 'Video Title...')}
+                                                {formValues.title || (t('dir') === 'rtl' ? 'عنوان الفيديو...' : 'Video Title...')}
                                             </h3>
                                             <p className="text-sm font-medium text-slate-500 line-clamp-1 mb-1">
                                                 <User size={14} className="inline mr-1" />
-                                                {document.querySelector('input[name="instructor"]')?.value || (t('dir') === 'rtl' ? 'اسم المدرب...' : 'Instructor Name...')}
+                                                {formValues.instructor || (t('dir') === 'rtl' ? 'اسم المدرب...' : 'Instructor Name...')}
                                             </p>
                                             <p className="text-xs font-semibold text-primary/80 line-clamp-1 mb-4">
-                                                {document.querySelector('input[name="course"]')?.value || (t('dir') === 'rtl' ? 'اسم الدورة...' : 'Course Name...')}
+                                                {formValues.course || (t('dir') === 'rtl' ? 'اسم الدورة...' : 'Course Name...')}
                                             </p>
                                             <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                                                 <span className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300">
-                                                    <Clock size={14} /> {document.querySelector('input[name="duration"]')?.value || '10:00'}
+                                                    <Clock size={14} /> {formValues.duration || '10:00'}
                                                 </span>
                                             </div>
                                         </div>

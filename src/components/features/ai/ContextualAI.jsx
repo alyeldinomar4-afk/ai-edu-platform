@@ -35,7 +35,7 @@ const buttonItem = {
     visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 400, damping: 25 } },
 };
 
-const ContextualAI = ({ videoState, addMarker }) => {
+const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
     const [messages, setMessages] = useState([
@@ -159,30 +159,26 @@ const ContextualAI = ({ videoState, addMarker }) => {
     ];
 
     return (
-        <div className="flex flex-col flex-1 min-h-0 bg-[#0F172A] border-l border-slate-800 overflow-hidden text-slate-200 font-sans">
-            {/* Header */}
-            <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-[#131C31]">
-                <div className="flex items-center gap-3">
-                    <motion.div
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: 'easeInOut' }}
-                    >
-                        <Zap className="w-5 h-5 text-purple-500" />
-                    </motion.div>
-                    <h3 className="font-bold text-white tracking-wide">{t('videoPlayer.aiTutor.title')}</h3>
+        <div className="flex flex-col h-full bg-[#0F172A] border-l border-slate-800 overflow-hidden text-slate-200 font-sans">
+            {/* Minimal Header for mobile or state indicator */}
+            {!hideHeader && (
+                <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800/50 bg-[#131C31]/50">
+                    <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-purple-500" />
+                        <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t('videoPlayer.aiTutor.title')}</span>
+                    </div>
+                    {videoState?.isPlaying && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20"
+                        >
+                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                            <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter">{t('videoPlayer.aiTutor.liveSync')}</span>
+                        </motion.div>
+                    )}
                 </div>
-                {videoState?.isPlaying && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="flex items-center gap-1.5 px-3 py-1 bg-green-500/10 rounded-full border border-green-500/20 shadow-[0_0_10px_rgba(34,197,94,0.1)]"
-                    >
-                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
-                        <span className="text-[10px] font-bold text-green-400 tracking-widest uppercase">{t('videoPlayer.aiTutor.liveSync')}</span>
-                    </motion.div>
-                )}
-            </div>
+            )}
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto min-h-0 p-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">

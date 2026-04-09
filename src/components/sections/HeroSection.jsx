@@ -450,7 +450,7 @@ const HeroSection = ({ getStartedPath }) => {
                                         x: { delay: 1, duration: 0.5 },
                                         y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 } 
                                     }}
-                                    className={`absolute ${isAr ? '-left-6' : '-right-6'} top-[15%] bg-white/90 dark:bg-[#0f1629]/90 backdrop-blur-xl border border-white dark:border-slate-700/40 px-4 py-2.5 rounded-2xl shadow-2xl shadow-purple-500/10 z-30 flex items-center gap-2.5`}
+                                    className={`absolute ${isAr ? '-left-6' : '-right-6'} top-[10%] bg-white/90 dark:bg-[#0f1629]/90 backdrop-blur-xl border border-white dark:border-slate-700/40 px-4 py-2.5 rounded-2xl shadow-2xl shadow-purple-500/10 z-30 flex items-center gap-2.5`}
                                     style={{ transform: 'translateZ(40px)' }}
                                 >
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">

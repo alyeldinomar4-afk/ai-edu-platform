@@ -15,7 +15,17 @@ import {
     X,
     ChevronLeft,
     ChevronRight,
-    Ban
+    Ban,
+    Lock,
+    RotateCcw,
+    Award,
+    FileText,
+    Briefcase,
+    Phone,
+    GraduationCap,
+    Globe,
+    Clock,
+    Hash
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 
@@ -26,6 +36,8 @@ const ManageUsersPage = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [showUserModal, setShowUserModal] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
+    const [selectedRole, setSelectedRole] = useState('learner');
+    const [generatedPass, setGeneratedPass] = useState('');
 
     // Initial users state
     const [users, setUsers] = useState([
@@ -88,9 +100,20 @@ const ManageUsersPage = () => {
         // setShowActionMenu(null); // Also not defined in original state but present here
     };
 
+    const generatePassword = () => {
+        const chars = "1234567890";
+        let password = "";
+        for (let i = 0; i < 6; i++) {
+            password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        setGeneratedPass(password);
+        toast.success(t('common.justNow')); // Generic feedback for generation
+    };
+
     const stats = [
         { label: t('dashboard.admin.manageUsers.stats.totalUsers'), value: users.length, icon: Users, color: 'text-blue-600', bg: 'bg-blue-100 dark:bg-blue-900/30' },
         { label: t('dashboard.admin.manageUsers.stats.totalInstructors'), value: users.filter(u => u.role === 'instructor').length, icon: Shield, color: 'text-purple-600', bg: 'bg-purple-100 dark:bg-purple-900/30' },
+        { label: t('dashboard.admin.manageUsers.stats.totalAdmins'), value: users.filter(u => u.role === 'admin').length, icon: Shield, color: 'text-amber-600', bg: 'bg-amber-100 dark:bg-amber-900/30' },
         { label: t('dashboard.admin.manageUsers.stats.suspendedUsers'), value: users.filter(u => u.status === 'suspended').length, icon: UserX, color: 'text-red-600', bg: 'bg-red-100 dark:bg-red-900/30' },
     ];
 
@@ -102,7 +125,12 @@ const ManageUsersPage = () => {
                     <p className="text-slate-500 dark:text-slate-400">{t('dashboard.admin.manageUsers.subtitle')}</p>
                 </div>
                 <button 
-                    onClick={() => setShowUserModal(true)}
+                    onClick={() => {
+                        setEditingUser(null);
+                        setSelectedRole('learner');
+                        setGeneratedPass('');
+                        setShowUserModal(true);
+                    }}
                     className="relative group flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium tracking-wide text-white bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50 overflow-hidden transition-all duration-300 active:scale-[0.98] cursor-pointer"
                 >
                     <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -113,7 +141,7 @@ const ManageUsersPage = () => {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, i) => (
                     <div key={i} className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 flex items-center gap-4 shadow-sm">
                         <div className={`w-12 h-12 rounded-full flex items-center justify-center ${stat.bg} ${stat.color}`}>
@@ -219,7 +247,12 @@ const ManageUsersPage = () => {
                                         <div className="flex items-center justify-end gap-1">
                                             {/* Edit */}
                                             <button
-                                                onClick={() => { setEditingUser(user); setShowUserModal(true); }}
+                                                onClick={() => { 
+                                                    setEditingUser(user); 
+                                                    setSelectedRole(user.role);
+                                                    setGeneratedPass('');
+                                                    setShowUserModal(true); 
+                                                }}
                                                 title={t('dashboard.admin.manageUsers.editUser')}
                                                 className="group flex items-center justify-center h-8 px-2 rounded-full overflow-hidden text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all duration-300 hover:shadow-sm focus:outline-none cursor-pointer"
                                             >
@@ -281,102 +314,271 @@ const ManageUsersPage = () => {
                 </div>
             </div>
 
-            {/* User Modal (Add/Edit) */}
             <AnimatePresence>
                 {showUserModal && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8 overflow-y-auto">
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-x-hidden overflow-y-auto">
+                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-md"
                             onClick={() => { setShowUserModal(false); setEditingUser(null); }}
                         />
-                             <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        
+                        {/* Centered Modal Content */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden text-left"
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                            className="relative w-full max-w-4xl bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden border border-white/20 dark:border-slate-800"
                         >
-                            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-                                    {editingUser ? t('dashboard.admin.manageUsers.editTitle') : t('dashboard.admin.manageUsers.addTitle')}
-                                </h2>
+                            {/* Modal Header */}
+                            <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                                        <UserPlus size={24} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                                            {editingUser ? t('dashboard.admin.manageUsers.editTitle') : t('dashboard.admin.manageUsers.addTitle')}
+                                        </h2>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                            {editingUser ? t('dashboard.admin.manageUsers.editUser') : t('dashboard.admin.manageUsers.addNew')}
+                                        </p>
+                                    </div>
+                                </div>
                                 <button
                                     onClick={() => { setShowUserModal(false); setEditingUser(null); }}
-                                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all text-slate-400 hover:text-red-500"
                                 >
-                                    <X size={20} className="text-slate-500" />
+                                    <X size={24} />
                                 </button>
                             </div>
 
-                            <form onSubmit={(e) => {
-                                e.preventDefault();
-                                const formData = new FormData(e.target);
-                                const userData = Object.fromEntries(formData);
-                                if (editingUser) {
-                                    handleUpdateUser({ ...editingUser, ...userData });
-                                } else {
-                                    handleAddUser(userData);
-                                }
-                            }} className={`p-6 space-y-4 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.fullName')}</label>
-                                    <input
-                                        name="name"
-                                        type="text"
-                                        required
-                                        defaultValue={editingUser?.name || ''}
-                                        className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
-                                        placeholder={t('dashboard.admin.manageUsers.form.placeholderName')}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.email')}</label>
-                                    <input
-                                        name="email"
-                                        type="email"
-                                        required
-                                        defaultValue={editingUser?.email || ''}
-                                        className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
-                                        placeholder={t('dashboard.admin.manageUsers.form.placeholderEmail')}
-                                    />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.role')}</label>
-                                        <select
-                                            name="role"
-                                            defaultValue={editingUser?.role || 'learner'}
-                                            className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
-                                        >
-                                            <option value="learner">{t('dashboard.admin.manageUsers.learners').replace(/s$/, '')}</option>
-                                            <option value="instructor">{t('dashboard.admin.manageUsers.instructors').replace(/s$/, '')}</option>
-                                            <option value="admin">{t('dashboard.admin.manageUsers.admins').replace(/s$/, '')}</option>
-                                        </select>
+                            {/* Modal Body */}
+                            <form 
+                                id="userForm"
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const formData = new FormData(e.target);
+                                    const userData = Object.fromEntries(formData);
+                                    if (editingUser) {
+                                        handleUpdateUser({ ...editingUser, ...userData });
+                                    } else {
+                                        handleAddUser(userData);
+                                    }
+                                }} 
+                                className="p-8 space-y-10 max-h-[70vh] overflow-y-auto custom-scrollbar"
+                            >
+                                {/* Section 1: Basic Info */}
+                                <div className="space-y-6">
+                                    <div className="flex items-center gap-3 text-primary border-b border-primary/10 pb-2">
+                                        <Users size={18} />
+                                        <h4 className="text-xs font-bold uppercase tracking-widest">{t('dashboard.admin.manageUsers.table.user')} Information</h4>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.admin.manageUsers.form.status')}</label>
-                                        <select
-                                            name="status"
-                                            defaultValue={editingUser?.status || 'active'}
-                                            className={`w-full px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
-                                        >
-                                            <option value="active">{t('dashboard.admin.manageUsers.active')}</option>
-                                            <option value="suspended">{t('dashboard.admin.manageUsers.suspended')}</option>
-                                        </select>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">{t('dashboard.admin.manageUsers.form.fullName')}</label>
+                                            <input
+                                                name="name"
+                                                type="text"
+                                                required
+                                                defaultValue={editingUser?.name || ''}
+                                                className="w-full px-5 py-3 border border-slate-200 dark:border-slate-700/80 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-slate-400 font-medium"
+                                                placeholder={t('dashboard.admin.manageUsers.form.placeholderName')}
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">{t('dashboard.admin.manageUsers.form.email')}</label>
+                                            <div className="relative">
+                                                <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                <input
+                                                    name="email"
+                                                    type="email"
+                                                    required
+                                                    defaultValue={editingUser?.email || ''}
+                                                    className="w-full pl-12 pr-5 py-3 border border-slate-200 dark:border-slate-700/80 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-slate-400 font-medium"
+                                                    placeholder={t('dashboard.admin.manageUsers.form.placeholderEmail')}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="pt-6 flex gap-3">
-                                    <Button variant="outline" className="flex-1" type="button" onClick={() => { setShowUserModal(false); setEditingUser(null); }}>
-                                        {t('common.cancel')}
-                                    </Button>
-                                    <Button className="flex-1" type="submit">
-                                        {editingUser ? t('common.save') : t('dashboard.admin.manageUsers.form.createAccount')}
-                                    </Button>
+                                {/* Section 2: Config */}
+                                <div className="space-y-6">
+                                    <div className="flex items-center gap-3 text-amber-500 border-b border-amber-500/10 pb-2">
+                                        <Shield size={18} />
+                                        <h4 className="text-xs font-bold uppercase tracking-widest">Role & Status Configuration</h4>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">{t('dashboard.admin.manageUsers.form.role')}</label>
+                                            <select
+                                                name="role"
+                                                value={selectedRole}
+                                                onChange={(e) => setSelectedRole(e.target.value)}
+                                                className="w-full px-5 py-3 border border-slate-200 dark:border-slate-700/80 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all cursor-pointer font-medium appearance-none"
+                                            >
+                                                <option value="learner">{t('dashboard.admin.manageUsers.learners').replace(/s$/, '')}</option>
+                                                <option value="instructor">{t('dashboard.admin.manageUsers.instructors').replace(/s$/, '')}</option>
+                                                <option value="admin">{t('dashboard.admin.manageUsers.admins').replace(/s$/, '')}</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">{t('dashboard.admin.manageUsers.form.status')}</label>
+                                            <select
+                                                name="status"
+                                                defaultValue={editingUser?.status || 'active'}
+                                                className="w-full px-5 py-3 border border-slate-200 dark:border-slate-700/80 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all cursor-pointer font-medium appearance-none"
+                                            >
+                                                <option value="active">{t('dashboard.admin.manageUsers.active')}</option>
+                                                <option value="suspended">{t('dashboard.admin.manageUsers.suspended')}</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
+
+                                {/* Section 3: Dynamic Data */}
+                                <AnimatePresence mode="wait">
+                                    {selectedRole === 'instructor' && (
+                                        <motion.div
+                                            key="instructor-fields"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="space-y-6"
+                                        >
+                                            <div className="flex items-center gap-3 text-purple-500 border-b border-purple-500/10 pb-2">
+                                                <Briefcase size={18} />
+                                                <h4 className="text-xs font-bold uppercase tracking-widest">Professional Instructor details</h4>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Department</label>
+                                                    <div className="relative">
+                                                        <Award size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <input name="department" type="text" className="w-full pl-12 pr-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="e.g. Computer Science"/>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Experience</label>
+                                                    <div className="relative">
+                                                        <Clock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <input name="experience" type="text" className="w-full pl-12 pr-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="e.g. 5+ Years"/>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Specialization</label>
+                                                    <div className="relative">
+                                                        <GraduationCap size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <input name="specialization" type="text" className="w-full pl-12 pr-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="e.g. AI Specialist"/>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Social Profile</label>
+                                                    <div className="relative">
+                                                        <Globe size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <input name="linkedin" type="url" className="w-full pl-12 pr-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="linkedin.com/in/..."/>
+                                                    </div>
+                                                </div>
+                                                <div className="md:col-span-2 space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Professional Bio</label>
+                                                    <textarea name="bio" rows="3" className="w-full px-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium resize-none" placeholder="Brief background..."></textarea>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
+
+                                    {selectedRole === 'learner' && (
+                                        <motion.div
+                                            key="student-fields"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="space-y-6"
+                                        >
+                                            <div className="flex items-center gap-3 text-blue-500 border-b border-blue-500/10 pb-2">
+                                                <GraduationCap size={18} />
+                                                <h4 className="text-xs font-bold uppercase tracking-widest">Academic details</h4>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Educational Grade</label>
+                                                    <select name="grade" className="w-full px-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium appearance-none">
+                                                        <option value="">Select Grade</option>
+                                                        <option value="y1">Academic Year 1</option>
+                                                        <option value="y2">Academic Year 2</option>
+                                                        <option value="y3">Academic Year 3</option>
+                                                        <option value="y4">Academic Year 4</option>
+                                                        <option value="grad">Graduate</option>
+                                                    </select>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Major/Focus</label>
+                                                    <div className="relative">
+                                                        <Hash size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <input name="major" type="text" className="w-full pl-12 pr-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="e.g. Software Engineering"/>
+                                                    </div>
+                                                </div>
+                                                <div className="md:col-span-2 space-y-1.5">
+                                                    <label className="text-xs font-bold text-slate-500 dark:text-slate-400 tracking-tight ml-1">Phone Number</label>
+                                                    <div className="relative">
+                                                        <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                                        <input name="phone" type="tel" className="w-full pl-12 pr-5 py-3 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50/50 dark:bg-slate-900/50 text-slate-900 dark:text-white focus:ring-4 focus:ring-primary/10 outline-none transition-all font-medium" placeholder="+20 ..."/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
+
+                                    {selectedRole === 'admin' && (
+                                        <motion.div
+                                            key="security-fields"
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            className="space-y-6"
+                                        >
+                                            <div className="flex items-center gap-3 text-red-500 border-b border-red-500/10 pb-2">
+                                                <Lock size={18} />
+                                                <h4 className="text-xs font-bold uppercase tracking-widest">Security credentials</h4>
+                                            </div>
+                                            <div className="p-6 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-[2rem] space-y-4">
+                                                <div className="flex items-center justify-between">
+                                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-tighter">New Admin Password</label>
+                                                    <button type="button" onClick={generatePassword} className="flex items-center gap-2 px-3 py-1 bg-primary text-white text-[10px] font-bold rounded-full hover:bg-primary-dark transition-all transform hover:scale-105 active:scale-95 shadow-md shadow-primary/20 cursor-pointer">
+                                                        <RotateCcw size={12} /> Re-Generate
+                                                    </button>
+                                                </div>
+                                                <input name="password" type="text" value={generatedPass} onChange={(e) => setGeneratedPass(e.target.value)} className="w-full px-5 py-3 border-2 border-dashed border-primary/20 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-center text-lg tracking-[0.5em] focus:border-primary focus:ring-0 outline-none transition-all placeholder:tracking-normal placeholder:font-sans" placeholder="······"/>
+                                                <p className="text-[10px] text-center text-slate-400 italic">Admin accounts require a strong, generated password by default.</p>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </form>
+
+                            {/* Modal Footer */}
+                            <div className="p-8 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex gap-4">
+                                <Button 
+                                    variant="outline" 
+                                    className="flex-1 rounded-2xl h-14 text-lg font-bold border-2" 
+                                    type="button" 
+                                    onClick={() => { setShowUserModal(false); setEditingUser(null); }}
+                                >
+                                    {t('common.cancel')}
+                                </Button>
+                                <Button 
+                                    form="userForm"
+                                    type="submit"
+                                    className="flex-1 rounded-2xl h-14 shadow-xl shadow-primary/30 text-lg font-black tracking-wide"
+                                >
+                                    {editingUser ? t('common.save') : t('dashboard.admin.manageUsers.form.createAccount')}
+                                </Button>
+                            </div>
                         </motion.div>
                     </div>
                 )}

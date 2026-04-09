@@ -8,15 +8,18 @@ import VideoPlayer from '../../components/features/video/VideoPlayer';
 import Playlist from '../../components/features/video/Playlist';
 import ContextualAI from '../../components/features/ai/ContextualAI';
 import Quiz from '../../components/features/course/Quiz';
+import { useScrollContext } from '../../context/ScrollContext';
 import { lectures } from '../../data/mockData';
 import toast from 'react-hot-toast';
-import ScrollProgress from '../../components/ui/ScrollProgress';
 
 const VideoPlayerPage = () => {
     const { courseId } = useParams();
     const { t } = useTranslation();
     const [rightSidebarTab, setRightSidebarTab] = useState('playlist'); // playlist, ai
+    const [isTheaterMode, setIsTheaterMode] = useState(false);
     const [activeTab, setActiveTab] = useState('overview');
+    const [messages, setMessages] = useState([]);
+    const [isAiTyping, setIsAiTyping] = useState(false);
     const [videoState, setVideoState] = useState({ currentTime: 0, isPlaying: false });
     const [markers, setMarkers] = useState([]);
     const [questionInput, setQuestionInput] = useState('');
@@ -40,6 +43,15 @@ const VideoPlayerPage = () => {
     const courseLectures = lectures.filter(l => l.courseId === currentCourseId);
     const [activeLectureId, setActiveLectureId] = useState(courseLectures[0]?.id || 1);
     const scrollContainerRef = useRef(null);
+    const { setScrollContainer } = useScrollContext();
+
+    // Register scroll container to global context
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            setScrollContainer(scrollContainerRef.current);
+        }
+        return () => setScrollContainer(null);
+    }, [setScrollContainer]);
 
     // Reset scroll when lecture or course changes
     useEffect(() => {
@@ -47,6 +59,51 @@ const VideoPlayerPage = () => {
             scrollContainerRef.current.scrollTop = 0;
         }
     }, [activeLectureId, courseId]);
+
+    // Initial AI welcome message
+    useEffect(() => {
+        if (messages.length === 0) {
+            setMessages([{ id: 1, role: 'ai', text: t('videoPlayer.aiTutor.defaultWelcome'), isNew: false }]);
+        }
+    }, [t]);
+
+    const handleAiMessage = (text, timestamp = null) => {
+        if (!text.trim()) return;
+
+        const currentTime = timestamp !== null ? timestamp : videoState.currentTime;
+
+        // Add user message
+        setMessages(prev => [...prev, {
+            id: Date.now(),
+            role: 'user',
+            text,
+            timestamp: currentTime
+        }]);
+
+        setIsAiTyping(true);
+
+        // Mock AI response
+        setTimeout(() => {
+            setIsAiTyping(false);
+
+            const lastMessageText = text.toLowerCase();
+            let responseText = t('videoPlayer.aiTutor.analyzingResponse', { timestamp: formatTime(currentTime) });
+
+            if (lastMessageText.includes('explain') || lastMessageText.includes('شرح')) {
+                responseText = i18n.language === 'ar'
+                    ? "أرى شرحًا لبنية الـ React Context تظهر على الشاشة. يتحدث المعلم في هذه اللحظة عن كيفية تمرير البيانات عبر شجرة المكونات دون الحاجة لاستخدام الـ Props يدوياً."
+                    : "I see a structural diagram showing React Context architecture. The instructor is explaining how data is passed through the component tree without manually passing props at every level.";
+            }
+
+            setMessages(prev => [...prev, {
+                id: Date.now() + 1,
+                role: 'ai',
+                text: responseText,
+                timestamp: currentTime,
+                isNew: true
+            }]);
+        }, 1500);
+    };
 
     const handleLectureSelect = (lecture) => {
         setActiveLectureId(lecture.id);
@@ -126,25 +183,30 @@ const VideoPlayerPage = () => {
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Main Content (Video + Tabs) */}
-                <div 
+                <div
                     ref={scrollContainerRef}
-                    className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-950 transition-colors"
+                    className={`flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-950 transition-all duration-500 ease-in-out`}
                 >
-                    <ScrollProgress container={scrollContainerRef} />
-                    <div className="p-4 md:p-6 pb-0">
+                    <div className={`transition-all duration-500 ${isTheaterMode ? 'p-2 md:p-4 pb-0 max-w-[1600px] mx-auto w-full' : 'p-4 md:p-6 pb-0'}`}>
                         <VideoPlayer
                             src={lectureData?.videoUrl}
                             title={currentLecture.title}
                             onStateChange={handleVideoStateChange}
                             markers={markers}
+                            isTheaterMode={isTheaterMode}
+                            onToggleTheaterMode={() => setIsTheaterMode(!isTheaterMode)}
+                            aiMessages={messages}
+                            isAiTyping={isAiTyping}
+                            onAiAsk={handleAiMessage}
+                            setMessages={setMessages}
                         />
                     </div>
 
-                    <div className="p-4 md:p-6">
+                    <div className={`transition-all duration-500 ${isTheaterMode ? 'p-2 md:p-4 max-w-[1600px] mx-auto w-full' : 'p-4 md:p-6'}`}>
                         <div className="border-b border-slate-800 mb-6 flex gap-6 overflow-x-auto no-scrollbar">
                             {[
-                                { id: 'playlist', label: t('videoPlayer.tabs.playlist'), icon: List, mobileOnly: true },
-                                { id: 'ai', label: t('videoPlayer.tabs.ai'), icon: Zap, mobileOnly: true },
+                                { id: 'playlist', label: t('videoPlayer.tabs.playlist'), icon: List, mobileOnly: true, theaterOnly: true },
+                                { id: 'ai', label: t('videoPlayer.tabs.ai'), icon: Zap, mobileOnly: true, theaterOnly: true },
                                 { id: 'overview', label: t('videoPlayer.tabs.overview'), icon: FileText },
                                 { id: 'quiz', label: t('videoPlayer.tabs.quiz'), icon: HelpCircle },
                                 { id: 'comments', label: t('videoPlayer.tabs.comments'), icon: HelpCircle },
@@ -153,7 +215,7 @@ const VideoPlayerPage = () => {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`pb-4 px-2 flex items-center gap-2 text-sm font-medium transition-colors relative flex-shrink-0 ${tab.mobileOnly ? 'lg:hidden' : ''
+                                    className={`pb-4 px-2 flex items-center gap-2 text-sm font-medium transition-colors relative flex-shrink-0 ${(tab.mobileOnly && !isTheaterMode) ? 'lg:hidden' : ''
                                         } ${activeTab === tab.id ? 'text-primary' : 'text-slate-400 hover:text-slate-200'}`}
                                 >
                                     <tab.icon size={16} />
@@ -172,15 +234,18 @@ const VideoPlayerPage = () => {
                         <div className="text-slate-300">
                             {/* Mobile Only Views */}
                             {activeTab === 'playlist' && (
-                                <div className="lg:hidden h-[500px]">
+                                <div className={`${isTheaterMode ? '' : 'lg:hidden'} h-[500px]`}>
                                     <Playlist sections={playlistData} currentLecture={activeLectureId} onSelect={handleLectureSelect} />
                                 </div>
                             )}
                             {activeTab === 'ai' && (
-                                <div className="lg:hidden min-h-[500px] flex flex-col">
+                                <div className={`${isTheaterMode ? '' : 'lg:hidden'} min-h-[500px] flex flex-col`}>
                                     <ContextualAI
                                         videoState={videoState}
                                         addMarker={addMarker}
+                                        messages={messages}
+                                        onSend={handleAiMessage}
+                                        isTyping={isAiTyping}
                                     />
                                 </div>
                             )}
@@ -293,7 +358,7 @@ const VideoPlayerPage = () => {
                 </div>
 
                 {/* Right Sidebar (Playlist / AI) */}
-                <div className="w-80 md:w-[360px] bg-[#0A0F1C] border-l border-slate-800 flex flex-col flex-shrink-0 hidden lg:flex">
+                <div className={`w-80 md:w-[360px] bg-[#0A0F1C] border-l border-slate-800 flex flex-col flex-shrink-0 transition-all duration-500 ${isTheaterMode ? 'hidden' : 'hidden lg:flex'}`}>
                     <div className="flex border-b border-slate-800 h-[60px] shrink-0 bg-[#0A0F1C]">
                         <button
                             onClick={() => setRightSidebarTab('playlist')}
@@ -333,6 +398,9 @@ const VideoPlayerPage = () => {
                             <ContextualAI
                                 videoState={videoState}
                                 addMarker={addMarker}
+                                messages={messages}
+                                onSend={handleAiMessage}
+                                isTyping={isAiTyping}
                             />
                         )}
                     </div>

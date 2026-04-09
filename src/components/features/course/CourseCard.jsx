@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Button from '../../ui/Button';
+import { instructors } from '../../../data/mockData';
 
 const CourseCard = ({ course }) => {
     const navigate = useNavigate();
@@ -110,7 +111,7 @@ const CourseCard = ({ course }) => {
                 >
                     <div className="w-5 h-5 rounded-full overflow-hidden border border-white dark:border-slate-800 shadow-sm shrink-0">
                         <img 
-                            src={course.instructor === 'Dr. Laila Hassan' ? 'https://randomuser.me/api/portraits/women/65.jpg' : 'https://randomuser.me/api/portraits/men/46.jpg'} 
+                            src={instructors.find(ins => ins.name === course.instructor)?.avatar || `https://ui-avatars.com/api/?name=${course.instructor}&background=random`} 
                             alt={course.instructor}
                             className="w-full h-full object-cover"
                         />

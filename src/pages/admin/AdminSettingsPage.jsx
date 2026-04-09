@@ -1,20 +1,21 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { 
-    Settings, 
-    Bot, 
-    Zap, 
-    Share2, 
-    Globe, 
-    Mail, 
-    Shield, 
-    ToggleLeft, 
+import {
+    Settings,
+    Bot,
+    Zap,
+    Share2,
+    Globe,
+    Mail,
+    Shield,
+    ToggleLeft,
     ToggleRight,
     Save,
     LayoutDashboard,
     Key,
-    DollarSign
+    DollarSign,
+    AlertTriangle
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
@@ -24,6 +25,7 @@ const AdminSettingsPage = () => {
     const isAr = i18n.language === 'ar';
     const [activeTab, setActiveTab] = useState('general');
     const [isSaving, setIsSaving] = useState(false);
+    const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
 
     // Mock Settings State
     const [settings, setSettings] = useState({
@@ -95,11 +97,10 @@ const AdminSettingsPage = () => {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all whitespace-nowrap cursor-pointer ${
-                                    isActive 
-                                    ? 'bg-white dark:bg-slate-700 text-primary shadow-sm font-semibold' 
-                                    : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
-                                }`}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all whitespace-nowrap cursor-pointer ${isActive
+                                        ? 'bg-white dark:bg-slate-700 text-primary shadow-sm font-semibold'
+                                        : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                                    }`}
                             >
                                 <Icon size={18} />
                                 <span>{tab.label}</span>
@@ -130,8 +131,8 @@ const AdminSettingsPage = () => {
                                             <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('dashboard.admin.settings.general.platformName')}</label>
                                             <div className="relative">
                                                 <LayoutDashboard className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     name="platformName"
                                                     value={settings.platformName}
                                                     onChange={handleChange}
@@ -143,8 +144,8 @@ const AdminSettingsPage = () => {
                                             <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('dashboard.admin.settings.general.supportEmail')}</label>
                                             <div className="relative">
                                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                                <input 
-                                                    type="email" 
+                                                <input
+                                                    type="email"
                                                     name="supportEmail"
                                                     value={settings.supportEmail}
                                                     onChange={handleChange}
@@ -153,14 +154,21 @@ const AdminSettingsPage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-xl">
+                                    <div className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${settings.maintenanceMode
+                                            ? 'bg-red-100/40 dark:bg-red-500/10 border-red-200 dark:border-red-500/20'
+                                            : 'bg-green-100/40 dark:bg-green-500/10 border-green-200 dark:border-green-500/20'
+                                        }`}>
                                         <div className="space-y-1">
-                                            <h3 className="font-semibold text-red-900 dark:text-red-400">{t('dashboard.admin.settings.general.maintenanceMode')}</h3>
-                                            <p className="text-sm text-red-700/70 dark:text-red-400/60">{t('dashboard.admin.settings.general.maintenanceHint')}</p>
+                                            <h3 className={`font-semibold transition-colors ${settings.maintenanceMode ? 'text-red-700 dark:text-red-400' : 'text-green-700 dark:text-green-400'}`}>
+                                                {t('dashboard.admin.settings.general.maintenanceMode')}
+                                            </h3>
+                                            <p className={`text-sm transition-colors ${settings.maintenanceMode ? 'text-red-600/70 dark:text-red-400/60' : 'text-green-600/70 dark:text-green-400/60'}`}>
+                                                {t('dashboard.admin.settings.general.maintenanceHint')}
+                                            </p>
                                         </div>
-                                        <button 
-                                            onClick={() => handleToggle('maintenanceMode')}
-                                            className="cursor-pointer text-red-500 hover:text-red-600 transition-colors"
+                                        <button
+                                            onClick={() => setShowMaintenanceModal(true)}
+                                            className={`cursor-pointer transition-colors ${settings.maintenanceMode ? 'text-red-500 hover:text-red-600' : 'text-green-500 hover:text-green-600'}`}
                                         >
                                             {settings.maintenanceMode ? <ToggleRight size={40} /> : <ToggleLeft size={40} />}
                                         </button>
@@ -173,14 +181,20 @@ const AdminSettingsPage = () => {
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white pb-4 border-b border-slate-100 dark:border-slate-800">
                                         {t('dashboard.admin.settings.ai.title')}
                                     </h2>
-                                    <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-xl">
+                                    <div className={`flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
+                                        settings.enableAiTutor 
+                                        ? 'bg-primary/5 border border-primary/20 shadow-sm shadow-primary/5' 
+                                        : 'bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700'
+                                    }`}>
                                         <div className="space-y-1">
-                                            <h3 className="font-semibold text-primary">{t('dashboard.admin.settings.ai.enableTutor')}</h3>
+                                            <h3 className={`font-semibold transition-colors ${settings.enableAiTutor ? 'text-primary' : 'text-slate-900 dark:text-white'}`}>
+                                                {t('dashboard.admin.settings.ai.enableTutor')}
+                                            </h3>
                                             <p className="text-sm text-slate-500 dark:text-slate-400">{t('dashboard.admin.settings.ai.tutorHint')}</p>
                                         </div>
-                                        <button 
+                                        <button
                                             onClick={() => handleToggle('enableAiTutor')}
-                                            className="cursor-pointer text-primary transition-colors"
+                                            className={`cursor-pointer transition-colors ${settings.enableAiTutor ? 'text-primary' : 'text-slate-400'}`}
                                         >
                                             {settings.enableAiTutor ? <ToggleRight size={40} /> : <ToggleLeft size={40} />}
                                         </button>
@@ -188,7 +202,7 @@ const AdminSettingsPage = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
                                             <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('dashboard.admin.settings.ai.model')}</label>
-                                            <select 
+                                            <select
                                                 name="defaultAiModel"
                                                 value={settings.defaultAiModel}
                                                 onChange={handleChange}
@@ -206,11 +220,10 @@ const AdminSettingsPage = () => {
                                                     <button
                                                         key={level}
                                                         onClick={() => setSettings(prev => ({ ...prev, feedbackIntensity: level }))}
-                                                        className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-all cursor-pointer ${
-                                                            settings.feedbackIntensity === level
-                                                            ? 'bg-primary border-primary text-white'
-                                                            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-primary/50'
-                                                        }`}
+                                                        className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-all cursor-pointer ${settings.feedbackIntensity === level
+                                                                ? 'bg-primary border-primary text-white'
+                                                                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-primary/50'
+                                                            }`}
                                                     >
                                                         {t(`dashboard.admin.settings.ai.intensity${level.charAt(0).toUpperCase() + level.slice(1)}`)}
                                                     </button>
@@ -231,7 +244,7 @@ const AdminSettingsPage = () => {
                                             <h3 className="font-semibold text-slate-900 dark:text-white">{t('dashboard.admin.settings.workflow.autoApprove')}</h3>
                                             <p className="text-sm text-slate-500 dark:text-slate-400">Automatically publish new courses from verified instructors.</p>
                                         </div>
-                                        <button 
+                                        <button
                                             onClick={() => handleToggle('autoApproveCourses')}
                                             className="cursor-pointer text-slate-400 hover:text-primary transition-colors"
                                         >
@@ -242,7 +255,7 @@ const AdminSettingsPage = () => {
                                         <label className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('dashboard.admin.settings.workflow.currency')}</label>
                                         <div className="relative">
                                             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                            <select 
+                                            <select
                                                 name="defaultCurrency"
                                                 value={settings.defaultCurrency}
                                                 onChange={handleChange}
@@ -272,7 +285,7 @@ const AdminSettingsPage = () => {
                                                 </div>
                                                 <h3 className="font-medium text-slate-900 dark:text-white">{t('dashboard.admin.settings.integrations.googleLogin')}</h3>
                                             </div>
-                                            <button 
+                                            <button
                                                 onClick={() => handleToggle('googleLogin')}
                                                 className="cursor-pointer"
                                             >
@@ -286,7 +299,7 @@ const AdminSettingsPage = () => {
                                                 </div>
                                                 <h3 className="font-medium text-slate-900 dark:text-white">{t('dashboard.admin.settings.integrations.githubLogin')}</h3>
                                             </div>
-                                            <button 
+                                            <button
                                                 onClick={() => handleToggle('githubLogin')}
                                                 className="cursor-pointer"
                                             >
@@ -306,6 +319,60 @@ const AdminSettingsPage = () => {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Maintenance Mode Confirmation Modal */}
+            <AnimatePresence>
+                {showMaintenanceModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+                            onClick={() => setShowMaintenanceModal(false)}
+                        />
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                            className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md p-6 relative z-10 border border-slate-100 dark:border-slate-800 text-left rtl:text-right"
+                        >
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 shrink-0">
+                                    <AlertTriangle size={24} />
+                                </div>
+                                <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                                    {t('dashboard.admin.settings.general.maintenanceConfirmTitle')}
+                                </h2>
+                            </div>
+
+                            <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                                {t('dashboard.admin.settings.general.maintenanceConfirmMessage')}
+                            </p>
+
+                            <div className="flex gap-3">
+                                <Button
+                                    variant="ghost"
+                                    onClick={() => setShowMaintenanceModal(false)}
+                                    className="flex-1"
+                                >
+                                    {t('common.cancel')}
+                                </Button>
+                                <Button
+                                    variant={settings.maintenanceMode ? 'primary' : 'danger'}
+                                    onClick={() => {
+                                        handleToggle('maintenanceMode');
+                                        setShowMaintenanceModal(false);
+                                    }}
+                                    className="flex-1"
+                                >
+                                    {t('common.save')}
+                                </Button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

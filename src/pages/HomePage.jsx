@@ -90,7 +90,7 @@ const HomePage = () => {
 
 
             {/* Stats Section — Animated Counters */}
-            <section className="bg-slate-900 dark:bg-black text-white py-12 transition-colors duration-300">
+            <section className="bg-[#8247E5] dark:bg-black text-white py-12 transition-colors duration-300">
                 <motion.div
                     variants={staggerContainer}
                     initial="hidden"
@@ -105,10 +105,10 @@ const HomePage = () => {
                         { label: t('home.stats.satisfaction'), value: 99, suffix: '%' },
                     ].map((stat, idx) => (
                         <motion.div key={idx} variants={fadeSlideUp} className="flex-1 min-w-[150px]">
-                            <h3 className="text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-primary via-secondary to-white">
+                            <h3 className="text-4xl font-bold text-white">
                                 <AnimatedCounter target={stat.value} suffix={stat.suffix} duration={2.5} />
                             </h3>
-                            <p className="text-slate-400 text-sm mt-1 uppercase tracking-wider">{stat.label}</p>
+                            <p className="text-[#EDE9FE] dark:text-slate-400 text-sm mt-1">{stat.label}</p>
                         </motion.div>
                     ))}
                 </motion.div>
@@ -117,7 +117,7 @@ const HomePage = () => {
             {/* Categories Section — Premium Redesign */}
             <section className="relative py-24 overflow-hidden">
                 {/* Background */}
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-[#0c1020] dark:to-slate-950 transition-colors duration-500" />
+                <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-slate-950 transition-colors duration-500" />
                 <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -162,11 +162,11 @@ const HomePage = () => {
                                 >
                                     {/* Gradient border glow on hover */}
                                     <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-primary/0 via-secondary/0 to-accent/0 group-hover:from-primary/40 group-hover:via-secondary/40 group-hover:to-accent/40 transition-all duration-500 blur-[1px] opacity-0 group-hover:opacity-100" />
-                                    
+
                                     <div className="relative p-6 rounded-2xl bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-slate-100 dark:border-slate-800 group-hover:border-transparent shadow-sm group-hover:shadow-xl group-hover:shadow-primary/5 dark:group-hover:shadow-primary/10 transition-all duration-400 text-center overflow-hidden">
                                         {/* Subtle radial glow inside card on hover */}
                                         <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-secondary/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                        
+
                                         {/* Icon */}
                                         <motion.div
                                             whileHover={{ scale: 1.18, rotate: [0, -8, 8, 0] }}
@@ -182,17 +182,17 @@ const HomePage = () => {
                                                 <span className="text-2xl transition-all duration-300 group-hover:scale-110">{cat.icon || '📚'}</span>
                                             )}
                                         </motion.div>
-                                        
+
                                         {/* Title */}
                                         <h3 className="font-bold text-[15px] text-slate-800 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors duration-300 mb-2 relative z-10">
                                             {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
                                         </h3>
-                                        
+
                                         {/* Course count pill */}
                                         <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800/60 px-2.5 py-1 rounded-full relative z-10">
                                             {cat.count} {t('home.categories.coursesCount')}
                                         </span>
-                                        
+
                                         {/* Hover arrow indicator */}
                                         <div className="mt-3 flex justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
                                             <ArrowRight className={cn("w-4 h-4 text-primary", isAr && "rotate-180")} />
@@ -206,7 +206,7 @@ const HomePage = () => {
             </section>
 
             {/* Featured Courses — Stagger Grid */}
-            <section className="bg-slate-50 dark:bg-slate-900/50 py-20 transition-colors duration-300">
+            <section className="bg-[#F5F3FF] dark:bg-slate-900/50 py-20 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -216,7 +216,7 @@ const HomePage = () => {
                         className="flex justify-between items-end mb-12"
                     >
                         <div>
-                            <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.featured.badge')}</span>
+                            <span className="text-primary font-semibold text-sm">{t('home.featured.badge')}</span>
                             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">{t('home.featured.title')}</h2>
                         </div>
                         <Link to="/courses">
@@ -252,7 +252,7 @@ const HomePage = () => {
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative overflow-visible">
                 {/* Enhanced Neon Glow behind the content */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-linear-to-r from-primary/20 via-purple-500/10 to-transparent blur-[140px] rounded-full pointer-events-none z-0 animate-pulse" style={{ animationDuration: '4s' }} />
-                
+
                 <motion.div
                     initial={{ opacity: 0, scale: 0.92, y: 40 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -336,18 +336,18 @@ const HomePage = () => {
             </section>
 
             {/* Top Instructors Section - Stagger with Alternating Slides */}
-            <section className="relative py-20 overflow-hidden bg-white dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
+            <section className="relative py-20 overflow-hidden bg-[#F5F3FF] dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
                 {/* Decorative background elements */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/5 rounded-full blur-[100px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
                 <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[400px] h-[400px] bg-secondary/10 dark:bg-secondary/5 rounded-full blur-[80px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
-                
+
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 gap-6 text-center md:text-start"
+                        className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 gap-6 text-center md:text-start p-8 rounded-3xl bg-[#F5F3FF] dark:bg-transparent border border-primary/5 dark:border-none"
                     >
                         <div className="max-w-2xl">
                             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -379,7 +379,7 @@ const HomePage = () => {
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 <div className="relative h-full bg-white dark:bg-[#121212] backdrop-blur-md rounded-[15px] p-5 sm:p-6 sm:py-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-start border-[0.5px] border-slate-100 dark:border-slate-700/40 group-hover:border-primary/30 transition-colors">
-                                    
+
                                     {/* Avatar */}
                                     <div className="relative shrink-0">
                                         <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-full blur-md opacity-20 dark:opacity-30 group-hover:opacity-60 transition-opacity duration-300" />
@@ -388,13 +388,13 @@ const HomePage = () => {
                                             <Award className="w-3.5 h-3.5 text-yellow-500 dark:text-yellow-400" />
                                         </div>
                                     </div>
-                                    
+
                                     {/* Content */}
                                     <div className="flex-1 min-w-0 flex flex-col items-center sm:items-start w-full">
                                         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-primary transition-colors truncate w-full">{instructor.name}</h3>
                                         <p className="text-primary dark:text-secondary font-medium text-xs mb-3 truncate w-full">{instructor.role}</p>
                                         <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-4 line-clamp-1 w-full">{instructor.bio}</p>
-                                        
+
                                         {/* Stats Row */}
                                         <div className="flex items-center gap-3 mb-5 text-slate-500 dark:text-slate-400 text-xs font-medium w-full truncate justify-center sm:justify-start">
                                             <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-700/50 shadow-sm">
@@ -406,7 +406,7 @@ const HomePage = () => {
                                                 <span>{instructor.rating}</span>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="mt-auto w-full sm:w-auto">
                                             <Link to={`/instructor/user/${encodeURIComponent(instructor.name.replace(/\s+/g, '-').toLowerCase())}`}>
                                                 <Button size="sm" className="w-full sm:w-auto bg-slate-100 dark:bg-slate-800/80 hover:bg-gradient-to-r hover:from-primary hover:to-secondary text-slate-700 dark:text-white border-slate-200 dark:border-slate-700 shadow-none transition-all duration-300 text-xs px-5 py-2">
@@ -424,48 +424,50 @@ const HomePage = () => {
             </section>
 
             {/* Testimonials — Stagger with Scale */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
-                >
-                    <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.testimonials.badge')}</span>
-                    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{t('home.testimonials.title')}</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-3">{t('home.testimonials.subtitle')}</p>
-                </motion.div>
-                <motion.div
-                    variants={staggerContainer}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-50px' }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8"
-                >
-                    {testimonials.map((testimonial, idx) => (
-                        <motion.div
-                            key={testimonial.id}
-                            variants={fadeScale}
-                            whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                            className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
-                        >
-                            <div className="flex items-center gap-4 mb-6">
-                                <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
-                                <div>
-                                    <h4 className="font-bold text-slate-900 dark:text-white">{testimonial.name}</h4>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                                        {t(`home.testimonials.roles.${testimonial.role.charAt(0).toLowerCase() + testimonial.role.slice(1).replace(/\s+/g, '')}`)}
-                                    </p>
+            <section className="bg-[#F5F3FF] dark:bg-transparent py-20 transition-colors duration-300">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center mb-16"
+                    >
+                        <span className="text-primary font-semibold tracking-wider uppercase text-sm">{t('home.testimonials.badge')}</span>
+                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{t('home.testimonials.title')}</h2>
+                        <p className="text-slate-500 dark:text-slate-400 mt-3">{t('home.testimonials.subtitle')}</p>
+                    </motion.div>
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: '-50px' }}
+                        className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                    >
+                        {testimonials.map((testimonial, idx) => (
+                            <motion.div
+                                key={testimonial.id}
+                                variants={fadeScale}
+                                whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                                className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
+                            >
+                                <div className="flex items-center gap-4 mb-6">
+                                    <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 dark:text-white">{testimonial.name}</h4>
+                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                            {t(`home.testimonials.roles.${testimonial.role.charAt(0).toLowerCase() + testimonial.role.slice(1).replace(/\s+/g, '')}`)}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex gap-1 mb-4">
-                                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
-                            </div>
-                            <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm">"{testimonial.content}"</p>
-                        </motion.div>
-                    ))}
-                </motion.div>
+                                <div className="flex gap-1 mb-4">
+                                    {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
+                                </div>
+                                <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm">"{testimonial.content}"</p>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </div>
             </section>
 
             {/* CTA Section — Cinematic Zoom */}
@@ -475,9 +477,9 @@ const HomePage = () => {
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="relative text-center py-16 px-8 rounded-3xl bg-linear-to-r from-primary via-secondary to-accent overflow-hidden"
+                    className="relative text-center py-16 px-8 rounded-3xl bg-[linear-gradient(135deg,#7C3AED,#A855F7)] overflow-hidden shadow-2xl shadow-primary/20"
                 >
-                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute inset-0 bg-black/10" />
                     {/* Animated floating particles */}
                     <motion.div
                         animate={{ y: [0, -15, 0], x: [0, 10, 0] }}

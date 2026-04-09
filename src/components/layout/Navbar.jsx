@@ -58,7 +58,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="sticky top-0 z-50 bg-white/75 dark:bg-[#090d1a]/80 backdrop-blur-2xl border-b border-transparent shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] transition-all duration-500">
+        <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-transparent shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] transition-all duration-500">
             <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-12">
                 <div className="flex justify-between items-center h-[84px]">
                     {/* Left side: Logo */}
@@ -120,7 +120,7 @@ const Navbar = () => {
                         <div className="hidden lg:flex items-center gap-5 pr-5 border-r border-slate-200 dark:border-slate-800/60">
                             <button
                                 onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}
-                                className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors flex items-center gap-1.5 font-bold"
+                                className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors flex items-center gap-1.5 font-bold cursor-pointer"
                                 title={t('nav.switchToArabic')}
                             >
                                 <Globe size={18} />
@@ -177,9 +177,9 @@ const Navbar = () => {
                                         {t('nav.login')}
                                     </Link>
                                     <Link to="/register">
-                                        <button className="relative overflow-hidden bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2.5 rounded-full text-[15px] font-extrabold tracking-wide shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 group">
-                                            <div className="absolute inset-0 bg-gradient-to-r from-primary to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                            <span className="relative z-10 group-hover:text-white transition-colors duration-300">{t('nav.getStarted')}</span>
+                                        <button className="relative overflow-hidden bg-primary text-white px-6 py-2.5 rounded-full text-[15px] font-extrabold tracking-wide shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-300 group cursor-pointer">
+                                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                                            <span className="relative z-10">{t('nav.getStarted')}</span>
                                         </button>
                                     </Link>
                                 </div>
@@ -190,7 +190,7 @@ const Navbar = () => {
                         <div className="md:hidden flex items-center gap-2">
                             <button
                                 onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'ar' : 'en')}
-                                className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                className="p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                             >
                                 <Globe size={20} />
                             </button>

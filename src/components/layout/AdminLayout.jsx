@@ -5,7 +5,7 @@ import { LayoutDashboard, BookOpen, Video, Users, Settings, LogOut, Menu, X, Use
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/useAuth';
 import ThemeToggle from '../ui/ThemeToggle';
-import ScrollProgress from '../ui/ScrollProgress';
+import { useScrollContext } from '../../context/ScrollContext';
 
 const sidebarStagger = {
     hidden: {},
@@ -33,6 +33,7 @@ const AdminLayout = () => {
     const { user, logout } = useAuth();
     const { t, i18n } = useTranslation();
     const mainContentRef = useRef(null);
+    const { setScrollContainer } = useScrollContext();
 
     // Reset scroll when path changes
     useEffect(() => {
@@ -40,6 +41,14 @@ const AdminLayout = () => {
             mainContentRef.current.scrollTop = 0;
         }
     }, [location.pathname]);
+
+    // Register scroll container to global context
+    useEffect(() => {
+        if (mainContentRef.current) {
+            setScrollContainer(mainContentRef.current);
+        }
+        return () => setScrollContainer(null);
+    }, [setScrollContainer]);
 
     const handleLogout = () => {
 
@@ -142,7 +151,7 @@ const AdminLayout = () => {
     );
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex">
+        <div className="h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 flex">
             {/* Mobile Sidebar Overlay */}
             <AnimatePresence>
                 {sidebarOpen && (
@@ -173,7 +182,6 @@ const AdminLayout = () => {
                 ref={mainContentRef}
                 className="flex-1 overflow-auto min-w-0"
             >
-                <ScrollProgress container={mainContentRef} />
                 <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 h-16 flex items-center justify-between px-4 sm:px-8">
                     <div className="flex items-center gap-3">
                         {/* Mobile hamburger */}

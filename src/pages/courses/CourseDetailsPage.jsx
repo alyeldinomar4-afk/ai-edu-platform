@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
-import { courses } from '../../data/mockData';
+import { courses, instructors } from '../../data/mockData';
 import { useAuth } from '../../auth/useAuth';
 import { cn } from '../../utils';
 
@@ -44,6 +44,7 @@ const CourseDetailsPage = () => {
 
     // Find course by ID (mock) - fallback to first course if not found
     const course = courses.find(c => c.id === parseInt(id)) || courses[0];
+    const instructorData = instructors.find(ins => ins.name === course.instructor);
 
     // Simulate loading
     useEffect(() => {
@@ -237,21 +238,21 @@ const CourseDetailsPage = () => {
 
                                         {activeTab === 'instructor' && (
                                             <div className="flex flex-col sm:flex-row gap-6">
-                                                <div className="w-24 h-24 rounded-full bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden">
-                                                    <img src={`https://ui-avatars.com/api/?name=${course.instructor}&background=random`} alt={course.instructor} className="w-full h-full object-cover" />
+                                                <div className="w-24 h-24 rounded-2xl bg-slate-200 dark:bg-slate-800 shrink-0 overflow-hidden shadow-lg border-2 border-white dark:border-slate-800">
+                                                    <img src={instructorData?.avatar || `https://ui-avatars.com/api/?name=${course.instructor}&background=random`} alt={course.instructor} className="w-full h-full object-cover" />
                                                 </div>
                                                 <div>
                                                     <Link to={`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`} className="block hover:opacity-80 transition-opacity">
                                                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 hover:text-primary transition-colors">{course.instructor}</h3>
                                                     </Link>
-                                                    <p className="text-primary font-medium text-sm mb-4">{t('courseDetails.seniorInstructor')}</p>
+                                                    <p className="text-primary font-medium text-sm mb-4">{instructorData?.role || t('courseDetails.seniorInstructor')}</p>
                                                     <div className="flex gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
-                                                        <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-primary text-primary" /> 4.8 {t('courseDetails.rating')}</div>
-                                                        <div className="flex items-center gap-1"><Users className="w-4 h-4" /> 25k {t('courseDetails.students')}</div>
-                                                        <div className="flex items-center gap-1"><PlayCircle className="w-4 h-4" /> 12 {t('courseDetails.courses')}</div>
+                                                        <div className="flex items-center gap-1"><Star className="w-4 h-4 fill-primary text-primary" /> {instructorData?.rating || '4.8'} {t('courseDetails.rating')}</div>
+                                                        <div className="flex items-center gap-1"><Users className="w-4 h-4" /> {instructorData?.studentsCount || '25k'} {t('courseDetails.students')}</div>
+                                                        <div className="flex items-center gap-1"><PlayCircle className="w-4 h-4" /> {instructorData?.coursesCount || '12'} {t('courseDetails.courses')}</div>
                                                     </div>
                                                     <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                                        {t('courseDetails.instructorBio', { instructor: course.instructor })}
+                                                        {instructorData?.bio || t('courseDetails.instructorBio', { instructor: course.instructor })}
                                                     </p>
                                                 </div>
                                             </div>

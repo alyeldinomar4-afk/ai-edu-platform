@@ -11,7 +11,7 @@
     "logoutConfirmMessage": "Are you sure you want to log out?",
     "cancel": "Cancel",
     "instructors": "Instructors",
-    "aiDemo": "AI Assistant",
+    "aiDemo": "AI Tutor",
     "switchToArabic": "العربية"
   },
   "home": {
@@ -51,7 +51,7 @@
       "titleMain": "Learning stuck?",
       "titleHighlight": "Ask the AI Tutor.",
       "subtitle": "Get instant feedback, code explanations, and personalized study plans. Our AI tutor understands your learning style and adapts to your pace.",
-      "btnTryDemo": "Try AI Demo",
+      "btnTryDemo": "Experience AI Tutor",
       "chatUserQuery": "How do I optimize this React component for performance?",
       "chatAiResponse": "You can use `useMemo` and `useCallback` to prevent unnecessary re-renders."
     },
@@ -274,6 +274,7 @@
         "stats": {
           "totalUsers": "Total Users",
           "totalInstructors": "Total Instructors",
+          "totalAdmins": "Total Admins",
           "suspendedUsers": "Suspended Users"
         },
         "searchPlaceholder": "Search by name or email...",
@@ -330,7 +331,9 @@
           "platformName": "Platform Name",
           "supportEmail": "Support Email",
           "maintenanceMode": "Maintenance Mode",
-          "maintenanceHint": "When active, the platform will be offline for maintenance."
+          "maintenanceHint": "When active, the platform will be offline for maintenance.",
+          "maintenanceConfirmTitle": "Change Maintenance Mode?",
+          "maintenanceConfirmMessage": "Are you sure you want to change the platform status? This will affect all users immediately."
         },
         "ai": {
           "title": "AI Configuration",
