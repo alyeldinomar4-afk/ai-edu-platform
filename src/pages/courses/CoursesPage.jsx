@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Filter, SlidersHorizontal, X, BookX } from 'lucide-react';
+import { Search, Filter, SlidersHorizontal, X, BookX, LayoutGrid, List, Eye, Star, Clock, BookOpen, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import CourseCard from '../../components/features/course/CourseCard';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
 import { courses, categories } from '../../data/mockData';
+import { cn } from '../../utils';
 
 const staggerContainer = {
     hidden: {},
@@ -38,6 +39,7 @@ const CoursesPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedLevels, setSelectedLevels] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
 
     useEffect(() => {
         const categoryParam = searchParams.get('category');
@@ -115,6 +117,30 @@ const CoursesPage = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder-slate-400 dark:placeholder-slate-500"
                         />
+                    </div>
+                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <button
+                            onClick={() => setViewMode('grid')}
+                            className={cn(
+                                "p-2 rounded-lg transition-all",
+                                viewMode === 'grid' 
+                                    ? "bg-white dark:bg-slate-700 text-primary shadow-sm" 
+                                    : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"
+                            )}
+                        >
+                            <LayoutGrid size={18} />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={cn(
+                                "p-2 rounded-lg transition-all",
+                                viewMode === 'list' 
+                                    ? "bg-white dark:bg-slate-700 text-primary shadow-sm" 
+                                    : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"
+                            )}
+                        >
+                            <List size={18} />
+                        </button>
                     </div>
                     <Button
                         variant="outline"
@@ -220,22 +246,103 @@ const CoursesPage = () => {
                             ))}
                         </div>
                     ) : filteredCourses.length > 0 ? (
-                        <motion.div
-                            key={`${selectedCategory}-${selectedLevels.join(',')}`}
-                            variants={staggerContainer}
-                            initial="hidden"
-                            animate="visible"
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                        >
-                            {filteredCourses.map((course) => (
+                        <AnimatePresence mode="wait">
+                            {viewMode === 'grid' ? (
                                 <motion.div
-                                    key={course.id}
-                                    variants={fadeSlideUp}
+                                    key={`grid-${selectedCategory}`}
+                                    variants={staggerContainer}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit={{ opacity: 0, y: -20 }}
+                                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
                                 >
-                                    <CourseCard course={course} />
+                                    {filteredCourses.map((course) => (
+                                        <motion.div key={course.id} variants={fadeSlideUp}>
+                                            <CourseCard course={course} layout="grid" />
+                                        </motion.div>
+                                    ))}
                                 </motion.div>
-                            ))}
-                        </motion.div>
+                            ) : (
+                                <motion.div
+                                    key={`list-${selectedCategory}`}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    className="bg-white dark:bg-slate-900 p-1 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 shadow-xl overflow-hidden overflow-x-auto"
+                                >
+                                    <table className={`w-full min-w-[800px] ${isAr ? 'text-right' : 'text-left'}`}>
+                                        <thead>
+                                            <tr className="border-b border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                                <th className="px-8 py-5">{t('courses.table.details')}</th>
+                                                <th className="px-6 py-5 text-center">{t('courses.table.stats')}</th>
+                                                <th className="px-6 py-5 text-center">{t('courses.table.level')}</th>
+                                                <th className="px-6 py-5 text-center">{t('courses.table.price')}</th>
+                                                <th className={`px-8 py-5 ${isAr ? 'text-left' : 'text-right'}`}>{t('courses.table.actions')}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
+                                            {filteredCourses.map((course) => (
+                                                <tr key={course.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-all duration-200">
+                                                    <td className="px-8 py-5">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-16 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
+                                                                <img src={course.image} className="w-full h-full object-cover" alt={course.title} />
+                                                            </div>
+                                                            <div className="min-w-0">
+                                                                <p className="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors mb-0.5 truncate">{course.title}</p>
+                                                                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                                                                    {t(`courses.categories.${course.category.charAt(0).toLowerCase() + course.category.slice(1).replace(/\s+/g, '')}`)}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-5">
+                                                        <div className="flex flex-col items-center gap-2 text-slate-500">
+                                                            <div className="flex items-center gap-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-700/40 shadow-sm">
+                                                                <Star size={12} className="text-yellow-400 fill-yellow-400" /> {course.rating}
+                                                            </div>
+                                                            <div className="flex flex-col items-center gap-1 group/stats">
+                                                                <span className="text-sm font-black text-slate-900 dark:text-white leading-none">{course.lessons}</span>
+                                                                <BookOpen size={14} className="text-primary/60 transition-transform group-hover/stats:scale-110" />
+                                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter opacity-80">{t('courses.lessons')}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-5 text-center">
+                                                        <span className={cn(
+                                                            "inline-flex px-3 py-1 text-[10px] font-bold rounded-full uppercase tracking-widest shadow-sm",
+                                                            course.level === 'Beginner' ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" :
+                                                                course.level === 'Intermediate' ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" :
+                                                                    "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+                                                        )}>
+                                                            {t(`courses.levels.${course.level.toLowerCase()}`)}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-5 text-center">
+                                                        <span className="text-lg font-black text-slate-900 dark:text-white">
+                                                            {course.price === 0 ? t('home.cta.free') : `$${course.discount ? (course.price * (1 - course.discount / 100)).toFixed(2) : course.price}`}
+                                                        </span>
+                                                    </td>
+                                                    <td className={`px-8 py-5 ${isAr ? 'text-left' : 'text-right'}`}>
+                                                        <Link to={`/courses/${course.id}`}>
+                                                            <Button 
+                                                                variant="ghost" 
+                                                                size="sm" 
+                                                                className="h-9 px-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:bg-primary/5 text-slate-600 dark:text-slate-400 hover:text-primary transition-all font-bold text-[11px] shadow-none"
+                                                                icon={Eye}
+                                                                iconOnly
+                                                            >
+                                                                {t('courses.viewCourse')}
+                                                            </Button>
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     ) : (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

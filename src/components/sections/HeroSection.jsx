@@ -302,7 +302,7 @@ const HeroSection = ({ getStartedPath }) => {
                             </div>
 
                             <h1
-                                className={`text-5xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight dark:[text-shadow:_0_0_40px_rgba(255,255,255,0.12),_0_2px_10px_rgba(0,0,0,0.4)] ${isAr ? 'leading-[1.4]' : ''}`}
+                                className={`text-3xl sm:text-6xl md:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight dark:[text-shadow:_0_0_40px_rgba(255,255,255,0.12),_0_2px_10px_rgba(0,0,0,0.4)] ${isAr ? 'leading-[1.4]' : ''}`}
                             >
                                 {t('home.heroTitleMain')}
                                 {isAr ? ' ' : <br />}
@@ -384,7 +384,7 @@ const HeroSection = ({ getStartedPath }) => {
                             transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                             className="flex items-center justify-center relative mt-12 lg:mt-0 w-full"
                         >
-                            <div 
+                            <div
                                 className="relative w-full max-w-[620px] h-[340px] sm:h-[420px] lg:h-[520px] flex items-center justify-center mx-auto lg:ml-auto"
                                 ref={imageRef}
                                 onMouseMove={handleMouseMove}
@@ -402,20 +402,20 @@ const HeroSection = ({ getStartedPath }) => {
                                     <div className="w-full h-full rounded-[36px] overflow-hidden bg-[#0c1224] relative group">
                                         {/* Fallback pattern while image loads or if missing */}
                                         <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                                        
+
                                         {/* The Generated Image */}
-                                        <img 
-                                            src="/premium_hero_nexora_subtle_neon_1775433853183.png" 
-                                            alt="Nexora AI - Premium AI Learning Platform" 
-                                            className="w-full h-full object-cover rounded-[36px] group-hover:scale-105 transition-all duration-700" 
+                                        <img
+                                            src="/premium_hero_nexora_subtle_neon_1775433853183.png"
+                                            alt="Nexora AI - Premium AI Learning Platform"
+                                            className="w-full h-full object-cover rounded-[36px] group-hover:scale-105 transition-all duration-700"
                                             style={{ filter: 'brightness(1.1) saturate(1.1) contrast(1.05)' }}
                                         />
-                                        
+
                                         {/* Glossy Overlay */}
                                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/20 pointer-events-none" />
 
                                         {/* Optional subtle glow for the Robot if it's centrally located */}
-                                        <motion.div 
+                                        <motion.div
                                             className="absolute pointer-events-none z-[5]"
                                             style={{
                                                 top: '48%',
@@ -442,15 +442,15 @@ const HeroSection = ({ getStartedPath }) => {
                                 </motion.div>
 
                                 {/* Floating Tag 1: Top Right */}
-                                <motion.div 
-                                    initial={{ opacity: 0, x: isAr ? -20 : 20, y: 0 }} 
-                                    animate={{ opacity: 1, x: 0, y: [0, -10, 0] }} 
-                                    transition={{ 
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20, y: 0 }}
+                                    animate={{ opacity: 1, x: 0, y: [0, -10, 0] }}
+                                    transition={{
                                         opacity: { delay: 1, duration: 0.5 },
                                         x: { delay: 1, duration: 0.5 },
-                                        y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 } 
+                                        y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }
                                     }}
-                                    className={`absolute ${isAr ? '-left-6' : '-right-6'} top-[10%] bg-white/90 dark:bg-[#0f1629]/90 backdrop-blur-xl border border-white dark:border-slate-700/40 px-4 py-2.5 rounded-2xl shadow-2xl shadow-purple-500/10 z-30 flex items-center gap-2.5`}
+                                    className="absolute -right-6 top-[10%] bg-white/90 dark:bg-[#0f1629]/90 backdrop-blur-xl border border-white dark:border-slate-700/40 px-4 py-2.5 rounded-2xl shadow-2xl shadow-purple-500/10 z-30 flex items-center gap-2.5"
                                     style={{ transform: 'translateZ(40px)' }}
                                 >
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
@@ -463,16 +463,16 @@ const HeroSection = ({ getStartedPath }) => {
                                 </motion.div>
 
                                 {/* Floating Tag 2: Bottom Left (Simple Rating Badge like the photo) */}
-                                <motion.div 
-                                    initial={{ opacity: 0, x: isAr ? 20 : -20, scale: 0.8 }} 
-                                    animate={{ opacity: 1, x: 0, scale: 1, y: [0, -8, 0] }} 
-                                    transition={{ 
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20, scale: 0.8 }}
+                                    animate={{ opacity: 1, x: 0, scale: 1, y: [0, -8, 0] }}
+                                    transition={{
                                         opacity: { delay: 1.2, duration: 0.5 },
                                         x: { delay: 1.2, duration: 0.5 },
                                         scale: { delay: 1.2, duration: 0.5 },
-                                        y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.5 } 
+                                        y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }
                                     }}
-                                    className={`absolute ${isAr ? '-right-4' : '-left-4'} bottom-12 bg-white/90 dark:bg-[#1a1f3d]/95 backdrop-blur-xl border border-white dark:border-slate-700/50 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3.5 z-30`}
+                                    className="absolute -left-4 bottom-12 bg-white/90 dark:bg-[#1a1f3d]/95 backdrop-blur-xl border border-white dark:border-slate-700/50 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3.5 z-30"
                                     style={{ transform: 'translateZ(60px)' }}
                                 >
                                     <div className="w-9 h-9 rounded-xl bg-yellow-100 dark:bg-[#2a271d] border border-yellow-300 dark:border-yellow-500/20 flex items-center justify-center flex-shrink-0 shadow-inner">

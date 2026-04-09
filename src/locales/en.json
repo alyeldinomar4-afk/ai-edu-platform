@@ -31,9 +31,13 @@
     },
     "stats": {
       "learners": "Active Learners",
+      "learnersSub": "Active Students",
       "courses": "Courses Available",
+      "coursesSub": "Online Courses",
       "instructors": "Instructors",
-      "satisfaction": "Satisfaction Rate"
+      "instructorsSub": "Expert Mentors",
+      "satisfaction": "Satisfaction Rate",
+      "satisfactionSub": "Success Rate"
     },
     "categories": {
       "badge": "Nexora AI Categories",
@@ -77,9 +81,13 @@
     },
     "cta": {
       "title": "Ready to Transform Your Learning?",
+      "titlePart1": "Take the First Step ",
+      "titlePart2": "Towards Mastery",
       "subtitle": "Join thousands of students already learning smarter with Nexora AI",
       "btnContinue": "Continue Learning",
       "btnGetStarted": "Get Started Free",
+      "browseAll": "Browse All Courses",
+      "getStarted": "Get Started Now",
       "free": "Free"
     }
   },
@@ -543,6 +551,11 @@
     "rating": "Rating",
     "instructorBio": "Expert instructor with over 10 years of experience teaching {{instructor}}.",
     "courseRating": "Course Rating",
+    "numReviews": "({{count}} reviews)",
+    "lastUpdated": "Last updated: June 2025",
+    "continueLearning": "Continue Learning",
+    "enrollFree": "Enroll for Free",
+    "manageCourse": "Manage Course",
     "leaveReview": "Leave a Review",
     "ratePrompt": "How would you rate this course?",
     "feedbackPrompt": "Write your feedback",
@@ -627,6 +640,13 @@
     "clearFilters": "Clear All Filters",
     "lessons": "Lessons",
     "viewCourse": "View Course",
+    "table": {
+      "details": "Course Details",
+      "stats": "Stats",
+      "level": "Level",
+      "price": "Price",
+      "actions": "Action"
+    },
     "levels": {
       "beginner": "Beginner",
       "intermediate": "Intermediate",

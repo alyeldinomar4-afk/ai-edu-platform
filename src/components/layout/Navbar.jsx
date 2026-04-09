@@ -205,49 +205,69 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
-            {/* Mobile Menu */}
+            {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-700/50 overflow-hidden"
+                        initial={{ opacity: 0, height: 0, y: -20 }}
+                        animate={{ opacity: 1, height: 'auto', y: 0 }}
+                        exit={{ opacity: 0, height: 0, y: -20 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        className="md:hidden fixed inset-x-0 top-[84px] bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 shadow-2xl z-40 overflow-hidden"
                     >
-                        <div className="px-4 pt-2 pb-6 space-y-2">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.path}
-                                    to={link.path}
-                                    onClick={() => setIsOpen(false)}
-                                    className={cn(
-                                        "block px-3 py-2 rounded-md text-base font-medium",
-                                        location.pathname === link.path
-                                            ? "bg-primary/10 text-primary"
-                                            : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
-                                    )}
-                                >
-                                    {link.name}
-                                </Link>
-                            ))}
-                            <div className="pt-4 border-t border-gray-100 dark:border-slate-700 flex flex-col gap-2">
+                        <div className="px-6 py-8 space-y-4 max-h-[80vh] overflow-y-auto">
+                            {navLinks.map((link) => {
+                                const isActive = location.pathname === link.path;
+                                return (
+                                    <Link
+                                        key={link.path}
+                                        to={link.path}
+                                        onClick={() => setIsOpen(false)}
+                                        className={cn(
+                                            "flex items-center gap-4 px-4 py-4 rounded-2xl text-[17px] font-bold transition-all duration-300",
+                                            isActive
+                                                ? "bg-primary/10 text-primary"
+                                                : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                                        )}
+                                    >
+                                        <div className={cn("p-2 rounded-xl", isActive ? "bg-primary text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-500")}>
+                                            <link.icon size={20} />
+                                        </div>
+                                        {link.name}
+                                    </Link>
+                                );
+                            })}
+
+                            <div className="pt-6 mt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-col gap-4">
                                 {user ? (
-                                    <>
-                                        <Link to={getDashboardPath()} onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-3 py-2">
-                                            <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full" />
-                                            <span className="font-medium text-slate-900 dark:text-white">{user.name}</span>
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3 px-4 py-2">
+                                            <img src={user.avatar} alt={user.name} className="w-12 h-12 rounded-full border-2 border-slate-100 dark:border-slate-800 shadow-sm" />
+                                            <div className="flex flex-col">
+                                                <span className="font-bold text-slate-900 dark:text-white leading-none">{user.name}</span>
+                                                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize">{user.role}</span>
+                                            </div>
+                                        </div>
+                                        <Link to={getProfilePath()} onClick={() => setIsOpen(false)}>
+                                            <Button variant="outline" className="w-full justify-start h-12 rounded-xl text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700">
+                                                <User size={18} className="mr-3" /> {t('nav.profile')}
+                                            </Button>
                                         </Link>
-                                        <Button variant="ghost" className="w-full justify-start text-red-500" onClick={() => { handleLogout(); setIsOpen(false); }}>
-                                            <LogOut size={16} className="mr-2" /> {t('nav.logout')}
+                                        <Button 
+                                            variant="ghost" 
+                                            className="w-full justify-start h-12 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10" 
+                                            onClick={() => { setIsLogoutModalOpen(true); setIsOpen(false); }}
+                                        >
+                                            <LogOut size={18} className="mr-3" /> {t('nav.logout')}
                                         </Button>
-                                    </>
+                                    </div>
                                 ) : (
                                     <>
                                         <Link to="/login" onClick={() => setIsOpen(false)}>
-                                            <Button variant="ghost" className="w-full justify-start">{t('nav.login')}</Button>
+                                            <Button variant="outline" className="w-full h-12 rounded-xl border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">{t('nav.login')}</Button>
                                         </Link>
                                         <Link to="/register" onClick={() => setIsOpen(false)}>
-                                            <Button className="w-full justify-start">{t('nav.getStarted')}</Button>
+                                            <Button className="w-full h-12 rounded-xl shadow-lg shadow-primary/20">{t('nav.getStarted')}</Button>
                                         </Link>
                                     </>
                                 )}

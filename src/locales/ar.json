@@ -31,9 +31,13 @@
     },
     "stats": {
       "learners": "متعلم نشط",
+      "learnersSub": "طالب نشط",
       "courses": "دورة متاحة",
+      "coursesSub": "دورة أونلاين",
       "instructors": "معلم",
-      "satisfaction": "نسبة الرضا"
+      "instructorsSub": "معلم خبير",
+      "satisfaction": "نسبة الرضا",
+      "satisfactionSub": "نسبة النجاح"
     },
     "categories": {
       "badge": "تصنيفات Nexora AI",
@@ -77,9 +81,13 @@
     },
     "cta": {
       "title": "جاهز لتحويل رحلة تعلمك؟",
+      "titlePart1": "اتخذ خطوتك الأولى ",
+      "titlePart2": "نحو الإتقان",
       "subtitle": "انضم إلى آلاف الطلاب الذين يتعلمون بذكاء أكبر مع Nexora AI",
       "btnContinue": "متابعة التعلم",
       "btnGetStarted": "ابدأ مجاناً",
+      "browseAll": "تصفح جميع الدورات",
+      "getStarted": "ابدأ الآن",
       "free": "مجانًا"
     }
   },
@@ -543,6 +551,11 @@
     "rating": "تقييم",
     "instructorBio": "مدرب خبير يتمتع بخبرة تزيد عن 10 سنوات في تدريس {{instructor}}.",
     "courseRating": "تقييم الدورة",
+    "numReviews": "({{count}} مراجعة)",
+    "lastUpdated": "آخر تحديث: يونيو 2025",
+    "continueLearning": "متابعة التعلم",
+    "enrollFree": "تسجيل مجاني",
+    "manageCourse": "إدارة الدورة",
     "leaveReview": "اترك تقييماً",
     "ratePrompt": "كيف تقيم هذه الدورة؟",
     "feedbackPrompt": "اكتب ملاحظاتك",
@@ -627,6 +640,13 @@
     "clearFilters": "مسح جميع الفلاتر",
     "lessons": "دروس",
     "viewCourse": "عرض الدورة",
+    "table": {
+      "details": "تفاصيل الدورة",
+      "stats": "الإحصائيات",
+      "level": "المستوى",
+      "price": "السعر",
+      "actions": "الإجراء"
+    },
     "levels": {
       "beginner": "مبتدئ",
       "intermediate": "متوسط",

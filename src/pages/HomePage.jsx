@@ -88,30 +88,53 @@ const HomePage = () => {
             {/* Hero Section — Clean & Minimal */}
             <HeroSection getStartedPath={getStartedPath} />
 
+            {/* Stats Section — Unified Style with Categories */}
+            <section className="relative py-12 md:py-16 px-4 md:px-8 overflow-hidden">
+                {/* Background match Categories in light, transparent in dark */}
+                <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-transparent transition-colors duration-500" />
+                <div className="absolute inset-0 opacity-[0.02] dark:opacity-0" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
-            {/* Stats Section — Animated Counters */}
-            <section className="bg-[#8247E5] dark:bg-black text-white py-12 transition-colors duration-300">
-                <motion.div
-                    variants={staggerContainer}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-50px' }}
-                    className="max-w-7xl mx-auto px-4 flex flex-wrap justify-between items-center gap-8 text-center md:text-left"
-                >
-                    {[
-                        { label: t('home.stats.learners'), value: 50, suffix: 'k+' },
-                        { label: t('home.stats.courses'), value: 200, suffix: '+' },
-                        { label: t('home.stats.instructors'), value: 50, suffix: '+' },
-                        { label: t('home.stats.satisfaction'), value: 99, suffix: '%' },
-                    ].map((stat, idx) => (
-                        <motion.div key={idx} variants={fadeSlideUp} className="flex-1 min-w-[150px]">
-                            <h3 className="text-4xl font-bold text-white">
-                                <AnimatedCounter target={stat.value} suffix={stat.suffix} duration={2.5} />
-                            </h3>
-                            <p className="text-[#EDE9FE] dark:text-slate-400 text-sm mt-1">{stat.label}</p>
-                        </motion.div>
-                    ))}
-                </motion.div>
+                <div className="max-w-7xl mx-auto relative z-10 px-4 md:px-0">
+                    <motion.div
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: '-50px' }}
+                        className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+                    >
+                        {[
+                            { label: t('home.stats.learners'), subtitle: t('home.stats.learnersSub'), value: 50, suffix: 'k+' },
+                            { label: t('home.stats.courses'), subtitle: t('home.stats.coursesSub'), value: 200, suffix: '+' },
+                            { label: t('home.stats.instructors'), subtitle: t('home.stats.instructorsSub'), value: 50, suffix: '+' },
+                            { label: t('home.stats.satisfaction'), subtitle: t('home.stats.satisfactionSub'), value: 99, suffix: '%' },
+                        ].map((stat, idx) => (
+                            <motion.div 
+                                key={idx} 
+                                variants={fadeSlideUp} 
+                                className="relative group"
+                            >
+                                {/* Stat Card — Floating Square Look */}
+                                <div className="p-5 sm:p-7 rounded-[24px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 transition-all duration-500 group-hover:translate-y-[-6px] shadow-sm hover:shadow-xl hover:shadow-primary/10 flex flex-col items-center justify-center text-center h-full">
+                                    <div className="relative mb-3">
+                                        <h3 className="text-3xl md:text-4xl font-black text-primary dark:text-primary-light selection:bg-primary/20">
+                                            <AnimatedCounter target={stat.value} suffix={stat.suffix} duration={2.5} />
+                                        </h3>
+                                        <div className="mt-1.5 mx-auto w-10 h-1 bg-primary/20 rounded-full overflow-hidden">
+                                            <motion.div 
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: '100%' }}
+                                                transition={{ duration: 2, delay: 0.5 + (idx * 0.2) }}
+                                                className="h-full bg-primary"
+                                            />
+                                        </div>
+                                    </div>
+                                    <p className="text-slate-900 dark:text-white text-[10px] font-black uppercase tracking-[0.15em] mb-1">{stat.label}</p>
+                                    <p className="text-slate-500 dark:text-slate-400 text-[9px] font-medium tracking-wide">{stat.subtitle}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                </div>
             </section>
 
             {/* Categories Section — Premium Redesign */}
@@ -120,7 +143,7 @@ const HomePage = () => {
                 <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-slate-950 transition-colors duration-500" />
                 <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -152,28 +175,39 @@ const HomePage = () => {
                     >
                         {categories.map((cat, idx) => {
                             const IconComponent = cat.icon && iconMap[cat.icon] ? iconMap[cat.icon] : null;
+                            const isSpecial = idx % 3 === 0; // Simulate some trending categories
                             return (
                                 <motion.div
                                     key={cat.id}
                                     variants={fadeScale}
                                     onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
-                                    whileHover={{ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }}
+                                    whileHover={{ 
+                                        y: -10,
+                                        transition: { duration: 0.3, ease: 'easeOut' } 
+                                    }}
                                     className="group cursor-pointer relative"
                                 >
                                     {/* Gradient border glow on hover */}
-                                    <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-primary/0 via-secondary/0 to-accent/0 group-hover:from-primary/40 group-hover:via-secondary/40 group-hover:to-accent/40 transition-all duration-500 blur-[1px] opacity-0 group-hover:opacity-100" />
+                                    <div className="absolute -inset-[1.5px] rounded-2xl bg-gradient-to-br from-primary via-secondary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-[2px]" />
 
-                                    <div className="relative p-6 rounded-2xl bg-white dark:bg-slate-900/80 backdrop-blur-sm border border-slate-100 dark:border-slate-800 group-hover:border-transparent shadow-sm group-hover:shadow-xl group-hover:shadow-primary/5 dark:group-hover:shadow-primary/10 transition-all duration-400 text-center overflow-hidden">
+                                    <div className="relative p-7 rounded-2xl bg-white dark:bg-slate-900/90 backdrop-blur-md border border-slate-100 dark:border-slate-800 shadow-sm group-hover:shadow-2xl group-hover:shadow-primary/20 transition-all duration-400 text-center overflow-hidden h-full flex flex-col items-center">
+                                        {/* Special Badge (Trending/Popular) */}
+                                        {isSpecial && (
+                                            <div className="absolute -top-1 -right-1 bg-gradient-to-r from-primary to-purple-600 text-white text-[9px] font-black px-2.5 py-1 rounded-bl-xl rounded-tr-xl shadow-lg z-20 uppercase tracking-tighter transition-transform group-hover:scale-110">
+                                                {idx % 6 === 0 ? t('home.categories.trending', { defaultValue: 'Trending' }) : t('home.categories.hot', { defaultValue: 'Popular' })}
+                                            </div>
+                                        )}
+
                                         {/* Subtle radial glow inside card on hover */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] via-transparent to-secondary/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.05] via-transparent to-secondary/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                        {/* Icon */}
+                                        {/* Icon Container with centered alignment */}
                                         <motion.div
-                                            whileHover={{ scale: 1.18, rotate: [0, -8, 8, 0] }}
+                                            whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
                                             transition={{ type: 'spring', stiffness: 400, damping: 15 }}
                                             className={cn(
-                                                "w-16 h-16 mx-auto rounded-2xl flex items-center justify-center mb-5 relative group-hover:shadow-lg transition-shadow duration-300",
-                                                cat.bgColor || "bg-slate-50 dark:bg-slate-800"
+                                                "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 relative group-hover:shadow-xl transition-all duration-300",
+                                                cat.bgColor || "bg-slate-50 dark:bg-slate-800/80"
                                             )}
                                         >
                                             {IconComponent ? (
@@ -183,20 +217,16 @@ const HomePage = () => {
                                             )}
                                         </motion.div>
 
-                                        {/* Title */}
-                                        <h3 className="font-bold text-[15px] text-slate-800 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors duration-300 mb-2 relative z-10">
+                                        {/* Title with improved weight and spacing */}
+                                        <h3 className="font-extrabold text-[15px] text-slate-800 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors duration-300 mb-2.5 relative z-10 leading-tight">
                                             {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
                                         </h3>
 
-                                        {/* Course count pill */}
-                                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800/60 px-2.5 py-1 rounded-full relative z-10">
+                                        {/* Course count pill (Centered and Styled) */}
+                                        <span className="mt-auto inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 bg-slate-50/80 dark:bg-slate-800/60 px-3 py-1.5 rounded-full relative z-10 border border-slate-100 dark:border-slate-700/50">
+                                            <span className="w-1 h-1 bg-primary rounded-full animate-pulse" />
                                             {cat.count} {t('home.categories.coursesCount')}
                                         </span>
-
-                                        {/* Hover arrow indicator */}
-                                        <div className="mt-3 flex justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                                            <ArrowRight className={cn("w-4 h-4 text-primary", isAr && "rotate-180")} />
-                                        </div>
                                     </div>
                                 </motion.div>
                             );
@@ -205,9 +235,9 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Featured Courses — Stagger Grid */}
-            <section className="bg-[#F5F3FF] dark:bg-slate-900/50 py-20 transition-colors duration-300">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Featured Courses — Stagger Grid with Carousel Mobile */}
+            <section className="bg-[#F5F3FF] dark:bg-slate-900/50 py-20 md:py-24 transition-colors duration-300">
+                <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -226,15 +256,19 @@ const HomePage = () => {
                         </Link>
                     </motion.div>
 
-                    <motion.div
-                        variants={staggerContainer}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: '-30px' }}
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-                    >
-                        {courses.slice(0, 4).map((course, idx) => (
-                            <motion.div key={course.id} variants={fadeSlideUp}>
+                        <motion.div
+                            variants={staggerContainer}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, margin: '-30px' }}
+                            className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 px-6 -mx-6 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:px-0 md:mx-0 md:snap-none md:overflow-visible"
+                        >
+                            {courses.slice(0, 4).map((course, idx) => (
+                                <motion.div 
+                                    key={course.id} 
+                                    variants={fadeSlideUp}
+                                    className="flex-none w-[85%] sm:w-[320px] md:w-auto snap-start"
+                                >
                                 <CourseCard course={course} />
                             </motion.div>
                         ))}
@@ -336,12 +370,12 @@ const HomePage = () => {
             </section>
 
             {/* Top Instructors Section - Stagger with Alternating Slides */}
-            <section className="relative py-20 overflow-hidden bg-[#F5F3FF] dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
+            <section className="relative py-20 md:py-24 overflow-hidden bg-[#F5F3FF] dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
                 {/* Decorative background elements */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/5 rounded-full blur-[100px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
                 <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[400px] h-[400px] bg-secondary/10 dark:bg-secondary/5 rounded-full blur-[80px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -375,41 +409,49 @@ const HomePage = () => {
                             <motion.div
                                 key={instructor.id}
                                 variants={idx % 2 === 0 ? slideFromLeft : slideFromRight}
-                                className="group relative rounded-2xl p-[1px] bg-slate-200 dark:bg-slate-800 hover:bg-gradient-to-r hover:from-primary/50 hover:to-secondary/50 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-xl dark:shadow-2xl"
+                                whileHover={{ y: -8, transition: { duration: 0.4 } }}
+                                className="group relative rounded-[32px] p-[1px] bg-slate-200 dark:bg-slate-800 hover:bg-gradient-to-r hover:from-primary/50 hover:to-secondary/50 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-2xl dark:shadow-2xl"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                <div className="relative h-full bg-white dark:bg-[#121212] backdrop-blur-md rounded-[15px] p-5 sm:p-6 sm:py-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-start border-[0.5px] border-slate-100 dark:border-slate-700/40 group-hover:border-primary/30 transition-colors">
+                                <div className="relative h-full bg-white dark:bg-[#121212] backdrop-blur-md rounded-[31px] p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-8 text-center sm:text-start border-[0.5px] border-slate-100 dark:border-slate-700/40 group-hover:border-primary/20 transition-colors">
 
-                                    {/* Avatar */}
+                                    {/* Avatar with Glow Ring */}
                                     <div className="relative shrink-0">
-                                        <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-full blur-md opacity-20 dark:opacity-30 group-hover:opacity-60 transition-opacity duration-300" />
-                                        <img src={instructor.avatar} alt={instructor.name} className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border border-slate-200 dark:border-slate-700 shadow-md z-10" />
-                                        <div className="absolute -bottom-1 -right-1 bg-white dark:bg-slate-800 rounded-full p-1.5 border border-slate-100 dark:border-slate-700 z-20 shadow-xs">
-                                            <Award className="w-3.5 h-3.5 text-yellow-500 dark:text-yellow-400" />
+                                        <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 scale-125" />
+                                        <div className="relative p-1 bg-gradient-to-tr from-slate-200 to-slate-100 dark:from-slate-700 dark:to-slate-800 rounded-full group-hover:from-primary group-hover:to-secondary transition-all duration-500">
+                                            <img src={instructor.avatar} alt={instructor.name} className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white dark:border-slate-900 shadow-xl z-10" />
+                                        </div>
+                                        <div className="absolute -bottom-1 -right-1 bg-white dark:bg-slate-800 rounded-full p-2 border border-slate-100 dark:border-slate-700 z-20 shadow-lg">
+                                            <Award className="w-4 h-4 text-primary" />
                                         </div>
                                     </div>
 
-                                    {/* Content */}
+                                    {/* Content Reveal on Hover */}
                                     <div className="flex-1 min-w-0 flex flex-col items-center sm:items-start w-full">
-                                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-0.5 group-hover:text-primary transition-colors truncate w-full">{instructor.name}</h3>
-                                        <p className="text-primary dark:text-secondary font-medium text-xs mb-3 truncate w-full">{instructor.role}</p>
-                                        <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-4 line-clamp-1 w-full">{instructor.bio}</p>
+                                        <div className="mb-2">
+                                            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-0.5 group-hover:text-primary transition-colors">{instructor.name}</h3>
+                                            <p className="text-primary dark:text-secondary font-bold text-[10px] uppercase tracking-widest">{instructor.role}</p>
+                                        </div>
+                                        
+                                        <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-6 line-clamp-2 w-full leading-relaxed">
+                                            {instructor.bio}
+                                        </p>
 
-                                        {/* Stats Row */}
-                                        <div className="flex items-center gap-3 mb-5 text-slate-500 dark:text-slate-400 text-xs font-medium w-full truncate justify-center sm:justify-start">
-                                            <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                                <BookOpen className="w-3.5 h-3.5 text-primary" />
-                                                <span>{instructor.coursesCount} {t('home.instructors.courses')}</span>
+                                        {/* Dynamic Stats Row */}
+                                        <div className="flex items-center gap-4 mb-6 text-slate-500 dark:text-slate-400 text-xs font-bold w-full justify-center sm:justify-start">
+                                            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                                                <BookOpen className="w-4 h-4 text-primary/80" />
+                                                <span>{instructor.coursesCount} Courses</span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-700/50 shadow-sm">
-                                                <Star className="w-3.5 h-3.5 text-yellow-500 dark:text-yellow-400 fill-yellow-500 dark:fill-yellow-400" />
-                                                <span>{instructor.rating}</span>
+                                            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                                                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                                <span>{instructor.rating} Rating</span>
                                             </div>
                                         </div>
 
-                                        <div className="mt-auto w-full sm:w-auto">
+                                        <div className="w-full sm:w-auto mt-auto">
                                             <Link to={`/instructor/user/${encodeURIComponent(instructor.name.replace(/\s+/g, '-').toLowerCase())}`}>
-                                                <Button size="sm" className="w-full sm:w-auto bg-slate-100 dark:bg-slate-800/80 hover:bg-gradient-to-r hover:from-primary hover:to-secondary text-slate-700 dark:text-white border-slate-200 dark:border-slate-700 shadow-none transition-all duration-300 text-xs px-5 py-2">
+                                                <Button size="sm" className="w-full sm:w-auto bg-slate-900 dark:bg-slate-800 hover:bg-primary text-white border-none shadow-lg hover:shadow-primary/30 transition-all duration-300 text-[11px] font-black uppercase tracking-wider px-7 py-3 rounded-xl">
                                                     {t('home.instructors.viewProfile')}
                                                 </Button>
                                             </Link>
@@ -423,9 +465,9 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Testimonials — Stagger with Scale */}
-            <section className="bg-[#F5F3FF] dark:bg-transparent py-20 transition-colors duration-300">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+            {/* Testimonials — Stagger with Scale & Carousel Mobile */}
+            <section className="bg-[#F5F3FF] dark:bg-transparent py-20 md:py-24 transition-colors duration-300">
+                <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 pb-20">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -442,28 +484,34 @@ const HomePage = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: '-50px' }}
-                        className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 px-6 -mx-6 scrollbar-hide md:grid md:grid-cols-3 md:px-0 md:mx-0 md:snap-none md:overflow-visible relative"
                     >
                         {testimonials.map((testimonial, idx) => (
                             <motion.div
                                 key={testimonial.id}
                                 variants={fadeScale}
-                                whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                                className="p-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300"
+                                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                                className="flex-none w-[85%] sm:w-[400px] md:w-auto snap-start p-8 sm:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/60 shadow-sm hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 relative overflow-hidden"
                             >
-                                <div className="flex items-center gap-4 mb-6">
-                                    <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-primary/10" />
+                                <div className="absolute top-0 right-0 p-6 opacity-[0.03] dark:opacity-[0.05]">
+                                    <Users className="w-20 h-20 rotate-12" />
+                                </div>
+                                <div className="flex items-center gap-5 mb-8">
+                                    <div className="relative group/avatar">
+                                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
+                                        <img src={testimonial.avatar} alt={testimonial.name} className="relative w-14 h-14 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-800 shadow-lg" />
+                                    </div>
                                     <div>
-                                        <h4 className="font-bold text-slate-900 dark:text-white">{testimonial.name}</h4>
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                        <h4 className="font-black text-slate-900 dark:text-white text-base">{testimonial.name}</h4>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-primary/80">
                                             {t(`home.testimonials.roles.${testimonial.role.charAt(0).toLowerCase() + testimonial.role.slice(1).replace(/\s+/g, '')}`)}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex gap-1 mb-4">
+                                <div className="flex gap-1.5 mb-6">
                                     {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />)}
                                 </div>
-                                <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-sm">"{testimonial.content}"</p>
+                                <p className="text-slate-600 dark:text-slate-300 italic leading-[1.8] text-sm md:text-base font-medium relative z-10">"{testimonial.content}"</p>
                             </motion.div>
                         ))}
                     </motion.div>
@@ -480,6 +528,7 @@ const HomePage = () => {
                     className="relative text-center py-16 px-8 rounded-3xl bg-[linear-gradient(135deg,#7C3AED,#A855F7)] overflow-hidden shadow-2xl shadow-primary/20"
                 >
                     <div className="absolute inset-0 bg-black/10" />
+                    
                     {/* Animated floating particles */}
                     <motion.div
                         animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
@@ -496,6 +545,7 @@ const HomePage = () => {
                         transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
                         className="absolute top-1/2 right-[10%] w-2 h-2 bg-white/25 rounded-full"
                     />
+
                     <div className="relative z-10 flex flex-col items-center">
                         <motion.div
                             initial={{ scale: 0, rotate: -180 }}
@@ -505,19 +555,17 @@ const HomePage = () => {
                         >
                             <Sparkles className="w-8 h-8 text-white/80 mx-auto mb-4" />
                         </motion.div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('home.cta.title')}</h2>
-                        <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">{t('home.cta.subtitle')}</p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                            <Link to={getStartedPath}>
-                                <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
-                                    <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl shadow-white/20 h-14 px-8 text-lg flex items-center justify-center gap-2 relative overflow-hidden group/cta">
-                                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/cta:translate-x-full transition-transform duration-700" />
-                                        <span className="relative z-10">{isAuthenticated ? t('home.cta.btnContinue') : t('home.cta.btnGetStarted')}</span>
-                                        <ArrowRight className={cn("w-5 h-5 relative z-10 transition-transform group-hover/cta:translate-x-1", isAr && "rotate-180 group-hover/cta:-translate-x-1")} />
-                                    </Button>
-                                </motion.div>
-                            </Link>
-                        </div>
+                        <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6 leading-tight">
+                            {t('home.cta.title')}
+                        </h2>
+                        <p className="text-white/90 text-sm sm:text-base mb-10 max-w-md mx-auto">
+                            {t('home.cta.subtitle')}
+                        </p>
+                        <Link to={getStartedPath}>
+                            <Button size="lg" variant="primary" className="bg-white text-primary hover:bg-white hover:scale-105 hover:shadow-xl px-10 py-3 rounded-full font-bold transition-all shadow-lg border-none">
+                                {isAuthenticated ? t('home.cta.btnContinue', { defaultValue: 'Continue Learning' }) : t('home.cta.getStarted', { defaultValue: 'Get Started Now' })}
+                            </Button>
+                        </Link>
                     </div>
                 </motion.div>
             </section>

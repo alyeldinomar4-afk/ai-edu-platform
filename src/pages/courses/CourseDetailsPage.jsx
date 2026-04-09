@@ -108,7 +108,7 @@ const CourseDetailsPage = () => {
                         <Breadcrumb
                             light={true}
                             items={[
-                                { label: 'Courses', href: '/courses' },
+                                { label: t('nav.courses'), href: '/courses' },
                                 { label: course.category, href: `/courses?category=${encodeURIComponent(course.category)}` },
                                 { label: course.title }
                             ]}
@@ -126,8 +126,7 @@ const CourseDetailsPage = () => {
                                 <div className="flex items-center gap-1.5">
                                     <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 shrink-0" />
                                     <span className="font-bold text-white">{course.rating}</span>
-                                    <span className="hidden sm:inline">({course.reviews} reviews)</span>
-                                    <span className="sm:hidden">({course.reviews})</span>
+                                    <span>{t('courseDetails.numReviews', { count: course.reviews })}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                     <User className="w-4 h-4 shrink-0 text-slate-400" />
@@ -138,8 +137,7 @@ const CourseDetailsPage = () => {
                                 </div>
                                 <div className="flex items-center gap-1.5 text-slate-400">
                                     <Clock className="w-4 h-4 shrink-0" />
-                                    <span className="hidden sm:inline">Last updated: June 2025</span>
-                                    <span className="sm:hidden">Updated Jun 2025</span>
+                                    <span>{t('courseDetails.lastUpdated')}</span>
                                 </div>
                             </div>
                         </div>
@@ -435,13 +433,15 @@ const CourseDetailsPage = () => {
 
                                 {user?.role === 'instructor' && user?.name === course.instructor ? (
                                     <Link to={`/instructor/dashboard`}>
-                                        <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)] hover:-translate-y-0.5 transition-all" size="lg">Manage Course</Button>
+                                        <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)] hover:-translate-y-0.5 transition-all" size="lg">
+                                            {t('courseDetails.manageCourse')}
+                                        </Button>
                                     </Link>
                                 ) : isPurchased ? (
                                     <Link to={`/courses/${id}/learn`}>
                                         <Button className="w-full mb-3 shadow-[0_4px_14px_0_rgb(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:-translate-y-0.5 transition-all bg-green-500 hover:bg-green-600" size="lg">
                                             <PlayCircle className="w-4 h-4" />
-                                            {t('courseDetails.continueLearning', 'Continue Learning')}
+                                            {t('courseDetails.continueLearning')}
                                         </Button>
                                     </Link>
                                 ) : course.price === 0 ? (
@@ -458,7 +458,7 @@ const CourseDetailsPage = () => {
                                         }}
                                     >
                                         <CheckCircle className="w-4 h-4" />
-                                        {t('courseDetails.enrollFree', 'Enroll for Free')}
+                                        {t('courseDetails.enrollFree')}
                                     </Button>
                                 ) : (
                                     <Link to={`/checkout/${id}`}>
