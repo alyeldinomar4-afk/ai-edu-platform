@@ -7,7 +7,7 @@ const getInitialTheme = () => {
     const stored = localStorage.getItem('ai_edu_theme');
     if (stored === 'dark' || stored === 'light') return stored;
 
-    return 'light';
+    return 'dark';
 };
 
 export const ThemeProvider = ({ children }) => {

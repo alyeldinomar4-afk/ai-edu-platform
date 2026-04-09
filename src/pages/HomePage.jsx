@@ -246,8 +246,10 @@ const HomePage = () => {
                         className="flex justify-between items-end mb-12"
                     >
                         <div>
-                            <span className="text-primary font-semibold text-sm">{t('home.featured.badge')}</span>
-                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-2">{t('home.featured.title')}</h2>
+                            <span className="text-primary font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs mb-3 block">{t('home.featured.badge')}</span>
+                            <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mt-1 tracking-tighter leading-tight">
+                                {t('home.featured.title')}
+                            </h2>
                         </div>
                         <Link to="/courses">
                             <Button variant="ghost" className="hidden sm:flex items-center gap-1 hover:text-primary dark:text-slate-300 cursor-pointer">
@@ -384,7 +386,7 @@ const HomePage = () => {
                         className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 gap-6 text-center md:text-start p-8 rounded-3xl bg-[#F5F3FF] dark:bg-transparent border border-primary/5 dark:border-none"
                     >
                         <div className="max-w-2xl">
-                            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                            <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter leading-tight">
                                 {t('home.instructors.titleMain')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{t('home.instructors.titleHighlight')}</span>
                             </h2>
                             <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-lg mx-auto md:mx-0">

@@ -160,22 +160,22 @@ const VideoPlayerPage = () => {
     ];
 
     return (
-        <div className="flex flex-col h-screen h-[100dvh] bg-slate-900 overflow-hidden transition-colors duration-300">
+        <div className="flex flex-col h-screen h-[100dvh] bg-white dark:bg-slate-900 overflow-hidden transition-colors duration-300">
             {/* Top Bar */}
-            <header className="h-16 bg-[#0A0F1C] border-b border-slate-800 flex items-center justify-between px-6 flex-shrink-0">
+            <header className="h-16 bg-white dark:bg-[#0A0F1C] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 flex-shrink-0">
                 <div className="flex items-center gap-4">
-                    <Link to={`/courses/${courseId}`} className="text-slate-400 hover:text-white transition-colors">
+                    <Link to={`/courses/${courseId}`} className="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors">
                         <motion.div whileHover={{ x: -3, scale: 1.1 }} whileTap={{ scale: 0.9 }} transition={{ type: 'spring', stiffness: 400, damping: 20 }}>
                             <ArrowLeft strokeWidth={1.5} size={20} />
                         </motion.div>
                     </Link>
                     <div>
-                        <h1 className="text-white font-bold text-[15px] leading-tight tracking-wide">{currentLecture.title}</h1>
-                        <p className="text-transparent bg-clip-text bg-gradient-to-r from-slate-400 to-slate-500 text-xs leading-tight mt-0.5 font-medium">{courseTitle}</p>
+                        <h1 className="text-slate-900 dark:text-white font-bold text-[15px] leading-tight tracking-wide">{currentLecture.title}</h1>
+                        <p className="text-transparent bg-clip-text bg-gradient-to-r from-slate-500 to-slate-600 dark:from-slate-400 dark:to-slate-500 text-xs leading-tight mt-0.5 font-medium">{courseTitle}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" className="hidden md:flex bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white rounded-xl text-xs px-3 font-semibold transition-colors">
+                    <Button size="sm" variant="outline" className="hidden md:flex bg-transparent border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-white rounded-xl text-xs px-3 font-semibold transition-colors">
                         <HelpCircle size={14} className="mr-1.5" /> {t('videoPlayer.header.help')}
                     </Button>
                 </div>
@@ -185,7 +185,7 @@ const VideoPlayerPage = () => {
                 {/* Main Content (Video + Tabs) */}
                 <div
                     ref={scrollContainerRef}
-                    className={`flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-950 transition-all duration-500 ease-in-out`}
+                    className={`flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 transition-all duration-500 ease-in-out`}
                 >
                     <div className={`transition-all duration-500 ${isTheaterMode ? 'p-2 md:p-4 pb-0 max-w-[1600px] mx-auto w-full' : 'p-4 md:p-6 pb-0'}`}>
                         <VideoPlayer
@@ -203,7 +203,7 @@ const VideoPlayerPage = () => {
                     </div>
 
                     <div className={`transition-all duration-500 ${isTheaterMode ? 'p-2 md:p-4 max-w-[1600px] mx-auto w-full' : 'p-4 md:p-6'}`}>
-                        <div className="border-b border-slate-800 mb-6 flex gap-6 overflow-x-auto no-scrollbar">
+                        <div className="border-b border-slate-200 dark:border-slate-800 mb-6 flex gap-6 overflow-x-auto no-scrollbar">
                             {[
                                 { id: 'playlist', label: t('videoPlayer.tabs.playlist'), icon: List, mobileOnly: true, theaterOnly: true },
                                 { id: 'ai', label: t('videoPlayer.tabs.ai'), icon: Zap, mobileOnly: true, theaterOnly: true },
@@ -216,7 +216,7 @@ const VideoPlayerPage = () => {
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
                                     className={`pb-4 px-2 flex items-center gap-2 text-sm font-medium transition-colors relative flex-shrink-0 ${(tab.mobileOnly && !isTheaterMode) ? 'lg:hidden' : ''
-                                        } ${activeTab === tab.id ? 'text-primary' : 'text-slate-400 hover:text-slate-200'}`}
+                                        } ${activeTab === tab.id ? 'text-primary' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'}`}
                                 >
                                     <tab.icon size={16} />
                                     {tab.label}
@@ -231,7 +231,7 @@ const VideoPlayerPage = () => {
                             ))}
                         </div>
 
-                        <div className="text-slate-300">
+                        <div className="text-slate-600 dark:text-slate-300">
                             {/* Mobile Only Views */}
                             {activeTab === 'playlist' && (
                                 <div className={`${isTheaterMode ? '' : 'lg:hidden'} h-[500px]`}>
@@ -252,8 +252,8 @@ const VideoPlayerPage = () => {
 
                             {activeTab === 'overview' && (
                                 <div className="max-w-3xl">
-                                    <h2 className="text-xl font-bold text-white mb-4">{t('videoPlayer.overview.title')}</h2>
-                                    <p className="leading-relaxed text-slate-400">
+                                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{t('videoPlayer.overview.title')}</h2>
+                                    <p className="leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
                                         In this lecture, we explore the fundamental building blocks of neural networks.
                                         We'll start with the biological inspiration behind artificial neurons and mathematically define the perceptron.
                                     </p>
@@ -267,8 +267,8 @@ const VideoPlayerPage = () => {
                             {activeTab === 'comments' && (
                                 <div className="space-y-6">
                                     {/* Question Submission Form */}
-                                    <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 mb-8">
-                                        <h3 className="text-sm font-semibold text-slate-200 mb-3">{t('videoPlayer.discussion.askTitle')}</h3>
+                                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl mb-8 shadow-sm">
+                                        <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200 mb-3">{t('videoPlayer.discussion.askTitle')}</h3>
                                         <div className="flex gap-4">
                                             <div className="w-8 h-8 rounded-full bg-slate-700 shrink-0 flex items-center justify-center text-[10px] font-bold">{t('videoPlayer.discussion.you')}</div>
                                             <div className="flex-1">
@@ -277,7 +277,7 @@ const VideoPlayerPage = () => {
                                                     rows="2"
                                                     value={questionInput}
                                                     onChange={(e) => setQuestionInput(e.target.value)}
-                                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none mb-2"
+                                                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary transition-all resize-none mb-2"
                                                 />
                                                 <div className="flex justify-end">
                                                     <Button
@@ -295,25 +295,25 @@ const VideoPlayerPage = () => {
                                     {/* Questions List */}
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
-                                            <h3 className="font-bold text-white uppercase text-[10px] tracking-wider text-slate-500">{t('videoPlayer.discussion.forumTitle')}</h3>
-                                            <span className="text-xs text-slate-500">{t('videoPlayer.discussion.questionsCount', { count: questions.length })}</span>
+                                            <h3 className="font-bold uppercase text-[10px] tracking-wider text-slate-500 dark:text-slate-400">{t('videoPlayer.discussion.forumTitle')}</h3>
+                                            <span className="text-xs text-slate-400 dark:text-slate-500">{t('videoPlayer.discussion.questionsCount', { count: questions.length })}</span>
                                         </div>
 
                                         {questions.map(q => (
-                                            <div key={q.id} className="p-4 bg-slate-900 rounded-xl border border-slate-800">
+                                            <div key={q.id} className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                                                 <div className="flex items-center gap-3 mb-3">
-                                                    <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] text-slate-400 font-bold">
+                                                    <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[10px] text-slate-500 dark:text-slate-400 font-bold">
                                                         {q.user.charAt(0)}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-semibold text-slate-200">{q.user}</p>
-                                                        <p className="text-[10px] text-slate-500">{q.date}</p>
+                                                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-200">{q.user}</p>
+                                                        <p className="text-[10px] text-slate-500 dark:text-slate-500">{q.date}</p>
                                                     </div>
                                                 </div>
-                                                <p className="text-sm text-slate-300 mb-4">{q.question}</p>
+                                                <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 font-medium">{q.question}</p>
 
                                                 {q.reply ? (
-                                                    <div className="mt-4 pt-4 border-t border-slate-800/50 flex gap-3">
+                                                    <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/50 flex gap-3">
                                                         <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                                                             <User size={12} />
                                                         </div>
@@ -322,7 +322,7 @@ const VideoPlayerPage = () => {
                                                                 <p className="text-xs font-bold text-primary">{t('videoPlayer.discussion.instructorReply')}</p>
                                                                 <span className="text-[10px] text-slate-600 px-1.5 py-0.5 bg-slate-800 rounded">{t('videoPlayer.discussion.official')}</span>
                                                             </div>
-                                                            <p className="text-xs text-slate-400 leading-relaxed italic">"{q.reply}"</p>
+                                                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed italic">"{q.reply}"</p>
                                                         </div>
                                                     </div>
                                                 ) : (
@@ -337,18 +337,18 @@ const VideoPlayerPage = () => {
                             )}
                             {activeTab === 'resources' && (
                                 <div className="space-y-3 max-w-xl">
-                                    <div className="p-3 bg-slate-900 rounded-lg flex items-center gap-3 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
-                                        <FileText className="text-blue-400" size={20} />
+                                    <div className="p-3 bg-white dark:bg-slate-900 rounded-lg flex items-center gap-3 border border-slate-200 dark:border-slate-800 hover:border-primary/20 dark:hover:border-slate-700 cursor-pointer transition-colors shadow-sm">
+                                        <FileText className="text-blue-500 dark:text-blue-400" size={20} />
                                         <div>
-                                            <p className="text-sm font-medium text-slate-200">Lecture Slides.pdf</p>
-                                            <p className="text-xs text-slate-500">2.4 MB</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-slate-200">Lecture Slides.pdf</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-500">2.4 MB</p>
                                         </div>
                                     </div>
-                                    <div className="p-3 bg-slate-900 rounded-lg flex items-center gap-3 border border-slate-800 hover:border-slate-700 cursor-pointer transition-colors">
-                                        <FileText className="text-blue-400" size={20} />
+                                    <div className="p-3 bg-white dark:bg-slate-900 rounded-lg flex items-center gap-3 border border-slate-200 dark:border-slate-800 hover:border-primary/20 dark:hover:border-slate-700 cursor-pointer transition-colors shadow-sm">
+                                        <FileText className="text-blue-500 dark:text-blue-400" size={20} />
                                         <div>
-                                            <p className="text-sm font-medium text-slate-200">Source Code.zip</p>
-                                            <p className="text-xs text-slate-500">1.1 MB</p>
+                                            <p className="text-sm font-medium text-slate-900 dark:text-slate-200">Source Code.zip</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-500">1.1 MB</p>
                                         </div>
                                     </div>
                                 </div>
@@ -358,11 +358,11 @@ const VideoPlayerPage = () => {
                 </div>
 
                 {/* Right Sidebar (Playlist / AI) */}
-                <div className={`w-80 md:w-[360px] bg-[#0A0F1C] border-l border-slate-800 flex flex-col flex-shrink-0 transition-all duration-500 ${isTheaterMode ? 'hidden' : 'hidden lg:flex'}`}>
-                    <div className="flex border-b border-slate-800 h-[60px] shrink-0 bg-[#0A0F1C]">
+                <div className={`w-80 md:w-[360px] bg-white dark:bg-[#0A0F1C] border-l border-slate-200 dark:border-slate-800 flex flex-col flex-shrink-0 transition-all duration-500 ${isTheaterMode ? 'hidden' : 'hidden lg:flex'}`}>
+                    <div className="flex border-b border-slate-200 dark:border-slate-800 h-[60px] shrink-0 bg-white dark:bg-[#0A0F1C]">
                         <button
                             onClick={() => setRightSidebarTab('playlist')}
-                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'playlist' ? 'text-indigo-400 bg-indigo-500/5' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
+                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'playlist' ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/30'}`}
                         >
                             <List size={16} /> {t('videoPlayer.tabs.playlist')}
                             {rightSidebarTab === 'playlist' && (
@@ -375,7 +375,7 @@ const VideoPlayerPage = () => {
                         </button>
                         <button
                             onClick={() => setRightSidebarTab('ai')}
-                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'ai' ? 'text-purple-400 bg-purple-500/5' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
+                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'ai' ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/5' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/30'}`}
                         >
                             <motion.div animate={rightSidebarTab === 'ai' ? { rotate: [0, 10, -10, 0] } : {}} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
                                 <Zap size={16} />

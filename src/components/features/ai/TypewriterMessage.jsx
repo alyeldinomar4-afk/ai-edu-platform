@@ -14,8 +14,8 @@ const CodeBlock = ({ content }) => {
     };
 
     return (
-        <div className="my-3 rounded-xl overflow-hidden shadow-lg bg-[#0F172A] border border-slate-700/50 font-sans">
-            <div className="flex items-center justify-between px-4 py-2.5 bg-[#131C31] border-b border-slate-800">
+        <div className="my-3 rounded-xl overflow-hidden shadow-sm dark:shadow-lg bg-slate-100 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-700/50 font-sans">
+            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 dark:bg-[#131C31] border-b border-slate-200 dark:border-slate-800">
                 <div className="flex gap-2">
                     <div className="w-3 h-3 rounded-full bg-red-400/90 shadow-[0_0_5px_rgba(248,113,113,0.5)]"></div>
                     <div className="w-3 h-3 rounded-full bg-yellow-400/90 shadow-[0_0_5px_rgba(250,204,21,0.5)]"></div>
@@ -25,15 +25,15 @@ const CodeBlock = ({ content }) => {
                     <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">{language || 'text'}</span>
                     <button 
                         onClick={handleCopy}
-                        className="text-slate-400 hover:text-white transition-colors"
+                        className="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors"
                         title="Copy code"
                     >
                         {copied ? <CheckCircle size={14} className="text-green-500" /> : <Copy size={14} />}
                     </button>
                 </div>
             </div>
-            <div className="p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
-                <pre className="text-[13px] text-slate-300 font-mono leading-relaxed" dir="ltr">
+            <div className="p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
+                <pre className="text-[13px] text-slate-700 dark:text-slate-300 font-mono leading-relaxed" dir="ltr">
                     <code>{code}</code>
                 </pre>
             </div>
@@ -83,7 +83,7 @@ const TypewriterMessage = ({ text, isNew }) => {
             // Format basic bold (**text**)
             const formattedText = part.split(/(\*\*.*?\*\*)/g).map((subPart, i) => {
                 if (subPart.startsWith('**') && subPart.endsWith('**')) {
-                    return <strong key={i} className="text-white font-bold">{subPart.slice(2, -2)}</strong>;
+                    return <strong key={i} className="text-slate-900 dark:text-white font-bold">{subPart.slice(2, -2)}</strong>;
                 }
                 return subPart;
             });

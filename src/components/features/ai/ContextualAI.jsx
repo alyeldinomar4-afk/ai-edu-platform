@@ -159,13 +159,13 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
     ];
 
     return (
-        <div className="flex flex-col h-full bg-[#0F172A] border-l border-slate-800 overflow-hidden text-slate-200 font-sans">
+        <div className="flex flex-col h-full bg-white dark:bg-[#0F172A] border-l border-slate-200 dark:border-slate-800 overflow-hidden text-slate-800 dark:text-slate-200 font-sans">
             {/* Minimal Header for mobile or state indicator */}
             {!hideHeader && (
-                <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800/50 bg-[#131C31]/50">
+                <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-slate-800/50 bg-white dark:bg-[#131C31]/50">
                     <div className="flex items-center gap-2">
-                        <Zap className="w-4 h-4 text-purple-500" />
-                        <span className="text-xs font-bold uppercase tracking-widest text-slate-400">{t('videoPlayer.aiTutor.title')}</span>
+                        <Zap className="w-4 h-4 text-primary dark:text-purple-500" />
+                        <span className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">{t('videoPlayer.aiTutor.title')}</span>
                     </div>
                     {videoState?.isPlaying && (
                         <motion.div
@@ -181,7 +181,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
             )}
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto min-h-0 p-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+            <div className="flex-1 overflow-y-auto min-h-0 p-5 space-y-6 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
                 <AnimatePresence>
                     {messages.map((msg) => (
                         <motion.div
@@ -197,19 +197,19 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                                 whileHover={{ scale: 1.1 }}
                                 className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ${msg.role === 'ai'
                                     ? 'bg-gradient-to-br from-indigo-600 to-purple-600 outline outline-2 outline-indigo-500/30'
-                                    : 'bg-slate-700'
+                                    : 'bg-slate-200 dark:bg-slate-700'
                                     }`}
                             >
-                                {msg.role === 'ai' ? <Bot size={20} className="text-white" /> : <User size={20} className="text-slate-300" />}
+                                {msg.role === 'ai' ? <Bot size={20} className="text-white" /> : <User size={20} className="text-slate-600 dark:text-slate-300" />}
                             </motion.div>
 
-                            <div className={`group relative p-4 rounded-2xl max-w-[80%] min-w-[30%] text-[15px] leading-relaxed transition-all duration-300 ${msg.role === 'ai'
-                                ? `bg-[#1E293B] border border-slate-700/50 text-slate-300 ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'} shadow-md`
+                            <div className={`group relative p-4 rounded-2xl max-w-[85%] min-w-[30%] text-[14px] leading-relaxed transition-all duration-300 ${msg.role === 'ai'
+                                ? `bg-slate-50 dark:bg-[#1E293B] border border-slate-100 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'} shadow-sm dark:shadow-md`
                                 : `bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/20 ${isRTL ? 'rounded-tl-none' : 'rounded-tr-none'}`
                                 }`}>
 
                                 {msg.timestamp !== undefined && (
-                                    <div className="text-xs font-medium mb-2 flex items-center gap-1.5 opacity-70">
+                                    <div className="text-[10px] font-medium mb-2 flex items-center gap-1.5 opacity-60">
                                         <Clock size={12} /> {formatTime(msg.timestamp)}
                                     </div>
                                 )}
@@ -241,7 +241,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => setMessages(prev => prev.filter(m => m.id !== msg.id))}
-                                            className="text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-slate-300 px-4 py-2 rounded-xl transition-all"
+                                            className="text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl transition-all"
                                         >
                                             {t('videoPlayer.aiTutor.skip')}
                                         </motion.button>
@@ -266,7 +266,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                                     <Sparkles size={18} className="text-white" />
                                 </motion.div>
                             </div>
-                            <div className={`bg-[#1E293B] border border-slate-700/50 p-4 rounded-2xl shadow-md ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'}`}>
+                            <div className={`bg-slate-50 dark:bg-[#1E293B] border border-slate-200 dark:border-slate-700/50 p-4 rounded-2xl shadow-sm dark:shadow-md ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="flex gap-1.5 items-center">
                                         <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0 }} className="w-2 h-2 bg-indigo-500 rounded-full" />
@@ -283,7 +283,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
             </div>
 
             {/* Quick Actions + Input */}
-            <div className="p-5 bg-[#0A0F1C] border-t border-slate-800 shrink-0">
+            <div className="p-5 bg-white dark:bg-[#0A0F1C] border-t border-slate-200 dark:border-slate-800 shrink-0">
                 <div className="mb-4 grid grid-cols-2 gap-2">
                     {quickActions.map((btn, i) => (
                         <motion.button
@@ -291,7 +291,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                             whileHover={{ scale: 1.04, y: -1 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleSend(null, btn.text)}
-                            className="group/pill relative text-[11px] font-semibold bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/50 hover:border-slate-600 text-slate-400 hover:text-white px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 overflow-hidden"
+                            className="group/pill relative text-[11px] font-semibold bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/50 hover:border-primary/30 dark:hover:border-slate-600 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 overflow-hidden"
                         >
                             {/* Shimmer */}
                             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent -translate-x-full group-hover/pill:translate-x-full transition-transform duration-700" />
@@ -307,7 +307,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                         placeholder={t('videoPlayer.aiTutor.placeholder')}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        className={`w-full py-4 bg-[#0F172A] border border-slate-800 rounded-2xl focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-sm text-white placeholder:text-slate-500 shadow-inner ${isRTL ? 'pr-5 pl-14' : 'pl-5 pr-14'}`}
+                        className={`w-full py-4 bg-slate-50 dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 rounded-2xl focus:outline-none focus:border-primary/50 dark:focus:border-indigo-500/50 focus:ring-1 focus:ring-primary/20 dark:focus:ring-indigo-500/50 transition-all text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-inner ${isRTL ? 'pr-5 pl-14' : 'pl-5 pr-14'}`}
                     />
                     <motion.button
                         type="submit"

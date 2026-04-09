@@ -136,14 +136,14 @@ const AIDemoPage = () => {
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.2 + i * 0.1 }}
-                                        className="group flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-default"
+                                        className="group flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/10 transition-all cursor-default border border-transparent hover:border-slate-100 dark:hover:border-slate-800/50"
                                     >
-                                        <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center flex-shrink-0 shadow-md opacity-80 group-hover:opacity-100 transition-opacity`}>
-                                            <feat.icon className="w-4 h-4 text-white" />
+                                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center flex-shrink-0 shadow-lg opacity-90 group-hover:opacity-100 transition-opacity`}>
+                                            <feat.icon className="w-5 h-5 text-white" />
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-semibold text-slate-800 dark:text-white">{feat.title}</h4>
-                                            <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed">{feat.desc}</p>
+                                            <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-0.5 transition-colors group-hover:text-primary dark:group-hover:text-indigo-400">{feat.title}</h4>
+                                            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{feat.desc}</p>
                                         </div>
                                     </motion.div>
                                 ))}
@@ -159,7 +159,7 @@ const AIDemoPage = () => {
                         className="flex-1 h-[600px] lg:h-auto bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden min-h-0 shadow-sm dark:shadow-none mb-6 lg:mb-0"
                     >
                         {/* Chat Header */}
-                        <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0 bg-white/60 dark:bg-slate-900/60">
+                        <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0 bg-white/40 dark:bg-slate-900/40">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                                     <Bot className="w-4 h-4 text-white" />
@@ -193,19 +193,19 @@ const AIDemoPage = () => {
                                         <motion.div
                                             whileHover={{ scale: 1.1 }}
                                             className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ${message.role === 'assistant'
-                                                ? 'bg-gradient-to-br from-indigo-500 to-purple-600'
-                                                : 'bg-slate-200 dark:bg-slate-700'
+                                                ? 'bg-gradient-to-br from-indigo-500 to-purple-600 shadow-indigo-500/20'
+                                                : 'bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600'
                                                 }`}
                                         >
                                             {message.role === 'assistant'
                                                 ? <Bot className="w-5 h-5 text-white" />
-                                                : <User className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+                                                : <User className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                                             }
                                         </motion.div>
 
-                                        <div className="flex-1 max-w-[80%]">
-                                            <div className={`rounded-2xl p-4 text-sm leading-relaxed ${message.role === 'assistant'
-                                                ? `bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'}`
+                                        <div className="flex-1 max-w-[85%]">
+                                            <div className={`rounded-2xl p-4 text-[14px] leading-relaxed shadow-sm transition-all duration-300 ${message.role === 'assistant'
+                                                ? `bg-slate-50/80 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 ${isRTL ? 'rounded-tr-none' : 'rounded-tl-none'} hover:bg-white dark:hover:bg-slate-800 transition-colors`
                                                 : `bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/20 ${isRTL ? 'rounded-tl-none' : 'rounded-tr-none'}`
                                                 }`}>
                                                 <div className="overflow-hidden">
@@ -216,7 +216,7 @@ const AIDemoPage = () => {
                                                     )}
                                                 </div>
                                             </div>
-                                            <div className={`text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 px-2 font-medium ${message.role === 'user' ? (isRTL ? 'text-left' : 'text-right') : ''}`}>
+                                            <div className={`text-[10px] text-slate-400 dark:text-slate-500 mt-2 px-2 font-semibold tracking-wide ${message.role === 'user' ? (isRTL ? 'text-left' : 'text-right') : ''}`}>
                                                 {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </div>
@@ -254,7 +254,7 @@ const AIDemoPage = () => {
                         </div>
 
                         {/* Input Area */}
-                        <div className="border-t border-slate-100 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 p-4 sm:p-5 flex-shrink-0">
+                        <div className="border-t border-slate-100 dark:border-slate-800 bg-white/40 dark:bg-slate-900/40 p-4 sm:p-5 flex-shrink-0">
                             {/* Suggested questions */}
                             {messages.length <= 2 && (
                                 <div className="mb-4">
