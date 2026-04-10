@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Send, Zap, Bot, User, Clock, Sparkles, FileText, Eye, Target, Code2 } from 'lucide-react';
+import { Send, Zap, Bot, User, Clock, Sparkles, FileText, Eye, Target, Code2, Pause } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import TypewriterMessage from './TypewriterMessage';
@@ -167,16 +167,35 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                         <Zap className="w-4 h-4 text-primary dark:text-purple-500" />
                         <span className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">{t('videoPlayer.aiTutor.title')}</span>
                     </div>
-                    {videoState?.isPlaying && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20"
-                        >
-                            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                            <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter">{t('videoPlayer.aiTutor.liveSync')}</span>
-                        </motion.div>
-                    )}
+                    <div className="flex items-center gap-2">
+                        <AnimatePresence mode="wait">
+                            {videoState?.isPlaying ? (
+                                <motion.div
+                                    key="watching"
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.8 }}
+                                    className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20"
+                                >
+                                    <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
+                                    <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter whitespace-nowrap">{t('videoPlayer.aiTutor.watchingWithYou', { defaultValue: 'WATCING' })}</span>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="paused"
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.8 }}
+                                    className="flex items-center gap-1.5 px-2 py-0.5 bg-yellow-400/10 rounded-full border border-yellow-400/20 shadow-[0_0_10px_rgba(250,204,21,0.05)]"
+                                >
+                                    <div className="flex items-center justify-center">
+                                        <Pause size={10} className="text-yellow-400 fill-yellow-400 shadow-[0_0_5px_rgba(250,204,21,0.5)]" />
+                                    </div>
+                                    <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-tighter whitespace-nowrap">{t('videoPlayer.aiTutor.paused')}</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
             )}
 
@@ -232,7 +251,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => handleSend(null, t('videoPlayer.aiTutor.explainSectionConfirm'))}
-                                            className="text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl transition-all shadow-md shadow-indigo-500/20"
+                                            className="text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl transition-all shadow-md shadow-indigo-500/20 cursor-pointer"
                                         >
                                             {t('videoPlayer.aiTutor.explainSection')}
                                         </motion.button>
@@ -241,7 +260,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={() => setMessages(prev => prev.filter(m => m.id !== msg.id))}
-                                            className="text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl transition-all"
+                                            className="text-xs font-semibold bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl transition-all cursor-pointer"
                                         >
                                             {t('videoPlayer.aiTutor.skip')}
                                         </motion.button>
@@ -291,7 +310,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                             whileHover={{ scale: 1.04, y: -1 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleSend(null, btn.text)}
-                            className="group/pill relative text-[11px] font-semibold bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/50 hover:border-primary/30 dark:hover:border-slate-600 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 overflow-hidden"
+                            className="group/pill relative text-[11px] font-semibold bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700/80 border border-slate-200 dark:border-slate-700/50 hover:border-primary/30 dark:hover:border-slate-600 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 overflow-hidden cursor-pointer"
                         >
                             {/* Shimmer */}
                             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent -translate-x-full group-hover/pill:translate-x-full transition-transform duration-700" />
@@ -314,7 +333,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                         disabled={!input.trim()}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9, rotate: -15 }}
-                        className={`absolute top-1/2 -translate-y-1/2 p-2 text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-xl transition-all disabled:opacity-30 disabled:hover:bg-transparent ${isRTL ? 'left-3' : 'right-3'}`}
+                        className={`absolute top-1/2 -translate-y-1/2 p-2 text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-xl transition-all disabled:opacity-30 disabled:hover:bg-transparent cursor-pointer ${isRTL ? 'left-3' : 'right-3'}`}
                     >
                         <Send size={20} className={isRTL ? 'scale-x-[-1]' : ''} />
                     </motion.button>

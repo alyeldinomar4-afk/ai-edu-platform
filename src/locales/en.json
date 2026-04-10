@@ -78,7 +78,7 @@
         "lectureInfo": "Lecture {{current}} of {{total}}",
         "points": "{{count}} AI Points",
         "tutorName": "Nexora AI Tutor",
-        "watchingStatus": "Watching with you",
+        "watchingStatus": "WATCING",
         "paused": "Paused",
         "watching": "Watching",
         "live": "Live",
@@ -90,7 +90,8 @@
         "thinking": "Thinking...",
         "aiExplanation": "Without <0>useMemo</0>, this recalculates every render:",
         "aiExplanationResult": "This caches the result until <0>[a, b]</0> change! ✨",
-        "inputPlaceholder": "Ask about this video..."
+        "inputPlaceholder": "Ask about this video...",
+        "aiAnalyzing": "AI IS ANALYZING THIS MOMENT"
       }
     },
     "testimonials": {
@@ -614,7 +615,6 @@
     "submitReview": "Submit Review",
     "recentReviews": "Recent Reviews",
     "buyCourse": "Buy Course",
-    "manageCourse": "Manage Course",
     "includes": "This course includes",
     "onDemandVideo": "on-demand video",
     "articlesResources": "articles & resources",
@@ -743,92 +743,85 @@
     }
   },
   "videoPlayer": {
+    "aiAnalyzing": "AI IS ANALYZING THIS MOMENT...",
+    "playbackSpeed": "Playback Speed",
+    "normal": "Normal",
     "header": {
       "help": "Help"
     },
     "tabs": {
-      "playlist": "Content",
       "ai": "AI Tutor",
+      "playlist": "Playlist",
       "overview": "Overview",
       "quiz": "Quiz",
-      "comments": "Q&A",
+      "comments": "Comments",
       "resources": "Resources"
     },
     "overview": {
-      "title": "About this lecture"
+      "title": "Course Overview"
+    },
+    "playlist": {
+      "title": "Course Playlist",
+      "section": "Section {{number}}",
+      "intro": "Introduction & Basics",
+      "advanced": "Advanced Concepts",
+      "courseContent": "Course Content"
     },
     "discussion": {
-      "askTitle": "Ask a question to the instructor",
-      "you": "YOU",
-      "placeholder": "Type your question here (e.g. Can you explain the difference between RNN and LSTM?)",
+      "you": "You",
+      "justNow": "Just now",
+      "askTitle": "Ask a Question",
+      "placeholder": "Type your question about this lecture...",
       "postQuestion": "Post Question",
-      "forumTitle": "Discussion forum",
-      "questionsCount": "{{count}} questions asked",
+      "forumTitle": "Discussion Forum",
+      "questionsCount": "{{count}} questions",
       "instructorReply": "Instructor Reply",
       "official": "Official",
-      "waitingResponse": "Waiting for instructor's response...",
-      "justNow": "Just Now",
+      "waitingResponse": "Waiting for response",
       "toasts": {
-        "postSuccess": "Your question has been posted successfully!"
+        "postSuccess": "Question posted successfully!"
       }
     },
     "aiTutor": {
       "title": "AI Tutor",
-      "liveSync": "Live Sync",
-      "explainSection": "Explain section",
-      "skip": "Skip",
-      "summarizePart": "Summarize part",
-      "summarizePrompt": "Can you summarize what happened in the last 30 seconds?",
-      "explainScene": "Explain scene",
-      "explainScenePrompt": "What am I seeing on the screen right now?",
-      "createQuiz": "Create quiz",
-      "createQuizPrompt": "Create a quiz based on the last few minutes.",
-      "showCode": "Show Code Example",
-      "showCodePrompt": "Can you provide a code block example for what you're explaining?",
+      "defaultWelcome": "Hi! I'm watching this video with you. Feel free to ask me to explain key concepts or summarize sections.",
+      "watchingWithYou": "WATCING",
+      "paused": "Paused",
+      "thinking": "AI is thinking...",
       "placeholder": "Ask about the video...",
-      "defaultWelcome": "Hello! I'm watching this video with you. Feel free to ask me to summarize key points or explain complex concepts.",
-      "pausePrompt": "You paused at {{timestamp}}. Would you like me to explain what's happening in this section?",
-      "analyzingResponse": "Analyzing the video at {{timestamp}}... The instructor is discussing how this specific pattern optimizes performance.",
-      "explainSectionConfirm": "Yes, please explain this section."
-    },
-    "playlist": {
-      "title": "Course Content",
-      "courseContent": "Course Content",
-      "section": "Section {{number}}",
-      "intro": "Introduction & Basics",
-      "advanced": "Advanced Concepts"
+      "pausePrompt": "I noticed you paused at {{timestamp}}. Would you like me to explain what was just covered?",
+      "analyzingResponse": "Let me analyze the content at {{timestamp}} for you...",
+      "summarizePart": "Summarize Part",
+      "summarizePrompt": "Summarize this part of the video",
+      "explainScene": "Explain Scene",
+      "explainScenePrompt": "Explain what's happening in this scene",
+      "createQuiz": "Create Quiz",
+      "createQuizPrompt": "Create a quiz about this section",
+      "showCode": "Show Code",
+      "showCodePrompt": "Show me the code example",
+      "explainSection": "Explain this section",
+      "explainSectionConfirm": "Yes, please explain this section",
+      "skip": "Skip"
     },
     "aiDemo": {
-      "title": "AI Learning Assistant",
-      "subtitle": "Your personal tutor, available 24/7",
+      "title": "Nexora AI Tutor",
+      "subtitle": "Your intelligent learning companion",
+      "description": "Ask me anything about programming, AI, or any topic you're studying. I'm here to help you understand concepts and solve problems.",
+      "welcome": "Welcome! 👋 I'm Nexora AI Tutor, your intelligent learning companion. Ask me anything about programming, AI, data science, or any topic you're learning. I'm here to help!",
       "backToHome": "Back to Home",
-      "tryAsking": "Try asking:",
-      "placeholder": "Ask me anything about your courses...",
-      "demoMode": "Demo Mode: Simulated AI responses",
-      "welcome": "Hi! I'm your AI Learning Assistant. 👋\n\nI can help you with:\n• Explaining complex concepts\n• Answering questions about courses\n• Providing code examples\n• Summarizing video lessons\n\nWhat would you like to learn today?",
+      "tryAsking": "Try asking about",
+      "placeholder": "Ask me anything...",
       "questions": {
-        "react": "Explain React components",
-        "python": "How do Python loops work?",
-        "ml": "What is Machine Learning?",
-        "js": "Help me learn JavaScript"
-      },
-      "description": "Experience our advanced AI that understands video context and provides real-time learning support.",
-      "features": {
-        "context": {
-          "title": "Context Aware",
-          "desc": "The AI understands exactly what's happening in the video."
-        },
-        "interactive": {
-          "title": "Interactive Learning",
-          "desc": "Ask questions and get instant, relevant answers."
-        }
+        "react": "How do React components work?",
+        "python": "Explain Python loops",
+        "ml": "What is Machine Learning?"
       },
       "responses": {
-        "react": "Great question about React! 🚀\n\nReact components are the building blocks of React applications. Here's a simple example:\n\n```jsx\nfunction Welcome({ name }) {\n  return <h1>Hello, {name}!</h1>;\n}\n```\n\nComponents can be:\n• **Functional** (like above) - simpler, use hooks\n• **Class-based** - older style, more verbose\n\nWould you like me to explain hooks like useState or useEffect?",
-        "python": "Python is awesome for beginners! 🐍\n\nHere's a simple for loop example:\n\n```python\nfor i in range(5):\n    print(f\"Number: {i}\")\n```\n\nThis will print numbers 0 through 4. The `range()` function generates a sequence of numbers.\n\nNeed help with something specific in Python?",
-        "ml": "Machine Learning is fascinating! 🤖\n\nHere are the main types:\n\n**1. Supervised Learning**\n   - Learn from labeled data\n   - Examples: Classification, Regression\n\n**2. Unsupervised Learning**\n   - Find patterns in unlabeled data\n   - Examples: Clustering, Dimensionality Reduction\n\n**3. Reinforcement Learning**\n   - Learn through trial and error\n   - Examples: Game AI, Robotics\n\nWhich area interests you most?",
-        "help": "I'm here to make learning easier! ✨\n\nI can help you with:\n\n📚 **Course Content**\n   - Explain difficult concepts\n   - Provide additional examples\n   - Summarize video lessons\n\n💻 **Code Help**\n   - Debug your code\n   - Explain syntax\n   - Suggest best practices\n\n🎯 **Learning Path**\n   - Recommend courses\n   - Create study plans\n   - Track your progress\n\nJust ask me anything!",
-        "default": "That's an interesting question! 💡\n\nWhile this is a demo, in the full version I would provide detailed explanations about \"{{message}}\".\n\nI can help with topics like:\n• Programming (Python, JavaScript, React)\n• Machine Learning & AI\n• Web Development\n• Data Science\n\nTry asking about one of these topics!"
+        "react": "React components are reusable building blocks for your UI. They accept inputs called 'props' and return React elements describing what should appear on screen.\n\nThere are two types:\n• **Function Components** — Simple JavaScript functions that return JSX\n• **Class Components** — ES6 classes that extend React.Component\n\nModern React uses function components with hooks like `useState` and `useEffect` for state and lifecycle management.",
+        "python": "Python loops let you execute a block of code repeatedly.\n\n**For Loop** — Iterates over a sequence:\n```python\nfor i in range(5):\n    print(i)  # 0, 1, 2, 3, 4\n```\n\n**While Loop** — Repeats while a condition is true:\n```python\ncount = 0\nwhile count < 5:\n    print(count)\n    count += 1\n```\n\nPython also supports `break`, `continue`, and `else` clauses in loops.",
+        "ml": "Machine Learning is a branch of AI that enables systems to learn and improve from experience without being explicitly programmed.\n\nThree main types:\n• **Supervised Learning** — Training with labeled data (classification, regression)\n• **Unsupervised Learning** — Finding patterns in unlabeled data (clustering)\n• **Reinforcement Learning** — Learning through trial and reward\n\nPopular frameworks: TensorFlow, PyTorch, scikit-learn.",
+        "help": "I can help you with:\n• 📚 **Concepts** (Python, JavaScript, React)\n• 🐛 **Debugging** code and fixing errors\n• 🎯 **Quiz** question preparation\n• 📝 **Summaries** of topics\n\nJust ask your question and I'll do my best to help!",
+        "default": "Great question about \"{{message}}\"!\n\nLet me help you explore this topic. The AI assistant can help with topics like:\n• Coding (Python, JavaScript, React)\n• Debugging and error resolution\n• Code review\n• Data analysis\n\nAsk a specific question for the best results!"
       }
     }
   }

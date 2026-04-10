@@ -231,7 +231,7 @@ const VideoPlayerPage = () => {
                                 </div>
                             )}
                             {activeTab === 'ai' && (
-                                <div className={`${isTheaterMode ? '' : 'lg:hidden'} min-h-[500px] flex flex-col`}>
+                                <div className={`${isTheaterMode ? '' : 'lg:hidden'} h-[500px] flex flex-col overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800`}>
                                     <ContextualAI
                                         videoState={videoState}
                                         addMarker={addMarker}

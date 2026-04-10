@@ -27,6 +27,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
 
+import { lectures } from '../../data/mockData';
+
 // ManageVideosPage v1.3 - Fixed ReferenceError (Edit icon)
 const ManageVideosPage = () => {
     const { t } = useTranslation();
@@ -63,75 +65,8 @@ const ManageVideosPage = () => {
         setFormValues(prev => ({ ...prev, [name]: value }));
     };
 
-    // Initial Videos state
-    const [videos, setVideos] = useState([
-        {
-            id: 1,
-            title: "Introduction to Neural Networks",
-            instructor: "Dr. Laila Hassan",
-            course: "Machine Learning Fundamentals",
-            views: "1.2k",
-            duration: "12:45",
-            status: "published",
-            date: "2024-02-15",
-            thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
-        },
-        {
-            id: 2,
-            title: "Advanced React Patterns",
-            instructor: "Ahmed Mansour",
-            course: "Advanced React Patterns",
-            views: "856",
-            duration: "25:30",
-            status: "published",
-            date: "2024-02-10",
-            thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80"
-        },
-        {
-            id: 3,
-            title: "Data Visualization with D3.js",
-            instructor: "Ahmed Mansour",
-            course: "Python for Finance",
-            views: "0",
-            duration: "18:20",
-            status: "pending",
-            date: "2024-02-25",
-            thumbnail: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        },
-        {
-            id: 4,
-            title: "Ethics in Artificial Intelligence",
-            instructor: "Dr. Laila Hassan",
-            course: "UX Design for AI Interfaces",
-            views: "2.4k",
-            duration: "45:00",
-            status: "published",
-            date: "2024-01-30",
-            thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-        },
-        {
-            id: 5,
-            title: "Git Workflow for Teams",
-            instructor: "Ahmed Mansour",
-            course: "Full-Stack Web Development",
-            views: "152",
-            duration: "10:15",
-            status: "draft",
-            date: "2024-02-20",
-            thumbnail: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80"
-        },
-        {
-            id: 6,
-            title: "Deep Learning Fundamentals",
-            instructor: "Dr. Laila Hassan",
-            course: "Machine Learning Fundamentals",
-            views: "3.1k",
-            duration: "32:10",
-            status: "published",
-            date: "2024-01-12",
-            thumbnail: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80"
-        }
-    ]);
+    // Initial Videos state - Now mapped directly to the shared mock data to keep pages synced
+    const [videos, setVideos] = useState(lectures);
 
     // Robust Filtering Logic
     const filteredVideos = useMemo(() => {
@@ -250,7 +185,7 @@ const ManageVideosPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {filteredVideos.map((video) => (
                             <div key={video.id} className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col">
-                                <div className="relative aspect-video bg-slate-100 dark:bg-slate-800">
+                                <div className="relative w-full aspect-video shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-800">
                                     {video.thumbnail && <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />}
                                     <span className={`absolute bottom-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded uppercase`}>{video.duration}</span>
                                     <span className={`absolute top-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider ${getStatusStyle(video.status)}`}>

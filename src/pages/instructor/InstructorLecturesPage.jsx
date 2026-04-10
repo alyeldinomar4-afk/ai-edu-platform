@@ -246,7 +246,7 @@ const InstructorLecturesPage = () => {
                             >
                                  {filteredVideos.map((video) => (
                                     <div key={video.id} className={`group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200/60 dark:border-slate-800 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col ${isRTL ? 'text-right' : 'text-left'}`}>
-                                        <div className="relative aspect-video overflow-hidden">
+                                        <div className="relative w-full aspect-video shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-800">
                                             {video.thumbnail && <img src={video.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
                                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                                             <span className={`absolute bottom-3 ${isRTL ? 'left-3' : 'right-3'} px-2 py-1 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold rounded-lg`}>{video.duration}</span>

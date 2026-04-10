@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings, SkipBack, SkipForward, Zap, Layout, Monitor, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import ContextualAI from '../ai/ContextualAI';
 
 const SAMPLE_VIDEO = 'https://media.w3.org/2010/05/sintel/trailer_hd.mp4';
@@ -14,6 +15,7 @@ const formatTime = (seconds) => {
 };
 
 const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, onToggleTheaterMode, aiMessages = [], isAiTyping, onAiAsk }) => {
+    const { t } = useTranslation();
     const videoRef = useRef(null);
     const containerRef = useRef(null);
     const controlsTimeoutRef = useRef(null);
@@ -283,7 +285,7 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, o
                     <div className={`mb-6 flex flex-col items-center transition-all duration-700 delay-100 ${!isPlaying ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                         <div className="flex items-center gap-2 px-6 py-2.5 bg-purple-600/30 backdrop-blur-xl border border-purple-400/40 rounded-full mb-6 shadow-[0_0_30px_rgba(168,85,247,0.6)] animate-pulse">
                             <Zap className="w-5 h-5 text-purple-300 fill-purple-300/20" />
-                            <span className="text-xs md:text-sm font-black text-white uppercase tracking-[0.2em] drop-shadow-sm">AI IS ANALYZING THIS MOMENT...</span>
+                            <span className="text-xs md:text-sm font-black text-white uppercase tracking-[0.2em] drop-shadow-sm">{t('videoPlayer.aiAnalyzing')}</span>
                         </div>
                         <div className="w-20 h-20 md:w-24 md:h-24 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 shadow-2xl hover:bg-white/20 transition-all duration-300">
                             <Play className="w-10 h-10 md:w-12 md:h-12 text-white ml-2 opacity-90 drop-shadow-lg" />
@@ -346,10 +348,10 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, o
                                 </button>
                                 {showSettings && (
                                     <div className="absolute bottom-full right-0 mb-2 bg-slate-900/95 backdrop-blur-sm rounded-xl border border-white/10 py-2 min-w-[140px] shadow-2xl">
-                                        <div className="px-3 py-1.5 text-xs text-slate-400 font-semibold">Playback Speed</div>
+                                        <div className="px-3 py-1.5 text-xs text-slate-400 font-semibold">{t('videoPlayer.playbackSpeed')}</div>
                                         {PLAYBACK_SPEEDS.map(speed => (
                                             <button key={speed} onClick={() => changeSpeed(speed)} className={`w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors cursor-pointer flex items-center justify-between ${playbackSpeed === speed ? 'text-primary font-bold' : 'text-white'}`}>
-                                                <span>{speed === 1 ? 'Normal' : `${speed}x`}</span>
+                                                <span>{speed === 1 ? t('videoPlayer.normal') : `${speed}x`}</span>
                                                 {playbackSpeed === speed && <span className="text-primary">✓</span>}
                                             </button>
                                         ))}
@@ -361,7 +363,7 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, o
                                 <button
                                     onClick={toggleAiSidebar}
                                     className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${showFsAi ? 'bg-purple-600 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' : 'hover:bg-white/10 text-white'}`}
-                                    title="AI Tutor"
+                                    title={t('videoPlayer.aiTutor.title')}
                                 >
                                     <Zap className={`w-5 h-5 ${showFsAi ? 'fill-white' : ''}`} />
                                 </button>
@@ -393,11 +395,40 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, o
                         <div className="p-4 border-b border-white/10 flex items-center justify-between bg-slate-800/50">
                             <div className="flex items-center gap-2">
                                 <Zap className="w-5 h-5 text-purple-400" />
-                                <span className="font-bold text-white text-sm">AI Tutor</span>
+                                <span className="font-bold text-white text-sm">{t('videoPlayer.aiTutor.title')}</span>
                             </div>
-                            <button onClick={() => setShowFsAi(false)} className="p-1 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors">
-                                <X size={20} />
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <AnimatePresence mode="wait">
+                                    {isPlaying ? (
+                                        <motion.div
+                                            key="watching"
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                            className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20"
+                                        >
+                                            <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
+                                            <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter whitespace-nowrap">{t('videoPlayer.aiTutor.watchingWithYou', { defaultValue: 'WATCING' })}</span>
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="paused"
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                            className="flex items-center gap-1.5 px-2 py-0.5 bg-yellow-400/10 rounded-full border border-yellow-400/20"
+                                        >
+                                            <div className="flex items-center justify-center">
+                                                <Pause size={10} className="text-yellow-400 fill-yellow-400" />
+                                            </div>
+                                            <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-tighter whitespace-nowrap">{t('videoPlayer.aiTutor.paused')}</span>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                                <button onClick={() => setShowFsAi(false)} className="p-1 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors">
+                                    <X size={20} />
+                                </button>
+                            </div>
                         </div>
 
                         {/* AI Chat Component */}
