@@ -1,5 +1,5 @@
 import { Star, Clock, BookOpen } from 'lucide-react';
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -12,49 +12,16 @@ const CourseCard = ({ course, layout = 'grid' }) => {
     const { t } = useTranslation();
     const cardRef = useRef(null);
 
-    // 2. 3D Tilt & Magnetic Springs
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
 
-    const mouseXSpring = useSpring(x, { stiffness: 120, damping: 20 });
-    const mouseYSpring = useSpring(y, { stiffness: 120, damping: 20 });
-
-    // 3. Transform Mapping - Stronger Magnetic Feel
-    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-    const translateX = useTransform(mouseXSpring, [-0.5, 0.5], ["-12px", "12px"]);
-    const translateY = useTransform(mouseYSpring, [-0.5, 0.5], ["-12px", "12px"]);
-
-    const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        
-        // Tilt/Translation position (-0.5 to 0.5)
-        x.set((e.clientX - rect.left) / rect.width - 0.5);
-        y.set((e.clientY - rect.top) / rect.height - 0.5);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
 
     return (
         <div style={{ perspective: "1200px" }} className="h-full">
             <motion.div
                 ref={cardRef}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                style={{
-                    rotateX,
-                    rotateY,
-                    x: translateX,
-                    y: translateY,
-                    transformStyle: "preserve-3d",
-                }}
                 whileHover={{ 
-                    scale: 1.05,
-                    transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] }
+                    y: -8,
+                    scale: 1.01,
+                    transition: { duration: 0.3, ease: 'easeOut' }
                 }}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -84,9 +51,9 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                         <motion.div 
                             initial={{ scale: 0.8, opacity: 0 }}
                             whileHover={{ scale: 1.1 }}
-                            className="bg-white text-slate-900 px-6 py-2.5 rounded-full text-sm font-bold shadow-2xl flex items-center gap-2"
+                            className="bg-white text-slate-900 px-8 py-3.5 rounded-full text-sm sm:text-base font-black shadow-2xl flex items-center gap-2"
                         >
-                            <BookOpen size={16} className="text-primary" />
+                            <BookOpen size={18} className="text-primary" />
                             {t('courses.viewCourse', { defaultValue: 'Preview Course' })}
                         </motion.div>
                     </div>
@@ -157,7 +124,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                         
                         <Link to={`/courses/${course.id}`} className="shrink-0">
                             <Button 
-                                className="bg-primary hover:bg-primary-dark text-white px-3 py-1.5 sm:px-6 sm:py-2.5 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-primary/40"
+                                className="bg-primary hover:bg-primary-dark text-white px-4 py-2 sm:px-8 sm:py-3.5 rounded-xl sm:rounded-2xl font-black text-[11px] sm:text-[13px] transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-primary/40 uppercase tracking-wider"
                             >
                                 {t('courses.viewCourse')}
                             </Button>

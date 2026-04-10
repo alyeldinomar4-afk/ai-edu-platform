@@ -316,7 +316,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                         whileTap={{ scale: 0.9, rotate: -15 }}
                         className={`absolute top-1/2 -translate-y-1/2 p-2 text-indigo-500 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-xl transition-all disabled:opacity-30 disabled:hover:bg-transparent ${isRTL ? 'left-3' : 'right-3'}`}
                     >
-                        <Send size={20} />
+                        <Send size={20} className={isRTL ? 'scale-x-[-1]' : ''} />
                     </motion.button>
                 </form>
             </div>

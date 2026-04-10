@@ -8,6 +8,8 @@
 @theme {
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  --font-alexandria: 'Alexandria', sans-serif;
+  --font-cairo: 'Cairo', sans-serif;
 
 
   /* Brand Colors - More Vibrant & Modern */
@@ -445,3 +447,76 @@ body {
 .animate-shimmer {
   animation: shimmer 2s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════
+   AUTH PAGE BACKGROUND ANIMATIONS
+═══════════════════════════════════════════════════ */
+
+/* Aurora orb drift animations */
+.auth-aurora-1 {
+  animation: auth-aurora-drift-1 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+.auth-aurora-2 {
+  animation: auth-aurora-drift-2 26s ease-in-out infinite;
+  will-change: transform;
+}
+
+.auth-aurora-3 {
+  animation: auth-aurora-drift-3 32s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes auth-aurora-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25%       { transform: translate(5vw, -4vh) scale(1.08); }
+  50%       { transform: translate(-3vw, 3vh) scale(0.95); }
+  75%       { transform: translate(2vw, 5vh) scale(1.04); }
+}
+
+@keyframes auth-aurora-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  30%       { transform: translate(-6vw, 4vh) scale(1.06); }
+  60%       { transform: translate(4vw, -5vh) scale(0.97); }
+  80%       { transform: translate(-2vw, 2vh) scale(1.02); }
+}
+
+@keyframes auth-aurora-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20%       { transform: translate(3vw, 5vh) scale(1.07); }
+  55%       { transform: translate(-5vw, -3vh) scale(0.93); }
+  80%       { transform: translate(2vw, -2vh) scale(1.03); }
+}
+
+/* Geometric shape animations */
+.auth-shape-spin {
+  animation: auth-shape-spin var(--dur, 25s) linear infinite;
+  will-change: transform;
+}
+
+.auth-shape-spin-reverse {
+  animation: auth-shape-spin-reverse var(--dur, 20s) linear infinite;
+  will-change: transform;
+}
+
+.auth-shape-float {
+  animation: auth-shape-float var(--dur, 18s) ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes auth-shape-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes auth-shape-spin-reverse {
+  from { transform: rotate(45deg); }
+  to   { transform: rotate(405deg); }
+}
+
+@keyframes auth-shape-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-18px) rotate(8deg); }
+  66%       { transform: translateY(10px) rotate(-6deg); }
+}

@@ -215,32 +215,6 @@ const DemoModal = ({ onClose, t }) => {
                     </div>
                 </div>
 
-                {/* Floating Badge — Top Right */}
-                <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 2.2, type: "spring", stiffness: 200 }}
-                    className="absolute -top-4 -right-4 md:-right-8 bg-slate-800 p-3 rounded-xl shadow-xl border border-slate-700/60 flex items-center gap-3 animate-float pointer-events-none z-20"
-                    style={{ transform: 'translateZ(60px)', animationDelay: '0.5s' }}>
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                        <Award className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                        <p className="text-[11px] text-slate-500 font-medium">{t('home.hero.courseCompleted', { defaultValue: "Course Completed" })}</p>
-                        <p className="text-sm font-bold text-white">{t('home.hero.pythonMastery', { defaultValue: "Python Mastery" })}</p>
-                    </div>
-                </motion.div>
-
-                {/* Floating Badge — Bottom Left */}
-                <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 2.5, type: "spring", stiffness: 200 }}
-                    className="absolute -bottom-3 -left-3 md:-left-6 bg-slate-800 px-4 py-3 rounded-xl shadow-xl border border-slate-700/60 flex items-center gap-3 animate-float pointer-events-none z-20"
-                    style={{ transform: 'translateZ(50px)', animationDelay: '1.2s' }}>
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                        <Sparkles className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-bold text-white">{t('home.hero.rating', { defaultValue: "4.9 out of 5" })}</p>
-                        <p className="text-[11px] text-slate-500">AI-Powered</p>
-                    </div>
-                </motion.div>
-
                 {/* Glow */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-500/20 via-purple-500/15 to-cyan-400/20 blur-[60px] -z-10 opacity-70 group-hover:opacity-90 transition-opacity duration-700" />
             </motion.div>
@@ -336,7 +310,7 @@ const HeroSection = ({ getStartedPath }) => {
                                         </Button>
                                     </motion.div>
                                 </Link>
-                                <motion.button
+                                <motion.div
                                     onClick={() => setShowDemo(true)}
                                     whileHover={{ scale: 1.04 }}
                                     whileTap={{ scale: 0.97 }}
@@ -356,7 +330,7 @@ const HeroSection = ({ getStartedPath }) => {
                                         </motion.span>
                                         <span className="relative z-10">{t('home.btnWatchDemo')}</span>
                                     </Button>
-                                </motion.button>
+                                </motion.div>
                             </div>
 
                             {/* Social Proof */}
@@ -430,58 +404,73 @@ const HeroSection = ({ getStartedPath }) => {
                                     </div>
                                 </motion.div>
 
-                                {/* Orbiting Particles (Premium Style) */}
-                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute inset-0 pointer-events-none z-20">
-                                    <div className="absolute top-[10%] left-[20%] w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)]" />
+                                {/* Floating Particles (Simple Vertical Movement) */}
+                                <motion.div 
+                                    animate={{ y: [0, -25, 0] }} 
+                                    transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} 
+                                    className="absolute inset-0 pointer-events-none z-20"
+                                >
+                                    <div className="absolute top-[15%] left-[25%] w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)]" />
                                 </motion.div>
-                                <motion.div animate={{ rotate: -360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute inset-4 pointer-events-none z-20">
-                                    <div className="absolute bottom-[10%] right-[15%] w-4 h-4 rounded-full bg-purple-400 shadow-[0_0_15px_rgba(192,132,252,0.8)]" />
+                                <motion.div 
+                                    animate={{ y: [0, 20, 0] }} 
+                                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }} 
+                                    className="absolute inset-4 pointer-events-none z-20"
+                                >
+                                    <div className="absolute bottom-[20%] right-[20%] w-4 h-4 rounded-full bg-purple-400 shadow-[0_0_15px_rgba(192,132,252,0.8)]" />
                                 </motion.div>
-                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -inset-4 pointer-events-none z-20">
-                                    <div className="absolute top-[50%] -right-4 w-2 h-2 rounded-full bg-pink-400 shadow-[0_0_10px_rgba(244,114,182,0.8)]" />
+                                <motion.div 
+                                    animate={{ y: [0, -15, 0] }} 
+                                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 0.5 }} 
+                                    className="absolute -inset-4 pointer-events-none z-20"
+                                >
+                                    <div className="absolute top-[45%] -right-4 w-2 h-2 rounded-full bg-pink-400 shadow-[0_0_10px_rgba(244,114,182,0.8)]" />
                                 </motion.div>
 
-                                {/* Floating Tag 1: Top Right */}
-                                <motion.div
-                                    initial={{ opacity: 0, x: 20, y: 0 }}
-                                    animate={{ opacity: 1, x: 0, y: [0, -10, 0] }}
-                                    transition={{
-                                        opacity: { delay: 1, duration: 0.5 },
-                                        x: { delay: 1, duration: 0.5 },
-                                        y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }
-                                    }}
-                                    className="absolute -right-6 top-[10%] bg-white/90 dark:bg-[#0f1629]/90 backdrop-blur-xl border border-white dark:border-slate-700/40 px-4 py-2.5 rounded-2xl shadow-2xl shadow-purple-500/10 z-30 flex items-center gap-2.5"
-                                    style={{ transform: 'translateZ(40px)' }}
-                                >
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                                        <Sparkles className="w-4 h-4 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold tracking-wide">{t('home.hero.aiFeatures', { defaultValue: 'AI Features' })}</p>
-                                        <p className="text-sm font-extrabold text-slate-900 dark:text-white">{t('home.hero.smartLearning', { defaultValue: 'Smart Learning' })}</p>
-                                    </div>
-                                </motion.div>
+                                {/* Floating Tags */}
+                                <div className="absolute inset-0 pointer-events-none z-30">
+                                    {/* Floating Tag 1: Top Right */}
+                                    <motion.div
+                                        initial={{ opacity: 0, x: 20, y: 0 }}
+                                        animate={{ opacity: 1, x: 0, y: [0, -10, 0] }}
+                                        transition={{
+                                            opacity: { delay: 1, duration: 0.5 },
+                                            x: { delay: 1, duration: 0.5 },
+                                            y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }
+                                        }}
+                                        className="absolute -right-6 top-[10%] bg-white/90 dark:bg-[#0f1629]/90 backdrop-blur-xl border border-white dark:border-slate-700/40 px-4 py-2.5 rounded-2xl shadow-2xl shadow-purple-500/10 z-30 flex items-center gap-2.5"
+                                        style={{ transform: 'translateZ(40px)' }}
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                                            <Sparkles className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold tracking-wide">{t('home.hero.aiFeatures', { defaultValue: 'AI Features' })}</p>
+                                            <p className="text-sm font-extrabold text-slate-900 dark:text-white">{t('home.hero.smartLearning', { defaultValue: 'Smart Learning' })}</p>
+                                        </div>
+                                    </motion.div>
 
-                                {/* Floating Tag 2: Bottom Left (Simple Rating Badge like the photo) */}
-                                <motion.div
-                                    initial={{ opacity: 0, x: -20, scale: 0.8 }}
-                                    animate={{ opacity: 1, x: 0, scale: 1, y: [0, -8, 0] }}
-                                    transition={{
-                                        opacity: { delay: 1.2, duration: 0.5 },
-                                        x: { delay: 1.2, duration: 0.5 },
-                                        scale: { delay: 1.2, duration: 0.5 },
-                                        y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }
-                                    }}
-                                    className="absolute -left-4 bottom-12 bg-white/90 dark:bg-[#1a1f3d]/95 backdrop-blur-xl border border-white dark:border-slate-700/50 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3.5 z-30"
-                                    style={{ transform: 'translateZ(60px)' }}
-                                >
-                                    <div className="w-9 h-9 rounded-xl bg-yellow-100 dark:bg-[#2a271d] border border-yellow-300 dark:border-yellow-500/20 flex items-center justify-center flex-shrink-0 shadow-inner">
-                                        <Star className="w-5 h-5 text-yellow-500 dark:text-yellow-400 fill-yellow-500 dark:fill-yellow-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[13px] font-bold text-slate-900 dark:text-white tracking-wide">{t('home.hero.ratingScore', { defaultValue: '4.9/5 Rating' })}</p>
-                                    </div>
-                                </motion.div>
+                                    {/* Floating Tag 2: Bottom Left - Rating */}
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -20, y: 0 }}
+                                        animate={{ opacity: 1, x: 0, y: [0, 10, 0] }}
+                                        transition={{
+                                            opacity: { delay: 1.2, duration: 0.5 },
+                                            x: { delay: 1.2, duration: 0.5 },
+                                            y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1.2 }
+                                        }}
+                                        className="absolute -left-8 bottom-[15%] bg-white/90 dark:bg-[#0f1629]/90 backdrop-blur-xl border border-white dark:border-slate-700/40 px-4 py-2.5 rounded-2xl shadow-2xl shadow-amber-500/10 z-30 flex items-center gap-2.5"
+                                        style={{ transform: 'translateZ(50px)' }}
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                                            <Star className="w-4 h-4 text-white fill-white" />
+                                        </div>
+                                        <div>
+
+                                            <p className="text-sm font-extrabold text-slate-900 dark:text-white">4.9/5 <span className="text-[10px] text-slate-400 ml-0.5">Rating</span></p>
+                                        </div>
+                                    </motion.div>
+                                </div>
                             </div>
                         </motion.div>
                     </div>

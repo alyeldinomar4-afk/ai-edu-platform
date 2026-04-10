@@ -409,8 +409,8 @@ const CoursesPage = () => {
                                                         <Link to={`/courses/${course.id}`}>
                                                             <Button 
                                                                 variant="ghost" 
-                                                                size="sm" 
-                                                                className="h-9 px-4 rounded-xl border border-slate-100 dark:border-slate-800 hover:border-primary/30 hover:bg-primary/5 text-slate-600 dark:text-slate-400 hover:text-primary transition-all font-bold text-[11px] shadow-none"
+                                                                size="md" 
+                                                                className="h-11 px-5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary/40 hover:bg-primary/5 text-slate-700 dark:text-slate-300 hover:text-primary transition-all font-black text-[12px] shadow-sm uppercase tracking-wider"
                                                                 icon={Eye}
                                                                 iconOnly
                                                             >

@@ -277,7 +277,7 @@ const AIDemoPage = () => {
                                 </div>
                             )}
 
-                            <div className="flex gap-3 items-center">
+                            <div className="relative flex items-center">
                                 <input
                                     ref={inputRef}
                                     type="text"
@@ -285,7 +285,7 @@ const AIDemoPage = () => {
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder={t('videoPlayer.aiDemo.placeholder')}
-                                    className={`flex-1 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 ${isRTL ? 'pr-4 pl-4' : 'pl-4 pr-4'}`}
+                                    className={`w-full py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-inner ${isRTL ? 'pl-14 pr-5' : 'pr-14 pl-5'}`}
                                     disabled={isTyping}
                                 />
                                 <motion.button
@@ -293,12 +293,12 @@ const AIDemoPage = () => {
                                     disabled={!input.trim() || isTyping}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-500/20 disabled:opacity-40 disabled:shadow-none transition-all hover:shadow-xl hover:shadow-indigo-500/30"
+                                    className={`absolute top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 disabled:opacity-40 disabled:shadow-none transition-all hover:shadow-xl hover:shadow-indigo-500/30 ${isRTL ? 'left-2' : 'right-2'}`}
                                 >
                                     {isTyping ? (
                                         <Loader2 className="w-5 h-5 text-white animate-spin" />
                                     ) : (
-                                        <Send className={`w-5 h-5 text-white ${isRTL ? 'rotate-180' : ''}`} />
+                                        <Send className={`w-5 h-5 text-white ${isRTL ? 'scale-x-[-1]' : ''}`} />
                                     )}
                                 </motion.button>
                             </div>

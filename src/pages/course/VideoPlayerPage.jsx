@@ -8,7 +8,7 @@ import VideoPlayer from '../../components/features/video/VideoPlayer';
 import Playlist from '../../components/features/video/Playlist';
 import ContextualAI from '../../components/features/ai/ContextualAI';
 import Quiz from '../../components/features/course/Quiz';
-import { useScrollContext } from '../../context/ScrollContext';
+
 import { lectures } from '../../data/mockData';
 import toast from 'react-hot-toast';
 
@@ -43,15 +43,7 @@ const VideoPlayerPage = () => {
     const courseLectures = lectures.filter(l => l.courseId === currentCourseId);
     const [activeLectureId, setActiveLectureId] = useState(courseLectures[0]?.id || 1);
     const scrollContainerRef = useRef(null);
-    const { setScrollContainer } = useScrollContext();
 
-    // Register scroll container to global context
-    useEffect(() => {
-        if (scrollContainerRef.current) {
-            setScrollContainer(scrollContainerRef.current);
-        }
-        return () => setScrollContainer(null);
-    }, [setScrollContainer]);
 
     // Reset scroll when lecture or course changes
     useEffect(() => {

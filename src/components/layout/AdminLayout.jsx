@@ -5,7 +5,7 @@ import { LayoutDashboard, BookOpen, Video, Users, Settings, LogOut, Menu, X, Use
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/useAuth';
 import ThemeToggle from '../ui/ThemeToggle';
-import { useScrollContext } from '../../context/ScrollContext';
+
 
 const sidebarStagger = {
     hidden: {},
@@ -33,7 +33,6 @@ const AdminLayout = () => {
     const { user, logout } = useAuth();
     const { t, i18n } = useTranslation();
     const mainContentRef = useRef(null);
-    const { setScrollContainer } = useScrollContext();
 
     // Reset scroll when path changes
     useEffect(() => {
@@ -41,15 +40,6 @@ const AdminLayout = () => {
             mainContentRef.current.scrollTop = 0;
         }
     }, [location.pathname]);
-
-    // Register scroll container to global context
-    useEffect(() => {
-        if (mainContentRef.current) {
-            setScrollContainer(mainContentRef.current);
-        }
-        return () => setScrollContainer(null);
-    }, [setScrollContainer]);
-
     const handleLogout = () => {
 
         logout();

@@ -134,15 +134,15 @@ const InstructorDashboardPage = () => {
                             <User className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" /> {t('dashboard.learner.profile')}
                         </Button>
                     </Link>
-                    <motion.button 
-                        whileHover={{ scale: 1.02 }} 
-                        whileTap={{ scale: 0.98 }} 
-                        onClick={openAddModal} 
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={openAddModal}
                         className="relative flex-1 sm:flex-none group flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium tracking-wide text-white bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50 overflow-hidden transition-all duration-300 cursor-pointer"
                     >
                         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 delay-[50ms]" />
-                        <Plus className="w-5 h-5 relative z-10" /> 
+                        <Plus className="w-5 h-5 relative z-10" />
                         <span className="relative z-10">{t('dashboard.instructor.newCourse')}</span>
                     </motion.button>
                 </div>
@@ -159,38 +159,38 @@ const InstructorDashboardPage = () => {
                     viewport={{ once: true }}
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10"
                 >
-                {statCards.map((card, i) => (
-                    <motion.div
-                        key={i}
-                        variants={fadeUp}
-                        whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                        className="group relative bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 dark:hover:shadow-primary/10 overflow-hidden"
-                    >
-                        {/* Gradient accent top */}
-                        <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                    {statCards.map((card, i) => (
+                        <motion.div
+                            key={i}
+                            variants={fadeUp}
+                            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                            className="group relative bg-white dark:bg-slate-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 dark:hover:shadow-primary/10 overflow-hidden"
+                        >
+                            {/* Gradient accent top */}
+                            <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
 
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-slate-500 dark:text-slate-400 text-sm font-medium">{card.label}</span>
-                            <motion.div
-                                whileHover={{ scale: 1.1, rotate: 5 }}
-                                transition={{ type: 'spring', stiffness: 400 }}
-                                className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.bgLight} ${card.textColor}`}
-                            >
-                                <card.icon className="w-5 h-5" />
-                            </motion.div>
-                        </div>
-                        <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-1">
-                            <AnimatedStat value={card.value} />
-                        </h3>
-                        {card.change && (
-                            <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-                                <ArrowUpRight className="w-3 h-3" />
-                                {card.change} <span className="text-slate-400 dark:text-slate-500 font-normal">{t('dashboard.instructor.stats.vsLastMonth')}</span>
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-slate-500 dark:text-slate-400 text-sm font-medium">{card.label}</span>
+                                <motion.div
+                                    whileHover={{ scale: 1.1, rotate: 5 }}
+                                    transition={{ type: 'spring', stiffness: 400 }}
+                                    className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.bgLight} ${card.textColor}`}
+                                >
+                                    <card.icon className="w-5 h-5" />
+                                </motion.div>
                             </div>
-                        )}
-                        {card.sub && <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">{card.sub}</p>}
-                    </motion.div>
-                ))}
+                            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-1">
+                                <AnimatedStat value={card.value} />
+                            </h3>
+                            {card.change && (
+                                <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                                    <ArrowUpRight className="w-3 h-3" />
+                                    {card.change} <span className="text-slate-400 dark:text-slate-500 font-normal">{t('dashboard.instructor.stats.vsLastMonth')}</span>
+                                </div>
+                            )}
+                            {card.sub && <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">{card.sub}</p>}
+                        </motion.div>
+                    ))}
                 </motion.div>
             )}
 
@@ -335,7 +335,7 @@ const InstructorDashboardPage = () => {
                                         <X size={20} className="text-slate-500" />
                                     </button>
                                 </div>
-                                
+
                                 <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
                                     <form id="course-form" onSubmit={handleSave} className="space-y-6">
 
@@ -410,7 +410,7 @@ const InstructorDashboardPage = () => {
                             {/* Live Preview Side */}
                             <div className="hidden md:flex w-1/2 h-full bg-slate-100/50 dark:bg-slate-950 flex-col items-center justify-center p-10 relative">
                                 <div className="absolute inset-0 bg-transparent bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_at_center,black,transparent)] pointer-events-none"></div>
-                                
+
                                 <div className="relative w-full max-w-sm">
                                     <div className="absolute -top-10 left-0 right-0 flex justify-center">
                                         <span className="bg-white/80 dark:bg-slate-900/80 text-primary text-xs font-bold px-4 py-1.5 rounded-full border border-primary/20 dark:border-primary/50 shadow-sm backdrop-blur-md relative z-20 flex items-center gap-1.5 animate-pulse">
@@ -418,7 +418,7 @@ const InstructorDashboardPage = () => {
                                             {isAr ? 'معاينة حية' : 'Live Preview'}
                                         </span>
                                     </div>
-                                    <motion.div 
+                                    <motion.div
                                         layout
                                         className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-slate-100 dark:border-slate-800 overflow-hidden group hover:-translate-y-1 transition-transform duration-300"
                                     >
@@ -433,11 +433,11 @@ const InstructorDashboardPage = () => {
                                                     <ImageIcon className="w-16 h-16 text-slate-200 dark:text-slate-700 transition-transform duration-500 group-hover:scale-110" />
                                                 </>
                                             )}
-                                            
+
                                             {/* Status Badge */}
                                             <AnimatePresence>
                                                 {formData.status === 'Published' && (
-                                                    <motion.div 
+                                                    <motion.div
                                                         initial={{ opacity: 0, scale: 0.8 }}
                                                         animate={{ opacity: 1, scale: 1 }}
                                                         exit={{ opacity: 0, scale: 0.8 }}
@@ -463,7 +463,7 @@ const InstructorDashboardPage = () => {
                                             </div>
                                         </div>
                                     </motion.div>
-                                    
+
                                     {/* Abstract glow behind the card */}
                                     <div className="absolute -inset-4 bg-primary/20 blur-3xl -z-10 rounded-full opacity-50 dark:opacity-30 mix-blend-multiply dark:mix-blend-screen"></div>
                                 </div>
