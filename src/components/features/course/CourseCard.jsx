@@ -34,7 +34,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                 <div className="absolute inset-0 rounded-[32px] border border-white/20 dark:border-slate-400/10 pointer-events-none z-20" />
 
                 {/* Image Section with Preview Overlay */}
-                <div className="relative h-32 sm:h-52 w-full overflow-hidden shrink-0 z-30">
+                <div className="relative h-28 sm:h-44 w-full overflow-hidden shrink-0 z-30">
                     <img
                         src={course.image}
                         alt={course.title}
@@ -60,7 +60,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                 </div>
 
                 {/* Content Section with Refined Hierarchy */}
-                <div className="p-3 sm:p-6 md:p-8 flex flex-col relative flex-grow min-w-0 z-30">
+                <div className="p-3 sm:p-5 md:p-6 flex flex-col relative flex-grow min-w-0 z-30">
                     {/* 1. Rating & Level Row */}
                     <div className="flex items-center justify-between mb-2 sm:mb-4">
                         <div className="flex items-center gap-1 sm:gap-1.5 bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-md sm:rounded-lg border border-slate-100 dark:border-slate-700/50">
@@ -78,13 +78,13 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                     </div>
 
                     {/* 2. Title */}
-                    <h3 className="font-extrabold text-base sm:text-lg md:text-xl text-slate-900 dark:text-white mb-2 sm:mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+                    <h3 className="font-extrabold text-base sm:text-md md:text-lg text-slate-900 dark:text-white mb-2 sm:mb-3 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
                         {course.title}
                     </h3>
 
                     {/* 3. Instructor - Restored for all sizes */}
                     <button
-                        className="flex items-center gap-2 mb-4 sm:mb-6 group/ins w-fit px-2 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800/40 border border-slate-100/50 dark:border-slate-700/50 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300 cursor-pointer"
+                        className="flex items-center gap-2 mb-3 sm:mb-4 group/ins w-fit px-2 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800/40 border border-slate-100/50 dark:border-slate-700/50 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300 cursor-pointer"
                         onClick={(e) => {
                             e.preventDefault();
                             navigate(`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`);
@@ -101,7 +101,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                     </button>
 
                     {/* 4. Course Details - Clean Grid */}
-                    <div className="flex items-center gap-3 sm:gap-5 text-[9px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-500 mb-3 sm:mb-6">
+                    <div className="flex items-center gap-3 sm:gap-5 text-[9px] sm:text-[11px] font-bold text-slate-400 dark:text-slate-500 mb-3 sm:mb-4">
                         <div className="flex items-center gap-1 sm:gap-1.5">
                             <BookOpen size={12} className="text-primary/60" />
                             <span>{course.lessons} <span className="hidden xs:inline">{t('courses.lessons')}</span></span>
@@ -113,10 +113,10 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                     </div>
 
                     {/* 5. Price & CTA - Premium Alignment */}
-                    <div className="mt-auto pt-2 sm:pt-5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2 sm:gap-4">
+                    <div className="mt-auto pt-2 sm:pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2 sm:gap-4">
                         <div className="flex flex-col">
                             <div className="flex items-center gap-1 sm:gap-2">
-                                <span className="font-black text-sm sm:text-2xl text-slate-900 dark:text-white">
+                                <span className="font-black text-sm sm:text-xl text-slate-900 dark:text-white">
                                     {course.price === 0 ? t('home.cta.free') : `$${course.discount ? (course.price * (1 - course.discount / 100)).toFixed(2) : course.price}`}
                                 </span>
                             </div>
@@ -124,7 +124,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                         
                         <Link to={`/courses/${course.id}`} className="shrink-0">
                             <Button 
-                                className="bg-primary hover:bg-primary-dark text-white px-4 py-2 sm:px-8 sm:py-3.5 rounded-xl sm:rounded-2xl font-black text-[11px] sm:text-[13px] transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-primary/40 uppercase tracking-wider"
+                                className="bg-primary hover:bg-primary-dark text-white px-4 py-2 sm:px-6 sm:py-2.5 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-[12px] transition-all duration-300 shadow-lg shadow-primary/20 hover:shadow-primary/40 uppercase tracking-wider"
                             >
                                 {t('courses.viewCourse')}
                             </Button>

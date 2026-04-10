@@ -127,7 +127,8 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="relative max-w-4xl mx-auto"
+            className="relative max-w-6xl mx-auto"
+            dir={isAr ? 'rtl' : 'ltr'}
         >
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/15 via-secondary/10 to-accent/15 blur-[60px] rounded-3xl opacity-60 dark:opacity-40 -z-10" />
 
@@ -135,29 +136,29 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                 {/* Title bar */}
                 <div className="flex items-center justify-between px-4 py-2.5 bg-[#12121f] border-b border-slate-800/60">
                     <div className="flex items-center gap-2">
-                        <div className="flex gap-1.5">
+                        <div className={cn("flex gap-1.5", isAr && "flex-row-reverse")}>
                             <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                             <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
                             <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                         </div>
-                        <div className="ml-3 px-3 py-1 bg-slate-800/60 rounded-md text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+                        <div className={cn("px-3 py-1 bg-slate-800/60 rounded-md text-[10px] text-slate-400 font-mono flex items-center gap-1.5", isAr ? "mr-3" : "ml-3")}>
                             <div className="w-3 h-3 bg-primary/30 rounded flex items-center justify-center">
-                                <Play className="w-1.5 h-1.5 text-primary fill-primary" />
+                                <Play className={cn("w-1.5 h-1.5 text-primary fill-primary", isAr && "rotate-180")} />
                             </div>
-                            nexora.ai/courses/react-masterclass/learn
+                            <span dir="ltr">nexora.ai/courses/react-masterclass/learn</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-1.5">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                        <span className="text-[9px] text-green-400/80 font-medium">AI Active</span>
+                        <span className="text-[9px] text-green-400/80 font-medium">{t('home.howItWorks.mockup.active')}</span>
                     </div>
                 </div>
 
                 <div className="flex flex-col lg:block relative">
                     {/* Video Player Side */}
-                    <div className="w-full lg:w-[calc(100%-320px)] relative">
+                    <div className="w-full lg:w-[calc(100%-380px)] relative">
                         <div className="relative aspect-video bg-gradient-to-br from-[#0d0d1a] via-[#141428] to-[#0d0d1a] flex items-center justify-center overflow-hidden">
-                            <div className="absolute inset-4 sm:inset-8 flex flex-col gap-2 opacity-50">
+                            <div className="absolute inset-4 sm:inset-8 flex flex-col gap-2 opacity-50" dir="ltr">
                                 <div className="text-[10px] sm:text-xs font-mono text-slate-500"><span className="text-pink-400">import</span> <span className="text-cyan-400">React</span> <span className="text-pink-400">from</span> <span className="text-yellow-300">'react'</span>;</div>
                                 <div className="text-[10px] sm:text-xs font-mono text-slate-500"><span className="text-pink-400">import</span> {'{'} <span className="text-cyan-400">useState</span>, <span className="text-cyan-400">useEffect</span> {'}'} <span className="text-pink-400">from</span> <span className="text-yellow-300">'react'</span>;</div>
                                 <div className="text-[10px] sm:text-xs font-mono text-slate-500 mt-2"><span className="text-pink-400">const</span> <span className="text-blue-400">useMemo</span> = (<span className="text-orange-400">factory</span>, <span className="text-orange-400">deps</span>) {'=> {'}</div>
@@ -184,14 +185,14 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                                 {currentPhase === 'playing' && (
                                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute top-3 left-3 sm:top-4 sm:left-4 flex items-center gap-1.5 bg-red-500/90 px-2 py-1 rounded-md z-10">
                                         <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                                        <span className="text-[9px] sm:text-[10px] text-white font-bold uppercase tracking-wider">Live</span>
+                                        <span className="text-[9px] sm:text-[10px] text-white font-bold uppercase tracking-wider">{t('home.howItWorks.mockup.live')}</span>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
 
-                            <div className="absolute bottom-12 left-3 right-3 sm:bottom-14 sm:left-4 sm:right-4 z-5">
-                                <div className="text-white/60 text-[10px] sm:text-[11px] font-medium">Lecture 7 of 12</div>
-                                <div className="text-white text-xs sm:text-sm font-bold">React Performance: useMemo & useCallback</div>
+                            <div className={cn("absolute bottom-12 z-5", isAr ? "right-3 sm:right-4 text-right" : "left-3 sm:left-4 text-left")}>
+                                <div className="text-white/60 text-[10px] sm:text-[11px] font-medium">{t('home.howItWorks.mockup.lectureInfo', { current: 7, total: 12 })}</div>
+                                <div className="text-white text-xs sm:text-sm font-bold">{t('home.howItWorks.mockup.lectureTitle')}</div>
                             </div>
                         </div>
 
@@ -206,14 +207,14 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                             <div className="flex items-center justify-between text-[10px] text-slate-500">
                                 <div className="flex items-center gap-3">
                                     <div className="w-5 h-5 flex items-center justify-center">
-                                        {isPaused ? <Play className="w-3.5 h-3.5 text-white fill-white" /> : <Pause className="w-3.5 h-3.5 text-white" />}
+                                        {isPaused ? <Play className={cn("w-3.5 h-3.5 text-white fill-white", isAr && "rotate-180")} /> : <Pause className="w-3.5 h-3.5 text-white" />}
                                     </div>
-                                    <span className="font-mono">12:{Math.floor(progress * 0.6).toString().padStart(2, '0')} / 28:45</span>
+                                    <span className="font-mono text-center" dir="ltr">12:{Math.floor(progress * 0.6).toString().padStart(2, '0')} / 28:45</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div className="flex items-center gap-1 text-purple-400">
                                         <div className="w-2 h-2 bg-purple-500 rounded-full" />
-                                        <span className="text-[9px] font-bold">4 AI Points</span>
+                                        <span className="text-[9px] font-bold">{t('home.howItWorks.mockup.points', { count: 4 })}</span>
                                     </div>
                                     <span className="text-slate-600">|</span>
                                     <span>1x</span>
@@ -223,17 +224,20 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                     </div>
 
                     {/* AI Chat Panel */}
-                    <div className="w-full lg:w-[320px] lg:absolute lg:right-0 lg:top-0 lg:bottom-0 border-t lg:border-t-0 lg:border-l border-slate-800/40 flex flex-col bg-[#0f0f1e]">
+                    <div className={cn(
+                        "w-full lg:w-[380px] lg:absolute lg:top-0 lg:bottom-0 border-t lg:border-t-0 flex flex-col bg-[#0f0f1e]",
+                        isAr ? "lg:left-0 lg:border-r border-slate-800/40" : "lg:right-0 lg:border-l border-slate-800/40"
+                    )}>
                         <div className="px-4 py-3 border-b border-slate-800/40 flex items-center justify-between">
                             <div className="flex items-center gap-2.5">
                                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                                     <Bot className="w-3.5 h-3.5 text-white" />
                                 </div>
                                 <div>
-                                    <div className="text-[11px] font-bold text-white">Nexora AI Tutor</div>
+                                    <div className="text-[11px] font-bold text-white">{t('home.howItWorks.mockup.tutorName')}</div>
                                     <div className="flex items-center gap-1">
                                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                        <span className="text-[9px] text-green-400 font-medium">Watching with you</span>
+                                        <span className="text-[9px] text-green-400 font-medium">{t('home.howItWorks.mockup.watchingStatus')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -242,15 +246,22 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                                 transition={{ duration: 1.5, repeat: Infinity }}
                                 className={cn("px-2 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider border", isPaused ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30" : "bg-emerald-500/10 text-emerald-400 border-emerald-500/30")}
                             >
-                                {isPaused ? '⏸ Paused' : '▶ Watching'}
+                                {isPaused ? `⏸ ${t('home.howItWorks.mockup.paused')}` : `▶ ${t('home.howItWorks.mockup.watching')}`}
                             </motion.div>
                         </div>
 
                         <div ref={chatScrollRef} className="flex-1 px-3 py-3 sm:px-4 sm:py-4 space-y-3 overflow-y-auto scrollbar-hide min-h-[200px] lg:min-h-0">
-                            <div className="flex gap-2.5 items-start">
+                             <div className="flex gap-2.5 items-start">
                                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center flex-shrink-0 mt-0.5"><Bot className="w-3 h-3 text-primary" /></div>
-                                <div className="bg-slate-800/60 rounded-xl rounded-tl-none px-3 py-2 text-[11px] text-slate-300 leading-relaxed border border-slate-700/30 flex-1">
-                                    I see the instructor is explaining <span className="text-primary font-semibold">useMemo</span> hook. I'm tracking the key concepts for you… 👀
+                                <div className={cn(
+                                    "bg-slate-800/60 rounded-xl px-3 py-2 text-[11px] text-slate-300 leading-relaxed border border-slate-700/30 flex-1",
+                                    isAr ? "rounded-tr-none text-right" : "rounded-tl-none text-left"
+                                )}>
+                                    {isAr ? (
+                                        <>أرى أن المحاضر يشرح خطاف <span className="text-primary font-semibold">useMemo</span>. أنا أتتبع المفاهيم الأساسية من أجلك… 👀</>
+                                    ) : (
+                                        <>I see the instructor is explaining <span className="text-primary font-semibold">useMemo</span> hook. I'm tracking the key concepts for you… 👀</>
+                                    )}
                                 </div>
                             </div>
 
@@ -258,9 +269,16 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                                 {(currentPhase === 'ai-asking' || currentPhase === 'typing' || currentPhase === 'ai-response') && (
                                     <motion.div initial={{ opacity: 0, y: 15, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} className="flex gap-2.5 items-start">
                                         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0 mt-0.5 shadow-lg shadow-primary/30"><Bot className="w-3 h-3 text-white" /></div>
-                                        <div className="bg-primary/10 rounded-xl rounded-tl-none px-3 py-2 text-[11px] text-slate-200 leading-relaxed border border-primary/20 flex-1">
-                                            <div className="flex items-center gap-1.5 mb-1"><MessageCircle className="w-3 h-3 text-primary" /><span className="text-[9px] text-primary font-bold uppercase tracking-wider">Paused • Quick Check</span></div>
-                                            The instructor just explained why <span className="text-yellow-300 font-semibold">useMemo</span> prevents unnecessary re-renders. Want me to break it down? 🤔
+                                        <div className={cn(
+                                            "bg-primary/10 rounded-xl px-3 py-2 text-[11px] text-slate-200 leading-relaxed border border-primary/20 flex-1",
+                                            isAr ? "rounded-tr-none text-right" : "rounded-tl-none text-left"
+                                        )}>
+                                            <div className={cn("flex items-center gap-1.5 mb-1", isAr && "flex-row-reverse")}><MessageCircle className="w-3 h-3 text-primary" /><span className="text-[9px] text-primary font-bold uppercase tracking-wider">{t('home.howItWorks.mockup.quickCheck')}</span></div>
+                                            {isAr ? (
+                                                <>لقد أوضح المحاضر للتو لماذا يمنع <span className="text-yellow-300 font-semibold">useMemo</span> إعادة الرندر غير الضرورية. هل تريدني أن أشرح ذلك؟ 🤔</>
+                                            ) : (
+                                                <>The instructor just explained why <span className="text-yellow-300 font-semibold">useMemo</span> prevents unnecessary re-renders. Want me to break it down? 🤔</>
+                                            )}
                                         </div>
                                     </motion.div>
                                 )}
@@ -268,9 +286,12 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
 
                             <AnimatePresence>
                                 {(currentPhase === 'typing' || currentPhase === 'ai-response') && (
-                                    <motion.div initial={{ opacity: 0, x: 20, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="flex gap-2.5 items-start flex-row-reverse">
+                                    <motion.div initial={{ opacity: 0, x: isAr ? -20 : 20, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className={cn("flex gap-2.5 items-start", isAr ? "flex-row" : "flex-row-reverse")}>
                                         <div className="w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center flex-shrink-0 mt-0.5 border border-slate-600"><Users className="w-3 h-3 text-slate-300" /></div>
-                                        <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl rounded-tr-none px-3 py-2 text-[11px] text-white leading-relaxed shadow-lg shadow-indigo-600/20">Yes please! Show me an example 🙏</div>
+                                        <div className={cn(
+                                            "bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl px-3 py-2 text-[11px] text-white leading-relaxed shadow-lg shadow-indigo-600/20",
+                                            isAr ? "rounded-tl-none text-left" : "rounded-tr-none text-right"
+                                        )}>{t('home.howItWorks.mockup.userReply')}</div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -281,12 +302,12 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                                         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0 mt-0.5">
                                             <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}><Sparkles className="w-3 h-3 text-white" /></motion.div>
                                         </div>
-                                        <div className="bg-slate-800/60 rounded-xl rounded-tl-none px-4 py-2.5 border border-slate-700/30">
+                                        <div className={cn("bg-slate-800/60 rounded-xl px-4 py-2.5 border border-slate-700/30", isAr ? "rounded-tr-none text-right" : "rounded-tl-none text-left")}>
                                             <div className="flex items-center gap-1.5">
                                                 <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0 }} className="w-1.5 h-1.5 bg-primary rounded-full" />
                                                 <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.15 }} className="w-1.5 h-1.5 bg-secondary rounded-full" />
                                                 <motion.div animate={{ scale: [1, 1.4, 1] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.3 }} className="w-1.5 h-1.5 bg-accent rounded-full" />
-                                                <span className="text-[9px] text-slate-500 ml-1 font-medium">Thinking...</span>
+                                                <span className={cn("text-[9px] text-slate-500 font-medium", isAr ? "mr-1" : "ml-1")}>{t('home.howItWorks.mockup.thinking')}</span>
                                             </div>
                                         </div>
                                     </motion.div>
@@ -297,14 +318,25 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                                 {currentPhase === 'ai-response' && (
                                     <motion.div initial={{ opacity: 0, y: 15, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="flex gap-2.5 items-start">
                                         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0 mt-0.5"><Bot className="w-3 h-3 text-white" /></div>
-                                        <div className="bg-slate-800/60 rounded-xl rounded-tl-none px-3 py-2 text-[11px] text-slate-300 leading-relaxed border border-slate-700/30 flex-1 space-y-2">
-                                            <p>Without <span className="text-yellow-300">useMemo</span>, this recalculates every render:</p>
-                                            <div className="bg-[#0a0a14] rounded-lg p-2.5 font-mono text-[10px] border border-white/5">
+                                        <div className={cn(
+                                            "bg-slate-800/60 rounded-xl px-3 py-2 text-[11px] text-slate-300 leading-relaxed border border-slate-700/30 flex-1 space-y-2",
+                                            isAr ? "rounded-tr-none text-right" : "rounded-tl-none text-left"
+                                        )}>
+                                            {isAr ? (
+                                                <p>بدون <span className="text-yellow-300">useMemo</span>، يتم حساب هذا في كل رندر:</p>
+                                            ) : (
+                                                <p>Without <span className="text-yellow-300">useMemo</span>, this recalculates every render:</p>
+                                            )}
+                                            <div className="bg-[#0a0a14] rounded-lg p-2.5 font-mono text-[10px] border border-white/5" dir="ltr">
                                                 <div><span className="text-pink-400">const</span> <span className="text-cyan-400">result</span> = <span className="text-purple-400">useMemo</span>{'(() => {'}</div>
                                                 <div className="ml-3"><span className="text-pink-400">return</span> <span className="text-blue-400">expensiveCalc</span>(a, b);</div>
                                                 <div>{'}'}, [a, b]);</div>
                                             </div>
-                                            <p>This caches the result until <span className="text-cyan-400">[a, b]</span> change! ✨</p>
+                                            {isAr ? (
+                                                <p>هذا يحفظ النتيجة حتى تتغير <span className="text-cyan-400">[a, b]</span>! ✨</p>
+                                            ) : (
+                                                <p>This caches the result until <span className="text-cyan-400">[a, b]</span> change! ✨</p>
+                                            )}
                                         </div>
                                     </motion.div>
                                 )}
@@ -313,8 +345,10 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
 
                         <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-t border-slate-800/40 bg-[#0a0a18]">
                             <div className="relative flex items-center">
-                                <div className="w-full py-2.5 px-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-[11px] text-slate-500">Ask about this video...</div>
-                                <div className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center opacity-50"><ArrowRight className="w-3.5 h-3.5 text-white" /></div>
+                                <div className={cn("w-full py-2.5 px-3 bg-slate-800/50 border border-slate-700/50 rounded-xl text-[11px] text-slate-500", isAr ? "text-right" : "text-left")}>{t('home.howItWorks.mockup.inputPlaceholder')}</div>
+                                <div className={cn("absolute top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center opacity-50", isAr ? "left-2" : "right-2")}>
+                                    <ArrowRight className={cn("w-3.5 h-3.5 text-white", isAr && "rotate-180")} />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -438,7 +472,7 @@ const HomePage = () => {
             <HeroSection getStartedPath={getStartedPath} />
 
             {/* Stats Section — Unified Style with Categories */}
-            <section className="relative py-12 md:py-16 px-4 md:px-8 overflow-hidden">
+            <section className="relative py-10 md:py-12 px-4 md:px-8 overflow-hidden">
                 {/* Background match Categories in light, transparent in dark */}
                 <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-transparent transition-colors duration-500" />
                 <div className="absolute inset-0 opacity-[0.02] dark:opacity-0" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -486,7 +520,7 @@ const HomePage = () => {
             </section>
 
             {/* Categories Section — Premium Redesign */}
-            <section className="relative py-24 overflow-hidden">
+            <section className="relative py-16 overflow-hidden">
                 {/* Background */}
                 <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-slate-950 transition-colors duration-500" />
                 <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -584,7 +618,7 @@ const HomePage = () => {
             </section>
 
             {/* Featured Courses — Stagger Grid with Carousel Mobile */}
-            <section className="bg-[#F5F3FF] dark:bg-slate-900/50 py-20 md:py-24 transition-colors duration-300">
+            <section className="bg-[#F5F3FF] dark:bg-slate-900/50 py-14 md:py-18 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -633,7 +667,7 @@ const HomePage = () => {
             </section>
 
             {/* AI Feature Highlight — Cinematic Entrance */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative overflow-visible">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative overflow-visible">
                 {/* Enhanced Neon Glow behind the content */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-linear-to-r from-primary/20 via-purple-500/10 to-transparent blur-[140px] rounded-full pointer-events-none z-0 animate-pulse" style={{ animationDuration: '4s' }} />
 
@@ -720,7 +754,7 @@ const HomePage = () => {
             </section>
 
             {/* ═══ How It Works — Animated Mockup Demo ═══ */}
-            <section className="relative py-20 md:py-28 overflow-hidden">
+            <section className="relative py-14 md:py-20 overflow-hidden">
                 {/* Background */}
                 <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-slate-950 transition-colors duration-500" />
                 <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -789,7 +823,7 @@ const HomePage = () => {
 
 
             {/* Top Instructors Section - Stagger with Alternating Slides */}
-            <section className="relative py-20 md:py-24 overflow-hidden bg-[#F5F3FF] dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
+            <section className="relative py-14 md:py-18 overflow-hidden bg-[#F5F3FF] dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
                 {/* Decorative background elements */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/5 rounded-full blur-[100px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
                 <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[400px] h-[400px] bg-secondary/10 dark:bg-secondary/5 rounded-full blur-[80px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
@@ -885,7 +919,7 @@ const HomePage = () => {
             </section>
 
             {/* Testimonials — Stagger with Scale & Carousel Mobile */}
-            <section className="bg-[#F5F3FF] dark:bg-transparent py-12 md:py-16 transition-colors duration-300">
+            <section className="bg-[#F5F3FF] dark:bg-transparent py-10 md:py-12 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 pb-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -938,7 +972,7 @@ const HomePage = () => {
             </section>
 
             {/* CTA Section — Premium Immersive */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9, y: 30 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -971,7 +1005,7 @@ const HomePage = () => {
                     />
 
                     {/* Content */}
-                    <div className="relative z-10 py-16 md:py-20 px-6 md:px-12">
+                    <div className="relative z-10 py-10 md:py-14 px-6 md:px-12">
                         <div className="grid lg:grid-cols-2 gap-12 items-center">
                             {/* Left - Text & CTA */}
                             <motion.div
@@ -992,10 +1026,10 @@ const HomePage = () => {
                                     {t('home.cta.badge', { defaultValue: 'Start Your Journey' })}
                                 </motion.div>
                                 
-                                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-5 leading-tight">
+                                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
                                     {t('home.cta.title')}
                                 </h2>
-                                <p className="text-white/70 text-sm sm:text-base mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                                <p className="text-white/70 text-xs sm:text-sm mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                                     {t('home.cta.subtitle')}
                                 </p>
 
@@ -1033,7 +1067,7 @@ const HomePage = () => {
                                             </div>
                                         ))}
                                     </div>
-                                    <p className="text-white/60 text-xs">
+                                    <p className="text-white/60 text-xs text-center lg:text-left">
                                         <span className="text-white font-bold">10,000+</span> {t('home.cta.learnersJoined', { defaultValue: 'learners joined this month' })}
                                     </p>
                                 </div>
@@ -1045,13 +1079,13 @@ const HomePage = () => {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.7, delay: 0.4 }}
-                                className="grid grid-cols-2 gap-3"
+                                className="grid grid-cols-2 gap-3 sm:gap-4 flex-1"
                             >
                                 {[
-                                    { icon: Brain, value: 'AI Powered', label: t('home.cta.stat1', { defaultValue: 'Smart Tutoring' }), color: 'from-cyan-400 to-blue-500', delay: 0 },
-                                    { icon: Clock, value: '24/7', label: t('home.cta.stat2', { defaultValue: 'Always Available' }), color: 'from-purple-400 to-pink-500', delay: 0.1 },
-                                    { icon: Target, value: '99%', label: t('home.cta.stat3', { defaultValue: 'Satisfaction Rate' }), color: 'from-amber-400 to-orange-500', delay: 0.2 },
-                                    { icon: Shield, value: '100%', label: t('home.cta.stat4', { defaultValue: 'Secure & Private' }), color: 'from-emerald-400 to-teal-500', delay: 0.3 },
+                                    { icon: Brain, value: t('home.cta.stat1Value', { defaultValue: 'AI Powered' }), label: t('home.cta.stat1Label', { defaultValue: 'Smart Tutoring' }), color: 'from-cyan-400 to-blue-500', delay: 0 },
+                                    { icon: Clock, value: t('home.cta.stat2Value', { defaultValue: '24/7' }), label: t('home.cta.stat2Label', { defaultValue: 'Always Available' }), color: 'from-purple-400 to-pink-500', delay: 0.1 },
+                                    { icon: Target, value: t('home.cta.stat3Value', { defaultValue: '99%' }), label: t('home.cta.stat3Label', { defaultValue: 'Satisfaction Rate' }), color: 'from-amber-400 to-orange-500', delay: 0.2 },
+                                    { icon: Shield, value: t('home.cta.stat4Value', { defaultValue: '100%' }), label: t('home.cta.stat4Label', { defaultValue: 'Secure & Private' }), color: 'from-emerald-400 to-teal-500', delay: 0.3 },
                                 ].map((stat, i) => (
                                     <motion.div
                                         key={i}
@@ -1060,16 +1094,17 @@ const HomePage = () => {
                                         viewport={{ once: true }}
                                         transition={{ duration: 0.5, delay: 0.5 + stat.delay }}
                                         whileHover={{ y: -5, transition: { duration: 0.3 } }}
-                                        className="bg-white/[0.07] backdrop-blur-md border border-white/10 rounded-2xl p-5 text-center hover:bg-white/[0.12] transition-all duration-300 group/stat"
+                                        className="bg-white/[0.07] backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center hover:bg-white/[0.12] transition-all duration-300 group/stat"
                                     >
                                         <div className={`w-10 h-10 mx-auto rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3 shadow-lg group-hover/stat:scale-110 transition-transform duration-300`}>
                                             <stat.icon className="w-5 h-5 text-white" />
                                         </div>
-                                        <p className="text-lg font-bold text-white mb-0.5">{stat.value}</p>
+                                        <p className="text-lg font-bold text-white mb-0.5 whitespace-nowrap">{stat.value}</p>
                                         <p className="text-[11px] text-white/50 font-medium uppercase tracking-wider">{stat.label}</p>
                                     </motion.div>
                                 ))}
                             </motion.div>
+
                         </div>
                     </div>
                 </motion.div>

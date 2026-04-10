@@ -6,6 +6,7 @@ import { motion, useInView, useSpring, useMotionValue, useTransform } from 'fram
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
 import { api } from '../../services/api';
+import { cn } from '../../utils';
 
 // Animated counter component
 const AnimatedStat = ({ value, suffix = '' }) => {
@@ -309,7 +310,7 @@ const LearnerDashboardPage = () => {
                         transition={{ duration: 2, repeat: Infinity }}
                         className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider"
                     >
-                        {t('common.new', { defaultValue: 'New' })}
+                        {t('common.new')}
                     </motion.span>
                 </div>
                 <div className="space-y-4">
@@ -328,12 +329,12 @@ const LearnerDashboardPage = () => {
                         </motion.div>
                         <div className="flex-1">
                             <div className="flex justify-between items-start mb-1">
-                                <h3 className="font-bold text-slate-900 dark:text-white">New Bonus Section Added!</h3>
-                                <span className="text-xs text-slate-500">2h ago</span>
+                                <h3 className="font-bold text-slate-900 dark:text-white">{t('dashboard.learner.announcementTitle')}</h3>
+                                <span className={cn("text-xs text-slate-500", isAr ? "text-left" : "text-right")}>{t('dashboard.learner.announcementTime')}</span>
                             </div>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">Hi everyone! I just uploaded 3 new videos covering the latest React 19 hooks. Make sure to check them out in Section 8...</p>
+                            <p className={cn("text-sm text-slate-600 dark:text-slate-400 mb-3", isAr && "text-right")}>{t('dashboard.learner.announcementBody')}</p>
                             <Link to="/courses/2" className="text-xs font-bold text-primary hover:underline flex items-center gap-1 group">
-                                {t('common.viewCourse', { defaultValue: 'View Course' })} <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                                {t('common.viewCourse')} <ChevronRight size={12} className={cn("transition-transform", isAr ? "group-hover:-translate-x-1 rotate-180" : "group-hover:translate-x-1")} />
                             </Link>
                         </div>
                     </motion.div>
@@ -353,7 +354,7 @@ const LearnerDashboardPage = () => {
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
                 >
                     {[
-                        { to: '/courses', icon: BookOpen, title: t('dashboard.learner.browseCourses'), desc: t('dashboard.learner.browseCoursesHint', { defaultValue: 'Explore new topics' }), gradient: 'from-blue-500 to-indigo-600', bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-600 dark:text-blue-400' },
+                        { to: '/courses', icon: BookOpen, title: t('dashboard.learner.browseCourses'), desc: t('dashboard.learner.exploreTopics'), gradient: 'from-blue-500 to-indigo-600', bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-600 dark:text-blue-400' },
                         { to: '/ai-demo', icon: Sparkles, title: t('dashboard.learner.aiTutor'), desc: t('dashboard.learner.aiTutorHint'), gradient: 'from-purple-500 to-pink-600', bg: 'bg-purple-50 dark:bg-purple-900/20', text: 'text-purple-600 dark:text-purple-400' },
                         { to: '/learner/profile', icon: User, title: t('dashboard.learner.profile'), desc: t('dashboard.learner.profileHint'), gradient: 'from-teal-500 to-emerald-600', bg: 'bg-teal-50 dark:bg-teal-900/20', text: 'text-teal-600 dark:text-teal-400' },
                     ].map((action, i) => (

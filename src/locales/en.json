@@ -59,6 +59,40 @@
       "chatUserQuery": "How do I optimize this React component for performance?",
       "chatAiResponse": "You can use `useMemo` and `useCallback` to prevent unnecessary re-renders."
     },
+    "howItWorks": {
+      "badge": "See It in Action",
+      "title": "Your AI Tutor,",
+      "titleHighlight": "Always Watching",
+      "subtitle": "Pause any video and your AI tutor instantly explains what's happening. It's like having a personal teacher for every lecture.",
+      "featureTitle1": "Watches Every Lecture",
+      "featureDesc1": "AI follows along with the video content in real-time, tracking concepts and key moments.",
+      "featureTitle2": "Explains on Pause",
+      "featureDesc2": "Pause anytime and get instant, contextual explanations of what was just covered.",
+      "featureTitle3": "Marks Key Points",
+      "featureDesc3": "Important concepts are automatically bookmarked so you never miss critical information.",
+      "featureTitle4": "Tracks Your Progress",
+      "featureDesc4": "Personalized learning analytics help you understand your strengths and areas to improve.",
+      "cta": "Try It Yourself",
+      "mockup": {
+        "active": "AI Active",
+        "lectureInfo": "Lecture {{current}} of {{total}}",
+        "points": "{{count}} AI Points",
+        "tutorName": "Nexora AI Tutor",
+        "watchingStatus": "Watching with you",
+        "paused": "Paused",
+        "watching": "Watching",
+        "live": "Live",
+        "lectureTitle": "React Performance: useMemo & useCallback",
+        "chatWelcome": "I see the instructor is explaining <0>useMemo</0> hook. I'm tracking the key concepts for you… 👀",
+        "quickCheck": "Paused • Quick Check",
+        "aiQuestion": "The instructor just explained why <0>useMemo</0> prevents unnecessary re-renders. Want me to break it down? 🤔",
+        "userReply": "Yes please! Show me an example 🙏",
+        "thinking": "Thinking...",
+        "aiExplanation": "Without <0>useMemo</0>, this recalculates every render:",
+        "aiExplanationResult": "This caches the result until <0>[a, b]</0> change! ✨",
+        "inputPlaceholder": "Ask about this video..."
+      }
+    },
     "testimonials": {
       "badge": "Testimonials",
       "title": "Loved by Students",
@@ -86,9 +120,19 @@
       "subtitle": "Join thousands of students already learning smarter with Nexora AI",
       "btnContinue": "Continue Learning",
       "btnGetStarted": "Get Started Free",
-      "browseAll": "Browse All Courses",
+      "browseCourses": "Browse Courses",
       "getStarted": "Get Started Now",
-      "free": "Free"
+      "free": "Free",
+      "badge": "Start Your Journey ✨",
+      "learnersJoined": "learners joined this month",
+      "stat1Value": "AI Powered",
+      "stat1Label": "Smart Tutoring",
+      "stat2Value": "24/7",
+      "stat2Label": "Always Available",
+      "stat3Value": "99%",
+      "stat3Label": "Satisfaction Rate",
+      "stat4Value": "100%",
+      "stat4Label": "Secure & Private"
     }
   },
   "footer": {
@@ -120,7 +164,10 @@
     "error_title": "Oops! Something went wrong",
     "error_subtitle": "An unexpected error occurred. Please try refreshing the page or going back to the home page.",
     "refresh_page": "Refresh Page",
-    "justNow": "Just now"
+    "justNow": "Just now",
+    "h": "h",
+    "new": "New",
+    "viewCourse": "View Course"
   },
   "auth": {
     "login": {
@@ -184,7 +231,11 @@
       "aiTutor": "AI Tutor",
       "aiTutorHint": "Get help from AI",
       "profile": "Profile",
-      "profileHint": "Manage details"
+      "profileHint": "Manage details",
+      "announcementTitle": "New Bonus Section Added!",
+      "announcementBody": "Hi everyone! I just uploaded 3 new videos covering the latest React 19 hooks. Make sure to check them out in Section 8...",
+      "announcementTime": "2h ago",
+      "exploreTopics": "Explore new topics"
     },
     "admin": {
       "panel": "Admin Panel",
