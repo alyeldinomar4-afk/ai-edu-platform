@@ -19,12 +19,14 @@ let lecturesSub = [...mockLectures];
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const normalizeDuration = (duration) => {
+    // Backend expects number (seconds). If UI sends a string (e.g. "10:30"), we convert it here.
     if (typeof duration === 'number') return duration;
-    if (typeof duration !== 'string') return 0;
     
-    const parts = duration.split(':').map(Number);
-    if (parts.length === 2) return (parts[0] || 0) * 60 + (parts[1] || 0);
-    if (parts.length === 3) return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+    if (typeof duration === 'string' && duration.includes(':')) {
+        const parts = duration.split(':').map(Number);
+        if (parts.length === 2) return (parts[0] || 0) * 60 + (parts[1] || 0);
+        if (parts.length === 3) return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+    }
     
     const num = parseInt(duration, 10);
     return isNaN(num) ? 0 : num;

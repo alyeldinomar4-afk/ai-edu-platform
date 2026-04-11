@@ -217,6 +217,7 @@ Response:
     title: string,
     instructor: string,   // instructor display name
     instructorId: number,  // for linking to instructor profile
+    instructorAvatar: string, // profile image of the instructor
     rating: number,        // 0-5
     reviews: number,       // total review count
     price: number,         // e.g. 19.99
@@ -249,7 +250,7 @@ Response:
   description: string,
   instructor: string,
   instructorId: number,
-  instructorImage: string,
+  instructorAvatar: string,
   price: number,
   discount: number,
   image: string,
@@ -611,7 +612,7 @@ Request (FormData):
   title: string,
   course: string,            // course name for display
   courseId: number,          // ⚠️ Required: linking to a course
-  duration: number | string, // MM:SS string or numeric seconds (API handles conversion)
+  duration: number,           // Total numeric seconds (REQUIRED)
   status: "published" | "draft" | "pending",
   videoFile: File,           // the actual video file
   resources: File[],         // PDF, docs, etc.
@@ -1086,7 +1087,7 @@ Request:
   context: {
     courseId: number | null,
     lectureId: number | null,
-    videoTimestamp: string | null   // "09:00"
+    videoTimestamp: number | null   // numeric seconds (e.g., 540 for 09:00)
   }
 }
 
@@ -1126,7 +1127,7 @@ This section defines how the AI connects to real-time video playback. The fronte
 
 Request:
 {
-  lectureId: number | string,   // ID of the video being watched
+  lectureId: number,          // ID of the video being watched
   currentTime: number,        // current timestamp in seconds (e.g., 125.5)
   action: "chat" | "auto_prompt" | "explain-section" | "summarize" | "explain-scene" | "create-quiz" | "show-code",
   query?: string              // the actual text or question from the user

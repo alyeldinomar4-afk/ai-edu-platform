@@ -92,7 +92,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                     >
                         <div className="w-6 h-6 rounded-full overflow-hidden border border-white dark:border-slate-700 shadow-sm transition-transform group-hover/ins:scale-110 bg-slate-200">
                             <img 
-                                src={course.instructorImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.instructor)}&background=random`} 
+                                src={course.instructorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.instructor)}&background=random`} 
                                 alt={course.instructor}
                                 className="w-full h-full object-cover"
                             />
