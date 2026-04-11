@@ -422,6 +422,7 @@
       "lectures": {
         "backToDashboard": "Back to Dashboard",
         "title": "Course Lectures",
+        "allCourses": "All Courses",
         "subtitle": "Manage and organize your educational video content.",
         "uploadNew": "Upload Lecture",
         "searchPlaceholder": "Search by title or course...",
@@ -709,6 +710,7 @@
       "design": "Design",
       "marketing": "Marketing",
       "photography": "Photography",
+      "business": "Business",
       "finance": "Finance"
     }
   },

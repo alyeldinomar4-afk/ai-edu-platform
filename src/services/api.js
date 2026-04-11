@@ -1,39 +1,55 @@
-/**
- * API Service Layer
- * -----------------
- * This file is the SINGLE integration point for all backend API calls.
- * Currently uses mock data from src/data/mockData.js.
- * 
- * TO INTEGRATE WITH BACKEND:
- * 1. Replace the mock implementations with fetch/axios calls
- * 2. Update BASE_URL to your backend URL
- * 3. Add token from localStorage to Authorization header
- * 
- * Example:
- *   const BASE_URL = 'https://your-api.com/api';
- *   const headers = () => ({
- *     'Content-Type': 'application/json',
- *     'Authorization': `Bearer ${localStorage.getItem('ai_edu_token')}`
- *   });
- */
+import { 
+    courses as mockCourses, 
+    instructors as mockInstructors, 
+    lectures as mockLectures,
+    instructorQuestions,
+    instructorAnnouncements,
+    instructorReviews,
+    globalStats,
+    categories,
+    testimonials
+} from '../data/mockData';
+import i18n from '../i18n';
 
-import { courses, categories, testimonials } from '../data/mockData';
+// Mutable data stores for synchronization
+let coursesSub = [...mockCourses];
+let lecturesSub = [...mockLectures];
 
 // Simulated network delay
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const normalizeDuration = (duration) => {
+    if (typeof duration === 'number') return duration;
+    if (typeof duration !== 'string') return 0;
+    
+    const parts = duration.split(':').map(Number);
+    if (parts.length === 2) return (parts[0] || 0) * 60 + (parts[1] || 0);
+    if (parts.length === 3) return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+    
+    const num = parseInt(duration, 10);
+    return isNaN(num) ? 0 : num;
+};
+
 export const api = {
+    // ─── Profile Endpoints ───────────────────────────────────
+    profile: {
+        update: async (data) => {
+            await delay(800);
+            console.log('Profile updated:', data);
+            return { success: true, user: data };
+        },
+        updatePassword: async (data) => {
+            await delay(1000);
+            console.log('Password updated');
+            return { success: true };
+        }
+    },
+
     // ─── Course Endpoints ────────────────────────────────────
-    // Backend: GET /api/courses
     courses: {
-        /**
-         * Get all courses
-         * Backend: GET /api/courses?category=X&search=Y
-         * Response: Course[]
-         */
         getAll: async (filters = {}) => {
             await delay(600);
-            let result = [...courses];
+            let result = [...coursesSub];
             if (filters.category && filters.category !== 'All') {
                 result = result.filter(c => c.category === filters.category);
             }
@@ -45,38 +61,38 @@ export const api = {
             return result;
         },
 
-        /**
-         * Get single course by ID
-         * Backend: GET /api/courses/:id
-         * Response: Course (with curriculum, reviews)
-         */
         getById: async (id) => {
             await delay(600);
-            const course = courses.find((c) => c.id === parseInt(id));
+            const course = coursesSub.find((c) => c.id === parseInt(id));
             if (!course) throw new Error('Course not found');
             return course;
         },
 
-        /**
-         * Get available categories
-         * Backend: GET /api/categories
-         * Response: Category[]
-         */
         getCategories: async () => {
             await delay(400);
             return categories;
         },
+
+        getLectures: async (id) => {
+            await delay(500);
+            return lecturesSub.filter(l => l.courseId === parseInt(id));
+        },
+    },
+
+    // ─── Instructors Public Endpoints ────────────────────────
+    instructors: {
+        getAll: async () => {
+            await delay(500);
+            return mockInstructors;
+        },
+        getById: async (id) => {
+            await delay(500);
+            return mockInstructors.find(ins => ins.id === parseInt(id));
+        }
     },
 
     // ─── Learner Endpoints ───────────────────────────────────
-    // Backend: GET /api/learner/*
     learner: {
-        /**
-         * Get enrolled courses with progress
-         * Backend: GET /api/learner/progress
-         * Headers: Authorization: Bearer <token>
-         * Response: { courseId, title, progress, lastLesson }[]
-         */
         getProgress: async () => {
             await delay(500);
             return [
@@ -84,24 +100,19 @@ export const api = {
                     courseId: 1,
                     title: 'Machine Learning Fundamentals',
                     progress: 65,
-                    lastLesson: 'Lecture 14: Gradient Descent',
+                    lastLesson: 'Understanding Neural Networks and Deep Learning',
                     image: 'https://images.unsplash.com/photo-1527474305487-b87b222841cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
                 },
                 {
                     courseId: 2,
                     title: 'Advanced React Patterns',
                     progress: 45,
-                    lastLesson: 'Lesson 5: Higher Order Components',
+                    lastLesson: 'Advanced React Context and Hooks',
                     image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
                 },
             ];
         },
 
-        /**
-         * Get learner stats
-         * Backend: GET /api/learner/stats
-         * Response: { hoursWatched, certificates, coursesInProgress }
-         */
         getStats: async () => {
             await delay(500);
             return {
@@ -111,121 +122,329 @@ export const api = {
             };
         },
 
-        /**
-         * Get recommended courses for this learner
-         * Backend: GET /api/learner/recommendations
-         * Response: Course[] (based on AI/ML analysis)
-         */
         getRecommendations: async () => {
             await delay(600);
-            return courses.slice(0, 3);
+            return coursesSub.slice(0, 3);
         },
+
+        checkout: async (courseId) => {
+            await delay(1000);
+            return { success: true, orderId: `ORD-${Date.now()}` };
+        },
+
+        getPurchase: async (orderId) => {
+            await delay(500);
+            return { id: orderId, date: new Date().toISOString(), status: 'completed' };
+        }
     },
 
-    // ─── Instructor Endpoints ────────────────────────────────
-    // Backend: GET /api/instructor/*
+    // ─── Instructor Dashboard Endpoints ─────────────────────
     instructor: {
-        /**
-         * Get instructor dashboard stats
-         * Backend: GET /api/instructor/stats
-         * Response: { totalStudents, totalRevenue, avgRating, activeCourses }
-         */
         getStats: async () => {
             await delay(500);
             return {
-                totalStudents: 1234,
-                totalRevenue: '$12.5k',
+                totalStudents: 15420,
+                totalRevenue: 24500,
                 avgRating: 4.8,
-                totalReviews: 500,
-                activeCourses: 8,
+                totalReviews: 850,
+                activeCourses: 12,
                 pendingReview: 2
             };
         },
 
-        /**
-         * Get instructor's courses
-         * Backend: GET /api/instructor/courses
-         * Response: InstructorCourse[]
-         */
-        getCourses: async () => {
-            await delay(600);
-            return [
-                {
-                    id: 1,
-                    title: 'Introduction to AI v1.0',
-                    students: 120,
-                    status: 'Published',
-                    revenue: '$1,200',
-                    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
-                },
-                {
-                    id: 2,
-                    title: 'Introduction to AI v2.0',
-                    students: 85,
-                    status: 'Published',
-                    revenue: '$950',
-                    image: 'https://images.unsplash.com/photo-1591453089816-0fbb971b454c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
-                },
-                {
-                    id: 3,
-                    title: 'Introduction to AI v3.0',
-                    students: 200,
-                    status: 'Draft',
-                    revenue: '$0',
-                    image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
-                },
-            ];
+        courses: {
+            getAll: async () => {
+                await delay(600);
+                return coursesSub.filter(c => c.instructorId === 1).map(c => ({
+                    ...c,
+                    students: Math.floor(Math.random() * 500),
+                    status: 'published',
+                    revenue: Math.floor(Math.random() * 5000)
+                }));
+            },
+            create: async (data) => {
+                await delay(800);
+                const newCourse = { ...data, id: coursesSub.length + 1, instructorId: 1 };
+                coursesSub = [newCourse, ...coursesSub];
+                return newCourse;
+            },
+            update: async (id, data) => {
+                await delay(800);
+                coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
+                return { ...data, id };
+            },
+            delete: async (id) => {
+                await delay(500);
+                coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
+                return { success: true };
+            }
         },
+
+        lectures: {
+            getAll: async (courseId) => {
+                await delay(500);
+                if (courseId === 'all') return lecturesSub;
+                return lecturesSub.filter(l => l.courseId === parseInt(courseId));
+            },
+            create: async (data) => {
+                await delay(800);
+                const normalizedData = {
+                    ...data,
+                    duration: normalizeDuration(data.duration)
+                };
+                const newLecture = { 
+                    ...normalizedData, 
+                    id: Date.now(), 
+                    views: 0, 
+                    date: new Date().toISOString().split('T')[0] 
+                };
+                lecturesSub = [newLecture, ...lecturesSub];
+                return newLecture;
+            },
+            update: async (id, data) => {
+                await delay(800);
+                const updateData = { ...data };
+                if (updateData.duration !== undefined) {
+                    updateData.duration = normalizeDuration(updateData.duration);
+                }
+                lecturesSub = lecturesSub.map(l => l.id === parseInt(id) ? { ...l, ...updateData } : l);
+                return { ...updateData, id };
+            },
+            delete: async (id) => {
+                await delay(500);
+                lecturesSub = lecturesSub.filter(l => l.id !== parseInt(id));
+                return { success: true };
+            },
+            toggleStatus: async (id) => {
+                await delay(400);
+                lecturesSub = lecturesSub.map(l => l.id === parseInt(id) ? { ...l, status: l.status === 'published' ? 'draft' : 'published' } : l);
+                return { success: true };
+            }
+        },
+
+        reviews: {
+            getAll: async () => {
+                await delay(500);
+                return instructorReviews;
+            },
+            reply: async (id, comment) => {
+                await delay(500);
+                return { id, user: 'Instructor', comment, date: 'Just now' };
+            }
+        },
+
+        questions: {
+            getAll: async () => {
+                await delay(500);
+                return instructorQuestions;
+            },
+            reply: async (id, reply) => {
+                await delay(500);
+                return { id, reply, date: 'Just now' };
+            }
+        },
+
+        announcements: {
+            getAll: async (courseId) => {
+                await delay(400);
+                if (courseId === 'all') return instructorAnnouncements;
+                return instructorAnnouncements.filter(a => a.courseId === courseId);
+            },
+            create: async (data) => {
+                await delay(500);
+                return { ...data, id: Date.now() };
+            }
+        }
     },
 
     // ─── Admin Endpoints ─────────────────────────────────────
-    // Backend: GET /api/admin/*
     admin: {
-        /**
-         * Get admin dashboard stats
-         * Backend: GET /api/admin/stats
-         * Response: { totalUsers, activeCourses, totalRevenue, activeUsers }
-         */
-        getStats: async () => {
-            await delay(500);
-            return {
-                totalUsers: 12345,
-                activeCourses: courses.length,
-                totalRevenue: 45678,
-                activeUsers: 890
-            };
+        stats: {
+            getOverview: async () => {
+                await delay(500);
+                return {
+                    totalStudents: 1540,
+                    activeCourses: mockCourses.length,
+                    totalRevenue: 85000,
+                    totalInstructors: 2,
+                    videosUploaded: 48,
+                    userGrowth: 12,
+                    courseGrowth: 5,
+                    videoGrowth: 8,
+                    revenueGrowth: 15,
+                    recentActivity: [
+                        { id: 1, user: 'Ahmed Ali', action: 'Purchased: Machine Learning', time: '5m ago' },
+                        { id: 2, user: 'Sara Kamel', action: 'Enrolled: React Patterns', time: '12m ago' },
+                        { id: 3, user: 'Dr. Laila Hassan', action: 'Uploaded New Lecture', time: '45m ago' },
+                        { id: 4, user: 'Ahmed Mansour', action: 'Updated Course Price', time: '1h ago' }
+                    ]
+                };
+            },
         },
 
-        /**
-         * Get all users (admin)
-         * Backend: GET /api/admin/users?page=X&limit=Y
-         * Response: { users: User[], total: number }
-         */
-        getUsers: async () => {
-            await delay(600);
-            return [
-                { id: 1, name: 'Alice Smith', email: 'alice@example.com', role: 'learner', joined: '2023-10-15' },
-                { id: 2, name: 'Bob Jones', email: 'bob@example.com', role: 'learner', joined: '2023-11-02' },
-                { id: 3, name: 'Charlie Kim', email: 'charlie@example.com', role: 'instructor', joined: '2023-09-01' },
-                { id: 4, name: 'David Lee', email: 'david@example.com', role: 'learner', joined: '2023-12-10' },
-                { id: 5, name: 'Emma Wilson', email: 'emma@example.com', role: 'admin', joined: '2024-01-05' },
-            ];
+        users: {
+            getAll: async () => {
+                await delay(600);
+                return [
+                    { id: 1, name: 'Dr. Laila Hassan', email: 'laila@nexora.ai', role: 'instructor', joined: '2023-01-10', status: 'active', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
+                    { id: 2, name: 'Ahmed Mansour', email: 'ahmed@nexora.ai', role: 'instructor', joined: '2023-02-15', status: 'active', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
+                    { id: 3, name: 'System Admin', email: 'admin@test.com', role: 'admin', joined: '2023-01-01', status: 'active', avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&q=80' },
+                    { id: 4, name: 'Test Student', email: 'user@test.com', role: 'learner', joined: '2023-03-20', status: 'active', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&q=80' },
+                    { id: 5, name: 'Ahmed Ali', email: 'ahmed.ali@example.com', role: 'learner', joined: '2023-05-12', status: 'active', avatar: 'https://ui-avatars.com/api/?name=Ahmed+Ali&background=random' },
+                    { id: 6, name: 'Sara Kamel', email: 'sara.kamel@example.com', role: 'learner', joined: '2023-06-18', status: 'active', avatar: 'https://ui-avatars.com/api/?name=Sara+Kamel&background=random' },
+                ];
+            },
+            create: async (data) => {
+                await delay(800);
+                return { ...data, id: Date.now() };
+            },
+            update: async (id, data) => {
+                await delay(800);
+                return { ...data, id };
+            },
+            delete: async (id) => {
+                await delay(500);
+                return { success: true };
+            },
+            toggleStatus: async (id) => {
+                await delay(400);
+                return { success: true };
+            }
         },
+
+        courses: {
+            getAll: async () => {
+                await delay(600);
+                return coursesSub;
+            },
+            update: async (id, data) => {
+                await delay(800);
+                coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
+                return { ...data, id };
+            },
+            delete: async (id) => {
+                await delay(500);
+                coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
+                return { success: true };
+            }
+        },
+
+        videos: {
+            getAll: async () => {
+                await delay(600);
+                return lecturesSub;
+            },
+            update: async (id, data) => {
+                await delay(800);
+                lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, ...data } : v);
+                return { ...data, id };
+            },
+            delete: async (id) => {
+                await delay(500);
+                lecturesSub = lecturesSub.filter(v => v.id !== parseInt(id));
+                return { success: true };
+            },
+            toggleStatus: async (id) => {
+                await delay(400);
+                lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, status: v.status === 'published' ? 'draft' : 'published' } : v);
+                return { success: true };
+            }
+        },
+
+        settings: {
+            get: async () => {
+                await delay(600);
+                return {
+                    platformName: 'Nexora AI',
+                    supportEmail: 'support@nexora.ai',
+                    maintenanceMode: false,
+                    enableAiTutor: true,
+                    defaultAiModel: 'gpt-4-turbo',
+                    feedbackIntensity: 'medium',
+                    autoApproveCourses: false,
+                    defaultCurrency: 'USD',
+                    googleLogin: true,
+                    githubLogin: true
+                };
+            },
+            update: async (data) => {
+                await delay(1000);
+                console.log('Settings updated:', data);
+                return { success: true, settings: data };
+            }
+        }
     },
 
-    // ─── AI Chat Endpoints ───────────────────────────────────
-    // Backend: POST /api/ai/chat
+    // ─── AI Chat & Video Assistant ──────────────────────────
     ai: {
-        /**
-         * Send message to AI tutor
-         * Backend: POST /api/ai/chat
-         * Body: { message, context?: { courseId, videoTimestamp } }
-         * Response: { response: string }
-         */
         chat: async (message, context = {}) => {
-            await delay(1500);
+            await delay(1200);
+            const msg = message.toLowerCase();
+            const isAr = i18n.language === 'ar';
+
+            if (msg.includes('react') || msg.includes('component') || msg.includes('ريأكت')) {
+                return { message: isAr ? "ريأكت (React) هي مكتبة JavaScript لبناء واجهات المستخدم. تعتمد على فكرة المكونات (Components) التي تجعل الكود قابلاً لإعادة الاستخدام وسهل الصيانة." : "React is a JavaScript library for building user interfaces. It relies on the concept of Components, making code reusable and easier to maintain." };
+            }
+            if (msg.includes('python') || msg.includes('loop') || msg.includes('بايثون')) {
+                return { message: isAr ? "بايثون هي لغة برمجة قوية وسهلة التعلم. تُستخدم بكثرة في علم البيانات، الذكاء الاصطناعي، وتطوير الويب لسهولة قراءة كودها وتوفر مكتبات ضخمة لها." : "Python is a powerful and easy-to-learn programming language. It is widely used in Data Science, AI, and Web Development due to its readability and massive library support." };
+            }
+            if (msg.includes('machine learning') || msg.includes('ml') || msg.includes('ai') || msg.includes('تعلم الآلة') || msg.includes('ذكاء اصطناعي')) {
+                return { message: isAr ? "تعلم الآلة (ML) هو فرع من الذكاء الاصطناعي يركز على بناء أنظمة تتعلم من البيانات وتحسن أداءها مع الوقت دون برمجة صريحة لكل خطوة." : "Machine Learning (ML) is a branch of AI focusing on building systems that learn from data and improve over time without being explicitly programmed for every step." };
+            }
+            if (msg.includes('code') || msg.includes('مثال') || msg.includes('كود')) {
+                return {
+                    message: isAr
+                        ? "بالتأكيد! إليك مثال بسيط لمكون React:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>أهلاً بك في مشروعي!</h1>\n    </div>\n  );\n}\n```\nشوفت التنسيق جميل إزاي؟ ✨"
+                        : "Sure thing! Here is a simple React component example:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>Welcome to my project!</h1>\n    </div>\n  );\n}\n```\nI have formatted it for you! ✨"
+                };
+            }
+
             return {
-                response: `I analyzed your question: "${message}". Based on the current context, here is a detailed explanation...`
+                message: isAr ? `سؤال مثير للاهتمام! سأقوم بتحليل "${message}" والرد عليك بالتفصيل بناءً على المصادر المتاحة لدي.` : `Interesting question! I will analyze "${message}" and provide a detailed response based on the available resources.`
+            };
+        },
+        /**
+         * AI Video Assistant
+         * Handles auto-prompts on pause and contextual user questions.
+         */
+        videoAssistant: async ({ lectureId, currentTime, action, query }) => {
+            await delay(800);
+            
+            // 1. Auto Prompt logic
+            if (action === 'auto_prompt') {
+                return {
+                    message: i18n.language === 'ar' 
+                        ? "لاحظت أنك توقفت هنا. هل تود أن أشرح لك المفهوم البرمجي الذي يظهر على الشاشة الآن؟"
+                        : "I noticed you paused here. Would you like me to explain the concept being shown on screen right now?",
+                    suggested: true
+                };
+            }
+
+            // 2. Specialized responses for specific contextual queries
+            if (action === 'show-code' || (query && query.includes('code'))) {
+                return {
+                    message: i18n.language === 'ar'
+                        ? "بالتأكيد! إليك كود برمجي يوضح المفهوم الذي يتم شرحه في الفيديو:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nويمكنك نسخه مباشرة وتجربته في مشروعك! 🚀"
+                        : "Certainly! Here's a clean implementation of the Custom Hook discussed in the video:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nYou can copy this directly into your project! 🚀",
+                    suggested: false
+                };
+            }
+
+            if (action === 'explain-scene' || action === 'explain-section') {
+                return {
+                    message: i18n.language === 'ar' 
+                        ? "أرى شرحًا لبنية الـ React Context تظهر على الشاشة. يتحدث المعلم في هذه اللحظة عن كيفية تمرير البيانات عبر شجرة المكونات دون الحاجة لاستخدام الـ Props يدوياً."
+                        : "I see a structural diagram showing React Context architecture. The instructor is explaining how data is passed through the component tree without manually passing props at every level.",
+                    suggested: false
+                };
+            }
+
+            // 3. Default fallback response
+            return {
+                message: i18n.language === 'ar'
+                    ? `سؤال رائع عن محتوى الفيديو عند الثانية ${Math.floor(currentTime)}. في هذا الجزء، يشرح المحاضر كيفية تحسين أداء التطبيق وتقليل عمليات إعادة الـ Rendering لزيادة السرعة.`
+                    : `That's a great question about the content at ${Math.floor(currentTime)}s. In this part, the instructor is discussing how to optimize application performance and minimize re-renders for speed.`,
+                suggested: false
             };
         }
     },

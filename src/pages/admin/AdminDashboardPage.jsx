@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../auth/useAuth';
+import { api } from '../../services/api';
+import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { formatCompactNumber, formatCurrency } from '../../utils/formatters';
 
 const StatCard = ({ title, value, change, icon: Icon, color }) => (
     <motion.div
@@ -25,7 +29,24 @@ const StatCard = ({ title, value, change, icon: Icon, color }) => (
 
 const AdminDashboardPage = () => {
     const { user } = useAuth();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const [stats, setStats] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            setIsLoading(true);
+            try {
+                const data = await api.admin.stats.getOverview();
+                setStats(data);
+            } catch (error) {
+                console.error('Error fetching admin stats:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
 
     return (
         <div className="space-y-8 transition-colors duration-300">
@@ -41,10 +62,20 @@ const AdminDashboardPage = () => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard title={t('dashboard.admin.stats.totalUsers')} value="12,345" change={12} icon={Users} color="bg-blue-500" />
-                <StatCard title={t('dashboard.admin.stats.activeCourses')} value="142" change={5} icon={BookOpen} color="bg-indigo-500" />
-                <StatCard title={t('dashboard.admin.stats.videosUploaded')} value="1,204" change={8} icon={Video} color="bg-pink-500" />
-                <StatCard title={t('dashboard.admin.stats.totalRevenue')} value="$45,678" change={24} icon={DollarSign} color="bg-green-500" />
+                {isLoading ? (
+                    [1, 2, 3, 4].map(i => (
+                        <div key={i} className="h-40 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 animate-pulse flex items-center justify-center">
+                            <Loader2 className="w-6 h-6 text-slate-300 animate-spin" />
+                        </div>
+                    ))
+                ) : (
+                    <>
+                        <StatCard title={t('dashboard.admin.stats.totalUsers')} value={formatCompactNumber(stats?.totalStudents || 0, i18n.language)} change={stats?.userGrowth || 0} icon={Users} color="bg-blue-500" />
+                        <StatCard title={t('dashboard.admin.stats.activeCourses')} value={formatCompactNumber(stats?.activeCourses || 0, i18n.language)} change={stats?.courseGrowth || 0} icon={BookOpen} color="bg-indigo-500" />
+                        <StatCard title={t('dashboard.admin.stats.videosUploaded')} value={formatCompactNumber(stats?.videosUploaded || 0, i18n.language)} change={stats?.videoGrowth || 0} icon={Video} color="bg-pink-500" />
+                        <StatCard title={t('dashboard.admin.stats.totalRevenue')} value={formatCurrency(stats?.totalRevenue || 0, i18n.language)} change={stats?.revenueGrowth || 0} icon={DollarSign} color="bg-green-500" />
+                    </>
+                )}
             </div>
 
             {/* Charts / Placeholder */}

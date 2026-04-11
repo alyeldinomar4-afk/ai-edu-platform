@@ -7,31 +7,8 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
 import { api } from '../../services/api';
 import { cn } from '../../utils';
-
-// Animated counter component
-const AnimatedStat = ({ value, suffix = '' }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true });
-    const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value;
-    const motionValue = useMotionValue(0);
-    const springValue = useSpring(motionValue, { stiffness: 80, damping: 20 });
-    const [display, setDisplay] = useState('0');
-
-    useEffect(() => {
-        if (isInView) {
-            motionValue.set(numericValue);
-        }
-    }, [isInView, numericValue, motionValue]);
-
-    useEffect(() => {
-        const unsubscribe = springValue.on('change', (latest) => {
-            setDisplay(Math.round(latest).toString());
-        });
-        return unsubscribe;
-    }, [springValue]);
-
-    return <span ref={ref}>{display}{suffix}</span>;
-};
+import { formatNumber, formatCompactNumber } from '../../utils/formatters';
+import AnimatedCounter from '../../components/ui/AnimatedCounter';
 
 // Stagger variants
 const stagger = {
@@ -147,7 +124,7 @@ const LearnerDashboardPage = () => {
                         </motion.div>
                         <div>
                             <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                                <AnimatedStat value={stat.value} suffix={stat.suffix} />
+                                <AnimatedCounter target={stat.value} suffix={stat.suffix} locale={i18n.language} />
                             </h3>
                             <p className="text-sm text-slate-500 dark:text-slate-400">{stat.label}</p>
                         </div>

@@ -4,6 +4,7 @@ import { Send, Sparkles, User, Bot, Loader2, ArrowLeft, Zap, Code, Brain, BookOp
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import TypewriterMessage from '../components/features/ai/TypewriterMessage';
+import { api } from '../services/api';
 
 const AIDemoPage = () => {
     const { t, i18n } = useTranslation();
@@ -25,38 +26,47 @@ const AIDemoPage = () => {
     const inputRef = useRef(null);
 
     const scrollToBottom = () => {
-        if (chatContainerRef.current) chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        setTimeout(() => { if (chatContainerRef.current) chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; }, 100);
-        setTimeout(() => { if (chatContainerRef.current) chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; }, 300);
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTo({
+                top: chatContainerRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
     };
 
     useEffect(() => { scrollToBottom(); }, [messages, isTyping]);
 
-    const getDemoResponse = (userMessage) => {
-        const msg = userMessage.toLowerCase();
-        if (msg.includes('react') || msg.includes('component') || msg.includes('ريأكت')) return t('videoPlayer.aiDemo.responses.react');
-        if (msg.includes('python') || msg.includes('loop') || msg.includes('بايثون')) return t('videoPlayer.aiDemo.responses.python');
-        if (msg.includes('machine learning') || msg.includes('ml') || msg.includes('ai') || msg.includes('تعلم الآلة') || msg.includes('ذكاء اصطناعي')) return t('videoPlayer.aiDemo.responses.ml');
-        if (msg.includes('help') || msg.includes('what can you do') || msg.includes('مساعدة')) return t('videoPlayer.aiDemo.responses.help');
-        if (msg.includes('code') || msg.includes('مثال') || msg.includes('كود')) {
-            return isRTL
-                ? "بالتأكيد! إليك مثال بسيط لكود React لمكون (Component) يقوم بعرض رسالة ترحيب:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>أهلاً بك في مشروعي!</h1>\n    </div>\n  );\n}\n```\nلاحظ كيف قمت بتنسيقه لك بشكل احترافي! ✨"
-                : "Sure thing! Here is a simple React component example:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>Welcome to my project!</h1>\n    </div>\n  );\n}\n```\nI have formatted it for you to be easy to read! ✨";
-        }
-        return t('videoPlayer.aiDemo.responses.default', { message: userMessage });
-    };
-
     const handleSend = async () => {
-        if (!input.trim()) return;
+        if (!input.trim() || isTyping) return;
+        
         const userMessage = { id: Date.now(), role: 'user', content: input, timestamp: new Date() };
         setMessages(prev => [...prev, userMessage]);
+        
         const savedInput = input;
         setInput('');
         setIsTyping(true);
-        setTimeout(() => {
-            setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', content: getDemoResponse(savedInput), timestamp: new Date(), isNew: true }]);
+
+        try {
+            const result = await api.ai.chat(savedInput);
             setIsTyping(false);
-        }, 1000 + Math.random() * 1000);
+            setMessages(prev => [...prev, { 
+                id: Date.now() + 1, 
+                role: 'assistant', 
+                content: result.message, 
+                timestamp: new Date(), 
+                isNew: true 
+            }]);
+        } catch (error) {
+            console.error("AI Demo Error:", error);
+            setIsTyping(false);
+            setMessages(prev => [...prev, { 
+                id: Date.now() + 1, 
+                role: 'assistant', 
+                content: isRTL ? "عذراً، حدث خطأ في الاتصال بنظام الذكاء الاصطناعي." : "Sorry, I had trouble connecting to the AI system.", 
+                timestamp: new Date(), 
+                isNew: true 
+            }]);
+        }
     };
 
     const handleKeyPress = (e) => {

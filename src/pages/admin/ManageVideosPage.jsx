@@ -26,8 +26,9 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
-
-import { lectures } from '../../data/mockData';
+import { api } from '../../services/api';
+import { formatCompactNumber, formatDuration } from '../../utils/formatters';
+import { Loader2 } from 'lucide-react';
 
 // ManageVideosPage v1.3 - Fixed ReferenceError (Edit icon)
 const ManageVideosPage = () => {
@@ -46,6 +47,25 @@ const ManageVideosPage = () => {
         status: 'published'
     });
 
+    const [videos, setVideos] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchVideos = async () => {
+        setIsLoading(true);
+        try {
+            const data = await api.admin.videos.getAll(); 
+            setVideos(data);
+        } catch (error) {
+            console.error('Error fetching videos:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchVideos();
+    }, []);
+
     // Reset/Sync form values when modal opens or editingVideo changes
     useEffect(() => {
         if (showVideoModal) {
@@ -54,19 +74,11 @@ const ManageVideosPage = () => {
                 instructor: editingVideo?.instructor || '',
                 course: editingVideo?.course || '',
                 thumbnail: editingVideo?.thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80',
-                duration: editingVideo?.duration || '10:00',
+                duration: editingVideo?.duration || 600,
                 status: editingVideo?.status || 'published'
             });
         }
     }, [showVideoModal, editingVideo]);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues(prev => ({ ...prev, [name]: value }));
-    };
-
-    // Initial Videos state - Now mapped directly to the shared mock data to keep pages synced
-    const [videos, setVideos] = useState(lectures);
 
     // Robust Filtering Logic
     const filteredVideos = useMemo(() => {
@@ -84,39 +96,57 @@ const ManageVideosPage = () => {
     }, [videos, searchTerm, statusFilter]);
 
     // Actions
-    const handleDeleteVideo = (id) => {
-        setVideos(prev => prev.filter(v => v.id !== id));
-        toast.success(t('dashboard.admin.manageVideos.toasts.deleteSuccess'));
+    const handleDeleteVideo = async (id) => {
+        try {
+            await api.instructor.lectures.delete(id);
+            setVideos(prev => prev.filter(v => v.id !== id));
+            toast.success(t('dashboard.admin.manageVideos.toasts.deleteSuccess'));
+        } catch (error) {
+            console.error('Error deleting video:', error);
+        }
     };
 
-    const togglePublish = (id) => {
-        const video = videos.find(v => v.id === id);
-        if (!video) return;
+    const togglePublish = async (id) => {
+        try {
+            await api.instructor.lectures.toggleStatus(id);
+            const video = videos.find(v => v.id === id);
+            if (!video) return;
 
-        const newStatus = video.status === 'published' ? 'draft' : 'published';
-        toast.success(t(`dashboard.admin.manageVideos.toasts.${newStatus === 'published' ? 'publishSuccess' : 'unpublishSuccess'}`));
+            const newStatus = video.status === 'published' ? 'draft' : 'published';
+            toast.success(t(`dashboard.admin.manageVideos.toasts.${newStatus === 'published' ? 'publishSuccess' : 'unpublishSuccess'}`));
 
-        setVideos(prev => prev.map(v => v.id === id ? { ...v, status: newStatus } : v));
+            setVideos(prev => prev.map(v => v.id === id ? { ...v, status: newStatus } : v));
+        } catch (error) {
+            console.error('Error toggling status:', error);
+        }
     };
 
-    const handleAddVideo = (data) => {
-        const newVideo = {
-            ...data,
-            id: Date.now(),
-            views: "0",
-            date: new Date().toISOString().split('T')[0],
-            thumbnail: data.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
-        };
-        setVideos(prev => [newVideo, ...prev]);
-        setShowVideoModal(false);
-        toast.success(t('dashboard.admin.manageVideos.toasts.addSuccess'));
+    const handleAddVideo = async (data) => {
+        try {
+            const created = await api.instructor.lectures.create({
+                ...data,
+                views: 0,
+                date: new Date().toISOString().split('T')[0],
+                thumbnail: data.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
+            });
+            setVideos(prev => [created, ...prev]);
+            setShowVideoModal(false);
+            toast.success(t('dashboard.admin.manageVideos.toasts.addSuccess'));
+        } catch (error) {
+            console.error('Error adding video:', error);
+        }
     };
 
-    const handleUpdateVideo = (data) => {
-        setVideos(prev => prev.map(v => v.id === data.id ? { ...v, ...data } : v));
-        setEditingVideo(null);
-        setShowVideoModal(false);
-        toast.success(t('dashboard.admin.manageVideos.toasts.updateSuccess'));
+    const handleUpdateVideo = async (data) => {
+        try {
+            const updated = await api.instructor.lectures.update(data.id, data);
+            setVideos(prev => prev.map(v => v.id === data.id ? updated : v));
+            setEditingVideo(null);
+            setShowVideoModal(false);
+            toast.success(t('dashboard.admin.manageVideos.toasts.updateSuccess'));
+        } catch (error) {
+            console.error('Error updating video:', error);
+        }
     };
 
     const getStatusStyle = (status) => {
@@ -180,14 +210,19 @@ const ManageVideosPage = () => {
             </div>
 
             {/* Content Area */}
-            {filteredVideos && filteredVideos.length > 0 ? (
+            {isLoading ? (
+                <div className="py-20 flex flex-col items-center justify-center gap-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                </div>
+            ) : filteredVideos && filteredVideos.length > 0 ? (
                 viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {filteredVideos.map((video) => (
                             <div key={video.id} className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col">
                                 <div className="relative w-full aspect-video shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-800">
                                     {video.thumbnail && <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />}
-                                    <span className={`absolute bottom-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded uppercase`}>{video.duration}</span>
+                                    <span className={`absolute bottom-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded uppercase`}>{formatDuration(video.duration)}</span>
                                     <span className={`absolute top-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider ${getStatusStyle(video.status)}`}>
                                         {t(`dashboard.admin.manageVideos.${video.status}`)}
                                     </span>
@@ -200,7 +235,7 @@ const ManageVideosPage = () => {
                                     </div>
                                     <div className="mt-auto pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between">
                                         <div className={`flex gap-3 text-[10px] text-slate-400 ${t('dir') === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
-                                            <span className="flex items-center gap-1"><Eye size={12} /> {video.views}</span>
+                                            <span className="flex items-center gap-1"><Eye size={12} /> {formatCompactNumber(video.views)}</span>
                                             <span className="flex items-center gap-1"><Calendar size={12} /> {video.date}</span>
                                         </div>
                                         <div className="flex gap-1">
@@ -243,8 +278,8 @@ const ManageVideosPage = () => {
                                         <td className="px-6 py-4 whitespace-nowrap text-slate-600 dark:text-slate-300">{video.instructor}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-[11px] text-slate-500">
                                             <div className="flex flex-col gap-0.5">
-                                                <span className="flex items-center gap-1"><Eye size={12} /> {video.views}</span>
-                                                <span className="flex items-center gap-1"><Clock size={12} /> {video.duration}</span>
+                                                <span className="flex items-center gap-1"><Eye size={12} /> {formatCompactNumber(video.views)}</span>
+                                                <span className="flex items-center gap-1"><Clock size={12} /> {formatDuration(video.duration)}</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -406,7 +441,7 @@ const ManageVideosPage = () => {
                                             </p>
                                             <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                                                 <span className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300">
-                                                    <Clock size={14} /> {formValues.duration || '10:00'}
+                                                    <Clock size={14} /> {formatDuration(formValues.duration || 600)}
                                                 </span>
                                             </div>
                                         </div>

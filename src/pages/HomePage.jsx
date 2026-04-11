@@ -5,11 +5,13 @@ import Button from '../components/ui/Button';
 import HeroSection from '../components/sections/HeroSection';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import CourseCard from '../components/features/course/CourseCard';
-import { courses, categories, testimonials, instructors } from '../data/mockData';
+import { api } from '../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
 import { useTranslation } from 'react-i18next';
+import { Loader2 } from 'lucide-react';
 import { cn } from '../utils';
+import { formatCompactNumber } from '../utils/formatters';
 
 /* ─── Shared Framer Motion variants ─── */
 const staggerContainer = {
@@ -465,6 +467,38 @@ const HomePage = () => {
     const { t, i18n } = useTranslation();
     const isAr = i18n.language === 'ar';
 
+    const [featuredCourses, setFeaturedCourses] = useState([]);
+    const [fetchedStats, setFetchedStats] = useState(null);
+    const [categoriesList, setCategoriesList] = useState([]);
+    const [instructors, setInstructors] = useState([]);
+    const [testimonials, setTestimonials] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadHomeData = async () => {
+            setIsLoading(true);
+            try {
+                const [coursesData, statsData, catsData, instData, testsData] = await Promise.all([
+                    api.courses.getAll(),
+                    api.admin.stats.getOverview(),
+                    api.courses.getCategories(),
+                    api.instructors.getAll(),
+                    api.testimonials.getAll()
+                ]);
+                setFeaturedCourses(coursesData.slice(0, 4));
+                setFetchedStats(statsData);
+                setCategoriesList(catsData);
+                setInstructors(instData);
+                setTestimonials(testsData);
+            } catch (error) {
+                console.error('Error loading home data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadHomeData();
+    }, []);
+
     const getStartedPath = !isAuthenticated
         ? '/register'
         : user?.role === 'admin'
@@ -502,10 +536,10 @@ const HomePage = () => {
                         className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
                     >
                         {[
-                            { label: t('home.stats.learners'), subtitle: t('home.stats.learnersSub'), value: 50, suffix: 'k+' },
-                            { label: t('home.stats.courses'), subtitle: t('home.stats.coursesSub'), value: 200, suffix: '+' },
-                            { label: t('home.stats.instructors'), subtitle: t('home.stats.instructorsSub'), value: 50, suffix: '+' },
-                            { label: t('home.stats.satisfaction'), subtitle: t('home.stats.satisfactionSub'), value: 99, suffix: '%' },
+                            { label: t('home.stats.learners'), value: fetchedStats?.totalStudents || 52300, suffix: '+' },
+                            { label: t('home.stats.courses'), value: fetchedStats?.activeCourses || 240, suffix: '+' },
+                            { label: t('home.stats.instructors'), value: fetchedStats?.totalInstructors || 180, suffix: '+' },
+                            { label: t('home.stats.satisfaction'), value: 99, suffix: '%' },
                         ].map((stat, idx) => (
                             <motion.div
                                 key={idx}
@@ -516,7 +550,7 @@ const HomePage = () => {
                                 <div className="flex flex-col items-center justify-center text-center h-full py-2 opacity-90 hover:opacity-100 transition-opacity duration-300">
                                     <div className="relative mb-2">
                                         <h3 className="text-2xl md:text-3xl font-alexandria font-black bg-gradient-to-r from-blue-500 via-purple-500 to-violet-500 bg-clip-text text-transparent selection:bg-primary/10">
-                                            <AnimatedCounter target={stat.value} suffix={stat.suffix} duration={2.5} />
+                                            <AnimatedCounter target={stat.value} suffix={stat.suffix} duration={2.5} locale={i18n.language} compact={stat.value >= 1000} />
                                         </h3>
                                         <div className="mt-1.5 mx-auto w-10 h-[1.5px] bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
@@ -571,7 +605,7 @@ const HomePage = () => {
                         viewport={{ once: true, margin: '-30px' }}
                         className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5"
                     >
-                        {categories.map((cat, idx) => {
+                        {categoriesList.map((cat, idx) => {
                             const IconComponent = cat.icon && iconMap[cat.icon] ? iconMap[cat.icon] : null;
                             const isSpecial = idx % 3 === 0; // Simulate some trending categories
                             return (
@@ -663,7 +697,11 @@ const HomePage = () => {
                         viewport={{ once: true, margin: '-30px' }}
                         className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 px-6 -mx-6 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:px-0 md:mx-0 md:snap-none md:overflow-visible"
                     >
-                        {courses.slice(0, 4).map((course, idx) => (
+                        {isLoading ? (
+                            Array(4).fill(0).map((_, i) => (
+                                <div key={i} className="flex-none w-[85%] sm:w-[320px] md:w-auto h-[400px] bg-slate-100 dark:bg-slate-800 animate-pulse rounded-[32px]" />
+                            ))
+                        ) : featuredCourses.map((course, idx) => (
                             <motion.div
                                 key={course.id}
                                 variants={fadeSlideUp}
@@ -968,7 +1006,7 @@ const HomePage = () => {
                                 <div className="flex items-center gap-4 mb-6">
                                     <div className="relative group/avatar">
                                         <div className="absolute inset-0 bg-primary/20 rounded-full blur-md opacity-0 group-hover/avatar:opacity-100 transition-opacity" />
-                                        <img src={testimonial.avatar} alt={testimonial.name} className="relative w-12 h-12 rounded-full object-cover ring-2 ring-slate-50 dark:ring-slate-800 shadow-md" />
+                                        <img src={testimonial.image} alt={testimonial.name} className="relative w-12 h-12 rounded-full object-cover ring-2 ring-slate-50 dark:ring-slate-800 shadow-md" />
                                     </div>
                                     <div>
                                         <h4 className="font-black text-slate-900 dark:text-white text-sm">{testimonial.name}</h4>
@@ -978,7 +1016,9 @@ const HomePage = () => {
                                     </div>
                                 </div>
                                 <div className="flex gap-1 mb-5">
-                                    {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />)}
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                        <Star key={i} className={cn("w-3.5 h-3.5", i < testimonial.rating ? "fill-yellow-400 text-yellow-400" : "text-slate-300")} />
+                                    ))}
                                 </div>
                                 <p className="text-slate-600 dark:text-slate-300 italic leading-relaxed text-xs md:text-sm font-medium relative z-10">"{testimonial.content}"</p>
                             </motion.div>

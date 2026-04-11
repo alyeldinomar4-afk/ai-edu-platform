@@ -15,7 +15,7 @@ const formatTime = (seconds) => {
 };
 
 const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, onToggleTheaterMode, aiMessages = [], isAiTyping, onAiAsk }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const videoRef = useRef(null);
     const containerRef = useRef(null);
     const controlsTimeoutRef = useRef(null);

@@ -6,15 +6,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import LoadingSkeleton from '../../components/ui/LoadingSkeleton';
-import { courses, instructors } from '../../data/mockData';
+import { api } from '../../services/api';
 import { useAuth } from '../../auth/useAuth';
 import { cn } from '../../utils';
+import { formatCurrency, formatDuration } from '../../utils/formatters';
 
 const CourseDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     // TODO: Replace with real purchase check from backend
     const purchasedCourses = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
@@ -31,6 +32,9 @@ const CourseDetailsPage = () => {
         { name: "Youssef Tariq", date: "1 week ago", rating: 4, comment: "Great content, but would love more practical exercises in section 3." }
     ]);
 
+    const [course, setCourse] = useState(null);
+    const [instructorData, setInstructorData] = useState(null);
+
     const handleSubmitReview = () => {
         if (reviewRating === 0) { setReviewError('Please select a star rating first.'); return; }
         if (!reviewText.trim()) { setReviewError('Please write your feedback before submitting.'); return; }
@@ -42,15 +46,27 @@ const CourseDetailsPage = () => {
         setTimeout(() => setReviewSuccess(false), 4000);
     };
 
-    // Find course by ID (mock) - fallback to first course if not found
-    const course = courses.find(c => c.id === parseInt(id)) || courses[0];
-    const instructorData = instructors.find(ins => ins.name === course.instructor);
-
-    // Simulate loading
+    // Fetch course data
     useEffect(() => {
-        setIsLoading(true);
-        const timer = setTimeout(() => setIsLoading(false), 600);
-        return () => clearTimeout(timer);
+        const fetchCourseData = async () => {
+            setIsLoading(true);
+            try {
+                const courseData = await api.courses.getById(parseInt(id));
+                if (courseData) {
+                    setCourse(courseData);
+                    // Fetch instructors to get bio/avatar
+                    const instructors = await api.instructors.getAll();
+                    const instructor = instructors.find(ins => ins.name === courseData.instructor);
+                    setInstructorData(instructor);
+                }
+            } catch (error) {
+                console.error('Error fetching course details:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (id) fetchCourseData();
     }, [id]);
 
     const tabs = [
@@ -93,6 +109,23 @@ const CourseDetailsPage = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!course && !isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
+                <div className="text-center max-w-sm">
+                    <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <X size={40} className="text-slate-400" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('courses.noCoursesFound')}</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mb-8">{t('courses.noCoursesHint')}</p>
+                    <Link to="/courses">
+                        <Button className="w-full">{t('dashboard.instructor.lectures.backToDashboard')}</Button>
+                    </Link>
                 </div>
             </div>
         );
@@ -210,7 +243,7 @@ const CourseDetailsPage = () => {
                                             <div className="space-y-4">
                                                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-1 mb-4">
                                                     <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.content')}</h3>
-                                                    <span className="text-sm text-slate-500 dark:text-slate-400">{course.lessons} {t('courseDetails.lectures')} • {course.duration} {t('courseDetails.totalLength')}</span>
+                                                    <span className="text-sm text-slate-500 dark:text-slate-400">{course.lessons} {t('courseDetails.lectures')} • {formatDuration(course.duration)} {t('courseDetails.totalLength')}</span>
                                                 </div>
                                                 {[1, 2, 3, 4].map((section) => (
                                                     <div key={section} className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
@@ -421,12 +454,14 @@ const CourseDetailsPage = () => {
                             <div>
                                 <div className="flex items-end gap-2 mb-4">
                                     <span className="text-3xl font-bold text-slate-900 dark:text-white">
-                                        {course.price === 0 ? t('home.cta.free') : `$${course.price}`}
+                                        {course.price === 0 ? t('home.cta.free') : formatCurrency(course.discount ? (course.price * (1 - course.discount / 100)) : course.price, i18n.language)}
                                     </span>
-                                    {course.price > 0 && (
+                                    {course.price > 0 && course.discount > 0 && (
                                         <>
-                                            <span className="text-lg text-slate-400 dark:text-slate-500 line-through mb-1">${(course.price * 1.5).toFixed(2)}</span>
-                                            <span className="text-sm font-semibold text-green-600 dark:text-green-400 mb-1 ml-auto">33% OFF</span>
+                                            <span className="text-lg text-slate-400 dark:text-slate-500 line-through mb-1">
+                                                {formatCurrency(course.price, i18n.language)}
+                                            </span>
+                                            <span className="text-sm font-semibold text-green-600 dark:text-green-400 mb-1 ml-auto">{course.discount}% OFF</span>
                                         </>
                                     )}
                                 </div>

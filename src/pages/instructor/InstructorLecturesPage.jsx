@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -26,8 +26,10 @@ import {
     Youtube
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import { lectures } from '../../data/mockData';
+import { api } from '../../services/api';
 import toast from 'react-hot-toast';
+import { formatCompactNumber, formatDuration } from '../../utils/formatters';
+import { Loader2 } from 'lucide-react';
 
 import { useTranslation } from 'react-i18next';
 
@@ -47,6 +49,17 @@ const InstructorLecturesPage = () => {
     const [showQuizBuilder, setShowQuizBuilder] = useState(false);
     const [quizQuestions, setQuizQuestions] = useState([]);
 
+    // New State for Course Selection and Live Preview
+    const [instructorCourses, setInstructorCourses] = useState([]);
+    const [selectedCourseId, setSelectedCourseId] = useState(null);
+    const [formValues, setFormValues] = useState({
+        title: '',
+        course: '',
+        duration: '10:00',
+        thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        status: 'published'
+    });
+
     const addQuestion = () => {
         setQuizQuestions(prev => [...prev, { question: '', options: ['', '', '', ''], correctAnswer: 0 }]);
     };
@@ -60,15 +73,92 @@ const InstructorLecturesPage = () => {
     };
 
     // Initial Videos state
-    const [videos, setVideos] = useState(lectures);
+    const [videos, setVideos] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            setIsLoading(true);
+            try {
+                const coursesData = await api.instructor.courses.getAll();
+                setInstructorCourses(coursesData);
+                
+                if (coursesData && coursesData.length > 0) {
+                    // Set first course as default if none selected
+                    const defaultCourseId = coursesData[0].id;
+                    setSelectedCourseId(defaultCourseId);
+                    
+                    // Initial form value for course name
+                    setFormValues(prev => ({ ...prev, course: coursesData[0].title }));
+                }
+            } catch (error) {
+                console.error('Error loading instructor courses:', error);
+                toast.error(t('common.error'));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadInitialData();
+    }, [t]);
+
+    useEffect(() => {
+        const fetchLectures = async () => {
+            if (!selectedCourseId) return;
+            
+            setIsLoading(true);
+            try {
+                const data = await api.instructor.lectures.getAll(selectedCourseId);
+                setVideos(data);
+            } catch (error) {
+                console.error('Error fetching lectures:', error);
+                toast.error(t('common.error'));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchLectures();
+    }, [selectedCourseId, t]);
+
+    // Handle form changes for Live Preview
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues(prev => ({ ...prev, [name]: value }));
+        if (name === 'thumbnail') setThumbnailUrl(value);
+    };
+
+    const openModal = (video = null) => {
+        if (video) {
+            setEditingVideo(video);
+            setFormValues({
+                title: video.title,
+                course: video.course,
+                duration: formatDuration(video.duration),
+                thumbnail: video.thumbnail,
+                status: video.status
+            });
+            setThumbnailUrl(video.thumbnail || '');
+        } else {
+            setEditingVideo(null);
+            const currentCourse = instructorCourses.find(c => c.id === selectedCourseId);
+            setFormValues({
+                title: '',
+                course: currentCourse ? currentCourse.title : '',
+                duration: '10:00',
+                thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80',
+                status: 'published'
+            });
+            setThumbnailUrl('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80');
+        }
+        setShowVideoModal(true);
+    };
 
     // Filtering Logic
     const filteredVideos = useMemo(() => {
         if (!videos || !Array.isArray(videos)) return [];
-        const search = searchTerm.toLowerCase();
+        const search = (searchTerm || '').toLowerCase();
         return videos.filter(video => {
-            const title = video.title.toLowerCase();
-            const course = video.course.toLowerCase();
+            const title = (video.title || '').toLowerCase();
+            const course = (video.course || '').toLowerCase();
             const matchesSearch = title.includes(search) || course.includes(search);
             const matchesStatus = statusFilter === 'all' || video.status === statusFilter;
             return matchesSearch && matchesStatus;
@@ -76,55 +166,70 @@ const InstructorLecturesPage = () => {
     }, [videos, searchTerm, statusFilter]);
 
     // Actions
-    const handleDeleteVideo = (id) => {
-        setVideos(prev => prev.filter(v => v.id !== id));
-        toast.success(t('dashboard.instructor.lectures.toasts.deleteSuccess'));
+    const handleDeleteVideo = async (id) => {
+        try {
+            await api.instructor.lectures.delete(id);
+            setVideos(prev => prev.filter(v => v.id !== id));
+            toast.success(t('dashboard.instructor.lectures.toasts.deleteSuccess'));
+        } catch (error) {
+            console.error('Error deleting video:', error);
+        }
     };
 
-    const togglePublish = (id) => {
-        const video = videos.find(v => v.id === id);
-        if (!video) return;
+    const togglePublish = async (id) => {
+        try {
+            await api.instructor.lectures.toggleStatus(id);
+            const video = videos.find(v => v.id === id);
+            if (!video) return;
 
-        const newStatus = video.status === 'published' ? 'draft' : 'published';
-        toast.success(t('dashboard.instructor.lectures.toasts.statusUpdate', { status: t(`dashboard.instructor.lectures.${newStatus}`) }));
+            const newStatus = video.status === 'published' ? 'draft' : 'published';
+            toast.success(t('dashboard.instructor.lectures.toasts.statusUpdate', { status: t(`dashboard.instructor.lectures.${newStatus}`) }));
 
-        setVideos(prev => prev.map(v => v.id === id ? { ...v, status: newStatus } : v));
+            setVideos(prev => prev.map(v => v.id === id ? { ...v, status: newStatus } : v));
+        } catch (error) {
+            console.error('Error toggling status:', error);
+        }
     };
 
     const handleAddVideo = async (data) => {
         setIsSaving(true);
-        // Simulate API saving
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        const newVideo = {
-            ...data,
-            id: Date.now(),
-            views: "0",
-            date: new Date().toISOString().split('T')[0],
-            thumbnail: data.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
-        };
-        setVideos(prev => [newVideo, ...prev]);
-        setShowVideoModal(false);
-        setIsSaving(false);
-        setSelectedFiles([]);
-        setShowQuizBuilder(false);
-        setQuizQuestions([]);
-        toast.success(t('dashboard.instructor.lectures.toasts.uploadSuccess'));
+        try {
+            const created = await api.instructor.lectures.create({
+                ...data,
+                courseId: selectedCourseId === 'all' ? (instructorCourses[0]?.id || 1) : selectedCourseId,
+                views: 0,
+                date: new Date().toISOString().split('T')[0],
+                thumbnail: data.thumbnail || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
+            });
+            setVideos(prev => [created, ...prev]);
+            setShowVideoModal(false);
+            setIsSaving(false);
+            setSelectedFiles([]);
+            setShowQuizBuilder(false);
+            setQuizQuestions([]);
+            toast.success(t('dashboard.instructor.lectures.toasts.uploadSuccess'));
+        } catch (error) {
+            console.error('Error adding lecture:', error);
+            setIsSaving(false);
+        }
     };
 
     const handleUpdateVideo = async (data) => {
         setIsSaving(true);
-        // Simulate API updating
-        await new Promise(resolve => setTimeout(resolve, 800));
-
-        setVideos(prev => prev.map(v => v.id === data.id ? { ...v, ...data } : v));
-        setEditingVideo(null);
-        setShowVideoModal(false);
-        setIsSaving(false);
-        setSelectedFiles([]);
-        setShowQuizBuilder(false);
-        setQuizQuestions([]);
-        toast.success(t('dashboard.instructor.lectures.toasts.updateSuccess'));
+        try {
+            const updated = await api.instructor.lectures.update(data.id, data);
+            setVideos(prev => prev.map(v => v.id === data.id ? updated : v));
+            setEditingVideo(null);
+            setShowVideoModal(false);
+            setIsSaving(false);
+            setSelectedFiles([]);
+            setShowQuizBuilder(false);
+            setQuizQuestions([]);
+            toast.success(t('dashboard.instructor.lectures.toasts.updateSuccess'));
+        } catch (error) {
+            console.error('Error updating lecture:', error);
+            setIsSaving(false);
+        }
     };
 
     const getStatusStyle = (status) => {
@@ -176,10 +281,10 @@ const InstructorLecturesPage = () => {
                             {t('dashboard.instructor.lectures.subtitle')}
                         </motion.p>
                     </div>
-                    <motion.button 
+                        <motion.button 
                         whileHover={{ scale: 1.02 }} 
                         whileTap={{ scale: 0.98 }} 
-                        onClick={() => { setEditingVideo(null); setThumbnailUrl('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); setShowVideoModal(true); }}
+                        onClick={() => openModal()}
                         className="relative flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium tracking-wide text-white bg-primary hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-primary/50 overflow-hidden transition-all duration-300 cursor-pointer"
                     >
                         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -203,6 +308,22 @@ const InstructorLecturesPage = () => {
                     </div>
 
                     <div className={`flex items-center gap-2 ${isRTL ? 'border-r pr-2' : 'border-l pl-2'} border-slate-200 dark:border-slate-800 ml-0 md:ml-2`}>
+                        {/* Course Selector */}
+                        <div className="flex items-center gap-2 px-2">
+                             <select
+                                className={`bg-transparent border-none rounded-xl px-2 py-2 text-sm font-bold outline-none text-primary focus:ring-0 cursor-pointer [&>option]:dark:bg-slate-900 [&>option]:dark:text-white ${isRTL ? 'text-right' : 'text-left'}`}
+                                value={selectedCourseId || 'all'}
+                                onChange={(e) => setSelectedCourseId(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
+                            >
+                                 <option value="all">{t('dashboard.instructor.lectures.allCourses')}</option>
+                                {instructorCourses.map(course => (
+                                    <option key={course.id} value={course.id}>{course.title}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1" />
+
                         <select
                             className={`bg-transparent border-none rounded-xl px-4 py-2 text-sm font-medium outline-none text-slate-700 dark:text-slate-200 focus:ring-0 cursor-pointer [&>option]:dark:bg-slate-900 [&>option]:dark:text-white ${isRTL ? 'text-right' : 'text-left'}`}
                             value={statusFilter}
@@ -235,7 +356,18 @@ const InstructorLecturesPage = () => {
 
                 {/* Content Area */}
                 <AnimatePresence mode="wait">
-                    {filteredVideos && filteredVideos.length > 0 ? (
+                    {isLoading ? (
+                        <motion.div 
+                            key="loader" 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="py-24 flex flex-col items-center justify-center gap-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm"
+                        >
+                            <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                            <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                        </motion.div>
+                    ) : filteredVideos && filteredVideos.length > 0 ? (
                         viewMode === 'grid' ? (
                             <motion.div
                                 key="grid"
@@ -249,7 +381,7 @@ const InstructorLecturesPage = () => {
                                         <div className="relative w-full aspect-video shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-800">
                                             {video.thumbnail && <img src={video.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
                                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                                            <span className={`absolute bottom-3 ${isRTL ? 'left-3' : 'right-3'} px-2 py-1 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold rounded-lg`}>{video.duration}</span>
+                                            <span className={`absolute bottom-3 ${isRTL ? 'left-3' : 'right-3'} px-2 py-1 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold rounded-lg`}>{formatDuration(video.duration)}</span>
                                             <span className={`absolute top-3 ${isRTL ? 'right-3' : 'left-3'} px-2 py-1 text-[10px] font-bold rounded-lg uppercase tracking-wider shadow-sm ${getStatusStyle(video.status)}`}>
                                                 {t(`dashboard.instructor.lectures.${video.status}`)}
                                             </span>
@@ -259,11 +391,11 @@ const InstructorLecturesPage = () => {
                                             <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 font-medium bg-slate-50 dark:bg-slate-800/50 py-1 px-2 rounded-md inline-block w-fit">{video.course}</p>
                                             <div className={`mt-auto pt-5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                                                 <div className={`flex gap-4 text-[11px] text-slate-400 font-medium ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                                    <span className="flex items-center gap-1.5"><Eye size={14} /> {video.views}</span>
+                                                    <span className="flex items-center gap-1.5"><Eye size={14} /> {formatCompactNumber(video.views)}</span>
                                                     <span className="flex items-center gap-1.5"><Calendar size={14} /> {video.date}</span>
                                                 </div>
-                                                <div className="flex gap-2">
-                                                    <button onClick={() => { setEditingVideo(video); setThumbnailUrl(video.thumbnail || ''); setShowVideoModal(true); }} className="group flex items-center justify-center h-9 px-2 rounded-full overflow-hidden text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all duration-300 hover:shadow-sm focus:outline-none cursor-pointer" title={t('common.edit')}>
+                                                 <div className="flex gap-2">
+                                                    <button onClick={() => openModal(video)} className="group flex items-center justify-center h-9 px-2 rounded-full overflow-hidden text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all duration-300 hover:shadow-sm focus:outline-none cursor-pointer" title={t('common.edit')}>
                                                         <Edit size={18} className="shrink-0" />
                                                         <span className="max-w-0 w-0 overflow-hidden opacity-0 group-hover:max-w-[100px] group-hover:w-auto group-hover:opacity-100 group-hover:ml-1.5 rtl:group-hover:mr-1.5 rtl:group-hover:ml-0 whitespace-nowrap text-xs font-semibold transition-all duration-300 ease-in-out">{t('common.edit')}</span>
                                                     </button>
@@ -308,8 +440,8 @@ const InstructorLecturesPage = () => {
                                                 </td>
                                                 <td className="px-6 py-5">
                                                     <div className="flex flex-col items-center gap-1.5 text-slate-500">
-                                                        <span className="flex items-center gap-1.5 text-xs font-semibold"><Eye size={14} className="text-slate-400" /> {video.views}</span>
-                                                        <span className="flex items-center gap-1.5 text-[11px] font-medium"><Clock size={14} className="text-slate-400" /> {video.duration}</span>
+                                                        <span className="flex items-center gap-1.5 text-xs font-semibold"><Eye size={14} className="text-slate-400" /> {formatCompactNumber(video.views)}</span>
+                                                        <span className="flex items-center gap-1.5 text-[11px] font-medium"><Clock size={14} className="text-slate-400" /> {formatDuration(video.duration)}</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-5 text-center">
@@ -319,8 +451,8 @@ const InstructorLecturesPage = () => {
                                                 </td>
                                                 <td className={`px-8 py-5 ${isRTL ? 'text-left' : 'text-right'}`}>
                                                     <div className="flex justify-end gap-2 opacity-100 transition-opacity">
-                                                        <button
-                                                            onClick={() => { setEditingVideo(video); setThumbnailUrl(video.thumbnail || ''); setShowVideoModal(true); }}
+                                                         <button
+                                                            onClick={() => openModal(video)}
                                                             className="group flex items-center justify-center h-9 px-2 rounded-full overflow-hidden text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all duration-300 hover:shadow-sm focus:outline-none cursor-pointer"
                                                             title={t('common.edit')}
                                                         >
@@ -345,10 +477,10 @@ const InstructorLecturesPage = () => {
                                         ))}
                                     </tbody>
                                 </table>
-                            </motion.div>
-                        )
-                    ) : (
-                        <motion.div
+                        </motion.div>
+                    )
+                ) : (
+                    <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             className="bg-white dark:bg-slate-900 py-24 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700"
@@ -363,8 +495,8 @@ const InstructorLecturesPage = () => {
                                     {t('dashboard.instructor.lectures.clearFilters')}
                                 </Button>
                             </div>
-                        </motion.div>
-                    )}
+                    </motion.div>
+                )}
                 </AnimatePresence>
             </div>
 
@@ -408,19 +540,19 @@ const InstructorLecturesPage = () => {
                                         
 
 
-                                        <div className="space-y-2">
+                                         <div className="space-y-2">
                                             <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.title')}</label>
-                                            <input name="title" required defaultValue={editingVideo?.title || ''} placeholder={t('dashboard.instructor.lectures.form.titlePlaceholder')} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
+                                            <input name="title" required value={formValues.title} onChange={handleInputChange} placeholder={t('dashboard.instructor.lectures.form.titlePlaceholder')} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                         </div>
 
                                         <div className="space-y-2">
                                             <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.course')}</label>
-                                            <input name="course" required defaultValue={editingVideo?.course || ''} placeholder={t('dashboard.instructor.lectures.form.coursePlaceholder')} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
+                                            <input name="course" required value={formValues.course} onChange={handleInputChange} placeholder={t('dashboard.instructor.lectures.form.coursePlaceholder')} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                         </div>
 
                                         <div className="space-y-2">
                                             <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.thumbnailLabel') || (isRTL ? 'رابط صورة الغلاف' : 'Thumbnail URL')}</label>
-                                            <input name="thumbnail" value={thumbnailUrl} onChange={(e) => setThumbnailUrl(e.target.value)} placeholder={isRTL ? 'https://example.com/image.jpg' : 'https://example.com/image.jpg'} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
+                                            <input name="thumbnail" value={formValues.thumbnail} onChange={handleInputChange} placeholder={isRTL ? 'https://example.com/image.jpg' : 'https://example.com/image.jpg'} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                         </div>
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -428,12 +560,12 @@ const InstructorLecturesPage = () => {
                                                 <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.duration')}</label>
                                                 <div className="relative">
                                                     <Clock className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-400`} size={16} />
-                                                    <input name="duration" required defaultValue={editingVideo?.duration || '10:00'} className={`w-full ${isRTL ? 'pr-11 pl-4 text-right' : 'pl-11 pr-4 text-left'} py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium`} />
+                                                    <input name="duration" required value={formValues.duration} onChange={handleInputChange} className={`w-full ${isRTL ? 'pr-11 pl-4 text-right' : 'pl-11 pr-4 text-left'} py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium`} />
                                                 </div>
                                             </div>
                                             <div className="space-y-2">
                                                 <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.instructor.lectures.form.privacy')}</label>
-                                                <select name="status" defaultValue={editingVideo?.status || 'published'} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${isRTL ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${isRTL ? 'text-right' : 'text-left'} font-medium`}>
+                                                <select name="status" value={formValues.status} onChange={handleInputChange} className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${isRTL ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${isRTL ? 'text-right' : 'text-left'} font-medium`}>
                                                     <option value="published">{t('dashboard.instructor.lectures.form.public')}</option>
                                                     <option value="draft">{t('dashboard.instructor.lectures.form.private')}</option>
                                                     <option value="pending">{t('dashboard.instructor.lectures.form.pending')}</option>
@@ -612,15 +744,15 @@ const InstructorLecturesPage = () => {
                                             
                                             {/* Duration indicator */}
                                             <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-md">
-                                                {document.querySelector('input[name="duration"]')?.value || '10:00'}
+                                                {formatDuration(formValues.duration || 600)}
                                             </div>
                                         </div>
                                         <div className="p-5">
                                             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2 line-clamp-2 leading-tight">
-                                                {document.querySelector('input[name="title"]')?.value || (isRTL ? 'عنوان الفيديو...' : 'Video Title...')}
+                                                {formValues.title || (isRTL ? 'عنوان الفيديو...' : 'Video Title...')}
                                             </h3>
                                             <p className="text-sm font-medium text-slate-500 line-clamp-1 mb-4">
-                                                {document.querySelector('input[name="course"]')?.value || (isRTL ? 'اسم الدورة...' : 'Course Name...')}
+                                                {formValues.course || (isRTL ? 'اسم الدورة...' : 'Course Name...')}
                                             </p>
 
                                             <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">

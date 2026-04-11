@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Copy, CheckCircle } from 'lucide-react';
 
 const CodeBlock = ({ content }) => {
@@ -32,8 +33,8 @@ const CodeBlock = ({ content }) => {
                     </button>
                 </div>
             </div>
-            <div className="p-4 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
-                <pre className="text-[13px] text-slate-700 dark:text-slate-300 font-mono leading-relaxed" dir="ltr">
+            <div className="p-4 overflow-x-auto text-left scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent" dir="ltr">
+                <pre className="text-[13px] text-slate-700 dark:text-slate-300 font-mono leading-relaxed">
                     <code>{code}</code>
                 </pre>
             </div>
@@ -53,20 +54,34 @@ const TypewriterMessage = ({ text, isNew }) => {
         }
 
         let currentIndex = 0;
-        const speed = 15; // Typewriter speed (ms per char)
-        
-        const interval = setInterval(() => {
+        let isMounted = true;
+
+        const type = () => {
+            if (!isMounted) return;
+
             if (currentIndex < text.length) {
-                const nextChar = text.charAt(currentIndex);
-                setDisplayedText(prev => prev + nextChar);
-                currentIndex++;
+                // Add a small chunk if it's a long text to keep it smooth but fast
+                const chunk = text.length > 200 ? 2 : 1;
+                const nextChars = text.substring(currentIndex, currentIndex + chunk);
+                
+                setDisplayedText(prev => prev + nextChars);
+                currentIndex += chunk;
+
+                // Randomize speed slightly for a "human/organic" feel (5ms to 12ms)
+                const baseSpeed = text.length > 500 ? 4 : 8; 
+                const randomDelay = baseSpeed + Math.random() * 10;
+                
+                setTimeout(type, randomDelay);
             } else {
-                clearInterval(interval);
                 setIsTyping(false);
             }
-        }, speed);
+        };
 
-        return () => clearInterval(interval);
+        const initialTimeout = setTimeout(type, 50);
+        return () => {
+            isMounted = false;
+            clearTimeout(initialTimeout);
+        };
     }, [text, isNew]);
 
     // Parse the displayed text for code blocks and basic markdown
@@ -81,6 +96,7 @@ const TypewriterMessage = ({ text, isNew }) => {
             }
             
             // Format basic bold (**text**)
+            // Format basic bold (**text**)
             const formattedText = part.split(/(\*\*.*?\*\*)/g).map((subPart, i) => {
                 if (subPart.startsWith('**') && subPart.endsWith('**')) {
                     return <strong key={i} className="text-slate-900 dark:text-white font-bold">{subPart.slice(2, -2)}</strong>;
@@ -88,7 +104,17 @@ const TypewriterMessage = ({ text, isNew }) => {
                 return subPart;
             });
             
-            return <span key={index} className="whitespace-pre-wrap">{formattedText}</span>;
+            return (
+                <motion.span 
+                    key={index} 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="whitespace-pre-wrap inline"
+                >
+                    {formattedText}
+                </motion.span>
+            );
         });
     };
 

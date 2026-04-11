@@ -1,13 +1,88 @@
 # API INTEGRATION PLAN - NEXORA AI EDU PLATFORM
 # ══════════════════════════════════════════════════════════════
-# 📁 Main Integration File: src/services/api.js (Line 25+)
-# 📁 Auth Integration File: src/services/authService.js (Line 33+)
-# 📁 Mock Data File:        src/data/mockData.js (DELETE after full integration)
+# 📁 Central Service:      src/services/api.js
+# 📁 Auth Service:         src/services/authService.js
+# 📁 Migration Status:     ✅ Frontend calls centralized (Mocks remain in api.js)
 # ══════════════════════════════════════════════════════════════
-# ⚙️ BASE_URL: set in src/services/api.js Line 7
+# ⚙️ BASE_URL: Configurable in src/services/api.js
 # 🔑 Token: stored in localStorage key 'ai_edu_token'
 # 👤 User: stored in localStorage key 'ai_edu_user'
 # ══════════════════════════════════════════════════════════════
+
+# ══════════════════════════════════════════════════════════════
+# 📌 IMPORTANT NOTES FOR BACKEND TEAM
+# ══════════════════════════════════════════════════════════════
+
+```
+1. AUTH HEADER FORMAT:
+   Authorization: Bearer <jwt_token>
+   Token is stored in: localStorage.getItem('ai_edu_token')
+
+2. ERROR RESPONSE FORMAT (use consistently):
+   { message: string, statusCode: number }
+
+3. CORS:
+   Frontend runs on http://localhost:5173 (Vite dev server)
+   Make sure CORS allows this origin
+
+4. BASE_URL:
+   Currently all frontend calls go through src/services/api.js
+   Edit the api object's request logic to connect to a real backend.
+
+5. FILE UPLOADS:
+   Lectures page supports video + resource file uploads
+   Use multipart/form-data for POST /api/instructor/lectures
+
+6. RAW DATA & FORMATTERS (IMPORTANT):
+   The frontend uses 'src/utils/formatters.js' for all UI presentation.
+   The API MUST return raw numeric values only:
+   - Duration → number (seconds)
+   - Views/Counts → number (raw)
+   - Prices/Revenue → number (float/int)
+   UI Formatting (like "12:45" or "1.2K Views") is handled BY THE FRONTEND.
+
+7. DATA TYPE FIXES (COMPLETED ON FRONTEND):
+   - Instructor revenue: changed from string "$12,450" → number 12450
+   - Lecture views: changed from string "1.2K" → number 1200
+   - Video duration: changed from string "12:45" → number 765 (total seconds)
+   - Category icons: Photography renamed from Business, icon changed to Camera
+
+8. PAGINATION:
+   ManageUsersPage has pagination UI ready (prev/next buttons)
+   Send: { page, limit, total } in paginated responses
+
+9. MOCK FILES TO DELETE AFTER FULL INTEGRATION:
+   - src/data/mockData.js (entire file)
+   - Remove stateful variables (coursesSub, lecturesSub) in src/services/api.js
+   - Remove mock delays in src/services/api.js
+   - Remove localStorage user DB in src/services/authService.js
+
+10. DATA PARITY (IMPORTANT):
+    The Admin "Manage Videos" and Instructor "Lectures" pages now share the same
+    stateful source. Any change made by an instructor MUST be immediately
+    visible to the admin without a page reload (simulated via api.js state).
+
+11. SIMULATED NETWORK LATENCY (FAKE LOADING):
+    - The current api.js uses a 'delay' helper (500ms to 1200ms).
+    - This is intentionally added to test Loading Spinners and Skeleton states.
+    - AI responses have a longer delay (1.2s) to simulate "thinking" time.
+    - When connecting to a real API, these delays should be handled by the 
+      actual network response time.
+```
+
+### 🎥 Video Integration & AI Synchronization
+
+1. **Mock Video URL**: 
+   - Currently, all `videoUrl` fields in `mockData.js` point to a sample W3C test file.
+   - **Replacement**: The backend should provide real URLs (S3, Cloudinary, etc.) in the `videoUrl` field of the `/api/courses/:id` or `/api/lectures` response.
+
+2. **The Connection Key (`lectureId`)**:
+   - The AI Assistant is NOT linked to the video file itself, but to the `lectureId`.
+   - As long as the backend knows what is happening in `lectureId: 101` at `currentTime: 45s`, the AI will stay synchronized regardless of where the video file is hosted.
+
+3. **AI Metadata Sync**:
+   - To make the AI "aware" of the video content, the backend team should ideally have a transcript or timestamp-based markers for each `lectureId`.
+   - When the frontend sends `currentTime`, the Backend AI logic should look up what is being discussed at that second to provide a contextual answer.
 
 
 ## Authentication
@@ -19,13 +94,14 @@
 POST /api/auth/login
 
 // 📁 File: src/services/authService.js → Line 35
-// 🔄 Replace: Mock login with hardcoded users (admin@edu.com, user@test.com, instructor@test.com)
+// ✅ Status: Integrated (Decoupled from direct mockData imports) | تم الربط وفصل البيانات الوهمية عن الواجهة
+// 🔄 Next Step: Replace mock logic with fetch/axios calls | الخطوة التالية: استبدل الكود الوهمي بطلب حقيقي من السيرفر
 // 📝 Note: Currently checks localStorage 'ai_edu_users_db' array
 
 Request:
 {
-  email: string,       // "user@example.com"
-  password: string     // "password123"
+  email: string,       // "user@test.com"
+  password: string     // "123456"
 }
 
 Response:
@@ -51,7 +127,8 @@ Response:
 POST /api/auth/register
 
 // 📁 File: src/services/authService.js → Line 102
-// 🔄 Replace: localStorage user creation
+// ✅ Status: Integrated (Mock persistence)
+// 🔄 Next Step: Replace saveUser() with POST /api/auth/register
 // ⚠️ Password is stored as plain text in mock! Backend MUST hash it
 
 Request:
@@ -59,8 +136,12 @@ Request:
   name: string,        // "Ahmed Mansour"
   email: string,       // "ahmed@example.com"
   password: string,    // "password123"
-  role: "learner" | "instructor"
+  role: "learner" | "instructor"    // ⚠️ "admin" NOT allowed via registration
 }
+
+// 📝 Note: Role 'admin' is NOT allowed via public registration. 
+// Admin accounts must be created via admin-only endpoints (e.g., /api/admin/users).
+// Backend MUST reject role: "admin" in this request.
 
 Response:
 {
@@ -86,7 +167,8 @@ Response:
 GET /api/auth/me
 
 // 📁 File: src/services/authService.js → Line 138
-// 🔄 Replace: localStorage.getItem('ai_edu_user')
+// ✅ Status: Integrated | تم الربط برمجياً داخل الكود
+// 🔄 Next Step: Replace with GET /api/auth/me | الخطوة التالية: استبدل بطلب حقيقي من السيرفر
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -106,7 +188,8 @@ Response:
 POST /api/auth/logout
 
 // 📁 File: src/services/authService.js → Line 132
-// 🔄 Replace: localStorage.removeItem calls
+// ✅ Status: Integrated | تم الربط برمجياً
+// 🔄 Next Step: Replace with real API calls | الخطوة التالية: استبدل بطلب حقيقي من السيرفر
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -123,35 +206,31 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/courses?category=X&search=Y&level=Z&page=1&limit=12
 
-// 📁 Files that use this:
-//   - src/pages/HomePage.jsx → Line 1 (import { courses } from mockData)
-//   - src/pages/courses/CoursesPage.jsx → Line 4 (import { courses } from mockData)
-//   - src/services/api.js → Line 30 (api.courses.getAll)
-// 🔄 Replace: Direct import of 'courses' array from mockData.js
+// 📁 Integration Point: src/services/api.js → Line 50 (api.courses.getAll)
+// ✅ Status: Integrated (Decoupled from direct mockData imports) | تم الربط وفصل البيانات الوهمية عن الواجهة
+// 🔄 Next Step: Replace mock data with fetch calls | الخطوة التالية: استبدل البيانات الوهمية بطلب حقيقي من السيرفر
 
 Response:
-{
-  courses: [
-    {
-      id: number,
-      title: string,
-      instructor: string,   // instructor display name
-      instructorId: number,  // for linking to instructor profile
-      rating: number,        // 0-5
-      reviews: number,       // total review count
-      price: number,         // e.g. 49.99
-      discount: number,      // percentage, e.g. 20
-      image: string,         // full URL to course thumbnail
-      category: string,      // "Data Science", "Development", etc.
-      level: string,         // "Beginner", "Intermediate", "Advanced"
-      duration: string,      // "12h 30m"
-      lessons: number        // total lesson count
-    }
-  ],
-  total: number,             // total courses (for pagination)
-  page: number,
-  limit: number
-}
+[
+  {
+    id: number,
+    title: string,
+    instructor: string,   // instructor display name
+    instructorId: number,  // for linking to instructor profile
+    rating: number,        // 0-5
+    reviews: number,       // total review count
+    price: number,         // e.g. 19.99
+    discount: number,      // percentage, e.g. 20
+    image: string,         // full URL to course thumbnail
+    category: string,      // "Data Science", "Development", etc.
+    level: string,         // "Beginner", "Intermediate", "Advanced"
+    duration: number,      // Total seconds (e.g., 45000 for 12.5h)
+    lessons: number        // total lesson count
+  }
+]
+
+// 📝 Note: Currently returns a raw array. 
+// Backend target should include { courses: [], total, page, limit } for pagination.
 ```
 
 ```javascript
@@ -160,52 +239,31 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/courses/:id
 
-// 📁 Files:
-//   - src/pages/courses/CourseDetailsPage.jsx → Line 12 (courses.find(c => c.id === parseInt(id)))
-//   - src/services/api.js → Line 47 (api.courses.getById)
-// 🔄 Replace: courses.find() from mockData
+// 📁 Integration Point: src/services/api.js → Line 64 (api.courses.getById)
+// ✅ Status: Integrated
 
 Response:
 {
   id: number,
   title: string,
-  description: string,      // full HTML or markdown description
+  description: string,
   instructor: string,
   instructorId: number,
+  instructorImage: string,
   price: number,
   discount: number,
   image: string,
   category: string,
   level: string,
-  duration: string,
+  duration: number,          // Total seconds
   lessons: number,
   rating: number,
   reviews: number,
-  highlights: string[],      // ["Build ML models", "Learn Python", ...]
-  curriculum: [
-    {
-      sectionTitle: string,  // "Section 1: Introduction"
-      lectures: [
-        {
-          id: number,
-          title: string,
-          duration: string,  // "10:25"
-          isFree: boolean    // preview lectures
-        }
-      ]
-    }
-  ],
-  reviewsList: [
-    {
-      id: number,
-      name: string,
-      avatar: string,
-      rating: number,
-      comment: string,
-      date: string           // "2 days ago" or ISO date
-    }
-  ]
+  highlights: string[]       // ["Build ML models", "Learn Python", ...]
 }
+
+// 📝 Note: Curriculum (lectures) should be fetched separately via /api/courses/:id/lectures
+// or combined by the backend into this response. My current mock fetches them separately.
 ```
 
 ```javascript
@@ -214,21 +272,26 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/categories
 
-// 📁 Files:
-//   - src/pages/HomePage.jsx → Line 1 (import { categories } from mockData)
-//   - src/pages/courses/CoursesPage.jsx → Line 4 (import { categories } from mockData)
-//   - src/services/api.js → Line 55 (api.courses.getCategories)
-// 🔄 Replace: Direct import of 'categories' array
+// 📁 Integration Point: src/services/api.js → Line 71 (api.courses.getCategories)
+// ✅ Status: Integrated (Decoupled)
 
 Response:
 [
   {
-    id: number,
-    name: string,        // "Data Science"
-    count: number,       // number of courses in category
-    icon: string,        // icon name (used in frontend: "Brain", "Code", etc.)
-    color: string,       // CSS class or hex
-    bgColor: string      // CSS class or hex
+    id: 1,
+    name: "Development",
+    count: 120,
+    icon: "Code2",
+    color: "text-blue-500",
+    bgColor: "bg-blue-500/10"
+  },
+  {
+    id: 5,
+    name: "Photography",
+    count: 56,
+    icon: "Camera",
+    color: "text-cyan-500",
+    bgColor: "bg-cyan-500/10"
   }
 ]
 ```
@@ -239,18 +302,18 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/testimonials
 
-// 📁 File: src/pages/HomePage.jsx → Line 1 (import { testimonials } from mockData)
-// 🔄 Replace: Direct import of 'testimonials' array
+// 📁 Integration Point: src/services/api.js → Line 454 (api.testimonials.getAll)
+// ✅ Status: Integrated
 
 Response:
 [
   {
     id: number,
     name: string,
-    role: string,            // "Data Analyst at Google"
-    image: string,           // avatar URL
+    role: string,            // "Software Engineer"
+    image: string,           // student image URL
     content: string,         // review text
-    rating: number
+    rating: number           // 1-5 stars
   }
 ]
 ```
@@ -261,24 +324,25 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/instructors
 
-// 📁 Files:
-//   - src/pages/HomePage.jsx → Line 1 (import { instructors } from mockData - top 3)
-//   - src/pages/instructor/InstructorsPage.jsx → Line 4 (import { instructors } from mockData)
-// 🔄 Replace: Direct import of 'instructors' array
+// 📁 Integration Point: src/services/api.js → Line 84 (api.instructors.getAll)
+// ✅ Status: Integrated
 
 Response:
 [
   {
     id: number,
     name: string,
-    role: string,            // "Senior Data Scientist"
+    role: string,            // "AI Researcher & Educator"
     avatar: string,
     bio: string,
     coursesCount: number,
-    studentsCount: string,   // "12K+"
-    rating: number
+    studentsCount: number,   // 2500 - 4000
+    rating: number,
+    category: string
   }
 ]
+
+// 📝 Note: Frontend is responsible for formatting numbers (e.g., 12000 → 12K+)
 ```
 
 ---
@@ -291,8 +355,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/learner/stats
 
-// 📁 File: src/services/api.js → Line 66 (api.learner.getStats)
-// 📁 Used in: src/pages/learner/LearnerDashboardPage.jsx → Line 18
+// 📁 Integration Point: src/services/api.js → Line 116 (api.learner.getStats)
+// ✅ Status: Integrated (via api.learner methods)
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -309,8 +373,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/learner/progress
 
-// 📁 File: src/services/api.js → Line 76 (api.learner.getProgress)
-// 📁 Used in: src/pages/learner/LearnerDashboardPage.jsx → Line 19
+// 📁 Integration Point: src/services/api.js → Line 96 (api.learner.getProgress)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -319,7 +383,7 @@ Response:
     courseId: number,
     title: string,
     progress: number,        // 0-100 percentage
-    lastLesson: string,      // "Lecture 5: Neural Networks"
+    lastLesson: string,      // "Understanding Neural Networks and Deep Learning"
     image: string
   }
 ]
@@ -331,8 +395,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/learner/recommendations
 
-// 📁 File: src/services/api.js → Line 91 (api.learner.getRecommendations)
-// 📁 Used in: src/pages/learner/LearnerDashboardPage.jsx → Line 20
+// 📁 Integration Point: src/services/api.js → Line 125 (api.learner.getRecommendations)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -398,15 +462,15 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/instructor/stats
 
-// 📁 File: src/services/api.js → Line 107 (api.instructor.getStats)
-// 📁 Used in: src/pages/instructor/InstructorDashboardPage.jsx → Line 28
+// 📁 Integration Point: src/services/api.js → Line 143 (api.instructor.getStats)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
-// ⚠️ Note: totalRevenue is currently string "$12,450" — Backend should return number
+// ⚠️ Note: Backend MUST return numeric values for currency, NOT strings like "$12,450"
 
 Response:
 {
   totalStudents: number,
-  totalRevenue: number,      // ⚠️ Changed from string to number
+  totalRevenue: number,      // e.g. 24500
   avgRating: number,         // e.g. 4.8
   totalReviews: number,
   activeCourses: number,
@@ -420,8 +484,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/instructor/courses
 
-// 📁 File: src/services/api.js → Line 121 (api.instructor.getCourses)
-// 📁 Used in: src/pages/instructor/InstructorDashboardPage.jsx → Line 29
+// 📁 Integration Point: src/services/api.js → Line 156 (api.instructor.courses.getAll)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -430,8 +494,8 @@ Response:
     id: number,
     title: string,
     students: number,
-    status: "Published" | "Draft",
-    revenue: number,         // ⚠️ Changed from string "$1,200" to number
+    status: "published" | "draft",
+    revenue: number,         // e.g. 1200.50
     image: string
   }
 ]
@@ -443,14 +507,14 @@ Response:
 // ─────────────────────────────────────────────
 POST /api/instructor/courses
 
-// 📁 File: src/pages/instructor/InstructorDashboardPage.jsx → Line 54 (handleSave)
-// 🔄 Replace: await new Promise(resolve => setTimeout(resolve, 800)) + local state push
+// 📁 Used in: src/pages/instructor/InstructorDashboardPage.jsx (handleSave)
+// ✅ Status: Integrated (via api.instructor.courses.create)
 // 🔑 Header: Authorization: Bearer <token>
 
 Request:
 {
   title: string,
-  status: "Draft" | "Published",
+  status: "draft" | "published",
   price: number
 }
 
@@ -458,7 +522,7 @@ Response:
 {
   id: number,
   title: string,
-  status: "Draft",
+  status: "draft",
   students: 0,
   revenue: 0
 }
@@ -470,14 +534,14 @@ Response:
 // ─────────────────────────────────────────────
 PUT /api/instructor/courses/:id
 
-// 📁 File: src/pages/instructor/InstructorDashboardPage.jsx → Line 66 (editingCourse branch)
-// 🔄 Replace: setCourses(prev => prev.map(...)) local state update
+// 📁 Used in: src/pages/instructor/InstructorDashboardPage.jsx (editingCourse branch)
+// ✅ Status: Integrated (via api.instructor.courses.update)
 // 🔑 Header: Authorization: Bearer <token>
 
 Request:
 {
   title: string,
-  status: "Draft" | "Published",
+  status: "draft" | "published",
   price: number
 }
 
@@ -497,8 +561,8 @@ Response:
 // ─────────────────────────────────────────────
 DELETE /api/instructor/courses/:id
 
-// 📁 File: src/pages/instructor/InstructorDashboardPage.jsx → Line 84 (handleDelete)
-// 🔄 Replace: setCourses(prev => prev.filter(...))
+// 📁 Used in: src/pages/instructor/InstructorDashboardPage.jsx (handleDelete)
+// ✅ Status: Integrated (via api.instructor.courses.delete)
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -511,9 +575,9 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/instructor/lectures
 
-// 📁 File: src/pages/instructor/InstructorLecturesPage.jsx → Line 24
-//          import { lectures } from '../../data/mockData'
-// 🔄 Replace: const [videos, setVideos] = useState(lectures) at Line 56
+// 📁 Used in: src/pages/instructor/InstructorLecturesPage.jsx
+// ✅ Status: Integrated (via api.instructor.lectures.getAll)
+// 📝 Note: selectedCourseId can be numeric ID or "all" to fetch all instructor videos.
 
 Response:
 [
@@ -522,10 +586,10 @@ Response:
     title: string,
     course: string,          // course name
     courseId: number,
-    views: string,           // "1.2K"
-    duration: string,        // "12:45"
+    views: number,           // raw number
+    duration: number,        // Total seconds (MM:SS is formatted by UI)
     status: "published" | "pending" | "draft",
-    date: string,            // "2024-01-15"
+    date: "YYYY-MM-DD",
     thumbnail: string        // URL
   }
 ]
@@ -537,16 +601,17 @@ Response:
 // ─────────────────────────────────────────────
 POST /api/instructor/lectures
 
-// 📁 File: src/pages/instructor/InstructorLecturesPage.jsx → Line 87 (handleAddVideo)
-// 🔄 Replace: await new Promise(resolve => setTimeout(resolve, 800)) + local state
+// 📁 Used in: src/pages/instructor/InstructorLecturesPage.jsx (handleAddVideo)
+// ✅ Status: Integrated (via api.instructor.lectures.create)
 // 🔑 Header: Authorization: Bearer <token>
 // 📦 Content-Type: multipart/form-data (for file uploads)
 
 Request (FormData):
 {
   title: string,
-  course: string,
-  duration: string,
+  course: string,            // course name for display
+  courseId: number,          // ⚠️ Required: linking to a course
+  duration: number | string, // MM:SS string or numeric seconds (API handles conversion)
   status: "published" | "draft" | "pending",
   videoFile: File,           // the actual video file
   resources: File[],         // PDF, docs, etc.
@@ -571,19 +636,25 @@ Response:
 // ─────────────────────────────────────────────
 PUT /api/instructor/lectures/:id
 
-// 📁 File: src/pages/instructor/InstructorLecturesPage.jsx → Line 108 (handleUpdateVideo)
+// 📁 Used in: src/pages/instructor/InstructorLecturesPage.jsx (handleUpdateVideo)
+// ✅ Status: Integrated (via api.instructor.lectures.update)
 // 🔑 Header: Authorization: Bearer <token>
 
 Request:
 {
   title: string,
   course: string,
-  duration: string,
+  duration: number | string, // Total seconds or "MM:SS"
   status: string
 }
 
 Response:
-{ ...updated lecture object }
+{
+  id: number,
+  title: string,
+  course: string,
+  duration: number
+}
 ```
 
 ```javascript
@@ -592,7 +663,8 @@ Response:
 // ─────────────────────────────────────────────
 DELETE /api/instructor/lectures/:id
 
-// 📁 File: src/pages/instructor/InstructorLecturesPage.jsx → Line 72 (handleDeleteVideo)
+// 📁 Used in: src/pages/instructor/InstructorLecturesPage.jsx (handleDeleteVideo)
+// ✅ Status: Integrated (via api.instructor.lectures.delete)
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -605,7 +677,8 @@ Response:
 // ─────────────────────────────────────────────
 PATCH /api/instructor/lectures/:id/toggle
 
-// 📁 File: src/pages/instructor/InstructorLecturesPage.jsx → Line 77 (togglePublish)
+// 📁 Used in: src/pages/instructor/InstructorLecturesPage.jsx (togglePublish)
+// ✅ Status: Integrated (via api.instructor.lectures.toggleStatus)
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -621,8 +694,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/instructor/reviews
 
-// 📁 File: src/pages/instructor/InstructorReviewsPage.jsx → Line 10
-// 🔄 Replace: const initialReviews = [...] hardcoded array
+// 📁 Integration Point: src/services/api.js → Line 226 (api.instructor.reviews.getAll)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -646,8 +719,8 @@ Response:
 // ─────────────────────────────────────────────
 POST /api/instructor/reviews/:id/reply
 
-// 📁 File: src/pages/instructor/InstructorReviewsPage.jsx → Line 73 (handleSaveReply)
-// 🔄 Replace: setReviews(prev => prev.map(...)) local state
+// 📁 Integration Point: src/services/api.js → Line 230 (api.instructor.reviews.reply)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Request:
@@ -668,8 +741,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/instructor/questions
 
-// 📁 File: src/pages/instructor/InstructorQAPage.jsx → Line 10
-// 🔄 Replace: const initialQuestions = [...] hardcoded array
+// 📁 Integration Point: src/services/api.js → Line 237 (api.instructor.questions.getAll)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -693,8 +766,8 @@ Response:
 // ─────────────────────────────────────────────
 POST /api/instructor/questions/:id/reply
 
-// 📁 File: src/pages/instructor/InstructorQAPage.jsx → Line 60 (handleReply)
-// 🔄 Replace: local state update + status change to 'resolved'
+// 📁 Integration Point: src/services/api.js → Line 241 (api.instructor.questions.reply)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Request:
@@ -716,8 +789,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/instructor/announcements
 
-// 📁 File: src/pages/instructor/InstructorAnnouncementsPage.jsx → Line 16
-// 🔄 Replace: const initialAnnouncements = [...] hardcoded array
+// 📁 Integration Point: src/services/api.js → Line 248 (api.instructor.announcements.getAll)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Response:
@@ -739,8 +812,8 @@ Response:
 // ─────────────────────────────────────────────
 POST /api/instructor/announcements
 
-// 📁 File: src/pages/instructor/InstructorAnnouncementsPage.jsx → Line 46 (handleSend)
-// 🔄 Replace: setTimeout + local state push
+// 📁 Integration Point: src/services/api.js → Line 253 (api.instructor.announcements.create)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Request:
@@ -771,22 +844,24 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/admin/stats
 
-// 📁 File: src/pages/admin/AdminDashboardPage.jsx → Line 44-47
-// 🔄 Replace: Hardcoded values "12,345", "142", "1,204", "$45,678"
+// 📁 Integration Point: src/services/api.js → Line 263 (api.admin.stats.getOverview)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Response:
 {
-  totalUsers: number,
-  activeCourses: number,
+  totalStudents: number,      // e.g. 1540
+  activeCourses: number,     
+  totalRevenue: number,      // e.g. 85000
+  totalInstructors: number,
   videosUploaded: number,
-  totalRevenue: number,
-  revenueChart: number[],    // [40, 60, 45, 70, 65, 85, 95] - 7 data points
+  userGrowth: number,        // percentage
   recentActivity: [
     {
-      type: string,          // "new_user", "new_course", etc.
-      message: string,
-      date: string
+      id: number,
+      user: string,          // "Ahmed Ali"
+      action: string,        // "Purchased: Machine Learning"
+      time: string           // "5m ago"
     }
   ]
 }
@@ -798,8 +873,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/admin/users?search=X&role=Y&status=Z&page=1&limit=10
 
-// 📁 File: src/pages/admin/ManageUsersPage.jsx → Line 31
-// 🔄 Replace: const [users, setUsers] = useState([...hardcoded array])
+// 📁 Integration Point: src/services/api.js → Line 286 (api.admin.users.getAll)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Response:
@@ -827,7 +902,8 @@ Response:
 // ─────────────────────────────────────────────
 POST /api/admin/users
 
-// 📁 File: src/pages/admin/ManageUsersPage.jsx → Line 51 (handleAddUser)
+// 📁 Integration Point: src/services/api.js → Line 297 (api.admin.users.create)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Request:
@@ -856,7 +932,8 @@ Response:
 // ─────────────────────────────────────────────
 PUT /api/admin/users/:id
 
-// 📁 File: src/pages/admin/ManageUsersPage.jsx → Line 64 (handleUpdateUser)
+// 📁 Integration Point: src/services/api.js → Line 301 (api.admin.users.update)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Request:
@@ -877,7 +954,8 @@ Response:
 // ─────────────────────────────────────────────
 DELETE /api/admin/users/:id
 
-// 📁 File: src/pages/admin/ManageUsersPage.jsx → Line 71 (handleDeleteUser)
+// 📁 Integration Point: src/services/api.js → Line 305 (api.admin.users.delete)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Response:
@@ -890,7 +968,8 @@ Response:
 // ─────────────────────────────────────────────
 PATCH /api/admin/users/:id/status
 
-// 📁 File: src/pages/admin/ManageUsersPage.jsx → Line 77 (toggleStatus)
+// 📁 Integration Point: src/services/api.js → Line 309 (api.admin.users.toggleStatus)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Request:
@@ -911,9 +990,8 @@ Response:
 // ─────────────────────────────────────────────
 GET /api/admin/courses
 
-// 📁 File: src/pages/admin/ManageCoursesPage.jsx → Line 3
-//          import { courses } from '../../data/mockData'
-// 🔄 Replace: const [courseList, setCourseList] = useState(courses)
+// 📁 Integration Point: src/services/api.js → Line 316 (api.admin.courses.getAll)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Response:
@@ -930,7 +1008,7 @@ Response:
     reviews: number,
     level: string,
     lessons: number,
-    duration: string
+    duration: number
   }
 ]
 ```
@@ -941,20 +1019,37 @@ Response:
 // ─────────────────────────────────────────────
 PUT /api/admin/courses/:id
 
-// 📁 File: src/pages/admin/ManageCoursesPage.jsx → Line 40 (handleSave edit branch)
-// 🔑 Header: Authorization: Bearer <token> (admin only)
+// 📁 Integration Point: src/services/api.js → Line 320 (api.admin.courses.update)
+// ✅ Status: Integrated
+// 🔑 Header: Authorization: Bearer <token>
 
 Request:
 {
   title: string,
-  instructor: string,
-  category: string,
   price: number,
-  discount: number
+  discount: number,
+  category: string,
+  level: string,
+  image: string,
+  status: "published" | "draft",
+  instructor: string,
+  instructorId: number,
+  description: string,
+  lessons: number,
+  duration: number,
+  rating: number,
+  reviews: number
 }
 
 Response:
-{ ...updated course object }
+{
+  success: true,
+  data: {
+    id: number,
+    title: string,
+    // ... all updated fields
+  }
+}
 ```
 
 ```javascript
@@ -963,7 +1058,8 @@ Response:
 // ─────────────────────────────────────────────
 DELETE /api/admin/courses/:id
 
-// 📁 File: src/pages/admin/ManageCoursesPage.jsx → Line 57 (handleDelete)
+// 📁 Integration Point: src/services/api.js → Line 325 (api.admin.courses.delete)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token> (admin only)
 
 Response:
@@ -980,11 +1076,8 @@ Response:
 // ─────────────────────────────────────────────
 POST /api/ai/chat
 
-// 📁 Files:
-//   - src/pages/AIDemoPage.jsx (demo chat)
-//   - src/pages/course/VideoPlayerPage.jsx (contextual chat during video)
-//   - src/services/api.js → Line 155 (api.ai.chat)
-// 🔄 Replace: Hardcoded AI response
+// 📁 Integration Point: src/services/api.js → Line 380 (api.ai.chat)
+// ✅ Status: Integrated
 // 🔑 Header: Authorization: Bearer <token>
 
 Request:
@@ -993,59 +1086,72 @@ Request:
   context: {
     courseId: number | null,
     lectureId: number | null,
-    videoTimestamp: string | null   // "05:32"
+    videoTimestamp: string | null   // "09:00"
   }
 }
 
 Response:
 {
-  response: string,          // AI-generated answer (markdown supported)
-  sources: [
-    {
-      title: string,         // "Lecture 3: Data Preprocessing"
-      timestamp: string      // "02:15"
-    }
-  ]
+  message: string           // AI-generated answer (markdown supported)
 }
+
+// 📝 Note: Future updates may include 'sources' (array of lectures/timestamps)
+// to cite specific parts of the course.
+
+// ❓ Question for Backend:
+// Will the response be:
+//   a) Standard JSON
+//   b) Streaming (Server-Sent Events)?
+// 📝 Explanation: This decision affects frontend implementation (real-time typing vs full response rendering).
 ```
 
 ---
 
-# ══════════════════════════════════════════════════════════════
-# 📌 IMPORTANT NOTES FOR BACKEND TEAM
-# ══════════════════════════════════════════════════════════════
+## AI Video Assistant (CRITICAL)
 
-```
-1. AUTH HEADER FORMAT:
-   Authorization: Bearer <jwt_token>
-   Token is stored in: localStorage.getItem('ai_edu_token')
+This section defines how the AI connects to real-time video playback. The frontend currently simulates a "watch-along" experience that must be powered by the backend.
 
-2. ERROR RESPONSE FORMAT (use consistently):
-   { message: string, statusCode: number }
+### Current Frontend Logic:
+- **Pause Detection**: Frontend detects when a user pauses the video.
+- **Auto AI Suggestion**: If the video is paused for > 3 seconds, the frontend triggers an "auto_prompt" to the AI.
+- **Context Awareness**: The frontend tracks `currentTime` and `lectureId` to provide context for AI responses.
+- **Timeline Markers**: UI markers are added whenever the AI suggests something or the user asks a question.
 
-3. CORS:
-   Frontend runs on http://localhost:5173 (Vite dev server)
-   Make sure CORS allows this origin
+### POST /api/ai/video-assistant
+**Purpose**: Handles both automatic AI suggestions on pause and manual user questions.
 
-4. BASE_URL:
-   Set in: src/services/api.js → Line 7
-   Current value: '/api' (change to full URL if separate server)
+// 📁 Integration Point: src/services/api.js → Line 410 (api.ai.videoAssistant)
+// ✅ Status: Integrated
+// 🔑 Header: Authorization: Bearer <token>
 
-5. FILE UPLOADS:
-   Lectures page supports video + resource file uploads
-   Use multipart/form-data for POST /api/instructor/lectures
+Request:
+{
+  lectureId: number | string,   // ID of the video being watched
+  currentTime: number,        // current timestamp in seconds (e.g., 125.5)
+  action: "chat" | "auto_prompt" | "explain-section" | "summarize" | "explain-scene" | "create-quiz" | "show-code",
+  query?: string              // the actual text or question from the user
+}
 
-6. DATA TYPE FIXES:
-   - Instructor revenue: change from string "$12,450" → number 12450
-   - Lecture views: change from string "1.2K" → number 1200
-   - Admin stats: change from hardcoded strings → real numbers
+Response:
+{
+  message: string,            // The AI's response text (supports Markdown)
+  suggested: boolean,         // true if this was an auto-prompt suggestion
+  relatedSegment?: {          // Optional: point the user to a specific video segment
+    start: number,
+    end: number
+  }
+}
 
-7. PAGINATION:
-   ManageUsersPage has pagination UI ready (prev/next buttons)
-   Send: { page, limit, total } in paginated responses
+### 🧠 Backend Implementation Note:
+1. **action = "auto_prompt"**:
+   - Triggered when the user pauses.
+   - Backend should return a helpful suggestion like: *"I noticed you paused here. Would you like me to explain the last 30 seconds of this section?"*
+   
+2. **action = "user_question"**:
+   - Triggered when the user types a question.
+   - Backend responds using the `currentTime` and `lectureId` as context.
 
-8. MOCK FILES TO DELETE AFTER FULL INTEGRATION:
-   - src/data/mockData.js (entire file)
-   - Remove mock delays in src/services/api.js
-   - Remove localStorage user DB in src/services/authService.js
-```
+3. **Markers & Future Support**:
+   - Currently, markers are managed by the frontend UI.
+   - Transcript support is NOT required for the initial phase.
+

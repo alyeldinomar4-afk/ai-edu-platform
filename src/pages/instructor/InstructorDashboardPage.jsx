@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
 import InstructorNav from '../../components/layout/InstructorNav';
 import { api } from '../../services/api';
+import { formatCurrency, formatNumber, formatCompactNumber } from '../../utils/formatters';
 
 // Animated counter
 const AnimatedStat = ({ value }) => {
@@ -50,14 +51,14 @@ const InstructorDashboardPage = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
-    const [formData, setFormData] = useState({ title: '', students: '', status: 'Draft', revenue: '$0', image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
+    const [formData, setFormData] = useState({ title: '', students: 0, status: 'Draft', revenue: 0, image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
 
     useEffect(() => {
         const loadData = async () => {
             try {
                 const [statsData, coursesData] = await Promise.all([
                     api.instructor.getStats(),
-                    api.instructor.getCourses()
+                    api.instructor.courses.getAll()
                 ]);
                 setStats(statsData);
                 setCourses(coursesData);
@@ -72,13 +73,13 @@ const InstructorDashboardPage = () => {
 
     const openAddModal = () => {
         setEditingCourse(null);
-        setFormData({ title: '', students: '', status: 'Draft', revenue: '$0', image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
+        setFormData({ title: '', students: 0, status: 'Draft', revenue: 0, image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
         setShowModal(true);
     };
 
     const openEditModal = (course) => {
         setEditingCourse(course);
-        setFormData({ title: course.title, students: String(course.students), status: course.status, revenue: course.revenue, image: course.image || '', description: course.description || '' });
+        setFormData({ title: course.title, students: course.students, status: course.status, revenue: course.revenue, image: course.image || '', description: course.description || '' });
         setShowModal(true);
     };
 
@@ -89,29 +90,46 @@ const InstructorDashboardPage = () => {
             return;
         }
         setIsSaving(true);
-        await new Promise(resolve => setTimeout(resolve, 800));
-        if (editingCourse) {
-            setCourses(prev => prev.map(c =>
-                c.id === editingCourse.id ? { ...c, ...formData, students: parseInt(formData.students) || 0 } : c
-            ));
-            toast.success(t('dashboard.instructor.toasts.updateSuccess'));
-        } else {
-            setCourses(prev => [...prev, { id: Date.now(), ...formData, students: parseInt(formData.students) || 0 }]);
-            toast.success(t('dashboard.instructor.toasts.createSuccess'));
+        try {
+            if (editingCourse) {
+                const updated = await api.instructor.courses.update(editingCourse.id, formData);
+                setCourses(prev => prev.map(c =>
+                    c.id === editingCourse.id ? updated : c
+                ));
+                toast.success(t('dashboard.instructor.toasts.updateSuccess'));
+            } else {
+                const created = await api.instructor.courses.create({
+                    ...formData,
+                    students: 0,
+                    revenue: parseFloat(formData.revenue) || 0,
+                    status: formData.status || 'Draft'
+                });
+                setCourses(prev => [...prev, created]);
+                toast.success(t('dashboard.instructor.toasts.createSuccess'));
+            }
+        } catch (error) {
+            console.error('Error saving course:', error);
+            toast.error(t('common.error'));
+        } finally {
+            setIsSaving(false);
+            setShowModal(false);
         }
-        setIsSaving(false);
-        setShowModal(false);
     };
 
-    const handleDelete = (id) => {
-        setCourses(prev => prev.filter(c => c.id !== id));
-        setShowDeleteConfirm(null);
-        toast.success(t('common.deleted', { defaultValue: 'Course deleted' }));
+    const handleDelete = async (id) => {
+        try {
+            await api.instructor.courses.delete(id);
+            setCourses(prev => prev.filter(c => c.id !== id));
+            setShowDeleteConfirm(null);
+            toast.success(t('common.deleted', { defaultValue: 'Course deleted' }));
+        } catch (error) {
+            console.error('Error deleting course:', error);
+        }
     };
 
     const statCards = stats ? [
-        { label: t('dashboard.instructor.stats.totalStudents'), value: stats.totalStudents.toLocaleString(), change: '+12%', icon: Users, color: 'from-blue-500 to-indigo-600', bgLight: 'bg-blue-50 dark:bg-blue-900/20', textColor: 'text-blue-600 dark:text-blue-400' },
-        { label: t('dashboard.instructor.stats.totalRevenue'), value: stats.totalRevenue, change: '+8%', icon: DollarSign, color: 'from-emerald-500 to-teal-600', bgLight: 'bg-emerald-50 dark:bg-emerald-900/20', textColor: 'text-emerald-600 dark:text-emerald-400' },
+        { label: t('dashboard.instructor.stats.totalStudents'), value: stats.totalStudents, change: '+12%', icon: Users, color: 'from-blue-500 to-indigo-600', bgLight: 'bg-blue-50 dark:bg-blue-900/20', textColor: 'text-blue-600 dark:text-blue-400', isCompact: true },
+        { label: t('dashboard.instructor.stats.totalRevenue'), value: stats.totalRevenue, change: '+8%', icon: DollarSign, color: 'from-emerald-500 to-teal-600', bgLight: 'bg-emerald-50 dark:bg-emerald-900/20', textColor: 'text-emerald-600 dark:text-emerald-400', isCurrency: true },
         { label: t('dashboard.instructor.stats.courseRating'), value: stats.avgRating, sub: t('dashboard.instructor.stats.avgFrom', { count: stats.totalReviews }), icon: BarChart3, color: 'from-amber-500 to-orange-600', bgLight: 'bg-amber-50 dark:bg-amber-900/20', textColor: 'text-amber-600 dark:text-amber-400' },
         { label: t('dashboard.instructor.stats.activeCourses'), value: stats.activeCourses, sub: t('dashboard.instructor.stats.pendingReview', { count: stats.pendingReview }), icon: Video, color: 'from-purple-500 to-pink-600', bgLight: 'bg-purple-50 dark:bg-purple-900/20', textColor: 'text-purple-600 dark:text-purple-400' },
     ] : [];
@@ -180,7 +198,7 @@ const InstructorDashboardPage = () => {
                                 </motion.div>
                             </div>
                             <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-1">
-                                <AnimatedStat value={card.value} />
+                                {card.isCurrency ? formatCurrency(card.value, i18n.language) : card.isCompact ? formatCompactNumber(card.value, i18n.language) : formatNumber(card.value, i18n.language)}
                             </h3>
                             {card.change && (
                                 <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
@@ -242,12 +260,12 @@ const InstructorDashboardPage = () => {
                                             <div className="min-w-0">
                                                 <span className="block truncate font-bold group-hover:text-primary transition-colors">{course.title}</span>
                                                 <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">
-                                                    {course.status === 'Published' ? t('dashboard.instructor.published') : t('dashboard.instructor.draft')} • {course.revenue}
+                                                    {course.status === 'Published' ? t('dashboard.instructor.published') : t('dashboard.instructor.draft')} • {formatCurrency(course.revenue)}
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 font-medium">{course.students}</td>
+                                    <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 font-medium">{formatNumber(course.students)}</td>
                                     <td className="px-4 sm:px-6 py-4 hidden sm:table-cell">
                                         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${course.status === 'Published'
                                             ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
@@ -257,7 +275,7 @@ const InstructorDashboardPage = () => {
                                             {course.status === 'Published' ? t('dashboard.instructor.published') : t('dashboard.instructor.draft')}
                                         </span>
                                     </td>
-                                    <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell font-semibold">{course.revenue}</td>
+                                    <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell font-semibold">{formatCurrency(course.revenue)}</td>
                                     <td className="px-4 sm:px-6 py-4 text-right rtl:text-left">
                                         <div className="flex justify-end gap-1">
                                             <button
@@ -388,11 +406,11 @@ const InstructorDashboardPage = () => {
                                             <div>
                                                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">{t('dashboard.instructor.modals.price')}</label>
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     value={formData.revenue}
-                                                    onChange={e => setFormData(prev => ({ ...prev, revenue: e.target.value }))}
+                                                    onChange={e => setFormData(prev => ({ ...prev, revenue: e.target.value === '' ? '' : e.target.value }))}
                                                     className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
-                                                    placeholder={t('dashboard.instructor.modals.pricePlaceholder')}
+                                                    placeholder="0.00"
                                                 />
                                             </div>
                                         </div>
@@ -455,10 +473,10 @@ const InstructorDashboardPage = () => {
                                             <div className="flex items-center justify-between mt-5 pt-5 border-t border-slate-100 dark:border-slate-800">
                                                 <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg">
                                                     <Users size={16} className="text-primary" />
-                                                    {formData.students || 0}
+                                                    {formatNumber(formData.students || 0)}
                                                 </div>
                                                 <div className="text-xl font-black bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">
-                                                    {formData.revenue || '$0'}
+                                                    {formatCurrency(formData.revenue || 0)}
                                                 </div>
                                             </div>
                                         </div>

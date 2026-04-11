@@ -4,12 +4,12 @@ import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Button from '../../ui/Button';
-import { instructors } from '../../../data/mockData';
 import { cn } from '../../../utils';
+import { formatDuration, formatCurrency } from '../../../utils/formatters';
 
 const CourseCard = ({ course, layout = 'grid' }) => {
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const cardRef = useRef(null);
 
 
@@ -90,9 +90,9 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                             navigate(`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, '-').toLowerCase())}`);
                         }}
                     >
-                        <div className="w-6 h-6 rounded-full overflow-hidden border border-white dark:border-slate-700 shadow-sm transition-transform group-hover/ins:scale-110">
+                        <div className="w-6 h-6 rounded-full overflow-hidden border border-white dark:border-slate-700 shadow-sm transition-transform group-hover/ins:scale-110 bg-slate-200">
                             <img 
-                                src={instructors.find(ins => ins.name === course.instructor)?.avatar || `https://ui-avatars.com/api/?name=${course.instructor}&background=random`} 
+                                src={course.instructorImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.instructor)}&background=random`} 
                                 alt={course.instructor}
                                 className="w-full h-full object-cover"
                             />
@@ -108,7 +108,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                         </div>
                         <div className="flex items-center gap-1 sm:gap-1.5">
                             <Clock size={12} className="text-secondary/60" />
-                            <span>{course.duration}</span>
+                            <span>{formatDuration(course.duration)}</span>
                         </div>
                     </div>
 
@@ -117,8 +117,18 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                         <div className="flex flex-col">
                             <div className="flex items-center gap-1 sm:gap-2">
                                 <span className="font-black text-sm sm:text-xl text-slate-900 dark:text-white">
-                                    {course.price === 0 ? t('home.cta.free') : `$${course.discount ? (course.price * (1 - course.discount / 100)).toFixed(2) : course.price}`}
+                                    {course.price === 0 ? t('home.cta.free') : formatCurrency(course.discount ? (course.price * (1 - course.discount / 100)) : course.price, i18n.language)}
                                 </span>
+                                {course.price > 0 && course.discount > 0 && (
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] text-slate-400 line-through leading-none decoration-slate-400/50">
+                                            {formatCurrency(course.price, i18n.language)}
+                                        </span>
+                                        <span className="text-[9px] font-bold text-green-600 dark:text-green-400">
+                                            -{course.discount}%
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         

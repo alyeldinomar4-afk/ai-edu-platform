@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
@@ -19,18 +19,21 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Button from '../../components/ui/Button';
+import { api } from '../../services/api';
+import { Loader2 } from 'lucide-react';
 
 const AdminSettingsPage = () => {
     const { t, i18n } = useTranslation();
     const isAr = i18n.language === 'ar';
     const [activeTab, setActiveTab] = useState('general');
     const [isSaving, setIsSaving] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
 
-    // Mock Settings State
+    // Platform Settings State
     const [settings, setSettings] = useState({
-        platformName: 'Nexora AI',
-        supportEmail: 'support@nexora.ai',
+        platformName: '',
+        supportEmail: '',
         maintenanceMode: false,
         enableAiTutor: true,
         defaultAiModel: 'gpt-4-turbo',
@@ -41,6 +44,22 @@ const AdminSettingsPage = () => {
         githubLogin: true
     });
 
+    useEffect(() => {
+        const fetchSettings = async () => {
+            setIsLoading(true);
+            try {
+                const data = await api.admin.settings.get();
+                setSettings(data);
+            } catch (error) {
+                console.error('Error fetching settings:', error);
+                toast.error(t('common.error'));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchSettings();
+    }, [t]);
+
     const handleToggle = (key) => {
         setSettings(prev => ({ ...prev, [key]: !prev[key] }));
     };
@@ -50,12 +69,16 @@ const AdminSettingsPage = () => {
         setSettings(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setIsSaving(true);
-        setTimeout(() => {
-            setIsSaving(false);
+        try {
+            await api.admin.settings.update(settings);
             toast.success(t('dashboard.admin.settings.saveSuccess'));
-        }, 1000);
+        } catch (error) {
+            toast.error(t('common.error'));
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const tabs = [
@@ -111,7 +134,13 @@ const AdminSettingsPage = () => {
 
                 {/* Tab Content */}
                 <div className="flex-1">
-                    <AnimatePresence mode="wait">
+                    {isLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+                            <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                        </div>
+                    ) : (
+                        <AnimatePresence mode="wait">
                         <motion.div
                             key={activeTab}
                             variants={containerVariants}
@@ -317,6 +346,7 @@ const AdminSettingsPage = () => {
                             )}
                         </motion.div>
                     </AnimatePresence>
+                    )}
                 </div>
             </div>
 

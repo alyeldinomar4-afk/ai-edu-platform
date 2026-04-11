@@ -7,7 +7,8 @@ import CourseCard from '../../components/features/course/CourseCard';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
-import { courses, categories } from '../../data/mockData';
+import { api } from '../../services/api';
+import { formatCurrency, formatDuration } from '../../utils/formatters';
 import { cn } from '../../utils';
 
 const staggerContainer = {
@@ -36,18 +37,33 @@ const CoursesPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [showFilters, setShowFilters] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
+    const [viewMode, setViewMode] = useState('grid');
+    const [allCourses, setAllCourses] = useState([]);
+    const [categoriesList, setCategoriesList] = useState([]);
 
     // Derivations from URL
     const selectedCategory = searchParams.get('category') || 'All';
     const searchQuery = searchParams.get('q') || '';
     const selectedLevels = searchParams.get('levels') ? searchParams.get('levels').split(',').filter(Boolean) : [];
 
-    // Simulate loading state on mount
+    // Fetch data on mount
     useEffect(() => {
-        setIsLoading(true);
-        const timer = setTimeout(() => setIsLoading(false), 500);
-        return () => clearTimeout(timer);
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const [coursesData, categoriesData] = await Promise.all([
+                    api.courses.getAll(),
+                    api.courses.getCategories()
+                ]);
+                setAllCourses(coursesData);
+                setCategoriesList(categoriesData);
+            } catch (error) {
+                console.error('Error fetching marketplace data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
     }, []);
 
     const handleCategoryChange = (category) => {
@@ -63,14 +79,14 @@ const CoursesPage = () => {
 
     // Calculate level counts for the current filter set (ignoring level filter itself for better UX)
     const getLevelCount = (level) => {
-        return courses.filter(c => 
+        return allCourses.filter(c => 
             (selectedCategory === 'All' || c.category === selectedCategory) &&
             c.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
             c.level === level
         ).length;
     };
 
-    const filteredCourses = courses.filter(course => {
+    const filteredCourses = allCourses.filter(course => {
         const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
         const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesLevel = selectedLevels.length === 0 || selectedLevels.includes(course.level);
@@ -78,7 +94,7 @@ const CoursesPage = () => {
     });
 
     // Dynamic total count for 'All' based on current search and level
-    const totalMatchingCourses = courses.filter(c => 
+    const totalMatchingCourses = allCourses.filter(c => 
         c.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
         (selectedLevels.length === 0 || selectedLevels.includes(c.level))
     ).length;
@@ -150,7 +166,7 @@ const CoursesPage = () => {
                                 "p-2 rounded-lg transition-all",
                                 viewMode === 'grid' 
                                     ? "bg-white dark:bg-slate-700 text-primary shadow-sm" 
-                                    : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"
+                                    : "text-slate-400 dark:bg-slate-800 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"
                             )}
                         >
                             <LayoutGrid size={18} />
@@ -161,7 +177,7 @@ const CoursesPage = () => {
                                 "p-2 rounded-lg transition-all",
                                 viewMode === 'list' 
                                     ? "bg-white dark:bg-slate-700 text-primary shadow-sm" 
-                                    : "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"
+                                    : "text-slate-400 dark:bg-slate-800 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400"
                             )}
                         >
                             <List size={18} />
@@ -238,9 +254,9 @@ const CoursesPage = () => {
                                         {selectedCategory === 'All' && <motion.div layoutId="activeCat" className="absolute left-0 w-1 h-6 bg-primary rounded-r-full" />}
                                     </button>
 
-                                    {categories.map(cat => {
+                                    {categoriesList.map(cat => {
                                         const isActive = selectedCategory === cat.name;
-                                        const count = courses.filter(c => 
+                                        const count = allCourses.filter(c => 
                                             c.category === cat.name && 
                                             c.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
                                             (selectedLevels.length === 0 || selectedLevels.includes(c.level))
@@ -279,7 +295,7 @@ const CoursesPage = () => {
                                 <div className="space-y-0.5">
                                     {['Beginner', 'Intermediate', 'Advanced'].map(level => {
                                         const isChecked = selectedLevels.includes(level);
-                                        const count = courses.filter(c => 
+                                        const count = allCourses.filter(c => 
                                             c.level === level && 
                                             c.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
                                             (selectedCategory === 'All' || c.category === selectedCategory)
@@ -383,6 +399,7 @@ const CoursesPage = () => {
                                                             <div className="flex items-center gap-1.5 text-xs font-bold bg-slate-50 dark:bg-slate-800/50 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-700/40 shadow-sm">
                                                                 <Star size={12} className="text-yellow-400 fill-yellow-400" /> {course.rating}
                                                             </div>
+                                                            <span className="flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400"><Clock size={12} /> {formatDuration(course.duration)}</span>
                                                             <div className="flex flex-col items-center gap-1 group/stats">
                                                                 <span className="text-sm font-black text-slate-900 dark:text-white leading-none">{course.lessons}</span>
                                                                 <BookOpen size={14} className="text-primary/60 transition-transform group-hover/stats:scale-110" />
@@ -402,7 +419,7 @@ const CoursesPage = () => {
                                                     </td>
                                                     <td className="px-6 py-5 text-center">
                                                         <span className="text-lg font-black text-slate-900 dark:text-white">
-                                                            {course.price === 0 ? t('home.cta.free') : `$${course.discount ? (course.price * (1 - course.discount / 100)).toFixed(2) : course.price}`}
+                                                            {course.price === 0 ? t('home.cta.free') : formatCurrency(course.discount ? (course.price * (1 - course.discount / 100)) : course.price, i18n.language)}
                                                         </span>
                                                     </td>
                                                     <td className={`px-8 py-5 ${isAr ? 'text-left' : 'text-right'}`}>

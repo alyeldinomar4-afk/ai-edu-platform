@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +28,8 @@ import {
     Hash
 } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import { api } from '../../services/api';
+import { Loader2 } from 'lucide-react';
 
 const ManageUsersPage = () => {
     const { t } = useTranslation();
@@ -39,14 +41,25 @@ const ManageUsersPage = () => {
     const [selectedRole, setSelectedRole] = useState('learner');
     const [generatedPass, setGeneratedPass] = useState('');
 
-    // Initial users state
-    const [users, setUsers] = useState([
-        { id: 1, name: "Ahmed Mansour", email: "ahmed@example.com", role: "instructor", status: "active", joined: "2023-10-12", avatar: "https://ui-avatars.com/api/?name=Ahmed+Mansour&background=random" },
-        { id: 2, name: "Mona Gamal", email: "mona@example.com", role: "learner", status: "active", joined: "2023-11-05", avatar: "https://ui-avatars.com/api/?name=Mona+Gamal&background=random" },
-        { id: 3, name: "Youssef Khaled", email: "youssef@example.com", role: "learner", status: "suspended", joined: "2024-01-20", avatar: "https://ui-avatars.com/api/?name=Youssef+Khaled&background=random" },
-        { id: 4, name: "Dr. Laila Hassan", email: "laila@example.com", role: "instructor", status: "active", joined: "2023-09-15", avatar: "https://ui-avatars.com/api/?name=Laila+Hassan&background=random" },
-        { id: 5, name: "Nour Eddeen", email: "nour@example.com", role: "learner", status: "active", joined: "2024-02-10", avatar: "https://ui-avatars.com/api/?name=Nour+Eddeen&background=random" },
-    ]);
+    // Users state
+    const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setIsLoading(true);
+            try {
+                const data = await api.admin.users.getAll();
+                setUsers(data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                toast.error(t('common.error'));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchUsers();
+    }, [t]);
 
     // Filtering Logic
     const filteredUsers = useMemo(() => {
@@ -60,44 +73,58 @@ const ManageUsersPage = () => {
     }, [users, searchTerm, roleFilter, statusFilter]);
 
     // User Actions
-    const handleAddUser = (userData) => {
-        const newUser = {
-            ...userData,
-            id: users.length + 1,
-            avatar: `https://ui-avatars.com/api/?name=${userData.name.replace(' ', '+')}&background=random`,
-            joined: new Date().toISOString().split('T')[0],
-            status: 'active'
-        };
-        setUsers([newUser, ...users]);
-        setShowUserModal(false);
-        toast.success(t('dashboard.admin.manageUsers.toasts.addSuccess'));
+    const handleAddUser = async (userData) => {
+        try {
+            const newUser = await api.admin.users.create({
+                ...userData,
+                joined: new Date().toISOString().split('T')[0],
+                status: 'active'
+            });
+            setUsers([newUser, ...users]);
+            setShowUserModal(false);
+            toast.success(t('dashboard.admin.manageUsers.toasts.addSuccess'));
+        } catch (error) {
+            toast.error(t('common.error'));
+        }
     };
 
-    const handleUpdateUser = (userData) => {
-        setUsers(users.map(u => u.id === userData.id ? { ...u, ...userData } : u));
-        setEditingUser(null);
-        setShowUserModal(false);
-        toast.success(t('dashboard.admin.manageUsers.toasts.updateSuccess'));
+    const handleUpdateUser = async (userData) => {
+        try {
+            const updated = await api.admin.users.update(userData.id, userData);
+            setUsers(users.map(u => u.id === userData.id ? { ...u, ...updated } : u));
+            setEditingUser(null);
+            setShowUserModal(false);
+            toast.success(t('dashboard.admin.manageUsers.toasts.updateSuccess'));
+        } catch (error) {
+            toast.error(t('common.error'));
+        }
     };
 
-    const handleDeleteUser = (id) => {
-        setUsers(users.filter(u => u.id !== id));
-        // setShowActionMenu(null); // This was not defined in the original file but present in handleDeleteUser
-        toast.success(t('dashboard.admin.manageUsers.toasts.deleteSuccess'));
+    const handleDeleteUser = async (id) => {
+        try {
+            await api.admin.users.delete(id);
+            setUsers(users.filter(u => u.id !== id));
+            toast.success(t('dashboard.admin.manageUsers.toasts.deleteSuccess'));
+        } catch (error) {
+            toast.error(t('common.error'));
+        }
     };
 
-    const toggleStatus = (id) => {
+    const toggleStatus = async (id) => {
         const userToToggle = users.find(u => u.id === id);
         if (!userToToggle) return;
 
         const newStatus = userToToggle.status === 'active' ? 'suspended' : 'active';
-        toast.success(newStatus === 'active' 
-            ? t('dashboard.admin.manageUsers.toasts.activatedSuccess') 
-            : t('dashboard.admin.manageUsers.toasts.suspendedSuccess')
-        );
-
-        setUsers(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
-        // setShowActionMenu(null); // Also not defined in original state but present here
+        try {
+            await api.admin.users.update(id, { status: newStatus });
+            setUsers(prev => prev.map(u => u.id === id ? { ...u, status: newStatus } : u));
+            toast.success(newStatus === 'active' 
+                ? t('dashboard.admin.manageUsers.toasts.activatedSuccess') 
+                : t('dashboard.admin.manageUsers.toasts.suspendedSuccess')
+            );
+        } catch (error) {
+            toast.error(t('common.error'));
+        }
     };
 
     const generatePassword = () => {
@@ -204,7 +231,16 @@ const ManageUsersPage = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {filteredUsers.length > 0 ? filteredUsers.map((user) => (
+                            {isLoading ? (
+                                <tr>
+                                    <td colSpan="5" className="px-6 py-20 text-center">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                                            <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : filteredUsers.length > 0 ? filteredUsers.map((user) => (
                                 <tr key={user.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-3">

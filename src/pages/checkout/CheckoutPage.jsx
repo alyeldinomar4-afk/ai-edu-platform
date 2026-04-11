@@ -1,20 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CreditCard, Lock, ShieldCheck, ArrowLeft, Clock, BookOpen, Star, AlertCircle } from 'lucide-react';
+import { CreditCard, Lock, ShieldCheck, ArrowLeft, Clock, BookOpen, Star, AlertCircle, Loader2 } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import { courses } from '../../data/mockData';
+import { api } from '../../services/api';
 
 const CheckoutPage = () => {
     const { courseId } = useParams();
     const navigate = useNavigate();
-    const course = courses.find(c => c.id === parseInt(courseId)) || courses[0];
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const [cardNumber, setCardNumber] = useState('');
     const [expiry, setExpiry] = useState('');
     const [cvv, setCvv] = useState('');
     const [errors, setErrors] = useState({});
     const [touched, setTouched] = useState({});
+
+    useEffect(() => {
+        const fetchCourse = async () => {
+            setLoading(true);
+            try {
+                const data = await api.courses.getById(parseInt(courseId));
+                if (data) {
+                    setCourse(data);
+                } else {
+                    setError('Course not found');
+                }
+            } catch (err) {
+                console.error('Error fetching course:', err);
+                setError('Failed to load course details');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCourse();
+    }, [courseId]);
 
     const validateForm = () => {
         const newErrors = {};
@@ -106,6 +128,34 @@ const CheckoutPage = () => {
         if (v.length >= 2) return v.substring(0, 2) + '/' + v.substring(2, 4);
         return v;
     };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+                <div className="text-center">
+                    <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">Securing your session...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !course) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
+                <div className="text-center max-w-sm">
+                    <div className="w-20 h-20 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <AlertCircle size={40} className="text-red-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{error || 'Something went wrong'}</h2>
+                    <p className="text-slate-500 dark:text-slate-400 mb-8">We couldn't retrieve the course details. Please try again or browse other courses.</p>
+                    <Link to="/courses">
+                        <Button className="w-full">Browse Courses</Button>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-16 transition-colors duration-300">

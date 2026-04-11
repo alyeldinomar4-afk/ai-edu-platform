@@ -9,12 +9,14 @@ import Playlist from '../../components/features/video/Playlist';
 import ContextualAI from '../../components/features/ai/ContextualAI';
 import Quiz from '../../components/features/course/Quiz';
 
-import { lectures } from '../../data/mockData';
+import { api } from '../../services/api';
+import { formatDuration } from '../../utils/formatters';
 import toast from 'react-hot-toast';
+import { Loader2 } from 'lucide-react';
 
 const VideoPlayerPage = () => {
     const { courseId } = useParams();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [rightSidebarTab, setRightSidebarTab] = useState('playlist'); // playlist, ai
     const [isTheaterMode, setIsTheaterMode] = useState(false);
     const [activeTab, setActiveTab] = useState('overview');
@@ -39,18 +41,44 @@ const VideoPlayerPage = () => {
             reply: null
         }
     ]);
-    const currentCourseId = parseInt(courseId) || 1;
-    const courseLectures = lectures.filter(l => l.courseId === currentCourseId);
-    const [activeLectureId, setActiveLectureId] = useState(courseLectures[0]?.id || 1);
+    const [courseData, setCourseData] = useState(null);
+    const [courseLectures, setCourseLectures] = useState([]);
+    const [activeLectureId, setActiveLectureId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const scrollContainerRef = useRef(null);
 
 
-    // Reset scroll when lecture or course changes
+    // Fetch course and lectures
+    useEffect(() => {
+        const loadCourseContent = async () => {
+            setIsLoading(true);
+            try {
+                const id = parseInt(courseId);
+                const [course, lecturesData] = await Promise.all([
+                    api.courses.getById(id),
+                    api.courses.getLectures(id)
+                ]);
+                setCourseData(course);
+                setCourseLectures(lecturesData);
+                if (lecturesData.length > 0) {
+                    setActiveLectureId(lecturesData[0].id);
+                }
+            } catch (error) {
+                console.error('Error loading course content:', error);
+                toast.error(t('common.error'));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        if (courseId) loadCourseContent();
+    }, [courseId, t]);
+
+    // Reset scroll when lecture changes
     useEffect(() => {
         if (scrollContainerRef.current) {
             scrollContainerRef.current.scrollTop = 0;
         }
-    }, [activeLectureId, courseId]);
+    }, [activeLectureId]);
 
     // Initial AI welcome message
     useEffect(() => {
@@ -79,7 +107,7 @@ const VideoPlayerPage = () => {
             setIsAiTyping(false);
 
             const lastMessageText = text.toLowerCase();
-            let responseText = t('videoPlayer.aiTutor.analyzingResponse', { timestamp: formatTime(currentTime) });
+            let responseText = t('videoPlayer.aiTutor.analyzingResponse', { timestamp: formatDuration(currentTime) });
 
             if (lastMessageText.includes('explain') || lastMessageText.includes('شرح')) {
                 responseText = i18n.language === 'ar'
@@ -129,10 +157,10 @@ const VideoPlayerPage = () => {
         toast.success(t('videoPlayer.discussion.toasts.postSuccess'));
     };
 
-    // Find current lecture from mock data or fallback
-    const lectureData = lectures.find(l => l.id === activeLectureId) || courseLectures[0] || lectures[0];
-    const courseTitle = lectureData?.course || "Machine Learning Fundamentals";
-    const currentLecture = { title: lectureData?.title || "Introduction to Neural Networks" };
+    // Find current lecture
+    const lectureData = courseLectures.find(l => l.id === activeLectureId) || courseLectures[0] || {};
+    const courseTitle = courseData?.title || "...";
+    const currentLecture = { title: lectureData?.title || "..." };
 
     // Group lectures into sections for the playlist
     const playlistData = courseLectures.length >= 3 ? [
@@ -142,14 +170,23 @@ const VideoPlayerPage = () => {
         },
         {
             title: t('videoPlayer.playlist.advanced') || "Advanced Concepts",
-            lectures: courseLectures.slice(1)
+            lectures: courseLectures.slice(1).filter(Boolean)
         }
     ] : [
         {
             title: t('videoPlayer.playlist.courseContent') || "Course Content",
-            lectures: courseLectures.length > 0 ? courseLectures : [lectureData]
+            lectures: courseLectures.length > 0 ? courseLectures.filter(Boolean) : (lectureData.id ? [lectureData] : [])
         }
     ];
+
+    if (isLoading) {
+        return (
+            <div className="h-screen flex flex-col items-center justify-center bg-white dark:bg-slate-950 transition-colors">
+                <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+                <p className="text-slate-500 dark:text-slate-400 font-medium animate-pulse">{t('common.loading')}</p>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col h-screen h-[100dvh] bg-white dark:bg-slate-900 overflow-hidden transition-colors duration-300">

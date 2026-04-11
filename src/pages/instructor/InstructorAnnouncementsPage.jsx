@@ -1,72 +1,75 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Megaphone, Send, Users, Clock, Bold, Italic, Link as LinkIcon, List } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import InstructorNav from '../../components/layout/InstructorNav';
 import Button from '../../components/ui/Button';
+import { api } from '../../services/api';
+import { Loader2 } from 'lucide-react';
 
-// Mock Data
-const coursesList = [
-    { id: 'all', title: 'All Courses' },
-    { id: 'c1', title: 'Advanced React Patterns' },
-    { id: 'c2', title: 'Python for Machine Learning' },
-];
-
-const initialAnnouncements = [
-    {
-        id: 1,
-        course: 'Advanced React Patterns',
-        subject: 'New Bonus Section Added!',
-        message: 'Hi everyone! I just uploaded 3 new videos covering the latest React 19 hooks. Make sure to check them out in Section 8.',
-        date: '2 hours ago',
-        sentTo: 1450
-    },
-    {
-        id: 2,
-        course: 'All Courses',
-        subject: 'Upcoming Live Q&A Session',
-        message: 'Join me this Saturday at 2 PM GMT for a live Q&A session on YouTube. Bring your toughest questions!',
-        date: '3 days ago',
-        sentTo: 5200
-    }
-];
+// Mock data is now managed in src/data/mockData.js and served via api.js
 
 const InstructorAnnouncementsPage = () => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
-    const [announcements, setAnnouncements] = useState(initialAnnouncements);
+    const [announcements, setAnnouncements] = useState([]);
+    const [coursesList, setCoursesList] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [selectedCourse, setSelectedCourse] = useState('all');
     const [subject, setSubject] = useState('');
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
 
-    const handleSend = (e) => {
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                const [annData, courseData] = await Promise.all([
+                    api.instructor.announcements.getAll('all'),
+                    api.instructor.courses.getAll()
+                ]);
+                setAnnouncements(annData);
+                setCoursesList(courseData.map(c => ({ id: c.id, title: c.title })));
+            } catch (error) {
+                console.error('Error fetching announcements:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!subject.trim() || !message.trim()) return;
 
         setIsSending(true);
-        setTimeout(() => {
-            const courseName = selectedCourse === 'all' ? t('dashboard.instructor.announcements.allCourses') : (coursesList.find(c => c.id === selectedCourse)?.title || 'Selected Course');
-            const newAnnouncement = {
-                id: Date.now(),
+        try {
+            const courseName = selectedCourse === 'all' ? t('dashboard.instructor.announcements.allCourses') : (coursesList.find(c => String(c.id) === String(selectedCourse))?.title || 'Selected Course');
+            
+            const newAnnouncement = await api.instructor.announcements.create({
+                courseId: selectedCourse,
                 course: courseName,
                 subject,
                 message,
                 date: 'Just now',
-                sentTo: selectedCourse === 'all' ? 5200 : 1450 // Mock numbers
-            };
+                sentTo: selectedCourse === 'all' ? 5200 : 1450 // Mock numbers for UI
+            });
 
             setAnnouncements([newAnnouncement, ...announcements]);
             setSubject('');
             setMessage('');
             setSelectedCourse('all');
             setShowForm(false);
-            setIsSending(false);
             toast.success(t('dashboard.instructor.announcements.success'));
-        }, 1500);
+        } catch (error) {
+            toast.error(t('common.error'));
+        } finally {
+            setIsSending(false);
+        }
     };
 
     return (
@@ -160,29 +163,42 @@ const InstructorAnnouncementsPage = () => {
             {/* History */}
             <h2 className={`text-lg font-bold text-slate-900 dark:text-white mb-4 ${isRTL ? 'text-right' : ''}`}>{t('dashboard.instructor.announcements.history')}</h2>
             <div className="space-y-4">
-                {announcements.map((ann) => (
-                    <motion.div
-                        key={ann.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={`bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors ${isRTL ? 'text-right' : ''}`}
-                    >
-                        <div className={`flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                            <div className={isRTL ? 'text-right' : ''}>
-                                <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">{ann.subject}</h3>
-                                <p className="text-sm font-medium text-primary dark:text-primary-400">{ann.course}</p>
+                {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+                        <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                    </div>
+                ) : announcements.length > 0 ? (
+                    announcements.map((ann) => (
+                        <motion.div
+                            key={ann.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={`bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 transition-colors ${isRTL ? 'text-right' : ''}`}
+                        >
+                            <div className={`flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                <div className={isRTL ? 'text-right' : ''}>
+                                    <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-1">{ann.subject}</h3>
+                                    <p className="text-sm font-medium text-primary dark:text-primary-400">{ann.course}</p>
+                                </div>
+                                <div className={`flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                    <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Clock size={14} /> {ann.date}</span>
+                                    <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                                    <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Users size={14} /> {t('dashboard.instructor.announcements.sentTo', { count: ann.sentTo?.toLocaleString() || 0 })}</span>
+                                </div>
                             </div>
-                            <div className={`flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Clock size={14} /> {ann.date}</span>
-                                <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
-                                <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Users size={14} /> {t('dashboard.instructor.announcements.sentTo', { count: ann.sentTo.toLocaleString() })}</span>
+                            <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-300">
+                                <p>{ann.message || ann.content}</p>
                             </div>
-                        </div>
-                        <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-300">
-                            <p>{ann.message}</p>
-                        </div>
-                    </motion.div>
-                ))}
+                        </motion.div>
+                    ))
+                ) : (
+                    <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <Megaphone className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-slate-900 dark:text-white">{t('dashboard.instructor.announcements.emptyTitle')}</h3>
+                        <p className="text-slate-500 dark:text-slate-400">{t('dashboard.instructor.announcements.emptySubtitle')}</p>
+                    </div>
+                )}
             </div>
 
         </div>

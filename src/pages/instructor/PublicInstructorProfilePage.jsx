@@ -8,7 +8,7 @@ import { useAuth } from '../../auth/useAuth';
 import Button from '../../components/ui/Button';
 import LoadingSkeleton, { CourseCardSkeleton } from '../../components/ui/LoadingSkeleton';
 import CourseCard from '../../components/features/course/CourseCard';
-import { courses, instructors } from '../../data/mockData';
+import { api } from '../../services/api';
 
 const PublicInstructorProfilePage = () => {
     const { name } = useParams(); // Using the name from the URL
@@ -24,30 +24,38 @@ const PublicInstructorProfilePage = () => {
 
     const [instructorData, setInstructorData] = useState(null);
 
-    // Simulate loading and fetching instructor's courses
+    // Fetch instructor data and courses from API
     useEffect(() => {
-        setIsLoading(true);
-        // Find instructor data
-        const foundInstructor = instructors.find(inst => 
-            inst.name.toLowerCase() === instructorName.toLowerCase()
-        );
-        setInstructorData(foundInstructor || null);
+        const loadInstructorProfile = async () => {
+            setIsLoading(true);
+            try {
+                const [allInstructors, allCourses] = await Promise.all([
+                    api.instructors.getAll(),
+                    api.courses.getAll()
+                ]);
 
-        // Find courses taught by this instructor
-        const foundCourses = courses.filter(course =>
-            course.instructor.toLowerCase() === instructorName.toLowerCase()
-        );
+                // Find instructor data
+                const foundInstructor = allInstructors.find(inst => 
+                    inst.name.toLowerCase() === instructorName.toLowerCase()
+                );
+                setInstructorData(foundInstructor || null);
 
-        // If they don't have courses in mock data, let's just assign some random ones for demo purposes
-        if (foundCourses.length === 0) {
-            setInstructorCourses(courses.slice(0, 4));
-        } else {
-            setInstructorCourses(foundCourses);
-        }
+                // Find courses taught by this instructor
+                const foundCourses = allCourses.filter(course =>
+                    course.instructor.toLowerCase() === instructorName.toLowerCase()
+                );
 
-        const timer = setTimeout(() => setIsLoading(false), 800);
-        return () => clearTimeout(timer);
-    }, [instructorName]);
+                // If they don't have courses, we'll keep it empty or handle error
+                setInstructorCourses(foundCourses);
+            } catch (error) {
+                console.error('Error loading instructor profile:', error);
+                toast.error(t('common.error'));
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadInstructorProfile();
+    }, [instructorName, t]);
 
     const handleFollowToggle = () => {
         if (!isAuthenticated) {
@@ -68,7 +76,7 @@ const PublicInstructorProfilePage = () => {
 
     // Mock instructor details based on name
     const instructorStats = {
-        totalStudents: instructorData?.studentsCount ? parseInt(instructorData.studentsCount.toString().replace('k', '000')) : 25400,
+        totalStudents: instructorData?.studentsCount || 25400,
         reviews: 4800,
         averageRating: instructorData?.rating || 4.8,
         courseCount: instructorData?.coursesCount || instructorCourses.length || 12
@@ -122,7 +130,7 @@ const PublicInstructorProfilePage = () => {
                             >
                                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-white dark:bg-slate-800 shadow-xl overflow-hidden border-4 border-white dark:border-slate-900 mx-auto md:mx-0 z-10 relative">
                                     <img
-                                        src={instructorData?.avatar || `https://ui-avatars.com/api/?name=${instructorName}&background=0D8ABC&color=fff&size=200`}
+                                        src={instructorData?.image || instructorData?.avatar || `https://ui-avatars.com/api/?name=${instructorName}&background=0D8ABC&color=fff&size=200`}
                                         alt={instructorName}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />

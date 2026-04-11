@@ -4,20 +4,34 @@ import { PlayCircle, Clock, Award, Zap, BookOpen } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import { StatCardSkeleton, ProgressCardSkeleton } from '../../components/ui/LoadingSkeleton';
-import { courses } from '../../data/mockData';
+import { api } from '../../services/api';
 import { Link } from 'react-router-dom';
 
 const DashboardPage = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const learningProgress = [
-        { courseId: 1, title: 'Machine Learning Fundamentals', progress: 65, lastUnwatched: 'Lecture 14: Gradient Descent' },
-        { courseId: 2, title: 'Advanced React Patterns', progress: 30, lastUnwatched: 'Lecture 5: Composition' },
-    ];
+    const [stats, setStats] = useState({ hoursWatched: 0, certificates: 0, coursesInProgress: 0 });
+    const [learningProgress, setLearningProgress] = useState([]);
+    const [recommendedCourses, setRecommendedCourses] = useState([]);
 
-    // Simulate loading
     useEffect(() => {
-        const timer = setTimeout(() => setIsLoading(false), 600);
-        return () => clearTimeout(timer);
+        const loadDashboardData = async () => {
+            setIsLoading(true);
+            try {
+                const [statsData, progressData, recsData] = await Promise.all([
+                    api.learner.getStats(),
+                    api.learner.getProgress(),
+                    api.courses.getAll() // Use general courses for recommendations in this generic dashboard
+                ]);
+                setStats(statsData);
+                setLearningProgress(progressData);
+                setRecommendedCourses(recsData.slice(2, 4));
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadDashboardData();
     }, []);
 
     const hasEnrolledCourses = learningProgress.length > 0;
@@ -51,17 +65,17 @@ const DashboardPage = () => {
                                 <>
                                     <div className="bg-white p-4 sm:p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
                                         <div className="p-2 sm:p-3 bg-blue-50 text-blue-600 rounded-full mb-2 sm:mb-3"><PlayCircle size={20} className="sm:w-6 sm:h-6" /></div>
-                                        <span className="text-xl sm:text-2xl font-bold text-slate-900">12</span>
+                                        <span className="text-xl sm:text-2xl font-bold text-slate-900">{stats.hoursWatched}</span>
                                         <span className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Hours Watched</span>
                                     </div>
                                     <div className="bg-white p-4 sm:p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
                                         <div className="p-2 sm:p-3 bg-green-50 text-green-600 rounded-full mb-2 sm:mb-3"><Award size={20} className="sm:w-6 sm:h-6" /></div>
-                                        <span className="text-xl sm:text-2xl font-bold text-slate-900">2</span>
+                                        <span className="text-xl sm:text-2xl font-bold text-slate-900">{stats.certificates}</span>
                                         <span className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Certificates</span>
                                     </div>
                                     <div className="bg-white p-4 sm:p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
                                         <div className="p-2 sm:p-3 bg-purple-50 text-purple-600 rounded-full mb-2 sm:mb-3"><Zap size={20} className="sm:w-6 sm:h-6" /></div>
-                                        <span className="text-xl sm:text-2xl font-bold text-slate-900">5</span>
+                                        <span className="text-xl sm:text-2xl font-bold text-slate-900">{stats.coursesInProgress}</span>
                                         <span className="text-[10px] sm:text-xs text-slate-500 mt-0.5">In Progress</span>
                                     </div>
                                 </>
@@ -119,7 +133,7 @@ const DashboardPage = () => {
                         <section>
                             <h2 className="text-xl font-bold text-slate-900 mb-4">Recommended for You</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {courses.slice(2, 4).map(course => (
+                                {recommendedCourses.map(course => (
                                     <Link key={course.id} to={`/courses/${course.id}`} className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:border-primary/50 transition-colors group">
                                         <div className="flex gap-4">
                                             <img src={course.image} alt={course.title} className="w-20 h-20 rounded-lg object-cover" />

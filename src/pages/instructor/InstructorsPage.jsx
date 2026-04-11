@@ -1,12 +1,32 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { instructors } from '../../data/mockData';
+import { api } from '../../services/api';
 import Button from '../../components/ui/Button';
 import Breadcrumb from '../../components/ui/Breadcrumb';
+import { formatCompactNumber } from '../../utils/formatters';
+import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const InstructorsPage = () => {
     const { t } = useTranslation();
+    const [instructorList, setInstructorList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchInstructors = async () => {
+            setIsLoading(true);
+            try {
+                const data = await api.instructors.getAll();
+                setInstructorList(data);
+            } catch (error) {
+                console.error('Error fetching instructors:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchInstructors();
+    }, []);
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-300 min-h-screen">
@@ -24,8 +44,14 @@ const InstructorsPage = () => {
             </div>
 
             {/* Instructors Grid */}
-            <div className="grid md:grid-cols-2 gap-8 text-start max-w-4xl mx-auto">
-                {instructors.map((instructor, idx) => (
+            {isLoading ? (
+                <div className="py-20 flex flex-col items-center justify-center gap-4">
+                    <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                </div>
+            ) : (
+                <div className="grid md:grid-cols-2 gap-8 text-start max-w-4xl mx-auto">
+                    {instructorList.map((instructor, idx) => (
                     <motion.div
                         key={instructor.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -61,7 +87,7 @@ const InstructorsPage = () => {
                                 <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">{t('instructors.rating', 'Rating')}</p>
                             </div>
                             <div className="text-center">
-                                <p className="text-xs font-bold text-slate-900 dark:text-white">{instructor.studentsCount}</p>
+                                <p className="text-xs font-bold text-slate-900 dark:text-white">{formatCompactNumber(instructor.studentsCount)}</p>
                                 <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">{t('instructors.students', 'Students')}</p>
                             </div>
                         </div>
@@ -73,7 +99,8 @@ const InstructorsPage = () => {
                         </Link>
                     </motion.div>
                 ))}
-            </div>
+                </div>
+            )}
         </div>
     );
 };

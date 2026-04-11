@@ -1,44 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../auth/useAuth';
 import { Star, MessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import InstructorNav from '../../components/layout/InstructorNav';
 import Button from '../../components/ui/Button';
+import { api } from '../../services/api';
+import { Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-// Mock Data
-const initialReviews = [
-    {
-        id: 1,
-        studentName: 'Mohammed Khaled',
-        avatar: 'https://ui-avatars.com/api/?name=Mohammed+Khaled&background=random',
-        course: 'Advanced React Patterns',
-        rating: 5,
-        review: 'Excellent course. The patterns explained here saved me so much time refactoring our company frontend.',
-        date: '3 hours ago',
-        reply: ''
-    },
-    {
-        id: 2,
-        studentName: 'Youssef Tariq',
-        avatar: 'https://ui-avatars.com/api/?name=Youssef+Tariq&background=random',
-        course: 'Python for Machine Learning',
-        rating: 4,
-        review: 'Very good introduction, though the pace in section 4 was a bit fast for a beginner.',
-        date: '2 days ago',
-        reply: 'Thank you for the feedback Youssef! I will look into adding more supplemental material for section 4.'
-    },
-    {
-        id: 3,
-        studentName: 'Nour Ali',
-        avatar: 'https://ui-avatars.com/api/?name=Nour+Ali&background=random',
-        course: 'Advanced React Patterns',
-        rating: 5,
-        review: 'Hands down the best React course I have taken. Clear and concise.',
-        date: '1 week ago',
-        reply: ''
-    }
-];
+// Mock data is now managed in src/data/mockData.js and served via api.js
 
 const renderStars = (rating) => {
     const stars = [];
@@ -57,9 +28,35 @@ const InstructorReviewsPage = () => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
     const { user } = useAuth();
-    const [reviews, setReviews] = useState(initialReviews);
+    const [reviews, setReviews] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [activeReplyId, setActiveReplyId] = useState(null);
     const [replyText, setReplyText] = useState('');
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            setIsLoading(true);
+            try {
+                const data = await api.instructor.reviews.getAll();
+                // Map API data to UI format
+                const formatted = data.map(r => ({
+                    ...r,
+                    studentName: r.user, // API usually returns 'user'
+                    avatar: r.avatar || `https://ui-avatars.com/api/?name=${r.user}&background=random`,
+                    course: r.course || 'Nexora Course',
+                    review: r.comment || r.review, // handle both keys if any
+                    date: r.date || 'Just now',
+                    reply: r.reply || ''
+                }));
+                setReviews(formatted);
+            } catch (error) {
+                console.error('Error fetching reviews:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchReviews();
+    }, []);
 
     const toggleReply = (review) => {
         if (activeReplyId === review.id) {
@@ -70,12 +67,18 @@ const InstructorReviewsPage = () => {
         }
     };
 
-    const handleSaveReply = (id) => {
+    const handleSaveReply = async (id) => {
         if (!replyText.trim()) return;
-        setReviews(prev => prev.map(r =>
-            r.id === id ? { ...r, reply: replyText } : r
-        ));
-        setActiveReplyId(null);
+        try {
+            await api.instructor.reviews.reply(id, replyText);
+            setReviews(prev => prev.map(r =>
+                r.id === id ? { ...r, reply: replyText } : r
+            ));
+            setActiveReplyId(null);
+            toast.success(t('common.success'));
+        } catch (error) {
+            toast.error(t('common.error'));
+        }
     };
 
     const avgRating = (reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length).toFixed(1);
@@ -103,7 +106,12 @@ const InstructorReviewsPage = () => {
 
                 {/* Reviews List */}
                 <div className="md:col-span-3 space-y-4">
-                    {reviews.map((r) => (
+                    {isLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+                            <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                        </div>
+                    ) : reviews.map((r) => (
                         <motion.div
                             key={r.id}
                             initial={{ opacity: 0, scale: 0.98 }}

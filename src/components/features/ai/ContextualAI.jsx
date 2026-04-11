@@ -3,6 +3,7 @@ import { Send, Zap, Bot, User, Clock, Sparkles, FileText, Eye, Target, Code2, Pa
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import TypewriterMessage from './TypewriterMessage';
+import { api } from '../../../services/api';
 
 const formatTime = (seconds) => {
     if (isNaN(seconds) || seconds < 0) return '00:00';
@@ -108,15 +109,16 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
         };
     }, [isPaused, currentTime, videoState, addMarker, t]);
 
-    const handleSend = (e, customText = null) => {
+    const handleSend = async (e, customText = null) => {
         if (e) e.preventDefault();
         const textToSend = customText || input;
         if (!textToSend.trim()) return;
 
         addMarker?.(currentTime);
 
+        const userMessageId = Date.now();
         setMessages(prev => [...prev, {
-            id: Date.now(),
+            id: userMessageId,
             role: 'user',
             text: textToSend,
             timestamp: currentTime
@@ -125,30 +127,42 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
         if (!customText) setInput('');
         setIsTyping(true);
 
-        setTimeout(() => {
+        try {
+            // Get action from text if it's one of the quick actions
+            let action = 'chat';
+            if (textToSend === t('videoPlayer.aiTutor.explainSectionConfirm')) action = 'explain-section';
+            else if (textToSend === t('videoPlayer.aiTutor.summarizePrompt')) action = 'summarize';
+            else if (textToSend === t('videoPlayer.aiTutor.explainScenePrompt')) action = 'explain-scene';
+            else if (textToSend === t('videoPlayer.aiTutor.createQuizPrompt')) action = 'create-quiz';
+            else if (textToSend === t('videoPlayer.aiTutor.showCodePrompt')) action = 'show-code';
+
+            const response = await api.ai.videoAssistant({
+                lectureId: videoState?.lectureId || 'demo-lecture',
+                currentTime: currentTime,
+                action: action,
+                query: textToSend
+            });
+
             setIsTyping(false);
-
-            let responseText = t('videoPlayer.aiTutor.analyzingResponse', { timestamp: formatTime(currentTime) });
-
-            if (textToSend === t('videoPlayer.aiTutor.explainScenePrompt')) {
-                responseText = isRTL
-                    ? "أرى شرحًا لبنية الـ React Context تظهر على الشاشة. يتحدث المعلم في هذه اللحظة عن كيفية تمرير البيانات عبر شجرة المكونات دون الحاجة لاستخدام الـ Props يدوياً."
-                    : "I see a structural diagram showing React Context architecture. The instructor is explaining how data is passed through the component tree without manually passing props at every level.";
-            }
-            else if (textToSend === t('videoPlayer.aiTutor.showCodePrompt')) {
-                responseText = isRTL
-                    ? "بالتأكيد! إليك كود برمجي يوضح المفهوم الذي يتم شرحه في الفيديو:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nويمكنك نسخه مباشرة وتجربته في مشروعك! 🚀"
-                    : "Certainly! Here's a clean implementation of the Custom Hook discussed in the video:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nYou can copy this directly into your project! 🚀";
-            }
-
             setMessages(prev => [...prev, {
                 id: Date.now() + 1,
                 role: 'ai',
-                text: responseText,
+                text: response.message,
                 timestamp: currentTime,
                 isNew: true
             }]);
-        }, 1500);
+        } catch (error) {
+            console.error('AI Assistant Error:', error);
+            setIsTyping(false);
+            // Simple fallback if API fails
+            setMessages(prev => [...prev, {
+                id: Date.now() + 1,
+                role: 'ai',
+                text: isRTL ? "عذراً، حدث خطأ في الاتصال بالمدرب الذكي." : "Sorry, I had trouble connecting to the AI Tutor.",
+                timestamp: currentTime,
+                isNew: true
+            }]);
+        }
     };
 
     const quickActions = [

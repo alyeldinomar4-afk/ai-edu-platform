@@ -10,12 +10,12 @@ const AIDemoSection = () => {
     // Sequenced animation steps
     useEffect(() => {
         const timers = [
-            setTimeout(() => setStep(1), 600),   // Student active
-            setTimeout(() => setStep(2), 1400),  // User message appears
-            setTimeout(() => setStep(3), 2400),  // AI typing dots
-            setTimeout(() => setStep(4), 4000),  // AI responds
-            setTimeout(() => setStep(5), 5200),  // Reaction appears
-            setTimeout(() => setStep(6), 5800),  // Suggestion pills
+            setTimeout(() => setStep(1), 400),   // Student active
+            setTimeout(() => setStep(2), 900),   // User message appears
+            setTimeout(() => setStep(3), 1500),  // AI typing dots
+            setTimeout(() => setStep(4), 2400),  // AI responds
+            setTimeout(() => setStep(5), 3300),  // Reaction appears
+            setTimeout(() => setStep(6), 3800),  // Suggestion pills
         ];
         return () => timers.forEach(clearTimeout);
     }, []);

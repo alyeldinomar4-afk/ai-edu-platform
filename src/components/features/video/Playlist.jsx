@@ -32,7 +32,8 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                         </div>
 
                         <motion.div variants={listStagger} initial="hidden" animate="visible">
-                            {section.lectures.map((lecture, lIdx) => {
+                            {section?.lectures?.map((lecture, lIdx) => {
+                                if (!lecture) return null;
                                 const isActive = currentLecture === lecture.id;
                                 const isCompleted = lecture.completed;
                                 const isLocked = lecture.locked;

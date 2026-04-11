@@ -1,18 +1,34 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Button from '../../components/ui/Button';
-import { courses } from '../../data/mockData';
-import { Edit2, Trash2, Plus, X, Search, BookOpen, Sparkles } from 'lucide-react';
+import { api } from '../../services/api';
+import { Edit2, Trash2, Plus, X, Search, BookOpen, Sparkles, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const ManageCoursesPage = () => {
     const { t } = useTranslation();
-    const [courseList, setCourseList] = useState(courses);
+    const [courseList, setCourseList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [formData, setFormData] = useState({ title: '', instructor: '', category: '', price: '', discount: '', description: '', image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' });
     const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            setIsLoading(true);
+            try {
+                const data = await api.admin.courses.getAll();
+                setCourseList(data);
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchCourses();
+    }, []);
 
     const filteredCourses = useMemo(() => {
         const search = searchTerm.toLowerCase();
@@ -35,28 +51,38 @@ const ManageCoursesPage = () => {
         setShowModal(true);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!formData.title.trim()) return;
-        if (editingCourse) {
-            setCourseList(prev => prev.map(c =>
-                c.id === editingCourse.id ? { ...c, ...formData, price: parseFloat(formData.price) || 0, discount: parseInt(formData.discount) || 0 } : c
-            ));
-        } else {
-            setCourseList(prev => [...prev, {
-                id: Date.now(),
-                ...formData,
-                price: parseFloat(formData.price) || 0,
-                discount: parseInt(formData.discount) || 0,
-                image: formData.image || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                rating: 0, reviews: 0, level: 'Beginner', lessons: 0, duration: '0h 0m'
-            }]);
+        try {
+            if (editingCourse) {
+                const updated = await api.admin.courses.update(editingCourse.id, {
+                    ...formData,
+                    price: parseFloat(formData.price) || 0,
+                    discount: parseInt(formData.discount) || 0
+                });
+                setCourseList(prev => prev.map(c => c.id === editingCourse.id ? updated : c));
+            } else {
+                const created = await api.admin.courses.create({
+                    ...formData,
+                    price: parseFloat(formData.price) || 0,
+                    discount: parseInt(formData.discount) || 0
+                });
+                setCourseList(prev => [...prev, created]);
+            }
+            setShowModal(false);
+        } catch (error) {
+            console.error('Error saving course:', error);
         }
-        setShowModal(false);
     };
 
-    const handleDelete = (id) => {
-        setCourseList(prev => prev.filter(c => c.id !== id));
-        setShowDeleteConfirm(null);
+    const handleDelete = async (id) => {
+        try {
+            await api.admin.courses.delete(id);
+            setCourseList(prev => prev.filter(c => c.id !== id));
+            setShowDeleteConfirm(null);
+        } catch (error) {
+            console.error('Error deleting course:', error);
+        }
     };
 
     return (
@@ -89,7 +115,12 @@ const ManageCoursesPage = () => {
             </div>
 
             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm transition-colors">
-                {filteredCourses.length > 0 ? (
+                {isLoading ? (
+                    <div className="py-20 flex flex-col items-center justify-center gap-4">
+                        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+                        <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                    </div>
+                ) : filteredCourses.length > 0 ? (
                     <>
                         <div className="overflow-x-auto">
                             <table className={`w-full text-left rtl:text-right border-collapse`}>

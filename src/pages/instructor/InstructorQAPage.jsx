@@ -1,52 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../auth/useAuth';
-import { MessageSquare, CheckCircle, Clock, ChevronDown, ChevronUp, Reply } from 'lucide-react';
+import { MessageSquare, CheckCircle, Clock, ChevronDown, ChevronUp, Reply, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import InstructorNav from '../../components/layout/InstructorNav';
 import Button from '../../components/ui/Button';
+import { api } from '../../services/api';
+import toast from 'react-hot-toast';
 
-// Mock Data
-const initialQuestions = [
-    {
-        id: 1,
-        studentName: 'Ahmed Ali',
-        avatar: 'https://ui-avatars.com/api/?name=Ahmed+Ali&background=random',
-        course: 'Advanced React Patterns',
-        question: 'Could you explain why we use forwardRef in the compound components pattern?',
-        date: '2 hours ago',
-        status: 'pending',
-        reply: ''
-    },
-    {
-        id: 2,
-        studentName: 'Sarah Jenkins',
-        avatar: 'https://ui-avatars.com/api/?name=Sarah+Jenkins&background=random',
-        course: 'Python for Machine Learning',
-        question: 'I am getting an out-of-bounds error on Pandas dataframes when using iloc. What is the best way to handle indices safely?',
-        date: '1 day ago',
-        status: 'resolved',
-        reply: 'Hi Sarah. Check the boundaries of your dataframe before using iloc. You can safely slice by writing df.iloc[0:len(df)], which ensures we do not exceed the max index.'
-    },
-    {
-        id: 3,
-        studentName: 'Omar Hassan',
-        avatar: 'https://ui-avatars.com/api/?name=Omar+Hassan&background=random',
-        course: 'Advanced React Patterns',
-        question: 'Is it bad practice to use Context CPU-intensive states?',
-        date: '2 days ago',
-        status: 'pending',
-        reply: ''
-    }
-];
+// Mock data is now managed in src/data/mockData.js and served via api.js
 
 const InstructorQAPage = () => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
     const { user } = useAuth();
-    const [questions, setQuestions] = useState(initialQuestions);
+    const [questions, setQuestions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [expandedId, setExpandedId] = useState(null);
     const [replyText, setReplyText] = useState('');
+
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            setIsLoading(true);
+            try {
+                const data = await api.instructor.questions.getAll();
+                // Map API data to UI format if needed
+                const formatted = data.map(q => ({
+                    ...q,
+                    studentName: q.user, // API uses 'user'
+                    avatar: q.avatar || `https://ui-avatars.com/api/?name=${q.user}&background=random`,
+                    course: q.course || 'Global Q&A',
+                    question: q.question,
+                    date: q.date || 'Just now',
+                    status: q.reply ? 'resolved' : 'pending'
+                }));
+                setQuestions(formatted);
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchQuestions();
+    }, []);
 
     const toggleExpand = (question) => {
         if (expandedId === question.id) {
@@ -57,12 +53,18 @@ const InstructorQAPage = () => {
         }
     };
 
-    const handleReply = (id) => {
+    const handleReply = async (id) => {
         if (!replyText.trim()) return;
-        setQuestions(prev => prev.map(q =>
-            q.id === id ? { ...q, status: 'resolved', reply: replyText } : q
-        ));
-        setExpandedId(null);
+        try {
+            await api.instructor.questions.reply(id, replyText);
+            setQuestions(prev => prev.map(q =>
+                q.id === id ? { ...q, status: 'resolved', reply: replyText } : q
+            ));
+            setExpandedId(null);
+            toast.success(t('common.success'));
+        } catch (error) {
+            toast.error(t('common.error'));
+        }
     };
 
     const pendingCount = questions.filter(q => q.status === 'pending').length;
@@ -97,7 +99,12 @@ const InstructorQAPage = () => {
 
                 {/* Questions List */}
                 <div className="md:col-span-3 space-y-4">
-                    {questions.map((q) => (
+                    {isLoading ? (
+                        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+                            <p className="text-slate-500 dark:text-slate-400 font-medium">{t('common.loading')}</p>
+                        </div>
+                    ) : questions.map((q) => (
                         <motion.div
                             key={q.id}
                             layout
@@ -174,7 +181,7 @@ const InstructorQAPage = () => {
                             </AnimatePresence>
                         </motion.div>
                     ))}
-                    {questions.length === 0 && (
+                    {!isLoading && questions.length === 0 && (
                         <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
                             <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
                             <h3 className="text-lg font-medium text-slate-900 dark:text-white">{t('dashboard.instructor.qa.emptyTitle')}</h3>

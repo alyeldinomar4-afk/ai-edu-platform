@@ -40,11 +40,11 @@ export const authService = {
 
         if (!user) {
             // For checking purposes, allow a default admin if not exists
-            if ((email === 'admin@edu.com' || email === 'admin@test.com') && password === 'admin123') {
+            if (email === 'admin@test.com' && password === 'admin123') {
                 const adminUser = {
                     id: 'admin-1',
                     name: 'System Admin',
-                    email: 'admin@edu.com',
+                    email: 'admin@test.com',
                     role: 'admin',
                     avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&q=80'
                 };

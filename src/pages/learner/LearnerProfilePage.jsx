@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { User, Mail, Camera, Lock, Save, Shield } from 'lucide-react';
 import Button from '../../components/ui/Button';
+import { api } from '../../services/api';
 
 const LearnerProfilePage = () => {
     const { user } = useAuth();
@@ -22,29 +23,45 @@ const LearnerProfilePage = () => {
     const [isSavingPassword, setIsSavingPassword] = useState(false);
     const [avatar, setAvatar] = useState(user?.avatar || "https://ui-avatars.com/api/?name=" + (user?.name || "User") + "&background=random");
 
-    const handleSaveProfile = (e) => {
+    const handleSaveProfile = async (e) => {
         e.preventDefault();
         setIsSavingProfile(true);
-        setTimeout(() => {
-            setIsSavingProfile(false);
+        try {
+            await api.profile.update({
+                name,
+                email,
+                bio,
+                avatar
+            });
             toast.success(t('profile.successUpdate'));
-        }, 1000);
+        } catch (error) {
+            toast.error(t('common.error'));
+        } finally {
+            setIsSavingProfile(false);
+        }
     };
 
-    const handleUpdatePassword = (e) => {
+    const handleUpdatePassword = async (e) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
             toast.error(t('profile.errorPasswordMatch'));
             return;
         }
         setIsSavingPassword(true);
-        setTimeout(() => {
-            setIsSavingPassword(false);
+        try {
+            await api.profile.updatePassword({
+                currentPassword,
+                newPassword
+            });
             toast.success(t('profile.successPassword'));
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
-        }, 1000);
+        } catch (error) {
+            toast.error(t('common.error'));
+        } finally {
+            setIsSavingPassword(false);
+        }
     };
 
     return (

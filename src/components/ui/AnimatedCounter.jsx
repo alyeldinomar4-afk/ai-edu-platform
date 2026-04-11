@@ -10,7 +10,20 @@ import { useInView, useMotionValue, useSpring } from 'framer-motion';
  * @param {number} duration - Animation duration in seconds (default 2)
  * @param {string} className - Additional classes for the number element
  */
-const AnimatedCounter = ({ target, suffix = '', prefix = '', duration = 2, className = '' }) => {
+import { formatCompactNumber, formatNumber } from '../../utils/formatters';
+
+/**
+ * AnimatedCounter — Counts up from 0 to `target` when it scrolls into view.
+ * 
+ * @param {number} target - The number to count up to.
+ * @param {string} suffix - Optional suffix like '+', '%', '★'
+ * @param {string} prefix - Optional prefix like '$'
+ * @param {number} duration - Animation duration in seconds (default 2)
+ * @param {string} className - Additional classes for the number element
+ * @param {string} locale - The locale for number formatting
+ * @param {boolean} compact - Whether to use compact notation (e.g. 1.2K)
+ */
+const AnimatedCounter = ({ target, suffix = '', prefix = '', duration = 2, className = '', locale = 'en-US', compact = false }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-50px' });
 
@@ -31,17 +44,16 @@ const AnimatedCounter = ({ target, suffix = '', prefix = '', duration = 2, class
         const unsubscribe = springValue.on('change', (latest) => {
             if (ref.current) {
                 const value = Math.round(latest);
-                // Format with commas for large numbers
-                const formatted = value >= 1000 
-                    ? value.toLocaleString() 
-                    : value.toString();
+                const formatted = compact 
+                    ? formatCompactNumber(value, locale) 
+                    : formatNumber(value, locale);
                 ref.current.textContent = `${prefix}${formatted}${suffix}`;
             }
         });
         return unsubscribe;
-    }, [springValue, suffix, prefix]);
+    }, [springValue, suffix, prefix, locale, compact]);
 
-    return <span ref={ref} className={className}>{prefix}0{suffix}</span>;
+    return <span ref={ref} className={className}>{prefix}{compact ? '0' : '0'}{suffix}</span>;
 };
 
 export default AnimatedCounter;
