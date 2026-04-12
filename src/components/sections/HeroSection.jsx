@@ -47,17 +47,17 @@ const DemoModal = ({ onClose, t }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 }}
                 onClick={onClose}
-                className="absolute top-6 right-6 z-50 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer"
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 z-[100] w-10 h-10 rounded-full bg-black/40 sm:bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer"
             >
                 <X className="w-5 h-5" />
             </motion.button>
 
-            {/* "Now Playing" label */}
+            {/* "Now Playing" label - Hidden on mobile to avoid overlap */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="absolute top-6 left-6 z-50 flex items-center gap-3"
+                className="absolute top-6 left-6 z-50 hidden sm:flex items-center gap-3"
             >
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
                     <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
@@ -84,10 +84,10 @@ const DemoModal = ({ onClose, t }) => {
                     <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 opacity-70 blur-[1px] group-hover:opacity-100 transition-opacity duration-700" />
 
                     {/* Inner container */}
-                    <div className="relative bg-[#0c1224]/95 backdrop-blur-xl rounded-3xl p-6 border border-slate-700/30">
+                    <div className="relative bg-[#0c1224]/95 backdrop-blur-xl rounded-3xl p-4 sm:p-6 border border-slate-700/30">
                         {/* Window Chrome */}
                         <div className="flex items-center justify-between mb-5">
-                            <div className="flex items-center gap-2">
+                            <div className="hidden sm:flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full bg-red-400" />
                                 <div className="w-3 h-3 rounded-full bg-yellow-400" />
                                 <div className="w-3 h-3 rounded-full bg-green-400" />
@@ -203,12 +203,12 @@ const DemoModal = ({ onClose, t }) => {
                                 { icon: Star, label: "Rating", value: "4.9★", color: "from-amber-500 to-orange-500" },
                             ].map((stat, i) => (
                                 <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2 + i * 0.15 }}
-                                    className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/30 text-center hover:scale-105 transition-transform duration-300">
-                                    <div className={`w-8 h-8 mx-auto rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center mb-2 shadow-lg`}>
-                                        <stat.icon className="w-4 h-4 text-white" />
+                                    className="bg-slate-800/50 rounded-xl p-2 sm:p-3 border border-slate-700/30 text-center hover:scale-105 transition-transform duration-300">
+                                    <div className={`w-7 h-7 sm:w-8 sm:h-8 mx-auto rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center mb-1.5 sm:mb-2 shadow-lg`}>
+                                        <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                                     </div>
-                                    <p className="text-base font-bold text-white">{stat.value}</p>
-                                    <p className="text-[10px] text-slate-500 uppercase tracking-wider font-medium">{stat.label}</p>
+                                    <p className="text-sm sm:text-base font-bold text-white">{stat.value}</p>
+                                    <p className="text-[8px] sm:text-[10px] text-slate-500 uppercase tracking-wider font-medium">{stat.label}</p>
                                 </motion.div>
                             ))}
                         </div>
@@ -338,9 +338,8 @@ const HeroSection = ({ getStartedPath }) => {
                                 <div className="flex -space-x-3">
                                     {[
                                         "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=100&q=80",
-                                        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80",
-                                        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80",
-                                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
+                                        "https://media.istockphoto.com/id/1401962955/photo/smiling-girl-climbing-college-stairs-student-in-university-moving-up-the-staircase-and.jpg?s=2048x2048&w=is&k=20&c=OiK95EE_NLWT0m_0GhXdb0h5T4mNPmiT5vdaGTEA4Vc=",
+                                        "https://media.istockphoto.com/id/1587713852/photo/happy-female-student-positive-female-student-brazilian-or-hispanic-nationality-with-a.jpg?s=1024x1024&w=is&k=20&c=wO0ushlFkNSBVQGsuSMMGWo1BZrZrdM9wOlj5pagsKI="
                                     ].map(((src, i) => (
                                         <div key={i} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 dark:bg-slate-800 overflow-hidden">
                                             <img src={src} alt="User" className="w-full h-full object-cover" />

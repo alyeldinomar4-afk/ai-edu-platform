@@ -910,19 +910,19 @@ const HomePage = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: '-50px' }}
-                        className="flex flex-wrap justify-center gap-8 pb-12 w-full max-w-7xl mx-auto"
+                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 px-6 -mx-6 scrollbar-hide md:flex-wrap md:justify-center md:px-0 md:mx-0 md:snap-none md:overflow-visible w-full max-w-7xl mx-auto"
                     >
                         {instructors.slice(0, 4).map((instructor, idx) => (
                             <motion.div
                                 key={instructor.id}
                                 variants={idx % 2 === 0 ? slideFromLeft : slideFromRight}
                                 whileHover={{ y: -10, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
-                                className="relative group w-full sm:w-[500px] lg:w-[calc(50%-1rem)] xl:w-[550px]"
+                                className="flex-none relative group w-[85%] sm:w-[500px] md:w-auto lg:w-[calc(50%-1.5rem)] xl:w-[550px] snap-center"
                             >
                                 {/* Premium Hover Glow - Animated Gradient Border */}
                                 <div className="absolute -inset-[1px] bg-gradient-to-r from-primary via-secondary to-accent rounded-[32px] opacity-0 group-hover:opacity-100 transition-all duration-700 blur-[1px]" />
                                 
-                                <div className="relative h-full bg-white/70 dark:bg-[#11111e]/80 backdrop-blur-2xl rounded-[31px] p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-8 text-center sm:text-start border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(99,102,241,0.2)] transition-all duration-500 overflow-hidden">
+                                <div className="relative h-full bg-white/70 dark:bg-[#11111e]/80 backdrop-blur-2xl rounded-[31px] p-5 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-8 text-center sm:text-start border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(99,102,241,0.2)] transition-all duration-500 overflow-hidden">
                                     
                                     {/* Animated Background Pulse */}
                                     <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
@@ -932,7 +932,7 @@ const HomePage = () => {
                                         <div className="absolute -inset-4 bg-gradient-to-tr from-primary to-secondary rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700 scale-125" />
                                         <div className="relative p-1 bg-gradient-to-tr from-slate-200 to-slate-100 dark:from-slate-700/50 dark:to-slate-800/50 rounded-full group-hover:from-primary group-hover:to-secondary transition-all duration-700 shadow-inner">
                                             <div className="relative rounded-full overflow-hidden border-2 border-white dark:border-slate-900 shadow-2xl">
-                                                <img src={instructor.avatar} alt={instructor.name} className="w-24 h-24 sm:w-28 sm:h-28 object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                                                <img src={instructor.avatar} alt={instructor.name} className="w-20 h-20 sm:w-28 sm:h-28 object-cover transform group-hover:scale-110 transition-transform duration-700" />
                                             </div>
                                         </div>
                                         <motion.div 
@@ -1131,8 +1131,8 @@ const HomePage = () => {
                                     <div className="flex -space-x-2">
                                         {[
                                             "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=60&q=80",
-                                            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=60&q=80",
-                                            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=60&q=80",
+                                            "https://media.istockphoto.com/id/1401962955/photo/smiling-girl-climbing-college-stairs-student-in-university-moving-up-the-staircase-and.jpg?s=2048x2048&w=is&k=20&c=OiK95EE_NLWT0m_0GhXdb0h5T4mNPmiT5vdaGTEA4Vc=",
+                                            "https://media.istockphoto.com/id/1587713852/photo/happy-female-student-positive-female-student-brazilian-or-hispanic-nationality-with-a.jpg?s=1024x1024&w=is&k=20&c=wO0ushlFkNSBVQGsuSMMGWo1BZrZrdM9wOlj5pagsKI=",
                                         ].map((src, i) => (
                                             <div key={i} className="w-7 h-7 rounded-full border-2 border-indigo-900 overflow-hidden">
                                                 <img src={src} alt="" className="w-full h-full object-cover" />
