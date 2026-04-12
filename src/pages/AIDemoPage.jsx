@@ -109,17 +109,15 @@ const AIDemoPage = () => {
                     {t('videoPlayer.aiDemo.backToHome')}
                 </Link>
 
-                <div className="flex flex-col lg:flex-row gap-6 h-auto lg:h-[calc(100vh-120px)]">
-
-                    {/* ========== LEFT SIDEBAR ========== */}
+                <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 h-auto lg:h-[calc(100vh-120px)]">
+                    {/* ========== INTRO (TITLE CARD) ========== */}
                     <motion.div
                         initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="lg:w-[320px] flex-shrink-0 flex flex-col gap-5 overflow-y-auto scrollbar-hide"
+                        className="lg:w-[320px] order-1 lg:order-none lg:col-start-1 lg:row-start-1 flex flex-col"
                     >
-                        {/* Title card */}
-                        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-none">
+                        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-none h-full">
                             <div className="flex items-center gap-3 mb-4">
                                 <motion.div
                                     animate={{ rotate: [0, 360] }}
@@ -129,44 +127,20 @@ const AIDemoPage = () => {
                                     <Sparkles className="w-6 h-6 text-white" />
                                 </motion.div>
                                 <div>
-                                    <h1 className="text-lg font-bold text-slate-900 dark:text-white">{t('videoPlayer.aiDemo.title')}</h1>
+                                    <h1 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">{t('videoPlayer.aiDemo.title')}</h1>
                                     <p className="text-xs text-slate-500 dark:text-slate-400">{t('videoPlayer.aiDemo.subtitle')}</p>
                                 </div>
                             </div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{t('videoPlayer.aiDemo.description')}</p>
-                        </div>
-
-                        {/* Features */}
-                        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm dark:shadow-none">
-                            <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">{isRTL ? 'المميزات' : 'Features'}</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
-                                {features.map((feat, i) => (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.2 + i * 0.1 }}
-                                        className="group flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/10 transition-all cursor-default border border-transparent hover:border-slate-100 dark:hover:border-slate-800/50"
-                                    >
-                                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center flex-shrink-0 shadow-lg opacity-90 group-hover:opacity-100 transition-opacity`}>
-                                            <feat.icon className="w-5 h-5 text-white" />
-                                        </div>
-                                        <div>
-                                            <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-0.5 transition-colors group-hover:text-primary dark:group-hover:text-indigo-400">{feat.title}</h4>
-                                            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{feat.desc}</p>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
+                            <p className="text-[11px] sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2 sm:line-clamp-none">{t('videoPlayer.aiDemo.description')}</p>
                         </div>
                     </motion.div>
 
-                    {/* ========== RIGHT CHAT ========== */}
+                    {/* ========== RIGHT CHAT (ORDERED BEFORE FEATURES ON MOBILE) ========== */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="flex-1 h-[600px] lg:h-auto bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden min-h-0 shadow-sm dark:shadow-none mb-6 lg:mb-0"
+                        className="flex-1 order-2 lg:order-none lg:col-start-2 lg:row-span-2 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col overflow-hidden min-h-0 shadow-sm dark:shadow-none mb-6 lg:mb-0 h-[600px] lg:h-auto"
                     >
                         {/* Chat Header */}
                         <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between flex-shrink-0 bg-white/40 dark:bg-slate-900/40">
@@ -311,6 +285,37 @@ const AIDemoPage = () => {
                                         <Send className={`w-5 h-5 text-white ${isRTL ? 'scale-x-[-1]' : ''}`} />
                                     )}
                                 </motion.button>
+                            </div>
+                        </div>
+                    </motion.div>
+                    
+                    {/* ========== FEATURES LIST (ORDERED AFTER CHAT ON MOBILE) ========== */}
+                    <motion.div
+                        initial={{ opacity: 0, x: isRTL ? 20 : -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="lg:w-[320px] order-3 lg:order-none lg:col-start-1 lg:row-start-2"
+                    >
+                        <div className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm dark:shadow-none h-full">
+                            <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">{isRTL ? 'المميزات' : 'Features'}</h3>
+                            <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
+                                {features.map((feat, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.2 + i * 0.1 }}
+                                        className="group flex flex-col sm:flex-row lg:flex-row items-center sm:items-start lg:items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800/10 transition-all cursor-default border border-transparent hover:border-slate-100 dark:hover:border-slate-800/50 text-center sm:text-start lg:text-start"
+                                    >
+                                        <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center flex-shrink-0 shadow-lg opacity-90 group-hover:opacity-100 transition-opacity`}>
+                                            <feat.icon className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <h4 className="text-[12px] sm:text-sm font-bold text-slate-800 dark:text-white mb-0.5 transition-colors group-hover:text-primary dark:group-hover:text-indigo-400 truncate">{feat.title}</h4>
+                                            <p className="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 leading-tight font-medium hidden sm:block lg:block">{feat.desc}</p>
+                                        </div>
+                                    </motion.div>
+                                ))}
                             </div>
                         </div>
                     </motion.div>
