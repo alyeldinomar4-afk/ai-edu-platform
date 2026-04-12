@@ -379,4 +379,14 @@ getOverview: async () => {
 4. **Change Imports**: استبدل استيراد البيانات الوهمية باستيراد `apiInstance`.
 
 > [!IMPORTANT]
+> **DURATION FORMAT**:
+> The frontend `formatDuration()` utility currently accepts both:
+>   - **number (seconds)**: 45000 → "12:30:00" ✅ **Preferred**
+>   - **string (MM:SS)**: "12:30" → returned as-is (temporary fallback)
+> 
+> Once backend is live, **all duration fields MUST return numbers** (total seconds only).
+> The string fallback will be removed after full integration.
+
+> [!IMPORTANT]
 > يجب على الباك اند العودة لملف `src/services/api.js` دائماً للتأكد من المسميات التي يتوقعها الفرونت اند في الـ Response، لتجنب حدوث أخطاء في العرض.
+

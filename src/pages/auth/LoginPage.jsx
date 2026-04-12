@@ -55,11 +55,13 @@ const LoginPage = () => {
                 <p className="text-slate-500 dark:text-slate-400 mt-3 text-sm sm:text-base animate-slide-up [animation-delay:100ms] opacity-0 [animation-fill-mode:forwards]">
                     {t('auth.login.subtitle')}
                 </p>
-                <div className="mt-4 text-xs text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-700 inline-block pointer-events-none animate-slide-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
-                    <p>Student: user@test.com / 123456</p>
-                    <p>Instructor: instructor@test.com / 123456</p>
-                    <p>Admin: admin@test.com / admin123</p>
-                </div>
+                {import.meta.env.DEV && (
+                    <div className="mt-4 text-xs text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/50 p-2 rounded border border-slate-100 dark:border-slate-700 inline-block pointer-events-none animate-slide-up [animation-delay:200ms] opacity-0 [animation-fill-mode:forwards]">
+                        <p>Student: user@test.com / 123456</p>
+                        <p>Instructor: instructor@test.com / 123456</p>
+                        <p>Admin: admin@test.com / admin123</p>
+                    </div>
+                )}
             </div>
 
             {error && (
@@ -116,6 +118,7 @@ const LoginPage = () => {
 
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
+                        {/* TODO: Implement remember me - save token with longer expiry in localStorage */}
                         <input
                             id="remember-me"
                             name="remember-me"

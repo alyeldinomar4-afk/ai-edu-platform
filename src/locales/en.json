@@ -168,7 +168,9 @@
     "justNow": "Just now",
     "h": "h",
     "new": "New",
-    "viewCourse": "View Course"
+    "viewCourse": "View Course",
+    "comingSoon": "Coming Soon",
+    "comingSoonDesc": "This feature is currently under development. Check back later for updates."
   },
   "auth": {
     "login": {
@@ -193,7 +195,8 @@
       "roleHint": "* Choose 'Student' to learn or 'Instructor' to teach.",
       "submit": "Create Account",
       "hasAccount": "Already have an account?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "passwordTooShort": "Password must be at least 6 characters"
     },
     "forgotPassword": {
       "title": "Forgot password?",

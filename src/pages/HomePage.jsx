@@ -910,61 +910,77 @@ const HomePage = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: '-50px' }}
-                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 px-6 -mx-6 scrollbar-hide lg:grid lg:grid-cols-2 lg:px-0 lg:mx-0 lg:snap-none lg:overflow-visible max-w-5xl mx-auto"
+                        className="flex flex-wrap justify-center gap-8 pb-12 w-full max-w-7xl mx-auto"
                     >
                         {instructors.slice(0, 4).map((instructor, idx) => (
                             <motion.div
                                 key={instructor.id}
                                 variants={idx % 2 === 0 ? slideFromLeft : slideFromRight}
-                                whileHover={{ y: -8, transition: { duration: 0.4 } }}
-                                className="flex-none w-[85%] sm:w-[350px] lg:w-auto snap-start group relative rounded-[32px] p-[1px] bg-slate-200 dark:bg-slate-800 hover:bg-gradient-to-r hover:from-primary/50 hover:to-secondary/50 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-2xl dark:shadow-2xl"
+                                whileHover={{ y: -10, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
+                                className="relative group w-full sm:w-[500px] lg:w-[calc(50%-1rem)] xl:w-[550px]"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                <div className="relative h-full bg-white dark:bg-[#121212] backdrop-blur-md rounded-[31px] p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-8 text-center sm:text-start border-[0.5px] border-slate-100 dark:border-slate-700/40 group-hover:border-primary/20 transition-colors">
+                                {/* Premium Hover Glow - Animated Gradient Border */}
+                                <div className="absolute -inset-[1px] bg-gradient-to-r from-primary via-secondary to-accent rounded-[32px] opacity-0 group-hover:opacity-100 transition-all duration-700 blur-[1px]" />
+                                
+                                <div className="relative h-full bg-white/70 dark:bg-[#11111e]/80 backdrop-blur-2xl rounded-[31px] p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-8 text-center sm:text-start border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(99,102,241,0.2)] transition-all duration-500 overflow-hidden">
+                                    
+                                    {/* Animated Background Pulse */}
+                                    <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
 
-                                    {/* Avatar with Glow Ring */}
+                                    {/* Avatar with Enhanced Glow Ring */}
                                     <div className="relative shrink-0">
-                                        <div className="absolute inset-0 bg-gradient-to-tr from-primary to-secondary rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 scale-125" />
-                                        <div className="relative p-1 bg-gradient-to-tr from-slate-200 to-slate-100 dark:from-slate-700 dark:to-slate-800 rounded-full group-hover:from-primary group-hover:to-secondary transition-all duration-500">
-                                            <img src={instructor.avatar} alt={instructor.name} className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-white dark:border-slate-900 shadow-xl z-10" />
+                                        <div className="absolute -inset-4 bg-gradient-to-tr from-primary to-secondary rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700 scale-125" />
+                                        <div className="relative p-1 bg-gradient-to-tr from-slate-200 to-slate-100 dark:from-slate-700/50 dark:to-slate-800/50 rounded-full group-hover:from-primary group-hover:to-secondary transition-all duration-700 shadow-inner">
+                                            <div className="relative rounded-full overflow-hidden border-2 border-white dark:border-slate-900 shadow-2xl">
+                                                <img src={instructor.avatar} alt={instructor.name} className="w-24 h-24 sm:w-28 sm:h-28 object-cover transform group-hover:scale-110 transition-transform duration-700" />
+                                            </div>
                                         </div>
-                                        <div className="absolute -bottom-1 -right-1 bg-white dark:bg-slate-800 rounded-full p-2 border border-slate-100 dark:border-slate-700 z-20 shadow-lg">
-                                            <Award className="w-4 h-4 text-primary" />
-                                        </div>
+                                        <motion.div 
+                                            whileHover={{ scale: 1.2, rotate: 15 }}
+                                            className="absolute -bottom-1 -right-1 bg-white dark:bg-[#1a1a2e] rounded-full p-2.5 border border-slate-100 dark:border-white/10 z-20 shadow-xl"
+                                        >
+                                            <Award className="w-4.5 h-4.5 text-primary" />
+                                        </motion.div>
                                     </div>
 
-                                    {/* Content Reveal on Hover */}
-                                    <div className="flex-1 min-w-0 flex flex-col items-center sm:items-start w-full">
-                                        <div className="mb-2">
-                                            <h3 className="text-xl font-black text-slate-900 dark:text-white mb-0.5 group-hover:text-primary transition-colors">{instructor.name}</h3>
-                                            <p className="text-primary dark:text-secondary font-bold text-[10px] uppercase tracking-widest">{instructor.role}</p>
+                                    {/* Content with Improved Typography & Spacing */}
+                                    <div className="flex-1 min-w-0 flex flex-col items-center sm:items-start w-full relative z-10">
+                                        <div className="mb-3">
+                                            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-1 tracking-tight group-hover:text-primary transition-colors duration-300">{instructor.name}</h3>
+                                            <div className="flex items-center gap-2">
+                                                <span className="h-px w-4 bg-primary/40" />
+                                                <p className="text-primary dark:text-indigo-400 font-black text-[11px] uppercase tracking-[0.2em]">{instructor.role}</p>
+                                            </div>
                                         </div>
 
-                                        <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mb-6 line-clamp-2 w-full leading-relaxed">
+                                        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6 line-clamp-2 w-full leading-relaxed font-medium">
                                             {instructor.bio}
                                         </p>
 
-                                        {/* Dynamic Stats Row */}
-                                        <div className="flex items-center gap-4 mb-6 text-slate-500 dark:text-slate-400 text-xs font-bold w-full justify-center sm:justify-start">
-                                            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-xl border border-slate-100 dark:border-slate-700/50">
-                                                <BookOpen className="w-4 h-4 text-primary/80" />
-                                                <span>{instructor.coursesCount} Courses</span>
+                                        {/* Dynamic Stats Row - Redesigned Pills */}
+                                        <div className="flex flex-wrap items-center gap-3 mb-8 text-slate-600 dark:text-slate-300 text-[11px] font-black w-full justify-center sm:justify-start">
+                                            <div className="flex items-center gap-2 bg-slate-50 dark:bg-white/5 px-4 py-2 rounded-2xl border border-slate-100 dark:border-white/10 backdrop-blur-sm group-hover:bg-primary/5 group-hover:border-primary/20 transition-all duration-500">
+                                                <BookOpen className="w-4 h-4 text-primary" />
+                                                <span className="uppercase tracking-wider">{instructor.coursesCount} Courses</span>
                                             </div>
-                                            <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-xl border border-slate-100 dark:border-slate-700/50">
+                                            <div className="flex items-center gap-2 bg-slate-50 dark:bg-white/5 px-4 py-2 rounded-2xl border border-slate-100 dark:border-white/10 backdrop-blur-sm group-hover:bg-yellow-500/5 group-hover:border-yellow-500/20 transition-all duration-500">
                                                 <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                                                <span>{instructor.rating} Rating</span>
+                                                <span className="uppercase tracking-wider">{instructor.rating} Rating</span>
                                             </div>
                                         </div>
 
                                         <div className="w-full sm:w-auto mt-auto">
-                                            <Link to={`/instructor/user/${encodeURIComponent(instructor.name.replace(/\s+/g, '-').toLowerCase())}`}>
-                                                <Button size="sm" className="w-full sm:w-auto bg-slate-900 dark:bg-slate-800 hover:bg-primary text-white border-none shadow-lg hover:shadow-primary/30 transition-all duration-300 text-[11px] font-black uppercase tracking-wider px-7 py-3 rounded-xl">
-                                                    {t('home.instructors.viewProfile')}
+                                            <Link to={`/instructor/user/${encodeURIComponent(instructor.name.replace(/\s+/g, '-').toLowerCase())}`} className="block">
+                                                <Button 
+                                                    size="lg" 
+                                                    className="w-full sm:w-auto bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-primary dark:hover:bg-primary dark:hover:text-white text-white border-none shadow-xl hover:shadow-primary/30 transition-all duration-500 text-[11px] font-black uppercase tracking-[0.15em] px-8 py-4 rounded-2xl relative overflow-hidden group/btn"
+                                                >
+                                                    <span className="relative z-10">{t('home.instructors.viewProfile')}</span>
+                                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
                                                 </Button>
                                             </Link>
                                         </div>
                                     </div>
-
                                 </div>
                             </motion.div>
                         ))}

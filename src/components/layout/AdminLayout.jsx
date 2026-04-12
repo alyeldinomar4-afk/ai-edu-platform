@@ -26,22 +26,13 @@ const sidebarItem = {
     },
 };
 
-const AdminLayout = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+const SidebarContent = ({ setSidebarOpen }) => {
+    const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigate();
-    const { user, logout } = useAuth();
-    const { t, i18n } = useTranslation();
-    const mainContentRef = useRef(null);
+    const { logout } = useAuth();
 
-    // Reset scroll when path changes
-    useEffect(() => {
-        if (mainContentRef.current) {
-            mainContentRef.current.scrollTop = 0;
-        }
-    }, [location.pathname]);
     const handleLogout = () => {
-
         logout();
         navigate('/');
     };
@@ -55,7 +46,7 @@ const AdminLayout = () => {
         { name: t('dashboard.admin.settings.title'), key: 'Settings', path: '/admin/settings', icon: Settings },
     ];
 
-    const SidebarContent = () => (
+    return (
         <>
             {/* Logo / Title */}
             <div className="p-6 border-b border-slate-800">
@@ -139,6 +130,30 @@ const AdminLayout = () => {
             </div>
         </>
     );
+};
+
+const AdminLayout = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const location = useLocation();
+    const { user } = useAuth();
+    const { t, i18n } = useTranslation();
+    const mainContentRef = useRef(null);
+
+    // Reset scroll when path changes
+    useEffect(() => {
+        if (mainContentRef.current) {
+            mainContentRef.current.scrollTop = 0;
+        }
+    }, [location.pathname]);
+
+    const links = [
+        { name: t('dashboard.admin.dashboard'), key: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+        { name: t('dashboard.admin.courses'), key: 'Courses', path: '/admin/courses', icon: BookOpen },
+        { name: t('dashboard.admin.videos'), key: 'Videos', path: '/admin/videos', icon: Video },
+        { name: t('dashboard.admin.users'), key: 'Users', path: '/admin/users', icon: Users },
+        { name: t('dashboard.admin.profile'), key: 'Profile', path: '/admin/profile', icon: User },
+        { name: t('dashboard.admin.settings.title'), key: 'Settings', path: '/admin/settings', icon: Settings },
+    ];
 
     return (
         <div className="h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 flex">
@@ -164,7 +179,7 @@ const AdminLayout = () => {
                 ${sidebarOpen ? 'translate-x-0' : (i18n.language === 'ar' ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0')}
                 lg:flex-shrink-0
             `}>
-                <SidebarContent />
+                <SidebarContent setSidebarOpen={setSidebarOpen} />
             </aside>
 
             {/* Main Content */}

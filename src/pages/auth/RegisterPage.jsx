@@ -28,7 +28,13 @@ const RegisterPage = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
-
+    
+        if (formData.password.length < 6) {
+            setError(t('auth.register.passwordTooShort'));
+            setLoading(false);
+            return;
+        }
+    
         try {
             const user = await register(formData.name, formData.email, formData.password, formData.role);
             if (user.role === 'admin') navigate('/admin/dashboard');
