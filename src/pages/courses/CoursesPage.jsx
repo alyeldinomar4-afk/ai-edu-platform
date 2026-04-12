@@ -464,7 +464,7 @@ const CoursesPage = () => {
                                 <Button
                                     variant="outline"
                                     className="dark:border-slate-700 dark:text-slate-300"
-                                    onClick={() => { handleCategoryChange('All'); setSearchQuery(''); }}
+                                    onClick={handleClearAll}
                                 >
                                     <X className="w-4 h-4 mr-2" />
                                     {t('courses.clearFilters')}

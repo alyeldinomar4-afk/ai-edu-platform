@@ -8,6 +8,7 @@ import { AuthProvider } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import { useTranslation } from 'react-i18next';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -46,11 +47,6 @@ import ScrollToTop from './components/common/ScrollToTop';
 function App() {
   const { i18n } = useTranslation();
 
-  useEffect(() => {
-    document.documentElement.setAttribute('lang', i18n.language);
-    document.documentElement.setAttribute('dir', i18n.language === 'ar' ? 'rtl' : 'ltr');
-  }, [i18n.language]);
-
   return (
     <AuthProvider>
         <ErrorBoundary>
@@ -66,8 +62,18 @@ function App() {
               <Route path="/instructors" element={<InstructorsPage />} />
               <Route path="/instructor/user/:name" element={<PublicInstructorProfilePage />} />
               <Route path="/ai-demo" element={<AIDemoPage />} />
-              <Route path="/checkout/:courseId" element={<CheckoutPage />} />
-              <Route path="/payment-success" element={<PaymentSuccessPage />} />
+              
+              {/* Protected Learner-Access Routes */}
+              <Route path="/checkout/:courseId" element={
+                <ProtectedRoute allowedRoles={['learner', 'admin']}>
+                  <CheckoutPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/payment-success" element={
+                <ProtectedRoute allowedRoles={['learner', 'admin']}>
+                  <PaymentSuccessPage />
+                </ProtectedRoute>
+              } />
             </Route>
 
             {/* Learning Route (Fullscreen) */}
@@ -133,7 +139,7 @@ function App() {
           </Routes>
         </Router>
       </ErrorBoundary>
-    </AuthProvider>
+      </AuthProvider>
   );
 }
 

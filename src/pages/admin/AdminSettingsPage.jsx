@@ -271,7 +271,7 @@ const AdminSettingsPage = () => {
                                     <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl">
                                         <div className="space-y-1">
                                             <h3 className="font-semibold text-slate-900 dark:text-white">{t('dashboard.admin.settings.workflow.autoApprove')}</h3>
-                                            <p className="text-sm text-slate-500 dark:text-slate-400">Automatically publish new courses from verified instructors.</p>
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">{t('dashboard.admin.settings.workflow.autoApproveHint')}</p>
                                         </div>
                                         <button
                                             onClick={() => handleToggle('autoApproveCourses')}
@@ -339,7 +339,7 @@ const AdminSettingsPage = () => {
                                     <div className="p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 rounded-xl flex gap-3">
                                         <Shield className="text-amber-600 shrink-0" size={20} />
                                         <p className="text-sm text-amber-800 dark:text-amber-500/80">
-                                            Changes to social login providers may affect user access immediately. Please verify API credentials before disabling.
+                                            {t('dashboard.admin.settings.integrations.warning')}
                                         </p>
                                     </div>
                                 </div>

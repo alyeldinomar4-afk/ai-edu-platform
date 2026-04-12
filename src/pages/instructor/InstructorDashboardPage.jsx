@@ -51,7 +51,7 @@ const InstructorDashboardPage = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
-    const [formData, setFormData] = useState({ title: '', students: 0, status: 'Draft', revenue: 0, image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
+    const [formData, setFormData] = useState({ title: '', students: 0, status: 'draft', revenue: 0, image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
 
     useEffect(() => {
         const loadData = async () => {
@@ -73,7 +73,7 @@ const InstructorDashboardPage = () => {
 
     const openAddModal = () => {
         setEditingCourse(null);
-        setFormData({ title: '', students: 0, status: 'Draft', revenue: 0, image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
+        setFormData({ title: '', students: 0, status: 'draft', revenue: 0, image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', description: '' });
         setShowModal(true);
     };
 
@@ -102,7 +102,7 @@ const InstructorDashboardPage = () => {
                     ...formData,
                     students: 0,
                     revenue: parseFloat(formData.revenue) || 0,
-                    status: formData.status || 'Draft'
+                    status: formData.status || 'draft'
                 });
                 setCourses(prev => [...prev, created]);
                 toast.success(t('dashboard.instructor.toasts.createSuccess'));
@@ -198,7 +198,7 @@ const InstructorDashboardPage = () => {
                                 </motion.div>
                             </div>
                             <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-1">
-                                {card.isCurrency ? formatCurrency(card.value, i18n.language) : card.isCompact ? formatCompactNumber(card.value, i18n.language) : formatNumber(card.value, i18n.language)}
+                                <AnimatedStat value={card.isCurrency ? formatCurrency(card.value, i18n.language) : card.isCompact ? formatCompactNumber(card.value, i18n.language) : formatNumber(card.value, i18n.language)} />
                             </h3>
                             {card.change && (
                                 <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
@@ -260,19 +260,19 @@ const InstructorDashboardPage = () => {
                                             <div className="min-w-0">
                                                 <span className="block truncate font-bold group-hover:text-primary transition-colors">{course.title}</span>
                                                 <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">
-                                                    {course.status === 'Published' ? t('dashboard.instructor.published') : t('dashboard.instructor.draft')} • {formatCurrency(course.revenue)}
+                                                    {course.status === 'published' ? t('dashboard.instructor.published') : t('dashboard.instructor.draft')} • {formatCurrency(course.revenue)}
                                                 </span>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 font-medium">{formatNumber(course.students)}</td>
                                     <td className="px-4 sm:px-6 py-4 hidden sm:table-cell">
-                                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${course.status === 'Published'
+                                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${course.status === 'published'
                                             ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
                                             : 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400'
                                             }`}>
-                                            <div className={`w-1.5 h-1.5 rounded-full ${course.status === 'Published' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                                            {course.status === 'Published' ? t('dashboard.instructor.published') : t('dashboard.instructor.draft')}
+                                            <div className={`w-1.5 h-1.5 rounded-full ${course.status === 'published' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                                            {course.status === 'published' ? t('dashboard.instructor.published') : t('dashboard.instructor.draft')}
                                         </span>
                                     </td>
                                     <td className="px-4 sm:px-6 py-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell font-semibold">{formatCurrency(course.revenue)}</td>
@@ -399,8 +399,8 @@ const InstructorDashboardPage = () => {
                                                     onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
                                                     className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium"
                                                 >
-                                                    <option value="Draft">{t('dashboard.instructor.draft')}</option>
-                                                    <option value="Published">{t('dashboard.instructor.published')}</option>
+                                                    <option value="draft">{t('dashboard.instructor.draft')}</option>
+                                                    <option value="published">{t('dashboard.instructor.published')}</option>
                                                 </select>
                                             </div>
                                             <div>
@@ -454,7 +454,7 @@ const InstructorDashboardPage = () => {
 
                                             {/* Status Badge */}
                                             <AnimatePresence>
-                                                {formData.status === 'Published' && (
+                                                {formData.status === 'published' && (
                                                     <motion.div
                                                         initial={{ opacity: 0, scale: 0.8 }}
                                                         animate={{ opacity: 1, scale: 1 }}

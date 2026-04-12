@@ -17,7 +17,7 @@ const InstructorQAPage = () => {
     const [questions, setQuestions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [expandedId, setExpandedId] = useState(null);
-    const [replyText, setReplyText] = useState('');
+    const [replyTexts, setReplyTexts] = useState({});
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -48,17 +48,17 @@ const InstructorQAPage = () => {
         if (expandedId === question.id) {
             setExpandedId(null);
         } else {
-            setExpandedId(question.id);
-            setReplyText(question.reply || '');
+            setReplyTexts(prev => ({ ...prev, [question.id]: question.reply || '' }));
         }
     };
 
     const handleReply = async (id) => {
-        if (!replyText.trim()) return;
         try {
-            await api.instructor.questions.reply(id, replyText);
+            const text = replyTexts[id] || '';
+            if (!text.trim()) return;
+            await api.instructor.questions.reply(id, text);
             setQuestions(prev => prev.map(q =>
-                q.id === id ? { ...q, status: 'resolved', reply: replyText } : q
+                q.id === id ? { ...q, status: 'resolved', reply: text } : q
             ));
             setExpandedId(null);
             toast.success(t('common.success'));
@@ -160,8 +160,8 @@ const InstructorQAPage = () => {
                                                 <img src={user?.avatar || "https://ui-avatars.com/api/?name=Instructor&background=random"} alt="You" className="w-10 h-10 rounded-full hidden sm:block" />
                                                 <div className="flex-1">
                                                     <textarea
-                                                        value={replyText}
-                                                        onChange={(e) => setReplyText(e.target.value)}
+                                                        value={replyTexts[q.id] || ''}
+                                                        onChange={(e) => setReplyTexts(prev => ({ ...prev, [q.id]: e.target.value }))}
                                                         placeholder={t('dashboard.instructor.qa.placeholder')}
                                                         rows="4"
                                                         className={`w-full px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none resize-y mb-3 ${isRTL ? 'text-right' : ''}`}

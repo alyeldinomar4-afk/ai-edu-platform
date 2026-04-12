@@ -13,7 +13,7 @@ const LearnerProfilePage = () => {
 
     const [name, setName] = useState(user?.name || '');
     const [email, setEmail] = useState(user?.email || '');
-    const [bio, setBio] = useState('');
+    const [bio, setBio] = useState(user?.bio || '');
 
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');

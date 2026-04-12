@@ -672,10 +672,10 @@ const InstructorLecturesPage = () => {
                                                                                         name={`correct-${qIndex}`}
                                                                                         checked={q.correctAnswer === oIndex}
                                                                                         onChange={() => updateQuestion(qIndex, 'correctAnswer', oIndex)}
-                                                                                        className="peer sr-only"
+                                                                                        className="peer sr-only absolute"
                                                                                     />
                                                                                     <div className="w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded-full peer-checked:border-primary peer-checked:bg-primary transition-all flex items-center justify-center">
-                                                                                        <div className="w-2 h-2 bg-white rounded-full scale-0 peer-checked:scale-100 transition-transform"/>
+                                                                                        <div className="w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"/>
                                                                                     </div>
                                                                                 </div>
                                                                                 <input 
@@ -744,7 +744,7 @@ const InstructorLecturesPage = () => {
                                             
                                             {/* Duration indicator */}
                                             <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-white text-xs font-bold px-2 py-1 rounded-md">
-                                                {formatDuration(formValues.duration || 600)}
+                                                {formValues.duration || '10:00'}
                                             </div>
                                         </div>
                                         <div className="p-5">

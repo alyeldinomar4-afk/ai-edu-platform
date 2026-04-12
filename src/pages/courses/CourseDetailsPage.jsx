@@ -17,9 +17,8 @@ const CourseDetailsPage = () => {
     const { user } = useAuth();
     const { t, i18n } = useTranslation();
 
-    // TODO: Replace with real purchase check from backend
-    const purchasedCourses = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
-    const isPurchased = purchasedCourses.includes(parseInt(id));
+    const [isPurchased, setIsPurchased] = useState(false);
+    const [lectures, setLectures] = useState([]);
     const [activeTab, setActiveTab] = useState('overview');
     const [isLoading, setIsLoading] = useState(true);
     const [reviewRating, setReviewRating] = useState(0);
@@ -58,6 +57,14 @@ const CourseDetailsPage = () => {
                     const instructors = await api.instructors.getAll();
                     const instructor = instructors.find(ins => ins.name === courseData.instructor);
                     setInstructorData(instructor);
+
+                    // Fetch actual lectures
+                    const lecturesData = await api.courses.getLectures(parseInt(id));
+                    setLectures(lecturesData);
+
+                    // Check purchase status from API
+                    const purchase = await api.learner.getPurchase(id);
+                    setIsPurchased(purchase?.status === 'completed' || false);
                 }
             } catch (error) {
                 console.error('Error fetching course details:', error);
@@ -243,27 +250,40 @@ const CourseDetailsPage = () => {
                                             <div className="space-y-4">
                                                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-1 mb-4">
                                                     <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.content')}</h3>
-                                                    <span className="text-sm text-slate-500 dark:text-slate-400">{course.lessons} {t('courseDetails.lectures')} • {formatDuration(course.duration)} {t('courseDetails.totalLength')}</span>
+                                                    <span className="text-sm text-slate-500 dark:text-slate-400">{lectures.length} {t('courseDetails.lectures')} • {formatDuration(course.duration)} {t('courseDetails.totalLength')}</span>
                                                 </div>
-                                                {[1, 2, 3, 4].map((section) => (
-                                                    <div key={section} className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
-                                                        <div className="bg-slate-50 dark:bg-slate-800 px-4 py-3 font-semibold text-slate-700 dark:text-slate-200 flex justify-between items-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                                                            <span>{t('courseDetails.section')} {section}</span>
-                                                            <span className="text-xs text-slate-500 dark:text-slate-400">3 {t('courseDetails.lectures')} • 45{t('courseDetails.min')}</span>
+                                                
+                                                {lectures.length > 0 ? (
+                                                    <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                                                        <div className="bg-slate-50 dark:bg-slate-800 px-4 py-3 font-semibold text-slate-700 dark:text-slate-200 flex justify-between items-center cursor-default">
+                                                            <span>{t('courseDetails.curriculum')}</span>
+                                                            <span className="text-xs text-slate-500 dark:text-slate-400">{lectures.length} {t('courseDetails.lectures')}</span>
                                                         </div>
                                                         <div className="divide-y divide-slate-100 dark:divide-slate-800">
-                                                            {[1, 2, 3].map((lecture) => (
-                                                                <div key={lecture} className="px-4 py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+                                                            {lectures.map((lecture, idx) => (
+                                                                <div key={lecture.id} className="px-4 py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
                                                                     <div className="flex items-center gap-3">
                                                                         <PlayCircle className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors" />
-                                                                        <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white">{t('courseDetails.lecture')} {lecture}: {t('courseDetails.gettingStarted')}</span>
+                                                                        <span className="text-sm text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white">
+                                                                            {idx + 1}. {lecture.title}
+                                                                        </span>
                                                                     </div>
-                                                                    <span className="text-xs text-slate-400 dark:text-slate-500">15:00</span>
+                                                                    <div className="flex items-center gap-3">
+                                                                        <span className="text-xs text-slate-400 dark:text-slate-500">{formatDuration(lecture.duration)}</span>
+                                                                        {lecture.locked && !isPurchased && (
+                                                                            <Lock className="w-3 h-3 text-slate-400" />
+                                                                        )}
+                                                                    </div>
                                                                 </div>
                                                             ))}
                                                         </div>
                                                     </div>
-                                                ))}
+                                                ) : (
+                                                    <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-200 dark:border-slate-700">
+                                                        <PlayCircle className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
+                                                        <p className="text-slate-500 dark:text-slate-400">{t('courseDetails.noLectures', 'No lectures available yet for this course.')}</p>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
 
@@ -510,7 +530,7 @@ const CourseDetailsPage = () => {
                             <div className="space-y-4 pt-6 border-t border-slate-100 dark:border-slate-800">
                                 <h4 className="font-bold text-slate-900 dark:text-white">{t('courseDetails.includes')}:</h4>
                                 <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
-                                    <li className="flex items-center gap-3"><PlayCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {course.duration} {t('courseDetails.onDemandVideo')}</li>
+                                    <li className="flex items-center gap-3"><PlayCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {formatDuration(course.duration)} {t('courseDetails.onDemandVideo')}</li>
                                     <li className="flex items-center gap-3"><BookOpen className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {course.lessons} {t('courseDetails.articlesResources')}</li>
                                     <li className="flex items-center gap-3"><CheckCircle className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {t('courseDetails.lifetimeAccess')}</li>
                                     <li className="flex items-center gap-3"><BarChart className="w-4 h-4 text-slate-400 dark:text-slate-500" /> {t('courseDetails.certificate')}</li>

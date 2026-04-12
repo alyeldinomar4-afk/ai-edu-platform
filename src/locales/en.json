@@ -78,7 +78,7 @@
         "lectureInfo": "Lecture {{current}} of {{total}}",
         "points": "{{count}} AI Points",
         "tutorName": "Nexora AI Tutor",
-        "watchingStatus": "WATCING",
+        "watchingStatus": "WATCHING",
         "paused": "Paused",
         "watching": "Watching",
         "live": "Live",
@@ -408,13 +408,15 @@
         "workflow": {
           "title": "Platform Workflow",
           "autoApprove": "Auto-approve Courses",
+          "autoApproveHint": "Automatically publish new courses from verified instructors.",
           "currency": "Default Currency",
           "currencyHint": "Primary currency for all transactions."
         },
         "integrations": {
           "title": "Integrations & Security",
           "googleLogin": "Google Social Login",
-          "githubLogin": "GitHub Social Login"
+          "githubLogin": "GitHub Social Login",
+          "warning": "Changes to social login providers may affect user access immediately. Please verify API credentials before disabling."
         }
       }
     },
@@ -571,6 +573,32 @@
       }
     }
   },
+  "checkout": {
+    "title": "Secure Checkout",
+    "paymentDetails": "Payment Details",
+    "cardNumber": "Card Number",
+    "expiry": "Expiry Date",
+    "cvv": "CVV",
+    "backToCourse": "Back to Course",
+    "orderSummary": "Order Summary",
+    "guarantee": "30-Day Money-Back Guarantee",
+    "securing": "Securing your session...",
+    "coursePrice": "Course Price",
+    "discount": "Discount",
+    "total": "Total",
+    "free": "Free",
+    "payNow": "Pay Now — ${{price}}",
+    "enrollNow": "Enroll Now",
+    "securityHint": "Your payment info is encrypted and secure",
+    "lessons": "lessons",
+    "success": {
+      "title": "Payment Successful! 🎉",
+      "subtitle": "Congratulations! Your enrollment is confirmed. You now have full access to the course content.",
+      "myCourses": "Go to My Courses",
+      "browseMore": "Browse More Courses",
+      "emailNote": "A confirmation email has been sent to your inbox."
+    }
+  },
   "courseDetails": {
     "tabs": {
       "overview": "Overview",
@@ -578,6 +606,7 @@
       "instructor": "Instructor",
       "reviews": "Reviews"
     },
+    "curriculum": "Curriculum",
     "locked": {
       "title": "This course is locked",
       "subtitle": "Buy the course to access videos and all course content.",
@@ -787,7 +816,7 @@
     "aiTutor": {
       "title": "AI Tutor",
       "defaultWelcome": "Hi! I'm watching this video with you. Feel free to ask me to explain key concepts or summarize sections.",
-      "watchingWithYou": "WATCING",
+      "watchingWithYou": "WATCHING",
       "paused": "Paused",
       "thinking": "AI is thinking...",
       "placeholder": "Ask about the video...",

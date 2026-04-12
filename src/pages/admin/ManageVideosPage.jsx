@@ -32,7 +32,8 @@ import { Loader2 } from 'lucide-react';
 
 // ManageVideosPage v1.3 - Fixed ReferenceError (Edit icon)
 const ManageVideosPage = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const isRTL = i18n.language === 'ar';
     const [viewMode, setViewMode] = useState('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -46,9 +47,15 @@ const ManageVideosPage = () => {
         duration: '',
         status: 'published'
     });
-
+ 
     const [videos, setVideos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+ 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues(prev => ({ ...prev, [name]: value }));
+    };
 
     const fetchVideos = async () => {
         setIsLoading(true);
@@ -98,8 +105,9 @@ const ManageVideosPage = () => {
     // Actions
     const handleDeleteVideo = async (id) => {
         try {
-            await api.instructor.lectures.delete(id);
+            await api.admin.videos.delete(id);
             setVideos(prev => prev.filter(v => v.id !== id));
+            setShowDeleteConfirm(null);
             toast.success(t('dashboard.admin.manageVideos.toasts.deleteSuccess'));
         } catch (error) {
             console.error('Error deleting video:', error);
@@ -108,7 +116,7 @@ const ManageVideosPage = () => {
 
     const togglePublish = async (id) => {
         try {
-            await api.instructor.lectures.toggleStatus(id);
+            await api.admin.videos.toggleStatus(id);
             const video = videos.find(v => v.id === id);
             if (!video) return;
 
@@ -123,7 +131,7 @@ const ManageVideosPage = () => {
 
     const handleAddVideo = async (data) => {
         try {
-            const created = await api.instructor.lectures.create({
+            const created = await api.admin.videos.create({
                 ...data,
                 views: 0,
                 date: new Date().toISOString().split('T')[0],
@@ -139,7 +147,7 @@ const ManageVideosPage = () => {
 
     const handleUpdateVideo = async (data) => {
         try {
-            const updated = await api.instructor.lectures.update(data.id, data);
+            const updated = await api.admin.videos.update(data.id, data);
             setVideos(prev => prev.map(v => v.id === data.id ? updated : v));
             setEditingVideo(null);
             setShowVideoModal(false);
@@ -172,7 +180,7 @@ const ManageVideosPage = () => {
                     >
                         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 delay-[50ms]" />
-                        <Upload size={18} className={`relative z-10 shrink-0 ${t('dir') === 'rtl' ? 'ml-2' : 'mr-2'}`} /> 
+                        <Upload size={18} className={`relative z-10 shrink-0 ${isRTL ? 'ml-2' : 'mr-2'}`} /> 
                         <span className="relative z-10">{t('dashboard.admin.manageVideos.uploadNew')}</span>
                     </button>
                 </div>
@@ -181,11 +189,11 @@ const ManageVideosPage = () => {
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm">
                 <div className="relative flex-1">
-                    <Search className={`absolute ${t('dir') === 'rtl' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
+                    <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
                     <input
                         type="text"
                         placeholder={t('dashboard.admin.manageVideos.searchPlaceholder')}
-                        className={`w-full ${t('dir') === 'rtl' ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'} py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none`}
+                        className={`w-full ${isRTL ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'} py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary outline-none`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -193,7 +201,7 @@ const ManageVideosPage = () => {
 
                 <div className="flex items-center gap-3">
                     <select
-                        className={`bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm outline-none text-slate-700 dark:text-slate-200 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                        className={`bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-4 py-2 text-sm outline-none text-slate-700 dark:text-slate-200 ${isRTL ? 'text-right' : 'text-left'}`}
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
@@ -222,8 +230,8 @@ const ManageVideosPage = () => {
                             <div key={video.id} className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col">
                                 <div className="relative w-full aspect-video shrink-0 overflow-hidden bg-slate-100 dark:bg-slate-800">
                                     {video.thumbnail && <img src={video.thumbnail} alt="" className="w-full h-full object-cover" />}
-                                    <span className={`absolute bottom-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded uppercase`}>{formatDuration(video.duration)}</span>
-                                    <span className={`absolute top-2 ${t('dir') === 'rtl' ? 'left-2' : 'right-2'} px-1.5 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider ${getStatusStyle(video.status)}`}>
+                                    <span className={`absolute bottom-2 ${isRTL ? 'left-2' : 'right-2'} px-1.5 py-0.5 bg-black/70 text-white text-[10px] font-bold rounded uppercase`}>{formatDuration(video.duration)}</span>
+                                    <span className={`absolute top-2 ${isRTL ? 'left-2' : 'right-2'} px-1.5 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider ${getStatusStyle(video.status)}`}>
                                         {t(`dashboard.admin.manageVideos.${video.status}`)}
                                     </span>
                                 </div>
@@ -234,7 +242,7 @@ const ManageVideosPage = () => {
                                         <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 font-medium">{video.course}</div>
                                     </div>
                                     <div className="mt-auto pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between">
-                                        <div className={`flex gap-3 text-[10px] text-slate-400 ${t('dir') === 'rtl' ? 'flex-row-reverse' : 'flex-row'}`}>
+                                        <div className={`flex gap-3 text-[10px] text-slate-400 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
                                             <span className="flex items-center gap-1"><Eye size={12} /> {formatCompactNumber(video.views)}</span>
                                             <span className="flex items-center gap-1"><Calendar size={12} /> {video.date}</span>
                                         </div>
@@ -244,7 +252,7 @@ const ManageVideosPage = () => {
                                                 <span className="max-w-0 w-0 overflow-hidden opacity-0 group-hover:max-w-[100px] group-hover:w-auto group-hover:opacity-100 group-hover:ml-1.5 rtl:group-hover:mr-1.5 rtl:group-hover:ml-0 whitespace-nowrap text-xs font-semibold transition-all duration-300 ease-in-out">{t('common.edit')}</span>
                                             </button>
                                             <button onClick={() => togglePublish(video.id)} className={`p-1.5 rounded-lg transition-colors ${video.status === 'published' ? 'text-amber-500 hover:bg-amber-50' : 'text-green-500 hover:bg-green-50'}`}>{video.status === 'published' ? <PauseCircle size={16} /> : <CheckCircle size={16} />}</button>
-                                            <button onClick={() => handleDeleteVideo(video.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-500 transition-colors"><Trash2 size={16} /></button>
+                                            <button onClick={() => setShowDeleteConfirm(video.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-500 transition-colors"><Trash2 size={16} /></button>
                                         </div>
                                     </div>
                                 </div>
@@ -294,7 +302,7 @@ const ManageVideosPage = () => {
                                                     <span className="max-w-0 w-0 overflow-hidden opacity-0 group-hover:max-w-[100px] group-hover:w-auto group-hover:opacity-100 group-hover:ml-1.5 rtl:group-hover:mr-1.5 rtl:group-hover:ml-0 whitespace-nowrap text-xs font-semibold transition-all duration-300 ease-in-out">{t('common.edit')}</span>
                                                 </button>
                                                 <button onClick={() => togglePublish(video.id)} className={`p-1.5 rounded-lg ${video.status === 'published' ? 'hover:bg-amber-50 text-amber-500' : 'hover:bg-green-50 text-green-500'}`}>{video.status === 'published' ? <PauseCircle size={16} /> : <CheckCircle size={16} />}</button>
-                                                <button onClick={() => handleDeleteVideo(video.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-500"><Trash2 size={16} /></button>
+                                                <button onClick={() => setShowDeleteConfirm(video.id)} className="p-1.5 hover:bg-red-50 rounded-lg text-red-500"><Trash2 size={16} /></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -322,9 +330,9 @@ const ManageVideosPage = () => {
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => { setShowVideoModal(false); setEditingVideo(null); }} />
                         <motion.div
-                            initial={{ x: t('dir') === 'rtl' ? '-100%' : '100%' }}
+                            initial={{ x: isRTL ? '-100%' : '100%' }}
                             animate={{ x: 0 }}
-                            exit={{ x: t('dir') === 'rtl' ? '-100%' : '100%' }}
+                            exit={{ x: isRTL ? '-100%' : '100%' }}
                             transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
                             className="relative z-10 w-full max-w-5xl bg-slate-50 dark:bg-slate-950 h-full shadow-2xl flex flex-col md:flex-row overflow-hidden border-l border-slate-200 dark:border-slate-800 rtl:border-l-0 rtl:border-r"
                         >
@@ -349,45 +357,45 @@ const ManageVideosPage = () => {
                                         const data = Object.fromEntries(formData);
                                         if (editingVideo) handleUpdateVideo({ ...editingVideo, ...data });
                                         else handleAddVideo(data);
-                                    }} className={`space-y-6 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
+                                    }} className={`space-y-6 ${isRTL ? 'text-right' : 'text-left'}`}>
                                         
 
 
                                         <div className="space-y-2">
                                             <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.title')}</label>
-                                            <input name="title" required value={formValues.title} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                            <input name="title" required value={formValues.title} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.instructor')}</label>
-                                                <input name="instructor" required value={formValues.instructor} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                                <input name="instructor" required value={formValues.instructor} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.course')}</label>
-                                                <input name="course" required value={formValues.course} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                                <input name="course" required value={formValues.course} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                             </div>
                                         </div>
                                         <div className="space-y-2">
                                             <label className="block text-sm font-semibold mb-2 dark:text-slate-300">
-                                                {t('dir') === 'rtl' ? 'رابط الصورة المصغرة' : 'Thumbnail URL'}
+                                                {isRTL ? 'رابط الصورة المصغرة' : 'Thumbnail URL'}
                                             </label>
                                             <input 
                                                 name="thumbnail" 
                                                 value={formValues.thumbnail}
                                                 onChange={handleInputChange}
                                                 placeholder="https://example.com/image.jpg"
-                                                className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} 
+                                                className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} 
                                             />
-                                            <p className="text-[10px] text-slate-500 mt-1">{t('dir') === 'rtl' ? 'مثال: https://images.unsplash.com/...' : 'Example: https://images.unsplash.com/...'}</p>
+                                            <p className="text-[10px] text-slate-500 mt-1">{isRTL ? 'مثال: https://images.unsplash.com/...' : 'Example: https://images.unsplash.com/...'}</p>
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.duration')}</label>
-                                                <input name="duration" required value={formValues.duration} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`} />
+                                                <input name="duration" required value={formValues.duration} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.status')}</label>
-                                                <select name="status" value={formValues.status} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${t('dir') === 'rtl' ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>
+                                                <select name="status" value={formValues.status} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${isRTL ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${isRTL ? 'text-right' : 'text-left'}`}>
                                                     <option value="published">{t('dashboard.admin.manageVideos.published')}</option>
                                                     <option value="draft">{t('dashboard.admin.manageVideos.draft')}</option>
                                                     <option value="pending">{t('dashboard.admin.manageVideos.pending')}</option>
@@ -411,7 +419,7 @@ const ManageVideosPage = () => {
                                     <div className="absolute -top-10 left-0 right-0 flex justify-center">
                                         <span className="bg-white/80 dark:bg-slate-900/80 text-primary text-xs font-bold px-4 py-1.5 rounded-full border border-primary/20 dark:border-primary/50 shadow-sm backdrop-blur-md relative z-20 flex items-center gap-1.5 animate-pulse">
                                             <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                            {t('dir') === 'rtl' ? 'معاينة الفيديو' : 'Video Preview'}
+                                            {isRTL ? 'معاينة الفيديو' : 'Video Preview'}
                                         </span>
                                     </div>
                                     <motion.div 
@@ -430,14 +438,14 @@ const ManageVideosPage = () => {
                                         </div>
                                         <div className="p-5 flex-1 flex flex-col text-left text-slate-900 dark:text-white">
                                             <h3 className="font-bold text-lg mb-2 line-clamp-2 leading-tight">
-                                                {formValues.title || (t('dir') === 'rtl' ? 'عنوان الفيديو...' : 'Video Title...')}
+                                                {formValues.title || (isRTL ? 'عنوان الفيديو...' : 'Video Title...')}
                                             </h3>
                                             <p className="text-sm font-medium text-slate-500 line-clamp-1 mb-1">
                                                 <User size={14} className="inline mr-1" />
-                                                {formValues.instructor || (t('dir') === 'rtl' ? 'اسم المدرب...' : 'Instructor Name...')}
+                                                {formValues.instructor || (isRTL ? 'اسم المدرب...' : 'Instructor Name...')}
                                             </p>
                                             <p className="text-xs font-semibold text-primary/80 line-clamp-1 mb-4">
-                                                {formValues.course || (t('dir') === 'rtl' ? 'اسم الدورة...' : 'Course Name...')}
+                                                {formValues.course || (isRTL ? 'اسم الدورة...' : 'Course Name...')}
                                             </p>
                                             <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                                                 <span className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300">
@@ -449,6 +457,41 @@ const ManageVideosPage = () => {
                                     
                                     {/* Abstract glow behind the card */}
                                     <div className="absolute -inset-4 bg-primary/20 blur-3xl -z-10 rounded-full opacity-50 flex-shrink-0 dark:opacity-30 mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+ 
+            {/* Delete Confirmation Modal */}
+            <AnimatePresence>
+                {showDeleteConfirm && (
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                            onClick={() => setShowDeleteConfirm(null)}
+                        />
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            className="relative z-10 w-full max-w-sm bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-100 dark:border-slate-800"
+                        >
+                            <div className="flex flex-col items-center text-center gap-4">
+                                <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
+                                    <AlertTriangle size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">{t('dashboard.admin.manageVideos.deleteTitle')}</h3>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{t('dashboard.admin.manageVideos.deleteContent')}</p>
+                                </div>
+                                <div className="flex gap-3 w-full mt-2">
+                                    <Button variant="ghost" className="flex-1" onClick={() => setShowDeleteConfirm(null)}>{t('common.cancel')}</Button>
+                                    <Button variant="danger" className="flex-1" onClick={() => handleDeleteVideo(showDeleteConfirm)}>{t('common.delete')}</Button>
                                 </div>
                             </div>
                         </motion.div>

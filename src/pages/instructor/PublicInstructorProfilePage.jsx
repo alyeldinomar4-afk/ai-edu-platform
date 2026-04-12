@@ -165,15 +165,21 @@ const PublicInstructorProfilePage = () => {
                                     transition={{ delay: 0.25 }}
                                     className="flex items-center justify-center md:justify-start gap-4 mb-2"
                                 >
-                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/10 transition-all hover:scale-110" title="Website">
-                                        <Globe size={18} />
-                                    </a>
-                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-all hover:scale-110" title="LinkedIn">
-                                        <Linkedin size={18} />
-                                    </a>
-                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-all hover:scale-110" title="Twitter">
-                                        <Twitter size={18} />
-                                    </a>
+                                    {instructorData?.website && (
+                                        <a href={instructorData.website} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/10 transition-all hover:scale-110" title="Website">
+                                            <Globe size={18} />
+                                        </a>
+                                    )}
+                                    {instructorData?.linkedin && (
+                                        <a href={instructorData.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-all hover:scale-110" title="LinkedIn">
+                                            <Linkedin size={18} />
+                                        </a>
+                                    )}
+                                    {instructorData?.twitter && (
+                                        <a href={instructorData.twitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-all hover:scale-110" title="Twitter">
+                                            <Twitter size={18} />
+                                        </a>
+                                    )}
                                 </motion.div>
                             </div>
 

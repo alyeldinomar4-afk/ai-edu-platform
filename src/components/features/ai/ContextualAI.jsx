@@ -192,7 +192,7 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
                                     className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20"
                                 >
                                     <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.5)]" />
-                                    <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter whitespace-nowrap">{t('videoPlayer.aiTutor.watchingWithYou', { defaultValue: 'WATCING' })}</span>
+                                    <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter whitespace-nowrap">{t('videoPlayer.aiTutor.watchingWithYou', { defaultValue: 'WATCHING' })}</span>
                                 </motion.div>
                             ) : (
                                 <motion.div

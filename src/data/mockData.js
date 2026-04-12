@@ -107,7 +107,7 @@ export const courses = [
         instructorAvatar: 'https://randomuser.me/api/portraits/men/46.jpg',
         rating: 4.7,
         reviews: 210,
-        price: 12.99,
+        price: 0,
         discount: 0,
         image: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
         category: 'Development',
@@ -261,7 +261,10 @@ export const instructors = [
         rating: 4.8,
         studentsCount: 2500,
         category: 'Data Science',
-        bio: 'Specializing in Machine Learning and AI Ethics with over 10 years of experience in both academia and industry.'
+        bio: 'Specializing in Machine Learning and AI Ethics with over 10 years of experience in both academia and industry.',
+        website: 'https://lailahassan.ai',
+        linkedin: 'https://linkedin.com/in/lailahassan',
+        twitter: 'https://twitter.com/lailahassan'
     },
     {
         id: 2,
@@ -272,7 +275,9 @@ export const instructors = [
         rating: 4.9,
         studentsCount: 3800,
         category: 'Development',
-        bio: 'Passionate about building scalable web applications and teaching modern frameworks to the next generation of developers.'
+        bio: 'Passionate about building scalable web applications and teaching modern frameworks to the next generation of developers.',
+        website: 'https://ahmedmansour.dev',
+        linkedin: 'https://linkedin.com/in/ahmedmansour'
     }
 ];
 
@@ -290,7 +295,7 @@ export const users = [
         id: 1,
         name: "Student User",
         email: "user@test.com",
-        role: "student",
+        role: "learner",
         avatar: "https://randomuser.me/api/portraits/men/1.jpg",
     },
     {
@@ -423,6 +428,7 @@ export const lectures = [
         title: "Introduction to Machine Learning Concepts",
         course: "Machine Learning Fundamentals",
         courseId: 1,
+        instructorId: 1,
         instructor: "Dr. Laila Hassan",
         views: 1200,
         duration: 540,

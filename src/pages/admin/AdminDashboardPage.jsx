@@ -83,7 +83,7 @@ const AdminDashboardPage = () => {
                 <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
                     <h3 className="font-bold text-slate-900 dark:text-white mb-6">{t('dashboard.admin.revenueOverview')}</h3>
                     <div className="h-64 flex items-end justify-between gap-2 overflow-hidden px-2">
-                        {[40, 60, 45, 70, 65, 85, 95].map((h, i) => (
+                        {(stats?.revenueChart || [40, 60, 45, 70, 65, 85, 95]).map((h, i) => (
                             <div key={i} className="w-full bg-blue-100 dark:bg-slate-800 rounded-t-lg relative group h-full flex items-end">
                                 <div
                                     className="bg-primary absolute bottom-0 w-full rounded-t-lg transition-all duration-500"
@@ -102,14 +102,14 @@ const AdminDashboardPage = () => {
                         <AlertCircle className="text-orange-500" /> {t('dashboard.admin.recentActivity')}
                     </h2>
                     <div className="space-y-4">
-                        {[1, 2, 3, 4, 5].map((item) => (
-                            <div key={item} className="flex gap-3 items-start p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition-colors">
+                        {(stats?.recentActivity || []).map((activity) => (
+                            <div key={activity.id} className="flex gap-3 items-start p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition-colors">
                                 <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 shrink-0">
                                     <Users size={16} />
                                 </div>
                                 <div className="min-w-0">
-                                    <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{t('dashboard.admin.newUser')}</p>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400">{t('common.justNow')}</p>
+                                    <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{activity.action}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">{activity.user} • {activity.time}</p>
                                 </div>
                             </div>
                         ))}

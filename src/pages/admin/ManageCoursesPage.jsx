@@ -1,12 +1,14 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Button from '../../components/ui/Button';
 import { api } from '../../services/api';
 import { Edit2, Trash2, Plus, X, Search, BookOpen, Sparkles, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency } from '../../utils/formatters';
 
 const ManageCoursesPage = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const isRTL = i18n.language === 'ar';
     const [courseList, setCourseList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -103,11 +105,11 @@ const ManageCoursesPage = () => {
             {/* Search Bar */}
             <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm mb-6">
                 <div className="relative">
-                    <Search className={`absolute ${t('dir') === 'rtl' ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
+                    <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400`} size={18} />
                     <input
                         type="text"
                         placeholder={t('dashboard.admin.manageCourses.searchPlaceholder')}
-                        className={`w-full ${t('dir') === 'rtl' ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'} py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary transition-all outline-none`}
+                        className={`w-full ${isRTL ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'} py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-slate-900 dark:text-white focus:ring-2 focus:ring-primary transition-all outline-none`}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -151,7 +153,7 @@ const ManageCoursesPage = () => {
                                                     {course.category ? t(`courses.categories.${course.category.charAt(0).toLowerCase() + course.category.slice(1).replace(/\s+/g, '')}`) : ''}
                                                 </span>
                                             </td>
-                                            <td className="p-4 font-medium text-slate-900 dark:text-white">${course.price}</td>
+                                            <td className="p-4 font-medium text-slate-900 dark:text-white">{formatCurrency(course.price)}</td>
                                             <td className="p-4 text-right rtl:text-left">
                                                 <div className="flex justify-end gap-1">
                                                     <button
@@ -206,9 +208,9 @@ const ManageCoursesPage = () => {
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={() => setShowModal(false)} />
                         <motion.div
-                            initial={{ x: t('dir') === 'rtl' ? '-100%' : '100%' }}
+                            initial={{ x: isRTL ? '-100%' : '100%' }}
                             animate={{ x: 0 }}
-                            exit={{ x: t('dir') === 'rtl' ? '-100%' : '100%' }}
+                            exit={{ x: isRTL ? '-100%' : '100%' }}
                             transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
                             className="relative z-10 w-full max-w-5xl bg-slate-50 dark:bg-slate-950 h-full shadow-2xl flex flex-col md:flex-row overflow-hidden border-l border-slate-200 dark:border-slate-800 rtl:border-l-0 rtl:border-r"
                         >
@@ -232,34 +234,34 @@ const ManageCoursesPage = () => {
 
 
                                         <div className="space-y-2">
-                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.courseTitle')}</label>
+                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.courseTitle')}</label>
                                             <input
                                                 type="text"
                                                 value={formData.title}
                                                 onChange={e => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                                                className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                                className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-lg font-medium ${isRTL ? 'text-right' : 'text-left'}`}
                                                 placeholder={t('dashboard.admin.manageCourses.titlePlaceholder')}
                                             />
                                         </div>
 
                                         <div className="space-y-2">
-                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.table.instructor')}</label>
+                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.table.instructor')}</label>
                                             <input
                                                 type="text"
                                                 value={formData.instructor}
                                                 onChange={e => setFormData(prev => ({ ...prev, instructor: e.target.value }))}
-                                                className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                                className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`}
                                                 placeholder={t('dashboard.admin.manageCourses.instructorPlaceholder')}
                                             />
                                         </div>
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
-                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.table.category')}</label>
+                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.table.category')}</label>
                                                 <select
                                                     value={formData.category}
                                                     onChange={e => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${t('dir') === 'rtl' ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236B7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:20px] ${isRTL ? 'bg-[left_1rem_center]' : 'bg-[right_1rem_center]'} bg-no-repeat ${isRTL ? 'text-right' : 'text-left'}`}
                                                 >
                                                     <option value="">{t('common.select') || 'Select'}</option>
                                                     <option value="Data Science">{t('courses.categories.dataScience')}</option>
@@ -270,12 +272,12 @@ const ManageCoursesPage = () => {
                                                 </select>
                                             </div>
                                             <div className="space-y-2">
-                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.priceLabel')}</label>
+                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.priceLabel')}</label>
                                                 <input
                                                     type="number"
                                                     value={formData.price}
                                                     onChange={e => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`}
                                                     placeholder={t('dashboard.admin.manageCourses.pricePlaceholder')}
                                                 />
                                             </div>
@@ -283,37 +285,37 @@ const ManageCoursesPage = () => {
 
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
-                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.discountLabel')}</label>
+                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.discountLabel')}</label>
                                                 <input
                                                     type="number"
                                                     min="0"
                                                     max="100"
                                                     value={formData.discount}
                                                     onChange={e => setFormData(prev => ({ ...prev, discount: e.target.value }))}
-                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`}
                                                     placeholder={t('dashboard.admin.manageCourses.discountPlaceholder')}
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.thumbnailLabel') || (t('dir') === 'rtl' ? 'رابط صورة الغلاف' : 'Thumbnail URL')}</label>
+                                                <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.thumbnailLabel') || (isRTL ? 'رابط صورة الغلاف' : 'Thumbnail URL')}</label>
                                                 <input
                                                     type="text"
                                                     value={formData.image}
                                                     onChange={e => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}
+                                                    className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`}
                                                     placeholder={t('dashboard.admin.manageCourses.thumbnailPlaceholder') || 'https://example.com/image.jpg'}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${t('dir') === 'rtl' ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.descriptionLabel') || (t('dir') === 'rtl' ? 'وصف الدورة' : 'Course Description')}</label>
+                                            <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.descriptionLabel') || (isRTL ? 'وصف الدورة' : 'Course Description')}</label>
                                             <textarea
                                                 rows="3"
                                                 value={formData.description}
                                                 onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                                                className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${t('dir') === 'rtl' ? 'text-right' : 'text-left'} resize-none`}
-                                                placeholder={t('dashboard.admin.manageCourses.descriptionPlaceholder') || (t('dir') === 'rtl' ? 'أدخل وصف الدورة...' : 'Enter course description...')}
+                                                className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'} resize-none`}
+                                                placeholder={t('dashboard.admin.manageCourses.descriptionPlaceholder') || (isRTL ? 'أدخل وصف الدورة...' : 'Enter course description...')}
                                             />
                                         </div>
                                     </form>
@@ -334,7 +336,7 @@ const ManageCoursesPage = () => {
                                     <div className="absolute -top-10 left-0 right-0 flex justify-center">
                                         <span className="bg-white/80 dark:bg-slate-900/80 text-primary text-xs font-bold px-4 py-1.5 rounded-full border border-primary/20 dark:border-primary/50 shadow-sm backdrop-blur-md relative z-20 flex items-center gap-1.5 animate-pulse">
                                             <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                            {t('dir') === 'rtl' ? 'معاينة الكورس' : 'Course Preview'}
+                                            {isRTL ? 'معاينة الكورس' : 'Course Preview'}
                                         </span>
                                     </div>
                                     <motion.div 
@@ -346,10 +348,10 @@ const ManageCoursesPage = () => {
                                         </div>
                                         <div className="p-5">
                                             <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-2 line-clamp-2 leading-tight">
-                                                {formData.title || (t('dir') === 'rtl' ? 'عنوان الكورس...' : 'Course Title...')}
+                                                {formData.title || (isRTL ? 'عنوان الكورس...' : 'Course Title...')}
                                             </h3>
                                             <p className="text-sm font-medium text-slate-500 line-clamp-1 mb-4 flex items-center gap-2">
-                                                {formData.instructor || (t('dir') === 'rtl' ? 'اسم المدرب...' : 'Instructor Name...')}
+                                                {formData.instructor || (isRTL ? 'اسم المدرب...' : 'Instructor Name...')}
                                             </p>
 
                                             <div className="flex items-center justify-between mt-4 border-t border-slate-100 dark:border-slate-800 pt-4">

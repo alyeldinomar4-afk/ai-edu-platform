@@ -31,7 +31,7 @@ const InstructorReviewsPage = () => {
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeReplyId, setActiveReplyId] = useState(null);
-    const [replyText, setReplyText] = useState('');
+    const [replyTexts, setReplyTexts] = useState({});
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -62,17 +62,16 @@ const InstructorReviewsPage = () => {
         if (activeReplyId === review.id) {
             setActiveReplyId(null);
         } else {
-            setActiveReplyId(review.id);
-            setReplyText(review.reply || '');
+            setReplyTexts(prev => ({ ...prev, [review.id]: review.reply || '' }));
         }
     };
-
     const handleSaveReply = async (id) => {
-        if (!replyText.trim()) return;
         try {
-            await api.instructor.reviews.reply(id, replyText);
+            const text = replyTexts[id] || '';
+            if (!text.trim()) return;
+            await api.instructor.reviews.reply(id, text);
             setReviews(prev => prev.map(r =>
-                r.id === id ? { ...r, reply: replyText } : r
+                r.id === id ? { ...r, reply: text } : r
             ));
             setActiveReplyId(null);
             toast.success(t('common.success'));
@@ -81,7 +80,9 @@ const InstructorReviewsPage = () => {
         }
     };
 
-    const avgRating = (reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length).toFixed(1);
+    const avgRating = reviews.length > 0
+        ? (reviews.reduce((acc, curr) => acc + curr.rating, 0) / reviews.length).toFixed(1)
+        : '0.0';
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors duration-300">
@@ -173,8 +174,8 @@ const InstructorReviewsPage = () => {
                                             <img src={user?.avatar || "https://ui-avatars.com/api/?name=Instructor&background=random"} alt="You" className="w-8 h-8 rounded-full hidden sm:block mt-1" />
                                             <div className="flex-1 text-left">
                                                 <textarea
-                                                    value={replyText}
-                                                    onChange={(e) => setReplyText(e.target.value)}
+                                                    value={replyTexts[r.id] || ''}
+                                                    onChange={(e) => setReplyTexts(prev => ({ ...prev, [r.id]: e.target.value }))}
                                                     placeholder={t('dashboard.instructor.reviews.placeholder')}
                                                     rows="3"
                                                     className={`w-full px-4 py-3 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none resize-y mb-3 text-sm ${isRTL ? 'text-right' : ''}`}

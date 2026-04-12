@@ -92,6 +92,19 @@ export const api = {
             return mockInstructors.find(ins => ins.id === parseInt(id));
         }
     },
+ 
+    // ─── Statistics Endpoints ───────────────────────────────
+    stats: {
+        getPublicOverview: async () => {
+            await delay(500);
+            return {
+                totalStudents: 52300,
+                activeCourses: 240,
+                totalInstructors: 180,
+                satisfactionRate: 99
+            };
+        }
+    },
 
     // ─── Learner Endpoints ───────────────────────────────────
     learner: {
@@ -134,9 +147,65 @@ export const api = {
             return { success: true, orderId: `ORD-${Date.now()}` };
         },
 
-        getPurchase: async (orderId) => {
+        getPurchase: async (courseId) => {
             await delay(500);
-            return { id: orderId, date: new Date().toISOString(), status: 'completed' };
+            return { id: courseId, date: new Date().toISOString(), status: 'completed' };
+        },
+
+        getSavedVideos: async () => {
+            await delay(600);
+            // Return some samples from lecturesSub
+            return lecturesSub.slice(0, 2).map(l => ({
+                id: l.id,
+                title: l.title,
+                courseTitle: l.course,
+                thumbnail: l.thumbnail,
+                duration: l.duration,
+                savedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString() // 2 days ago
+            }));
+        },
+
+        getAnnouncements: async () => {
+            await delay(400);
+            return [
+                {
+                    id: 1,
+                    title: 'Welcome to Nexora AI!',
+                    body: 'We are glad to have you on board. Start exploring our AI courses today.',
+                    date: '2024-03-10',
+                    type: 'system'
+                },
+                {
+                    id: 2,
+                    title: 'New Course Release: Advanced NLP',
+                    body: 'A new course on Natural Language Processing has been released by Dr. Laila.',
+                    date: '2024-03-12',
+                    type: 'course',
+                    courseId: 1
+                }
+            ];
+        },
+
+        getBillingHistory: async () => {
+            await delay(700);
+            return [
+                {
+                    id: 'TRX-98421',
+                    courseTitle: 'Machine Learning Fundamentals',
+                    amount: 19.99,
+                    date: '2024-02-15T10:30:00Z',
+                    status: 'completed',
+                    paymentMethod: 'Stripe'
+                },
+                {
+                    id: 'TRX-98425',
+                    courseTitle: 'Advanced React Patterns',
+                    amount: 24.99,
+                    date: '2024-03-01T14:45:00Z',
+                    status: 'completed',
+                    paymentMethod: 'PayPal'
+                }
+            ];
         }
     },
 
@@ -157,11 +226,11 @@ export const api = {
         courses: {
             getAll: async () => {
                 await delay(600);
-                return coursesSub.filter(c => c.instructorId === 1).map(c => ({
+                return coursesSub.filter(c => c.instructorId === 1).map((c, index) => ({
                     ...c,
-                    students: Math.floor(Math.random() * 500),
+                    students: 120 + (index * 15),
                     status: 'published',
-                    revenue: Math.floor(Math.random() * 5000)
+                    revenue: 1200 + (index * 350)
                 }));
             },
             create: async (data) => {
@@ -274,6 +343,7 @@ export const api = {
                     courseGrowth: 5,
                     videoGrowth: 8,
                     revenueGrowth: 15,
+                    revenueChart: [40, 60, 45, 70, 65, 85, 95],
                     recentActivity: [
                         { id: 1, user: 'Ahmed Ali', action: 'Purchased: Machine Learning', time: '5m ago' },
                         { id: 2, user: 'Sara Kamel', action: 'Enrolled: React Patterns', time: '12m ago' },
@@ -319,6 +389,12 @@ export const api = {
                 await delay(600);
                 return coursesSub;
             },
+            create: async (data) => {
+                await delay(800);
+                const newCourse = { ...data, id: Date.now() };
+                coursesSub = [newCourse, ...coursesSub];
+                return newCourse;
+            },
             update: async (id, data) => {
                 await delay(800);
                 coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
@@ -335,6 +411,21 @@ export const api = {
             getAll: async () => {
                 await delay(600);
                 return lecturesSub;
+            },
+            create: async (data) => {
+                await delay(800);
+                const normalizedData = {
+                    ...data,
+                    duration: normalizeDuration(data.duration)
+                };
+                const newLecture = { 
+                    ...normalizedData, 
+                    id: Date.now(), 
+                    views: 0, 
+                    date: new Date().toISOString().split('T')[0] 
+                };
+                lecturesSub = [newLecture, ...lecturesSub];
+                return newLecture;
             },
             update: async (id, data) => {
                 await delay(800);

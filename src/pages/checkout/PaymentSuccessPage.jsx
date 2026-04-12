@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, BookOpen, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Button from '../../components/ui/Button';
 
 const PaymentSuccessPage = () => {
+    const { t, i18n } = useTranslation();
+    const isAr = i18n.language === 'ar';
+
     return (
         <div className="bg-slate-50 dark:bg-slate-950 min-h-screen flex items-center justify-center px-4 transition-colors duration-300">
             <motion.div
@@ -61,7 +65,7 @@ const PaymentSuccessPage = () => {
                     transition={{ delay: 0.4 }}
                     className="text-3xl font-bold text-slate-900 dark:text-white mb-3"
                 >
-                    Payment Successful! 🎉
+                    {t('checkout.success.title')}
                 </motion.h1>
 
                 <motion.p
@@ -70,7 +74,7 @@ const PaymentSuccessPage = () => {
                     transition={{ delay: 0.5 }}
                     className="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed"
                 >
-                    Congratulations! Your enrollment is confirmed. You now have full access to the course content.
+                    {t('checkout.success.subtitle')}
                 </motion.p>
 
                 {/* Actions */}
@@ -82,13 +86,13 @@ const PaymentSuccessPage = () => {
                 >
                     <Link to="/learner/dashboard">
                         <Button size="lg" className="w-full shadow-[0_4px_14px_0_rgb(79,70,229,0.39)]" icon={BookOpen}>
-                            Go to My Courses
+                            {t('checkout.success.myCourses')}
                         </Button>
                     </Link>
                     <Link to="/courses">
                         <Button variant="ghost" size="lg" className="w-full mt-2">
-                            Browse More Courses
-                            <ArrowRight className="w-4 h-4 ml-1" />
+                            {t('checkout.success.browseMore')}
+                            <ArrowRight className={`w-4 h-4 transition-transform ${isAr ? 'mr-1 rotate-180' : 'ml-1'}`} />
                         </Button>
                     </Link>
                 </motion.div>
@@ -100,7 +104,7 @@ const PaymentSuccessPage = () => {
                     transition={{ delay: 0.8 }}
                     className="text-xs text-slate-400 dark:text-slate-500 mt-8"
                 >
-                    A confirmation email has been sent to your inbox.
+                    {t('checkout.success.emailNote')}
                 </motion.p>
             </motion.div>
         </div>

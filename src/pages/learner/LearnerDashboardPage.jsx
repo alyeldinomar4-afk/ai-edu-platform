@@ -278,6 +278,7 @@ const LearnerDashboardPage = () => {
 
             {/* Instructor Announcements */}
             <section className="mb-10">
+                {/* TODO: Replace with api.learner.getAnnouncements() when backend implements it */}
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <Megaphone className="w-5 h-5 text-primary" /> {t('dashboard.learner.announcements')}

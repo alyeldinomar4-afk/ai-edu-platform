@@ -269,7 +269,7 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
                         </div>
 
                         <div ref={chatScrollRef} className="px-3 py-3 sm:px-4 sm:py-4 space-y-3 overflow-y-auto scrollbar-hide h-[240px] sm:h-[280px] lg:h-auto lg:flex-1 lg:min-h-0">
-                             <div className="flex gap-2.5 items-start">
+                            <div className="flex gap-2.5 items-start">
                                 <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center flex-shrink-0 mt-0.5"><Bot className="w-3 h-3 text-primary" /></div>
                                 <div className={cn(
                                     "bg-slate-800/60 rounded-xl px-3 py-2 text-[11px] text-slate-300 leading-relaxed border border-slate-700/30 flex-1",
@@ -383,10 +383,10 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
    Animated Feature Showcase — Interactive Feature Cards
 ═══════════════════════════════════════════════════════ */
 const FEATURES_DATA = [
-    { icon: Brain, title: 'Watches Every Lecture', desc: 'AI follows along with the video content in real-time, tracking concepts and key moments.', color: 'from-violet-500 to-purple-600', glow: 'violet' },
-    { icon: Pause, title: 'Explains on Pause', desc: 'Pause anytime and get instant, contextual explanations of what was just covered.', color: 'from-cyan-500 to-blue-600', glow: 'cyan' },
-    { icon: Target, title: 'Marks Key Points', desc: 'Important concepts are automatically bookmarked so you never miss critical information.', color: 'from-amber-500 to-orange-600', glow: 'amber' },
-    { icon: TrendingUp, title: 'Tracks Your Progress', desc: 'Personalized learning analytics help you understand your strengths and areas to improve.', color: 'from-emerald-500 to-teal-600', glow: 'emerald' },
+    { icon: Brain, key: 'feature1', color: 'from-violet-500 to-purple-600', glow: 'violet' },
+    { icon: Pause, key: 'feature2', color: 'from-cyan-500 to-blue-600', glow: 'cyan' },
+    { icon: Target, key: 'feature3', color: 'from-amber-500 to-orange-600', glow: 'amber' },
+    { icon: TrendingUp, key: 'feature4', color: 'from-emerald-500 to-teal-600', glow: 'emerald' },
 ];
 
 const AnimatedFeatureShowcase = ({ t }) => {
@@ -401,8 +401,8 @@ const AnimatedFeatureShowcase = ({ t }) => {
 
     const localizedFeatures = FEATURES_DATA.map((f, i) => ({
         ...f,
-        title: t(`home.howItWorks.featureTitle${i + 1}`, { defaultValue: f.title }),
-        desc: t(`home.howItWorks.featureDesc${i + 1}`, { defaultValue: f.desc }),
+        title: t(`home.howItWorks.featureTitle${i + 1}`),
+        desc: t(`home.howItWorks.featureDesc${i + 1}`),
     }));
 
     return (
@@ -480,7 +480,7 @@ const HomePage = () => {
             try {
                 const [coursesData, statsData, catsData, instData, testsData] = await Promise.all([
                     api.courses.getAll(),
-                    api.admin.stats.getOverview(),
+                    api.stats.getPublicOverview(),
                     api.courses.getCategories(),
                     api.instructors.getAll(),
                     api.testimonials.getAll()
@@ -900,7 +900,7 @@ const HomePage = () => {
                         </div>
                         <Link to="/instructors" className="group shrink-0">
                             <Button variant="outline" size="sm" className="border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white hover:border-primary/50 dark:hover:border-slate-500 bg-white dark:bg-slate-800/30 backdrop-blur-sm rounded-full px-6 transition-all shadow-sm">
-                                {t('home.instructors.viewAll')} <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ${document.documentElement.dir === 'rtl' ? 'mr-1.5 rotate-180 group-hover:-translate-x-1' : 'ml-1.5'}`} />
+                                {t('home.instructors.viewAll')} <ArrowRight className={`w-3.5 h-3.5 transition-transform group-hover:translate-x-1 ${isAr ? 'mr-1.5 rotate-180 group-hover:-translate-x-1' : 'ml-1.5'}`} />
                             </Button>
                         </Link>
                     </motion.div>

@@ -6,6 +6,7 @@ import Breadcrumb from '../../components/ui/Breadcrumb';
 import { StatCardSkeleton, ProgressCardSkeleton } from '../../components/ui/LoadingSkeleton';
 import { api } from '../../services/api';
 import { Link } from 'react-router-dom';
+import { formatDuration } from '../../utils/formatters';
 
 const DashboardPage = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -20,11 +21,11 @@ const DashboardPage = () => {
                 const [statsData, progressData, recsData] = await Promise.all([
                     api.learner.getStats(),
                     api.learner.getProgress(),
-                    api.courses.getAll() // Use general courses for recommendations in this generic dashboard
+                    api.learner.getRecommendations()
                 ]);
                 setStats(statsData);
                 setLearningProgress(progressData);
-                setRecommendedCourses(recsData.slice(2, 4));
+                setRecommendedCourses(recsData);
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             } finally {
@@ -99,7 +100,7 @@ const DashboardPage = () => {
                                                     <h3 className="font-bold text-sm sm:text-base text-slate-900 mb-1 line-clamp-1">{item.title}</h3>
                                                     <div className="text-xs sm:text-sm text-slate-500 flex items-center gap-2">
                                                         <PlayCircle size={14} className="flex-shrink-0" />
-                                                        <span className="truncate">Next: {item.lastUnwatched}</span>
+                                                        <span className="truncate">Next: {item.lastLesson}</span>
                                                     </div>
                                                 </div>
                                                 <Link to={`/courses/${item.courseId}/learn`}>
@@ -141,7 +142,7 @@ const DashboardPage = () => {
                                                 <h4 className="font-bold text-slate-900 group-hover:text-primary transition-colors line-clamp-2">{course.title}</h4>
                                                 <p className="text-xs text-slate-500 mt-1">{course.instructor}</p>
                                                 <div className="flex items-center gap-1 mt-2 text-xs font-semibold text-slate-700">
-                                                    <Clock size={12} /> {course.duration}
+                                                    <Clock size={12} /> {formatDuration(course.duration)}
                                                 </div>
                                             </div>
                                         </div>
@@ -170,6 +171,7 @@ const DashboardPage = () => {
 
                         <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
                             <h3 className="font-bold text-slate-900 mb-4">Saved Videos</h3>
+                            {/* TODO: Replace with api.learner.getSavedVideos() when backend implements it */}
                             <div className="space-y-3">
                                 {[1, 2, 3].map((i) => (
                                     <div key={i} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
