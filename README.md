@@ -1,45 +1,63 @@
-# Nexora AI
+# Nexora AI | منصة نيكسورا التعليمية الذكية
 
-> A modern, full-featured **AI-powered Learning Management System** built with React. This is the **frontend** layer of the graduation project — designed to be connected to any backend.
-
----
-
-## ✨ Key Features
-
-| Feature | Description |
-| :--- | :--- |
-| **Role-Based Access** | 3 user roles: Student, Instructor, Admin — each with a dedicated dashboard |
-| **AI Chat Assistant** | Interactive demo chat with simulated AI tutor responses (`/ai-demo`) |
-| **Course Catalog** | Browse, search, and filter courses by category |
-| **Video Player** | Full-screen learning experience with curriculum sidebar |
-| **Admin Panel** | Manage courses, view platform stats, and user data |
-| **Responsive Design** | Works on mobile, tablet, and desktop |
-| **Animations** | Smooth page transitions using Framer Motion |
+<div align="center">
+  <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000" alt="Nexora AI Banner" width="100%" style="border-radius: 15px; margin-bottom: 20px;" />
+  
+  <p>
+    <b>English</b>: A modern, full-featured **AI-powered Learning Management System** built with React 19. This is the **frontend** layer of the graduation project — designed for high performance and seamless backend integration.
+  </p>
+  
+  <p dir="rtl">
+    <b>عربي</b>: منصة تعليمية حديثة ومتكاملة مدعومة بالذكاء الاصطناعي (LMS) مبنية باستخدام React 19. تمثل هذه المنصة الطبقة الأمامية (Frontend) لمشروع التخرج، وهي مصممة لتجربة مستخدم متميزة مع جاهزية تامة للربط مع أي خلفية برمجية.
+  </p>
+</div>
 
 ---
 
-## 🚀 Tech Stack
+## ✨ Key Features | الميزات الرئيسية
 
-- **React 19** — UI framework
-- **Vite** — Build tool & dev server
-- **Tailwind CSS v4** — Styling
-- **React Router DOM v7** — Client-side routing
-- **Framer Motion** — Animations
-- **Lucide React** — Icon library
-
----
-
-## 🔑 Test Accounts
-
-| Role | Email | Password | Dashboard |
+| Feature (EN) | Description | الميزة (بالعربي) | الوصف بالعربي |
 | :--- | :--- | :--- | :--- |
-| **Student** | `user@test.com` | `123456` | `/learner/dashboard` |
-| 
-| **Admin** | `admin@test.com` | `admin123` | `/admin/dashboard` |
+| **AI Video Assistant** | Contextual AI that pauses and explains concepts/code interactively | **مساعد فيديو ذكي** | ذكاء اصطناعي تفاعلي يشرح الأكواد والمفاهيم أثناء مشاهدة الفيديو |
+| **AI Chat Tutor** | 24/7 interactive demo chat for student support | **معلم ذكاء اصطناعي** | دردشة تفاعلية لمساعدة الطلاب في أي وقت |
+| **Multi-Role Access** | Dedicated dashboards for Student, Instructor, and Admin | **تعدد المهام** | لوحات تحكم مخصصة للطالب، المحاضر، والمدير |
+| **Smart Quizzes** | Integrated learning check system within the curriculum | **اختبارات ذكية** | نظام اختبارات مدمج لتقييم تقدم الطلاب |
+| **Arabic & English** | Full RTL/LTR localization support for global reach | **دعم ثنائي اللغة** | دعم كامل للغتين العربية والإنجليزية (RTL/LTR) |
+| **3D Visuals** | Premium UI with Three.js/React Fiber animations | **تجربة بصرية متميزة** | واجهة مستخدم متطورة مع رسوميات ثلاثية الأبعاد |
 
 ---
 
-## 🛠️ How to Run
+## 🚀 Tech Stack | التقنيات المستخدمة
+
+- **Frontend**: React 19 (Latest) & Vite
+- **Styling**: Tailwind CSS v4 & Framer Motion (Animations)
+- **3D Graphics**: Three.js & React Three Fiber
+- **Localization**: i18next (Multi-language support)
+- **Routing**: React Router DOM v7
+- **Icons**: Lucide React
+
+## 🤖 AI Capabilities | قدرات الذكاء الاصطناعي
+
+### 1. AI Video Assistant (Smart Player)
+The player detects pauses and offers to explain what's on screen. It can extract code snippets from the context and explain them step-by-step.
+> يتفاعل مشغل الفيديو مع الطالب عند التوقف، ويقدم شروحات للمفاهيم البرمجية أو الأكواد المعروضة على الشاشة بشكل ذكي.
+
+### 2. General AI Tutor
+A global sidebar assistant available to answer technical questions and provide code examples in real-time.
+> مساعد دائم متاح للإجابة على الأسئلة التقنية وتقديم أمثلة برمجية حية.
+
+---
+
+## 🌍 Localization (i18n) | دعم اللغات
+
+The project is fully prepared for internationalization.
+- **Arabic**: Supported with full RTL (Right-to-Left) layout.
+- **English**: Supported with LTR layout.
+- **Auto-detection**: Detects browser language automatically.
+
+---
+
+## 🛠️ How to Run | طريقة التشغيل
 
 ```bash
 # 1. Install dependencies
@@ -48,52 +66,35 @@ npm install
 # 2. Start development server
 npm run dev
 
-# 3. Build for production (creates /dist folder)
+# 3. Build for production
 npm run build
-
-# 4. Open on mobile/other devices
-npm run host
 ```
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Structure | هيكل المشروع
 
-```
+```text
 src/
-├── auth/           # Auth context & protected route logic
-├── components/     # Reusable UI components (Button, Navbar, etc.)
-│   ├── common/     # Shared components (ComingSoon, etc.)
-│   ├── features/   # Feature-specific components (Course cards, Quiz, AI)
-│   ├── layout/     # Layout wrappers (MainLayout, AdminLayout, AuthLayout)
-│   └── ui/         # Base UI elements (Button, Breadcrumb, Skeleton)
-├── context/        # Global state (Auth)
-├── data/           # Mock data (courses, categories, testimonials)
-├── pages/          # All page views
-│   ├── admin/      # Admin dashboard & management
-│   ├── auth/       # Login, Register, Forgot Password
-│   ├── course/     # Video player page
-│   ├── courses/    # Course catalog & details
-│   ├── dashboard/  # Legacy dashboard (redirects)
-│   ├── instructor/ # Instructor dashboard
-│   └── learner/    # Learner dashboard
-├── services/       # API service layer (mock → real backend)
-└── utils/          # Helper functions
+├── auth/           # Authentication context & protection
+├── components/     # UI components (common, features, layout, ui)
+├── context/        # Global state management
+├── data/           # Mock DB & content
+├── locales/        # Translation files (AR/EN)
+├── pages/          # View components for all roles
+├── services/       # API abstraction layer
+└── utils/          # Helpers & formatters
 ```
 
 ---
 
-## 🔗 Backend Integration Guide
+## 🔗 Handoff & Integration | الربط البرمجي
 
-The frontend is **100% ready** for backend connection. See [`BACKEND_HANDOFF.md`](./BACKEND_HANDOFF.md) for full details.
+This project is **100% ready** for production integration.
+- 📘 **[API Integration Plan](./API_INTEGRATION_PLAN.md)**: Standardized schemas and endpoint mapping.
+- 📙 **[Backend Handoff Guide](./BACKEND_HANDOFF.md)**: Technical instructions for the backend team.
 
-**Quick summary:**
-1. All API calls go through `src/services/api.js` — replace mock functions with real `fetch`/`axios` calls
-2. Auth flow is in `src/auth/AuthContext.jsx` — replace `localStorage` logic with JWT token management
-3. AI chat logic is in `src/pages/AIDemoPage.jsx` — replace `getDemoResponse()` with a `POST /api/ai/chat` call
-
-
+---
 
 ## 📄 License
-
 This project is part of a graduation project and is for educational purposes.
