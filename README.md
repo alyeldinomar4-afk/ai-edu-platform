@@ -10,6 +10,10 @@
   <p dir="rtl">
     <b>عربي</b>: منصة تعليمية حديثة ومتكاملة مدعومة بالذكاء الاصطناعي (LMS) مبنية باستخدام React 19. تمثل هذه المنصة الطبقة الأمامية (Frontend) لمشروع التخرج، وهي مصممة لتجربة مستخدم متميزة مع جاهزية تامة للربط مع أي خلفية برمجية.
   </p>
+
+  <p>
+    🚀 <b>Live Demo</b>: <a href="https://aitourgraduation.netlify.app">aitourgraduation.netlify.app</a>
+  </p>
 </div>
 
 ---
