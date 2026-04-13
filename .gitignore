@@ -46,4 +46,5 @@ BACKEND_HANDOFF.md
 .env.*
 
 # ─── Gemini / AI Agent ──────────────────────
-.gemini/
+# 🛠️ Temporary Scratch Files (not for GitHub)
+scratch/

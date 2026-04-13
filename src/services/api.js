@@ -14,6 +14,8 @@ import i18n from '../i18n';
 // Mutable data stores for synchronization
 let coursesSub = [...mockCourses];
 let lecturesSub = [...mockLectures];
+let questionsSub = [...instructorQuestions];
+let reviewsSub = [...instructorReviews];
 
 // Simulated network delay
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -296,10 +298,13 @@ export const api = {
         reviews: {
             getAll: async () => {
                 await delay(500);
-                return instructorReviews;
+                return reviewsSub;
             },
             reply: async (id, comment) => {
                 await delay(500);
+                reviewsSub = reviewsSub.map(r => 
+                    r.id === id ? { ...r, reply: comment } : r
+                );
                 return { id, user: 'Instructor', comment, date: 'Just now' };
             }
         },
@@ -307,11 +312,14 @@ export const api = {
         questions: {
             getAll: async () => {
                 await delay(500);
-                return instructorQuestions;
+                return questionsSub;
             },
-            reply: async (id, reply) => {
+            reply: async (id, replyText) => {
                 await delay(500);
-                return { id, reply, date: 'Just now' };
+                questionsSub = questionsSub.map(q => 
+                    q.id === id ? { ...q, reply: replyText } : q
+                );
+                return { id, reply: replyText, date: 'Just now' };
             }
         },
 

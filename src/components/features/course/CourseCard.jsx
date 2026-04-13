@@ -42,7 +42,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                     />
                     
                     {/* Category Badge */}
-                    <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-wider text-primary shadow-sm z-40">
+                    <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-wider text-primary dark:text-white shadow-sm z-40">
                         {t(`courses.categories.${course.category.charAt(0).toLowerCase() + course.category.slice(1).replace(/\s+/g, '')}`)}
                     </div>
 

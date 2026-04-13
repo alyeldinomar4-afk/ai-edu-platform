@@ -62,6 +62,7 @@ const InstructorReviewsPage = () => {
         if (activeReplyId === review.id) {
             setActiveReplyId(null);
         } else {
+            setActiveReplyId(review.id);
             setReplyTexts(prev => ({ ...prev, [review.id]: review.reply || '' }));
         }
     };

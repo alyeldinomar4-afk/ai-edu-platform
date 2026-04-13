@@ -48,6 +48,7 @@ const InstructorQAPage = () => {
         if (expandedId === question.id) {
             setExpandedId(null);
         } else {
+            setExpandedId(question.id);
             setReplyTexts(prev => ({ ...prev, [question.id]: question.reply || '' }));
         }
     };

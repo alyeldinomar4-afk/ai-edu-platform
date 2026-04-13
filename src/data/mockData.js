@@ -334,8 +334,8 @@ export const instructorQuestions = [
     },
     {
         id: 3,
-        user: 'Omar Hassan',
-        avatar: 'https://ui-avatars.com/api/?name=Omar+Hassan&background=random',
+        user: 'Mohamed Karim',
+        avatar: 'https://ui-avatars.com/api/?name=Mohamed+Karim&background=random',
         course: 'Advanced React Patterns',
         question: 'Is it bad practice to use Context CPU-intensive states?',
         date: '2 days ago',
