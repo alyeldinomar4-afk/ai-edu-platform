@@ -16,7 +16,7 @@
 
 ## ✨ Key Features | الميزات الرئيسية
 
-| Feature (EN) | Description | الميزة (بالعربي) | الوصف بالعربي |
+| Feature (EN) | Description | الميزة | الوصف |
 | :--- | :--- | :--- | :--- |
 | **AI Video Assistant** | Contextual AI that pauses and explains concepts/code interactively | **مساعد فيديو ذكي** | ذكاء اصطناعي تفاعلي يشرح الأكواد والمفاهيم أثناء مشاهدة الفيديو |
 | **AI Chat Tutor** | 24/7 interactive demo chat for student support | **معلم ذكاء اصطناعي** | دردشة تفاعلية لمساعدة الطلاب في أي وقت |
