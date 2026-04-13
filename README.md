@@ -1,7 +1,7 @@
 # Nexora AI | منصة نيكسورا التعليمية الذكية
 
 <div align="center">
-  <img src="./public/premium_hero_nexora_subtle_neon_1775433853183.png" alt="Nexora AI Banner" width="100%" style="border-radius: 15px; margin-bottom: 20px;" />
+  <img src="./public/nexora_readme_banner_compact.png" alt="Nexora AI Banner" width="600" style="border-radius: 12px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" />
   
   <p>
     <b>English</b>: A modern, full-featured **AI-powered Learning Management System** built with React 19. This is the **frontend** layer of the graduation project — designed for high performance and seamless backend integration.
