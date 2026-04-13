@@ -92,7 +92,6 @@ src/
 
 This project is **100% ready** for production integration.
 - 📘 **[API Integration Plan](./API_INTEGRATION_PLAN.md)**: Standardized schemas and endpoint mapping.
-- 📙 **[Backend Handoff Guide](./BACKEND_HANDOFF.md)**: Technical instructions for the backend team.
 
 ---
 
