@@ -146,12 +146,21 @@ export const api = {
 
         checkout: async (courseId) => {
             await delay(1000);
+            const purchased = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
+            if (!purchased.includes(parseInt(courseId))) {
+                purchased.push(parseInt(courseId));
+                localStorage.setItem('purchasedCourses', JSON.stringify(purchased));
+            }
             return { success: true, orderId: `ORD-${Date.now()}` };
         },
 
         getPurchase: async (courseId) => {
             await delay(500);
-            return { id: courseId, date: new Date().toISOString(), status: 'completed' };
+            const purchased = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
+            if (purchased.includes(parseInt(courseId))) {
+                return { id: courseId, date: new Date().toISOString(), status: 'completed' };
+            }
+            return null;
         },
 
         getSavedVideos: async () => {

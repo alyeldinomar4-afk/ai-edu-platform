@@ -249,6 +249,31 @@ export const courses = [
             'Manage investment risk and build a portfolio'
         ]
     },
+    {
+        id: 11,
+        title: 'Generative AI Mastery',
+        instructor: 'Dr. Laila Hassan',
+        instructorId: 1,
+        instructorAvatar: 'https://randomuser.me/api/portraits/women/65.jpg',
+        rating: 4.9,
+        reviews: 156,
+        price: 39.99,
+        discount: 20,
+        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+        category: 'Data Science',
+        level: 'Advanced',
+        lessons: 12,
+        duration: 25200, // 7h
+        description: 'Master the art of Generative AI. Learn how to build and fine-tune large language models, image generators, and more using state-of-the-art architectures.',
+        highlights: [
+            'Understand GANs and VAEs foundations',
+            'Master Transformer architectures and Attention mechanisms',
+            'Fine-tune Large Language Models (LLMs) like GPT',
+            'Build image generation models with Stable Diffusion',
+            'Implement ethical AI safeguards and bias detection',
+            'Deploy generative models at scale in production'
+        ]
+    },
 ];
 
 export const instructors = [
@@ -721,5 +746,35 @@ export const lectures = [
         date: "2024-04-01",
         videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
         thumbnail: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80"
+    },
+    {
+        id: 1101,
+        title: "Introduction to Generative Models",
+        course: "Generative AI Mastery",
+        courseId: 11,
+        instructorId: 1,
+        instructor: "Dr. Laila Hassan",
+        views: 450,
+        duration: 600,
+        status: "published",
+        date: "2024-04-10",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+        quiz: []
+    },
+    {
+        id: 1102,
+        title: "Large Language Models & Transformers",
+        course: "Generative AI Mastery",
+        courseId: 11,
+        instructorId: 1,
+        instructor: "Dr. Laila Hassan",
+        views: 320,
+        duration: 1200,
+        status: "published",
+        date: "2024-04-12",
+        videoUrl: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
+        thumbnail: "https://images.unsplash.com/photo-1618060932014-4eb219ec200d?w=800&q=80",
+        quiz: []
     }
 ];
