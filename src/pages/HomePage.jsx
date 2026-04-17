@@ -108,7 +108,7 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
 
     useEffect(() => {
         if (DEMO_PHASES[phase].id === 'reset') setProgress(32);
-        
+
         // Auto-scroll chat to bottom smoothly when phase (and content) changes
         if (chatScrollRef.current) {
             chatScrollRef.current.scrollTo({
@@ -383,9 +383,9 @@ const AnimatedAITutorMockup = ({ isAr, t }) => {
    Animated Feature Showcase — Interactive Feature Cards
 ═══════════════════════════════════════════════════════ */
 const FEATURES_DATA = [
-    { icon: Brain, key: 'feature1', color: 'from-violet-500 to-purple-600', glow: 'violet' },
+    { icon: Brain, key: 'feature1', color: 'from-indigo-500 to-violet-600', glow: 'violet' },
     { icon: Pause, key: 'feature2', color: 'from-cyan-500 to-blue-600', glow: 'cyan' },
-    { icon: Target, key: 'feature3', color: 'from-amber-500 to-orange-600', glow: 'amber' },
+    { icon: Target, key: 'feature3', color: 'from-purple-500 to-violet-600', glow: 'violet' },
     { icon: TrendingUp, key: 'feature4', color: 'from-emerald-500 to-teal-600', glow: 'emerald' },
 ];
 
@@ -393,6 +393,7 @@ const AnimatedFeatureShowcase = ({ t }) => {
     const [activeFeature, setActiveFeature] = useState(0);
 
     const glowColors = {
+        pink: 'shadow-pink-500/30',
         violet: 'shadow-violet-500/30',
         cyan: 'shadow-cyan-500/30',
         amber: 'shadow-amber-500/30',
@@ -517,15 +518,12 @@ const HomePage = () => {
     };
 
     return (
-        <div className="space-y-0 pb-24 overflow-x-hidden transition-colors duration-300">
+        <div className="pb-24 overflow-x-hidden bg-slate-50 dark:bg-[#0B1120] transition-colors duration-300">
             {/* Hero Section — Clean & Minimal */}
             <HeroSection getStartedPath={getStartedPath} />
 
-            {/* Stats Section — Unified Style with Categories */}
-            <section className="relative py-10 md:py-12 px-4 md:px-8 overflow-hidden">
-                {/* Background match Categories in light, transparent in dark */}
-                <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-transparent transition-colors duration-500" />
-                <div className="absolute inset-0 opacity-[0.02] dark:opacity-0" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            {/* Stats Section */}
+            <section className="relative py-6 md:py-8 px-4 md:px-8 overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
 
                 <div className="max-w-7xl mx-auto relative z-10 px-4 md:px-0">
                     <motion.div
@@ -569,117 +567,159 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Categories Section — Premium Redesign */}
-            <section className="relative py-16 overflow-hidden">
-                {/* Background */}
-                <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-slate-950 transition-colors duration-500" />
-                <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-
+            {/* ═══ Categories / Domains — Editorial Text Layout ═══ */}
+            <section className="relative py-14 md:py-20 overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-16"
-                    >
-                        <motion.span
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 dark:bg-primary/15 border border-primary/20 text-primary font-semibold tracking-wider uppercase text-xs mb-4"
-                        >
-                            <motion.span animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 3, repeat: Infinity }}>
-                                <Sparkles className="w-3.5 h-3.5" />
-                            </motion.span>
-                            {t('home.categories.badge')}
-                        </motion.span>
-                        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3 tracking-tight">{t('home.categories.title')}</h2>
-                        <p className="text-slate-500 dark:text-slate-400 mt-4 max-w-xl mx-auto text-base leading-relaxed">{t('home.categories.subtitle')}</p>
-                    </motion.div>
+                    {(() => {
+                        const DOMAIN_ACCENTS = ['#EC4899', '#6366F1', '#84CC16', '#F59E0B', '#8B5CF6', '#14B8A6'];
 
-                    <motion.div
-                        variants={staggerContainer}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: '-30px' }}
-                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5"
-                    >
-                        {categoriesList.map((cat, idx) => {
-                            const IconComponent = cat.icon && iconMap[cat.icon] ? iconMap[cat.icon] : null;
-                            const isSpecial = idx % 3 === 0; // Simulate some trending categories
-                            return (
+                        return (
+                            <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-16 items-start relative">
+
+                                {/* Left — Header Column */}
                                 <motion.div
-                                    key={cat.id}
-                                    variants={fadeScale}
-                                    onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
-                                    whileHover={{
-                                        y: -10,
-                                        transition: { duration: 0.3, ease: 'easeOut' }
-                                    }}
-                                    className="group cursor-pointer relative"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.6 }}
+                                    className="lg:sticky lg:top-40 lg:mt-12 relative z-10"
                                 >
-                                    {/* Gradient border glow on hover */}
-                                    <div className="absolute -inset-[1.5px] rounded-2xl bg-gradient-to-br from-primary via-secondary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-[2px]" />
+                                    {/* Decorative Glow */}
+                                    <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+                                    
+                                    <motion.span
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.5 }}
+                                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 dark:bg-primary/10 border border-primary/20 text-primary font-bold tracking-widest uppercase text-xs mb-6 shadow-sm shadow-primary/5 backdrop-blur-sm"
+                                    >
+                                        <Sparkles className="w-3.5 h-3.5" />
+                                        {t('home.categories.badge')}
+                                    </motion.span>
 
-                                    <div className="relative p-7 rounded-2xl bg-white dark:bg-slate-900/90 backdrop-blur-md border border-slate-100 dark:border-slate-800 shadow-sm group-hover:shadow-2xl group-hover:shadow-primary/20 transition-all duration-400 text-center overflow-hidden h-full flex flex-col items-center">
-                                        {/* Special Badge (Trending/Popular) */}
-                                        {isSpecial && (
-                                            <div className="absolute -top-1 -right-1 bg-gradient-to-r from-primary to-purple-600 text-white text-[9px] font-black px-2.5 py-1 rounded-bl-xl rounded-tr-xl shadow-lg z-20 uppercase tracking-tighter transition-transform group-hover:scale-110">
-                                                {idx % 6 === 0 ? t('home.categories.trending', { defaultValue: 'Trending' }) : t('home.categories.hot', { defaultValue: 'Popular' })}
-                                            </div>
-                                        )}
-
-                                        {/* Subtle radial glow inside card on hover */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.05] via-transparent to-secondary/[0.05] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                                        {/* Icon Container with centered alignment */}
-                                        <motion.div
-                                            whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-                                            transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-                                            className={cn(
-                                                "w-16 h-16 rounded-2xl flex items-center justify-center mb-6 relative group-hover:shadow-xl transition-all duration-300",
-                                                cat.bgColor || "bg-slate-50 dark:bg-slate-800/80"
-                                            )}
-                                        >
-                                            {IconComponent ? (
-                                                <IconComponent className={cn("w-7 h-7 transition-all duration-300 group-hover:scale-110", cat.color || "text-slate-600 dark:text-slate-400")} />
-                                            ) : (
-                                                <span className="text-2xl transition-all duration-300 group-hover:scale-110">{cat.icon || '📚'}</span>
-                                            )}
-                                        </motion.div>
-
-                                        {/* Title with improved weight and spacing */}
-                                        <h3 className="font-extrabold text-[15px] text-slate-800 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors duration-300 mb-2.5 relative z-10 leading-tight">
-                                            {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
-                                        </h3>
-
-                                        {/* Course count pill (Centered and Styled) */}
-                                        <span className="mt-auto inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 bg-slate-50/80 dark:bg-slate-800/60 px-3 py-1.5 rounded-full relative z-10 border border-slate-100 dark:border-slate-700/50">
-                                            <span className="w-1 h-1 bg-primary rounded-full animate-pulse" />
-                                            {cat.count} {t('home.categories.coursesCount')}
-                                        </span>
+                                    <div className={cn("flex items-start gap-4 mb-6", isAr && "flex-row-reverse")}>
+                                        <div className="w-1.5 h-16 md:h-20 bg-gradient-to-b from-primary via-secondary to-accent rounded-full shrink-0 mt-1.5 shadow-lg shadow-primary/20" />
+                                        <div>
+                                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+                                                {t('home.categories.titleMain')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent block mt-1 drop-shadow-sm">
+                                                    {t('home.categories.titleHighlight')}
+                                                </span>
+                                            </h2>
+                                        </div>
                                     </div>
+
+                                    <p className="text-slate-500 dark:text-slate-400 text-base md:text-lg leading-relaxed max-w-sm font-medium relative">
+                                        {t('home.categories.subtitle')}
+                                    </p>
                                 </motion.div>
-                            );
-                        })}
-                    </motion.div>
+
+                                {/* Right — Domains Grid (2-col staggered, glass cards) */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-6">
+                                    {categoriesList.map((cat, idx) => {
+                                        const accent = DOMAIN_ACCENTS[idx % DOMAIN_ACCENTS.length];
+                                        const number = String(idx + 1).padStart(2, '0');
+                                        const isRightCol = idx % 2 !== 0;
+                                        const Icon = iconMap[cat.icon] || BookOpen;
+
+                                        return (
+                                            <motion.div
+                                                key={cat.id}
+                                                initial={{ opacity: 0, y: 40, filter: 'blur(6px)' }}
+                                                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                                viewport={{ once: true, margin: '-40px' }}
+                                                transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                                onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
+                                                style={{ '--accent-color': accent }}
+                                                className={cn(
+                                                    "group cursor-pointer",
+                                                    isRightCol && "sm:mt-10 md:mt-14"
+                                                )}
+                                            >
+                                                {/* Glass Card */}
+                                                <div className={cn(
+                                                    "relative rounded-2xl p-6 md:p-7 overflow-hidden transition-all duration-500",
+                                                    "bg-white/50 dark:bg-slate-900/30",
+                                                    "backdrop-blur-xl",
+                                                    "border border-slate-200/60 dark:border-white/[0.08]",
+                                                    "shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)]",
+                                                    "group-hover:shadow-[0_12px_40px_rgba(99,102,241,0.1)] dark:group-hover:shadow-[0_12px_40px_rgba(99,102,241,0.15)]",
+                                                    "group-hover:border-slate-300/80 dark:group-hover:border-white/15",
+                                                    "group-hover:-translate-y-1"
+                                                )}>
+                                                    {/* Accent Line at top of glass */}
+                                                    <motion.div
+                                                        initial={{ scaleX: 0 }}
+                                                        whileInView={{ scaleX: 1 }}
+                                                        viewport={{ once: true }}
+                                                        transition={{ duration: 0.6, delay: 0.3 + idx * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                                        className="absolute top-0 left-0 w-16 h-[3px] rounded-br-full origin-left group-hover:w-48 transition-all duration-500"
+                                                        style={{ backgroundColor: accent }}
+                                                    />
+
+                                                    {/* Category Icon */}
+                                                    <div 
+                                                        className="w-12 h-12 rounded-2xl mb-5 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6"
+                                                        style={{ backgroundColor: `${accent}1A`, color: accent }}
+                                                    >
+                                                        <Icon className="w-6 h-6" strokeWidth={2} />
+                                                    </div>
+
+                                                    {/* Category Name — Modern Responsive Styling */}
+                                                    <h3 className="font-grotesk font-bold text-xl md:text-2xl mb-2 tracking-tight transition-colors duration-300 text-slate-900 dark:text-white md:group-hover:text-[var(--accent-color)] max-md:text-[var(--accent-color)]">
+                                                        {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
+                                                    </h3>
+
+                                                    {/* Course Count + Arrow */}
+                                                    <div className={cn(
+                                                        "flex items-center gap-2 mb-3",
+                                                        isAr && "flex-row-reverse"
+                                                    )}>
+                                                        <span className="text-[11px] font-grotesk font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
+                                                            {cat.count} {t('home.categories.coursesCount')}
+                                                        </span>
+                                                        <ArrowRight
+                                                            className="w-3.5 h-3.5 transition-all duration-300 group-hover:translate-x-1"
+                                                            style={{ color: accent }}
+                                                        />
+                                                    </div>
+
+                                                    {/* Number — lifts up + glow on hover based on the whole card */}
+                                                    <span
+                                                        className="block font-grotesk font-bold text-lg tracking-tight opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_var(--accent-color)] transition-all duration-500 group-hover:-translate-y-1"
+                                                        style={{ color: 'var(--accent-color)' }}
+                                                    >
+                                                        {number}
+                                                    </span>
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    })()}
                 </div>
             </section>
 
-            {/* Featured Courses — Stagger Grid with Carousel Mobile */}
-            <section className="bg-[#F5F3FF] dark:bg-slate-900/50 py-14 md:py-18 transition-colors duration-300">
+            {/* Subtle Divider */}
+            <div className="max-w-5xl mx-auto px-8">
+                <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" />
+            </div>
+
+            {/* Featured Courses - Premium SaaS Stack */}
+            <section className="py-16 md:py-20 bg-slate-50 dark:bg-[#0B1120] border-y border-slate-200/50 dark:border-white/5 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="flex justify-between items-end mb-12"
+                        className="flex justify-between items-end mb-10"
                     >
                         <div>
-                            <span className="text-primary font-black uppercase tracking-[0.2em] text-[10px] sm:text-xs mb-3 block">{t('home.featured.badge')}</span>
-                            <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mt-1 tracking-tighter leading-tight">
+                            <span className="text-primary font-bold uppercase tracking-wider text-xs mb-3 block">{t('home.featured.badge')}</span>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
                                 {t('home.featured.title')}
                             </h2>
                         </div>
@@ -695,7 +735,7 @@ const HomePage = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: '-30px' }}
-                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 px-6 -mx-6 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:px-0 md:mx-0 md:snap-none md:overflow-visible"
+                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 pt-4 px-6 -mx-6 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:px-0 md:mx-0 md:pb-4 md:snap-none md:overflow-visible"
                     >
                         {isLoading ? (
                             Array(4).fill(0).map((_, i) => (
@@ -720,98 +760,111 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* AI Feature Highlight — Cinematic Entrance */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative overflow-visible">
-                {/* Enhanced Neon Glow behind the content */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-linear-to-r from-primary/20 via-purple-500/10 to-transparent blur-[140px] rounded-full pointer-events-none z-0 animate-pulse" style={{ animationDuration: '4s' }} />
+            {/* AI Feature Highlight — Premium SaaS Experience */}
+            <section className="py-16 md:py-24 relative overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-visible">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.96, y: 40 }}
+                        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="bg-[#0d0d12] dark:bg-[#0d0d12] rounded-[2rem] p-8 sm:p-12 md:p-20 overflow-hidden relative text-white border border-white/[0.07] shadow-[0_0_60px_rgba(0,0,0,0.6)] z-10"
+                    >
+                        {/* Abstract Glassmorphic Mesh Overlay */}
+                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8a2be2_1px,transparent_1px),linear-gradient(to_bottom,#8a2be2_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_60%,transparent_100%)] opacity-[0.03] pointer-events-none z-0" />
+                        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/8 blur-[120px] rounded-full pointer-events-none z-0" />
+                        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary/6 blur-[140px] rounded-full pointer-events-none z-0" />
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.92, y: 40 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-80px' }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    className="bg-[#050505] rounded-2xl sm:rounded-[3rem] p-6 sm:p-10 md:p-20 overflow-hidden relative text-white border border-slate-800 shadow-[0_0_80px_-20px_rgba(138,43,226,0.25)] z-10"
-                >
-                    <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: isAr ? 30 : -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                        >
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
-                                <Zap className="w-4 h-4 text-yellow-400" />
-                                <span>{t('home.aiHighlight.badge')}</span>
-                            </div>
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                                {t('home.aiHighlight.titleMain')} <br />
-                                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">{t('home.aiHighlight.titleHighlight')}</span>
-                            </h2>
-                            <p className="text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
-                                {t('home.aiHighlight.subtitle')}
-                            </p>
-                            <Link to="/ai-demo">
-                                <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
-                                    <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl shadow-white/10 flex items-center gap-2 relative overflow-hidden group/ai">
-                                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/ai:translate-x-full transition-transform duration-700" />
-                                        <motion.span
-                                            animate={{ rotate: [0, 15, -15, 0] }}
-                                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                                            className="relative z-10"
-                                        >
-                                            <Sparkles className="w-5 h-5 text-primary" />
-                                        </motion.span>
-                                        <span className="relative z-10">{t('home.aiHighlight.btnTryDemo')}</span>
-                                        <ArrowRight className={cn("w-5 h-5 relative z-10 transition-transform group-hover/ai:translate-x-1", isAr && "rotate-180 group-hover/ai:-translate-x-1")} />
-                                    </Button>
-                                </motion.div>
-                            </Link>
-                        </motion.div>
+                        <div className="relative z-10 grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
+                            <motion.div
+                                initial={{ opacity: 0, x: isAr ? 30 : -30 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-sm font-semibold mb-6 backdrop-blur-sm border border-white/10">
+                                    <Zap className="w-4 h-4 text-yellow-400" />
+                                    <span>{t('home.aiHighlight.badge')}</span>
+                                </div>
+                                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                                    {t('home.aiHighlight.titleMain')} <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{t('home.aiHighlight.titleHighlight')}</span>
+                                </h2>
+                                <p className="text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
+                                    {t('home.aiHighlight.subtitle')}
+                                </p>
+                                <Link to="/ai-demo">
+                                    <motion.div whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.96 }}>
+                                        <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 border-none shadow-xl shadow-white/10 flex items-center gap-2 relative overflow-hidden group/ai">
+                                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/15 to-transparent -translate-x-full group-hover/ai:translate-x-full transition-transform duration-700" />
+                                            <motion.span
+                                                animate={{ rotate: [0, 15, -15, 0] }}
+                                                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                                                className="relative z-10"
+                                            >
+                                                <Sparkles className="w-5 h-5 text-primary" />
+                                            </motion.span>
+                                            <span className="relative z-10 font-bold">{t('home.aiHighlight.btnTryDemo')}</span>
+                                            <ArrowRight className={cn("w-5 h-5 relative z-10 transition-transform group-hover/ai:translate-x-1", isAr && "rotate-180 group-hover/ai:-translate-x-1")} />
+                                        </Button>
+                                    </motion.div>
+                                </Link>
+                            </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, x: isAr ? -30 : 30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative"
-                        >
-                            {/* Abstract UI representation of chat */}
-                            <div className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-slate-700 dark:border-slate-800 shadow-2xl relative z-20">
-                                <div className="space-y-4">
-                                    <div className="flex gap-3 sm:gap-4 items-start">
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0">
-                                            <Users className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <motion.div
+                                initial={{ opacity: 0, x: isAr ? -30 : 30 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                                className="relative"
+                            >
+                                {/* Refined Floating UI representation of chat */}
+                                <div className="relative z-20 py-4">
+                                    <div className="space-y-6">
+                                        <div className="flex gap-4 items-start">
+                                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white shrink-0 shadow-inner">
+                                                <Users className="w-5 h-5" />
+                                            </div>
+                                            <div className="bg-white/10 dark:bg-white/5 border border-white/10 dark:border-white/5 p-4 rounded-2xl rounded-tl-none text-slate-200 dark:text-slate-300 text-sm flex-1 min-w-0 shadow-sm leading-relaxed">
+                                                <p>{t('home.aiHighlight.chatUserQuery')}</p>
+                                            </div>
                                         </div>
-                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-2xl rounded-tl-none text-slate-300 text-xs sm:text-sm flex-1 min-w-0">
-                                            <p>{t('home.aiHighlight.chatUserQuery')}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-3 sm:gap-4 items-start">
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 shrink-0">
-                                            <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
-                                        </div>
-                                        <div className="bg-slate-700/50 dark:bg-slate-800/50 p-3 sm:p-4 rounded-2xl rounded-tl-none text-slate-300 text-xs sm:text-sm flex-1 min-w-0">
-                                            <p className="mb-2">{t('home.aiHighlight.chatAiResponse')}</p>
-                                            <div className="bg-[#0a0a0a] rounded-xl p-3 sm:p-4 font-mono text-[10px] sm:text-xs text-slate-300 overflow-x-auto border border-white/5 shadow-inner">
-                                                <span className="text-pink-400">const</span> <span className="text-cyan-400">memoizedValue</span> = <span className="text-purple-400">useMemo</span>(() <span className="text-pink-400">=&gt;</span> <span className="text-yellow-300">computeExpensiveValue</span>(a, b), [a, b]);
+                                        <div className="flex gap-4 items-start">
+                                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shrink-0 shadow-lg shadow-primary/20 relative">
+                                                <Zap className="w-5 h-5 relative z-10" />
+                                                <div className="absolute inset-0 bg-primary/20 blur-md rounded-full -z-10" />
+                                            </div>
+                                            <div className="bg-primary/10 border border-primary/20 p-4 rounded-2xl rounded-tl-none text-slate-200 dark:text-slate-300 text-sm flex-1 min-w-0 shadow-sm leading-relaxed">
+                                                <p className="mb-3">
+                                                    {t('home.aiHighlight.chatAiResponse').split('`').map((part, i) => (
+                                                        i % 2 === 1 ? (
+                                                            <span key={i} className="text-purple-400 font-mono font-semibold px-1 py-0.5 bg-purple-400/10 rounded-md">
+                                                                {part}
+                                                            </span>
+                                                        ) : part
+                                                    ))}
+                                                </p>
+                                                <div className="bg-black/40 rounded-xl p-4 font-mono text-xs text-slate-300 overflow-x-auto border border-white/10 shadow-inner">
+                                                    <span className="text-pink-400">const</span> <span className="text-cyan-400">memoizedValue</span> = <span className="text-purple-400">useMemo</span>(() <span className="text-pink-400">=&gt;</span> <span className="text-yellow-300">compute</span>(a, b), [a, b]);
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Decorative blurred circles behind */}
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-linear-to-r from-primary to-purple-600 blur-[80px] opacity-20 -z-10 rounded-full animate-pulse" />
-                        </motion.div>
-                    </div>
-                </motion.div>
+                                {/* Subtle ambient glow */}
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-primary/5 blur-[100px] opacity-60 -z-10 rounded-full" />
+                            </motion.div>
+                        </div>
+                    </motion.div>
+                </div>
             </section>
+            <div className="max-w-5xl mx-auto px-8">
+                <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" />
+            </div>
 
             {/* ═══ How It Works — Animated Mockup Demo ═══ */}
-            <section className="relative py-14 md:py-20 overflow-hidden">
-                {/* Background */}
-                <div className="absolute inset-0 bg-[#F5F3FF] dark:bg-slate-950 transition-colors duration-500" />
-                <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+            <section className="relative py-10 md:py-14 overflow-hidden">
 
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
                     {/* Header */}
@@ -820,7 +873,7 @@ const HomePage = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="text-center mb-14 md:mb-18"
+                        className="text-center mb-10 md:mb-12"
                     >
                         <motion.span
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -853,7 +906,7 @@ const HomePage = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: 0.3 }}
-                        className="text-center mt-14"
+                        className="text-center mt-10"
                     >
                         <Link to="/ai-demo">
                             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
@@ -875,12 +928,13 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* Subtle Divider */}
+            <div className="max-w-5xl mx-auto px-8">
+                <div className="h-px bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" />
+            </div>
 
-            {/* Top Instructors Section - Stagger with Alternating Slides */}
-            <section className="relative py-14 md:py-18 overflow-hidden bg-[#F5F3FF] dark:bg-[#0a0a0a] border-y border-slate-200 dark:border-slate-800/60 transition-colors duration-500">
-                {/* Decorative background elements */}
-                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[500px] h-[500px] bg-primary/10 dark:bg-primary/5 rounded-full blur-[100px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
-                <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[400px] h-[400px] bg-secondary/10 dark:bg-secondary/5 rounded-full blur-[80px] opacity-20 dark:opacity-40 mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+            {/* Top Instructors Section */}
+            <section className="relative py-10 md:py-14 overflow-hidden transition-colors duration-500">
 
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
@@ -888,7 +942,7 @@ const HomePage = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 gap-6 text-center md:text-start p-8 rounded-3xl bg-[#F5F3FF] dark:bg-transparent border border-primary/5 dark:border-none"
+                        className="flex flex-col md:flex-row items-center md:items-end justify-between mb-10 gap-6 text-center md:text-start p-8 rounded-3xl bg-transparent dark:bg-transparent"
                     >
                         <div className="max-w-2xl">
                             <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter leading-tight">
@@ -921,9 +975,9 @@ const HomePage = () => {
                             >
                                 {/* Premium Hover Glow - Animated Gradient Border */}
                                 <div className="absolute -inset-[1px] bg-gradient-to-r from-primary via-secondary to-accent rounded-[32px] opacity-0 group-hover:opacity-100 transition-all duration-700 blur-[1px]" />
-                                
+
                                 <div className="relative h-full bg-white/70 dark:bg-[#11111e]/80 backdrop-blur-2xl rounded-[31px] p-5 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-8 text-center sm:text-start border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(99,102,241,0.2)] transition-all duration-500 overflow-hidden">
-                                    
+
                                     {/* Animated Background Pulse */}
                                     <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-500" />
 
@@ -935,7 +989,7 @@ const HomePage = () => {
                                                 <img src={instructor.avatar} alt={instructor.name} className="w-20 h-20 sm:w-28 sm:h-28 object-cover transform group-hover:scale-110 transition-transform duration-700" />
                                             </div>
                                         </div>
-                                        <motion.div 
+                                        <motion.div
                                             whileHover={{ scale: 1.2, rotate: 15 }}
                                             className="absolute -bottom-1 -right-1 bg-white dark:bg-[#1a1a2e] rounded-full p-2.5 border border-slate-100 dark:border-white/10 z-20 shadow-xl"
                                         >
@@ -971,8 +1025,8 @@ const HomePage = () => {
 
                                         <div className="w-full sm:w-auto mt-auto">
                                             <Link to={`/instructor/user/${encodeURIComponent(instructor.name.replace(/\s+/g, '-').toLowerCase())}`} className="block">
-                                                <Button 
-                                                    size="lg" 
+                                                <Button
+                                                    size="lg"
                                                     className="w-full sm:w-auto bg-slate-900 dark:bg-white dark:text-slate-900 hover:bg-primary dark:hover:bg-primary dark:hover:text-white text-white border-none shadow-xl hover:shadow-primary/30 transition-all duration-500 text-[11px] font-black uppercase tracking-[0.15em] px-8 py-4 rounded-2xl relative overflow-hidden group/btn"
                                                 >
                                                     <span className="relative z-10">{t('home.instructors.viewProfile')}</span>
@@ -989,7 +1043,7 @@ const HomePage = () => {
             </section>
 
             {/* Testimonials — Stagger with Scale & Carousel Mobile */}
-            <section className="bg-[#F5F3FF] dark:bg-transparent py-10 md:py-12 transition-colors duration-300">
+            <section className="py-10 md:py-12 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 pb-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -1055,7 +1109,7 @@ const HomePage = () => {
                     {/* Gradient Background */}
                     <div className="absolute inset-0 bg-[linear-gradient(135deg,#1e1b4b_0%,#312e81_30%,#4c1d95_60%,#7c3aed_100%)]" />
                     <div className="absolute inset-0 bg-black/10" />
-                    
+
                     {/* Animated Grid Pattern */}
                     <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
@@ -1097,7 +1151,7 @@ const HomePage = () => {
                                     <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-yellow-300" />
                                     {t('home.cta.badge', { defaultValue: 'Start Your Journey' })}
                                 </motion.div>
-                                
+
                                 <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-3 md:mb-5 leading-tight">
                                     {t('home.cta.title')}
                                 </h2>

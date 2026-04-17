@@ -41,8 +41,9 @@
     },
     "categories": {
       "badge": "Nexora AI Categories",
-      "title": "Explore What You Love",
-      "subtitle": "Browse our curated categories and find the perfect course for your goals",
+      "titleMain": "Diverse Domains,",
+      "titleHighlight": "Unified Intelligence.",
+      "subtitle": "Dive into educational content powered by an AI Tutor that guides you step-by-step, from development to creative design.",
       "coursesCount": "Courses"
     },
     "featured": {
@@ -134,6 +135,15 @@
       "stat3Label": "Satisfaction Rate",
       "stat4Value": "100%",
       "stat4Label": "Secure & Private"
+    },
+    "hero2": {
+      "badge": "Platform Features",
+      "title": "Why Choose Nexora AI?",
+      "subtitle": "Experience the next generation of learning with powerful AI tools designed to enhance your educational journey, seamlessly combining cutting-edge tech with world-class content.",
+      "card1": "Global Reach",
+      "card2": "AI Learning",
+      "card3": "Smart AI",
+      "card4": "200+ Courses"
     }
   },
   "footer": {

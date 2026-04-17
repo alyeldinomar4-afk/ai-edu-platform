@@ -93,7 +93,7 @@ const AIDemoPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 dark:from-[#0A0F1C] dark:via-slate-950 dark:to-[#0A0F1C] text-slate-900 dark:text-white overflow-hidden relative transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-[#0B1120] text-slate-900 dark:text-white overflow-hidden relative transition-colors duration-300">
             {/* Ambient background */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-indigo-400/5 dark:bg-indigo-600/8 rounded-full blur-[120px]" />

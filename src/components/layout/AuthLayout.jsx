@@ -29,7 +29,6 @@ const AuthLayout = () => {
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <Link to="/" className="flex justify-center items-center gap-2 mb-6">
-                        {/* Light mode logo */}
                         <motion.div
                             initial={{ rotate: -10 }}
                             animate={{ rotate: 0 }}
@@ -38,7 +37,6 @@ const AuthLayout = () => {
                         >
                             <img src={logoLight} alt="Nexora AI Logo" className="w-full h-full object-contain" />
                         </motion.div>
-                        {/* Dark mode logo */}
                         <motion.div
                             initial={{ rotate: -10 }}
                             animate={{ rotate: 0 }}
@@ -61,7 +59,6 @@ const AuthLayout = () => {
                 className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10"
             >
                 <div className="bg-white/90 dark:bg-slate-800/80 backdrop-blur-xl py-8 px-4 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/70 sm:rounded-xl sm:px-10 border border-slate-100/80 dark:border-slate-700/60 relative overflow-hidden">
-                    {/* Subtle gradient accent at top of card */}
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary via-secondary to-accent" />
                     <Outlet />
                 </div>
@@ -71,4 +68,3 @@ const AuthLayout = () => {
 };
 
 export default AuthLayout;
-
