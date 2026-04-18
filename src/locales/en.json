@@ -139,7 +139,8 @@
     "hero2": {
       "badge": "Platform Features",
       "title": "Why Choose Nexora AI?",
-      "subtitle": "Experience the next generation of learning with powerful AI tools designed to enhance your educational journey, seamlessly combining cutting-edge tech with world-class content.",
+      "subtitle": "Experience the next generation of learning with powerful AI tools designed to enhance your educational journey",
+      "subtitle_suffix": ", seamlessly combining cutting-edge tech with world-class content.",
       "card1": "Global Reach",
       "card2": "AI Learning",
       "card3": "Smart AI",

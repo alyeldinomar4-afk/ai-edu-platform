@@ -35,7 +35,7 @@ const DemoModal = ({ onClose, t }) => {
             <motion.button
                 initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}
                 onClick={onClose}
-                className="absolute top-4 right-4 sm:top-6 sm:right-6 z-[100] w-10 h-10 rounded-full bg-black/40 sm:bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer"
+                className="absolute top-4 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:top-6 sm:right-6 z-[100] w-10 h-10 rounded-full bg-black/40 sm:bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer"
             >
                 <X className="w-5 h-5" />
             </motion.button>
@@ -99,22 +99,21 @@ const DemoModal = ({ onClose, t }) => {
                                     <div className="bg-slate-800/80 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] border border-slate-700/40">
                                         <p className="text-[10px] font-semibold text-indigo-400 mb-1">Nexora AI</p>
                                         
-                                        {/* Typing animation indicator */}
-                                        <motion.div animate={{ opacity: [1, 1, 0], display: ['flex', 'flex', 'none'] }} transition={{ duration: 1.5, times: [0, 0.8, 1] }} className="flex gap-1 py-1 h-5 items-center">
-                                            <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
-                                            <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
-                                            <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }} className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
-                                        </motion.div>
-                                        
-                                        {/* Actual AI Message */}
-                                        <motion.p initial={{ opacity: 0, display: 'none' }} animate={{ opacity: 1, display: 'block' }} transition={{ delay: 1.4 }} className="text-[13px] text-slate-300 leading-relaxed">
+                                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-[13px] text-slate-300 leading-relaxed">
                                             {t('home.hero.aiMessage', { defaultValue: "Great question! 👍 Neural networks learn through backpropagation — they make predictions, measure errors, and adjust. Think of it like practicing until you get better! 🧠" })}
                                         </motion.p>
                                     </div>
-                                    <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.8, type: "spring" }} className="flex items-center gap-1.5 ml-2 mt-1">
-                                        <span className="text-[11px] bg-slate-800/80 px-2 py-1 rounded-full border border-slate-700/50 flex items-center gap-1 shadow-sm"><ThumbsUp className="w-3 h-3 text-yellow-500" /> 2</span>
-                                        <span className="text-[11px] bg-slate-800/80 px-1.5 py-1 rounded-full border border-slate-700/50 flex items-center gap-1 shadow-sm"><Heart className="w-3 h-3 text-red-500" /></span>
-                                        <span className="text-[11px] bg-slate-800/80 px-1.5 py-1 rounded-full border border-slate-700/50 flex items-center gap-1 shadow-sm"><Lightbulb className="w-3 h-3 text-yellow-400" /></span>
+                                    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.8, type: "spring" }} className="flex items-center -space-x-1.5 ml-2 mt-1">
+                                        <div className="flex items-center gap-1.5 bg-slate-800/90 backdrop-blur-md px-2.5 py-1 rounded-full border border-slate-700/50 shadow-sm transition-transform hover:scale-110 cursor-pointer">
+                                            <ThumbsUp className="w-3 h-3 text-yellow-500 fill-yellow-500/20" />
+                                            <span className="text-[10px] font-bold text-slate-300">2</span>
+                                        </div>
+                                        <div className="w-6 h-6 bg-slate-800/90 backdrop-blur-md rounded-full border border-slate-700/50 flex items-center justify-center shadow-sm transition-transform hover:scale-110 cursor-pointer">
+                                            <Heart className="w-3 h-3 text-red-500 fill-red-500/20" />
+                                        </div>
+                                        <div className="w-6 h-6 bg-slate-800/90 backdrop-blur-md rounded-full border border-slate-700/50 flex items-center justify-center shadow-sm transition-transform hover:scale-110 cursor-pointer">
+                                            <Lightbulb className="w-3 h-3 text-yellow-400 fill-yellow-400/20" />
+                                        </div>
                                     </motion.div>
                                 </div>
                             </motion.div>
@@ -189,7 +188,7 @@ const DSK_X = [-32, -10.6, 10.6, 32];
 const DSK_Y = '20vh'; // Moved down from 8vh so it doesn't overlap text
 
 const MOB_X = [-25, 25, -25, 25];
-const MOB_Y = ['4vh', '4vh', '30vh', '30vh']; // Moved entire 2x2 grid down
+const MOB_Y = ['4vh', '4vh', '24vh', '24vh']; // Reduced gap between rows on mobile
 
 function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
     // Mirror coordinates if Arabic (RTL) mode
@@ -200,8 +199,13 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
     // Stack is positioned at the bottom edge of the Hero Image
     // In RTL, the image sits on the left side of the screen, so stackX must be negative
     const deskStartX = isAr ? -10 : 10;
-    const startX = isMobile ? '0vw' : `${deskStartX}vw`;
-    const startY = isMobile ? '-75vh' : '-80vh';
+    // On mobile, spread cards to the edges and position them lower down to avoid hero center
+    // On mobile, keep them in a stack but move it to the bottom-side to avoid the hero center
+    const mobStartX = isAr ? '28vw' : '-28vw';
+    const mobStartY = '-60vh';
+
+    const startX = isMobile ? mobStartX : `${deskStartX}vw`;
+    const startY = isMobile ? mobStartY : '-80vh';
 
     // Cards should rotate the opposite way in RTL to look matched to the mirror
     const finalRotate = isAr ? -card.stackRotate : card.stackRotate;
@@ -224,14 +228,14 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
         >
             <div className="flex flex-col items-center gap-3">
                 <div
-                    className="w-36 h-36 sm:w-44 sm:h-44 lg:w-52 lg:h-52 xl:w-56 xl:h-56 rounded-3xl overflow-hidden ring-4 ring-slate-200/60 dark:ring-white/10"
+                    className="w-28 h-28 sm:w-44 sm:h-44 lg:w-52 lg:h-52 xl:w-56 xl:h-56 rounded-3xl overflow-hidden ring-4 ring-slate-200/60 dark:ring-white/10"
                     style={{ boxShadow: `0 10px 45px ${card.glow}, 0 4px 15px rgba(0,0,0,0.4)` }}
                 >
                     <img src={card.src} alt={card.fallback} className="w-full h-full object-cover" />
                 </div>
                 <motion.p
                     style={{ opacity: lblOpacity, y: lblY }}
-                    className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 tracking-wide text-center bg-white/90 dark:bg-black/40 border border-slate-200/60 dark:border-transparent px-4 py-1.5 rounded-full backdrop-blur-sm"
+                    className="text-[10px] sm:text-sm font-extrabold text-slate-800 dark:text-slate-100 tracking-wide text-center bg-white/90 dark:bg-black/40 border border-slate-200/60 dark:border-transparent px-3 py-1 sm:px-4 sm:py-1.5 rounded-full backdrop-blur-sm"
                 >
                     {t(card.labelKey, { defaultValue: card.fallback })}
                 </motion.p>
@@ -374,7 +378,17 @@ const HeroSection = ({ getStartedPath }) => {
                         {t('home.hero2.title', { defaultValue: 'Why Choose Nexora AI?' })}
                     </h2>
                     <p className={`text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mt-6 text-sm md:text-base leading-relaxed ${isAr ? 'leading-[1.8]' : ''}`}>
-                        {t('home.hero2.subtitle', { defaultValue: 'Experience the next generation of learning with powerful AI tools designed to enhance your educational journey, seamlessly combining cutting-edge tech with world-class content.' })}
+                        {t('home.hero2.subtitle', { defaultValue: 'Experience the next generation of learning with powerful AI tools designed to enhance your educational journey' })}
+                        {!isAr && (
+                            <span className="hidden lg:inline">
+                                {t('home.hero2.subtitle_suffix', { defaultValue: ', seamlessly combining cutting-edge tech with world-class content.' })}
+                            </span>
+                        )}
+                        {isAr && (
+                            <span className="hidden lg:inline">
+                                {t('home.hero2.subtitle_suffix', { defaultValue: '' })}
+                            </span>
+                        )}
                     </p>
                 </div>
 

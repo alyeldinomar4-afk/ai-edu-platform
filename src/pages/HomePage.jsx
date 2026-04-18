@@ -523,7 +523,7 @@ const HomePage = () => {
             <HeroSection getStartedPath={getStartedPath} />
 
             {/* Stats Section */}
-            <section className="relative py-6 md:py-8 px-4 md:px-8 overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
+            <section className="relative py-4 md:py-8 px-4 md:px-8 overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
 
                 <div className="max-w-7xl mx-auto relative z-10 px-4 md:px-0">
                     <motion.div
@@ -545,9 +545,9 @@ const HomePage = () => {
                                 className="relative group"
                             >
                                 {/* Stat Card — Floating Square Look */}
-                                <div className="flex flex-col items-center justify-center text-center h-full py-2 opacity-90 hover:opacity-100 transition-opacity duration-300">
-                                    <div className="relative mb-2">
-                                        <h3 className="text-2xl md:text-3xl font-alexandria font-black bg-gradient-to-r from-blue-500 via-purple-500 to-violet-500 bg-clip-text text-transparent selection:bg-primary/10">
+                                <div className="flex flex-col items-center justify-center text-center h-full py-1 md:py-2 opacity-90 hover:opacity-100 transition-opacity duration-300">
+                                    <div className="relative mb-1 md:mb-2">
+                                        <h3 className="text-xl md:text-3xl font-alexandria font-black bg-gradient-to-r from-blue-500 via-purple-500 to-violet-500 bg-clip-text text-transparent selection:bg-primary/10">
                                             <AnimatedCounter target={stat.value} suffix={stat.suffix} duration={2.5} locale={i18n.language} compact={stat.value >= 1000} />
                                         </h3>
                                         <div className="mt-1.5 mx-auto w-10 h-[1.5px] bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -638,7 +638,7 @@ const HomePage = () => {
                                             >
                                                 {/* Glass Card */}
                                                 <div className={cn(
-                                                    "relative rounded-2xl p-6 md:p-7 overflow-hidden transition-all duration-500",
+                                                    "relative rounded-2xl p-4 md:p-7 overflow-hidden transition-all duration-500",
                                                     "bg-white/50 dark:bg-slate-900/30",
                                                     "backdrop-blur-xl",
                                                     "border border-slate-200/60 dark:border-white/[0.08]",
@@ -659,34 +659,34 @@ const HomePage = () => {
 
                                                     {/* Category Icon */}
                                                     <div 
-                                                        className="w-12 h-12 rounded-2xl mb-5 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6"
+                                                        className="w-10 h-10 md:w-12 md:h-12 rounded-2xl mb-4 md:mb-5 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6"
                                                         style={{ backgroundColor: `${accent}1A`, color: accent }}
                                                     >
-                                                        <Icon className="w-6 h-6" strokeWidth={2} />
+                                                        <Icon className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
                                                     </div>
 
                                                     {/* Category Name — Modern Responsive Styling */}
-                                                    <h3 className="font-grotesk font-bold text-xl md:text-2xl mb-2 tracking-tight transition-colors duration-300 text-slate-900 dark:text-white md:group-hover:text-[var(--accent-color)] max-md:text-[var(--accent-color)]">
+                                                    <h3 className="font-grotesk font-bold text-lg md:text-2xl mb-1 md:mb-2 tracking-tight transition-colors duration-300 text-slate-900 dark:text-white md:group-hover:text-[var(--accent-color)] max-md:text-[var(--accent-color)]">
                                                         {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
                                                     </h3>
 
                                                     {/* Course Count + Arrow */}
                                                     <div className={cn(
-                                                        "flex items-center gap-2 mb-3",
+                                                        "flex items-center gap-2 mb-2 md:mb-3",
                                                         isAr && "flex-row-reverse"
                                                     )}>
-                                                        <span className="text-[11px] font-grotesk font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
+                                                        <span className="text-[10px] md:text-[11px] font-grotesk font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
                                                             {cat.count} {t('home.categories.coursesCount')}
                                                         </span>
                                                         <ArrowRight
-                                                            className="w-3.5 h-3.5 transition-all duration-300 group-hover:translate-x-1"
+                                                            className="w-3 h-3 md:w-3.5 md:h-3.5 transition-all duration-300 group-hover:translate-x-1"
                                                             style={{ color: accent }}
                                                         />
                                                     </div>
 
                                                     {/* Number — lifts up + glow on hover based on the whole card */}
                                                     <span
-                                                        className="block font-grotesk font-bold text-lg tracking-tight opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_var(--accent-color)] transition-all duration-500 group-hover:-translate-y-1"
+                                                        className="block font-grotesk font-bold text-sm md:text-lg tracking-tight opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_var(--accent-color)] transition-all duration-500 group-hover:-translate-y-1"
                                                         style={{ color: 'var(--accent-color)' }}
                                                     >
                                                         {number}
