@@ -27,19 +27,22 @@ const LearnerDashboardPage = () => {
     const [stats, setStats] = useState({ hoursWatched: 0, certificates: 0, coursesInProgress: 0 });
     const [progress, setProgress] = useState([]);
     const [recommendations, setRecommendations] = useState([]);
+    const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadDashboard = async () => {
             try {
-                const [statsData, progressData, recsData] = await Promise.all([
+                const [statsData, progressData, recsData, announcementsData] = await Promise.all([
                     api.learner.getStats(),
                     api.learner.getProgress(),
-                    api.learner.getRecommendations()
+                    api.learner.getRecommendations(),
+                    api.learner.getAnnouncements()
                 ]);
                 setStats(statsData);
                 setProgress(progressData);
                 setRecommendations(recsData);
+                setAnnouncements(announcementsData);
             } catch (err) {
                 console.error('Failed to load dashboard:', err);
             } finally {
@@ -278,44 +281,60 @@ const LearnerDashboardPage = () => {
 
             {/* Instructor Announcements */}
             <section className="mb-10">
-                {/* TODO: Replace with api.learner.getAnnouncements() when backend implements it */}
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <Megaphone className="w-5 h-5 text-primary" /> {t('dashboard.learner.announcements')}
                     </h2>
-                    <motion.span
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider"
-                    >
-                        {t('common.new')}
-                    </motion.span>
+                    {announcements.length > 0 && (
+                        <motion.span
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider"
+                        >
+                            {t('common.new')}
+                        </motion.span>
+                    )}
                 </div>
                 <div className="space-y-4">
-                    <motion.div
-                        initial={{ opacity: 0, x: isAr ? -10 : 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        whileHover={{ y: -2 }}
-                        className="bg-gradient-to-r from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent p-5 rounded-2xl border border-primary/10 flex gap-4 items-start transition-all hover:shadow-md hover:border-primary/20"
-                    >
-                        <motion.div
-                            animate={{ rotate: [0, 10, -10, 0] }}
-                            transition={{ duration: 4, repeat: Infinity }}
-                            className="w-10 h-10 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm border border-primary/5"
-                        >
-                            <Bell size={20} />
-                        </motion.div>
-                        <div className="flex-1">
-                            <div className="flex justify-between items-start mb-1">
-                                <h3 className="font-bold text-slate-900 dark:text-white">{t('dashboard.learner.announcementTitle')}</h3>
-                                <span className={cn("text-xs text-slate-500", isAr ? "text-left" : "text-right")}>{t('dashboard.learner.announcementTime')}</span>
-                            </div>
-                            <p className={cn("text-sm text-slate-600 dark:text-slate-400 mb-3", isAr && "text-right")}>{t('dashboard.learner.announcementBody')}</p>
-                            <Link to="/courses/2" className="text-xs font-bold text-primary hover:underline flex items-center gap-1 group">
-                                {t('common.viewCourse')} <ChevronRight size={12} className={cn("transition-transform", isAr ? "group-hover:-translate-x-1 rotate-180" : "group-hover:translate-x-1")} />
-                            </Link>
+                    {announcements.length > 0 ? (
+                        announcements.map((announcement) => (
+                            <motion.div
+                                key={announcement.id}
+                                initial={{ opacity: 0, x: isAr ? -10 : 10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                whileHover={{ y: -2 }}
+                                className="bg-gradient-to-r from-primary/5 to-transparent dark:from-primary/10 dark:to-transparent p-5 rounded-2xl border border-primary/10 flex gap-4 items-start transition-all hover:shadow-md hover:border-primary/20"
+                            >
+                                <motion.div
+                                    animate={{ rotate: [0, 10, -10, 0] }}
+                                    transition={{ duration: 4, repeat: Infinity }}
+                                    className="w-10 h-10 shrink-0 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center text-primary shadow-sm border border-primary/5"
+                                >
+                                    <Bell size={20} />
+                                </motion.div>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1 gap-1">
+                                        <h3 className="font-bold text-slate-900 dark:text-white truncate">{announcement.title}</h3>
+                                        <span className={cn("text-xs text-slate-500 whitespace-nowrap", isAr ? "text-right sm:text-left" : "text-left sm:text-right")}>
+                                            {isNaN(Date.parse(announcement.date)) 
+                                                ? announcement.date 
+                                                : new Date(announcement.date).toLocaleDateString(isAr ? 'ar-EG' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                        </span>
+                                    </div>
+                                    <p className={cn("text-sm text-slate-600 dark:text-slate-400 mb-3 whitespace-pre-wrap", isAr && "text-right")}>{announcement.body}</p>
+                                    {announcement.type === 'course' && announcement.courseId && (
+                                        <Link to={`/courses/${announcement.courseId}`} className="text-xs font-bold text-primary hover:underline flex items-center gap-1 group w-fit">
+                                            {t('common.viewCourse')} <ChevronRight size={12} className={cn("transition-transform", isAr ? "group-hover:-translate-x-1 rotate-180" : "group-hover:translate-x-1")} />
+                                        </Link>
+                                    )}
+                                </div>
+                            </motion.div>
+                        ))
+                    ) : (
+                        <div className="text-center p-6 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+                            <p className="text-slate-500 dark:text-slate-400 text-sm">{t('dashboard.learner.noAnnouncements', { defaultValue: 'No new announcements' })}</p>
                         </div>
-                    </motion.div>
+                    )}
                 </div>
             </section>
 

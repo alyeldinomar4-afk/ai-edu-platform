@@ -1,23 +1,19 @@
 import { Star, Clock, BookOpen, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Button from '../../ui/Button';
 import { cn } from '../../../utils';
 import { formatDuration, formatCurrency } from '../../../utils/formatters';
 
 const CourseCard = ({ course, layout = 'grid' }) => {
-    const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-    const cardRef = useRef(null);
 
 
 
     return (
         <div style={{ perspective: "1200px" }} className="h-full">
             <motion.div
-                ref={cardRef}
                 whileHover={{ 
                     y: -4,
                     transition: { duration: 0.2, ease: 'easeOut' }
@@ -75,11 +71,15 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                     <div className="flex items-center gap-1.5 mb-3">
                         <span className="text-sm font-bold text-amber-700 dark:text-amber-500">{course.rating}</span>
                         <div className="flex gap-0.5">
-                            <Star size={12} className="fill-amber-400 text-amber-400" />
-                            <Star size={12} className="fill-amber-400 text-amber-400" />
-                            <Star size={12} className="fill-amber-400 text-amber-400" />
-                            <Star size={12} className="fill-amber-400 text-amber-400" />
-                            <Star size={12} className="fill-amber-400 text-amber-400 opacity-30" />
+                            {[1, 2, 3, 4, 5].map(star => (
+                                <Star
+                                    key={star}
+                                    size={12}
+                                    className={star <= Math.round(course.rating)
+                                        ? "fill-amber-400 text-amber-400"
+                                        : "text-slate-300 dark:text-slate-600"}
+                                />
+                            ))}
                         </div>
                         <span className="text-[11px] text-slate-400">({course.reviews || 120})</span>
                     </div>

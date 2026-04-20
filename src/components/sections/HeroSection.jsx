@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useScroll } from 'framer-motion';
-import { ArrowRight, Sparkles, Play, Zap, Star, BookOpen, X, ThumbsUp, Heart, Lightbulb, Telescope, Calculator, MessagesSquare, Users } from 'lucide-react';
+import { ArrowRight, Sparkles, Play, Zap, Star, BookOpen, X, ThumbsUp, Heart, Lightbulb, Telescope, Calculator, MessagesSquare, Users, Brain } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -344,6 +344,28 @@ const HeroSection = ({ getStartedPath }) => {
                                 ref={imageRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ perspective: "1200px" }}
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/10 to-cyan-500/20 blur-[100px] rounded-full animate-pulse" />
+                                
+                                {/* Smart Learning Floating Badge */}
+                                <motion.div
+                                    animate={{ y: [-8, 8, -8] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                    className={`absolute z-30 ${isAr ? 'left-2 lg:-left-6' : 'right-2 lg:-right-6'} top-6 sm:top-10 bg-white/20 dark:bg-black/30 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 sm:gap-2.5 border-b-2 border-b-yellow-400/20 hover:scale-105 transition-transform cursor-default`}
+                                >
+                                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.2)] flex-shrink-0 backdrop-blur-md">
+                                        <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400/50" />
+                                    </div>
+                                    <div className="flex flex-col items-start justify-center pr-1">
+                                        <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wide text-white uppercase leading-tight">
+                                            {t('home.hero.smartLearning', { defaultValue: "Smart Learning" })}
+                                        </span>
+                                        <div className="flex gap-1 items-center mt-0.5">
+                                            <span className="w-1 h-1 rounded-full bg-amber-500/80 animate-bounce shadow-[0_0_5px_rgba(245,158,11,0.6)]" style={{ animationDelay: '0s' }} />
+                                            <span className="w-1 h-1 rounded-full bg-yellow-400/80 animate-bounce shadow-[0_0_5px_rgba(250,204,21,0.6)]" style={{ animationDelay: '0.15s' }} />
+                                            <span className="w-1 h-1 rounded-full bg-amber-300/80 animate-bounce shadow-[0_0_5px_rgba(252,211,77,0.6)]" style={{ animationDelay: '0.3s' }} />
+                                        </div>
+                                    </div>
+                                </motion.div>
+
                                 <motion.div
                                     style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
                                     className="relative z-10 w-full h-full rounded-[40px] overflow-hidden shadow-2xl shadow-indigo-500/40 p-1 bg-gradient-to-br from-white/20 via-white/5 to-white/10 backdrop-blur-md"

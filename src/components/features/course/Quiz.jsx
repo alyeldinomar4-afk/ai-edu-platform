@@ -12,33 +12,7 @@ const Quiz = ({ questions: propQuestions }) => {
     const [score, setScore] = useState(0);
     const [showResult, setShowResult] = useState(false);
 
-    // Default questions if none provided
-    const defaultQuestions = [
-        {
-            id: 1,
-            question: "What is the primary function of React's useState hook?",
-            options: [
-                "To handle side effects",
-                "To manage local component state",
-                "To fetch data from an API",
-                "To optimized performance"
-            ],
-            correct: 1
-        },
-        {
-            id: 2,
-            question: "Which method is used to update the state in a class component?",
-            options: [
-                "updateState()",
-                "changeState()",
-                "setState()",
-                "modifyState()"
-            ],
-            correct: 2
-        }
-    ];
-
-    const questions = propQuestions && propQuestions.length > 0 ? propQuestions : defaultQuestions;
+    const questions = propQuestions && propQuestions.length > 0 ? propQuestions : [];
 
     const handleAnswer = (index) => {
         setSelectedOption(index);
@@ -101,7 +75,7 @@ const Quiz = ({ questions: propQuestions }) => {
                     {questions[currentQuestion].options.map((option, idx) => (
                         <button
                             key={idx}
-                            onClick={() => !selectedOption && handleAnswer(idx)}
+                            onClick={() => selectedOption === null && handleAnswer(idx)}
                             disabled={selectedOption !== null}
                             className={`w-full text-left p-4 rounded-lg border transition-all ${isRTL ? 'text-right' : 'text-left'} ${selectedOption === idx
                                 ? isCorrect
