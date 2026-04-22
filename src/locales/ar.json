@@ -25,6 +25,7 @@
     "trustedBy": "موثوق من قبل",
     "students": "طالب",
     "hero": {
+      "smartLearning": "تعلّم ذكي",
       "courseCompleted": "تم إكمال الدورة",
       "pythonMastery": "إتقان بايثون",
       "rating": "تقييم 4.9 من 5"
@@ -41,7 +42,7 @@
     },
     "categories": {
       "badge": "تصنيفات Nexora AI",
-      "titleMain": "تخصصات متنوعة،",
+      "titleMain": "تخصصات متنوعة",
       "titleHighlight": "ذكاءٌ واحد.",
       "subtitle": "انغمس في محتوى تعليمي مدعوم بـ AI Tutor يرافقك خطوة بخطوة، من البرمجة وحتى التصميم الإبداعي.",
       "coursesCount": "دورة"

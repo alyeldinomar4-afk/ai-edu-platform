@@ -14,7 +14,7 @@ const formatTime = (seconds) => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
 
-const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, onToggleTheaterMode, aiMessages = [], isAiTyping, onAiAsk }) => {
+const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, onToggleTheaterMode }) => {
     const { t, i18n } = useTranslation();
     const videoRef = useRef(null);
     const containerRef = useRef(null);
@@ -436,9 +436,6 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, o
                             <ContextualAI
                                 videoState={{ currentTime, isPlaying }}
                                 addMarker={null}
-                                messages={aiMessages}
-                                onSend={onAiAsk}
-                                isTyping={isAiTyping}
                                 hideHeader={true}
                             />
                         </div>

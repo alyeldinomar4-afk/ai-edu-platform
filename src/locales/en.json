@@ -25,6 +25,7 @@
     "trustedBy": "Trusted by",
     "students": "students",
     "hero": {
+      "smartLearning": "Smart Learning",
       "courseCompleted": "Course Completed",
       "pythonMastery": "Python Mastery",
       "rating": "4.9/5 Rating"
@@ -41,7 +42,7 @@
     },
     "categories": {
       "badge": "Nexora AI Categories",
-      "titleMain": "Diverse Domains,",
+      "titleMain": "Diverse Domains",
       "titleHighlight": "Unified Intelligence.",
       "subtitle": "Dive into educational content powered by an AI Tutor that guides you step-by-step, from development to creative design.",
       "coursesCount": "Courses"

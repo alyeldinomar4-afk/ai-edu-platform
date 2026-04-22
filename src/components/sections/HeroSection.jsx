@@ -90,7 +90,7 @@ const DemoModal = ({ onClose, t }) => {
                                 <span className="text-[11px] font-medium text-green-400">Ahmed {t('home.hero.isLearning', { defaultValue: "is learning right now" })}</span>
                                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                             </motion.div>
-                            
+
                             <motion.div initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 }} className="flex gap-3 items-start">
                                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-500/30 ring-2 ring-indigo-400/30">
                                     <Zap className="w-4 h-4 text-white" />
@@ -98,7 +98,7 @@ const DemoModal = ({ onClose, t }) => {
                                 <div className="flex flex-col gap-1.5">
                                     <div className="bg-slate-800/80 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] border border-slate-700/40">
                                         <p className="text-[10px] font-semibold text-indigo-400 mb-1">Nexora AI</p>
-                                        
+
                                         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="text-[13px] text-slate-300 leading-relaxed">
                                             {t('home.hero.aiMessage', { defaultValue: "Great question! 👍 Neural networks learn through backpropagation — they make predictions, measure errors, and adjust. Think of it like practicing until you get better! 🧠" })}
                                         </motion.p>
@@ -117,7 +117,7 @@ const DemoModal = ({ onClose, t }) => {
                                     </motion.div>
                                 </div>
                             </motion.div>
-                            
+
                             <motion.div initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2 }} className="flex gap-3 items-start justify-end">
                                 <div className="flex flex-col items-end gap-1">
                                     <div className="bg-indigo-500 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[85%] shadow-lg shadow-indigo-500/20">
@@ -141,7 +141,7 @@ const DemoModal = ({ onClose, t }) => {
                                 </div>
                             </motion.div>
                         </div>
-                        
+
                         {/* Prompt Ideas */}
                         <div className="pt-3 border-t border-slate-700/50 mt-4 flex flex-wrap gap-2">
                             <div className="flex items-center gap-1.5 text-[10px] sm:text-xs px-3 py-1.5 rounded-full border border-slate-700/60 bg-slate-800/40 text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 cursor-pointer transition-colors shadow-sm">
@@ -176,12 +176,11 @@ const DemoModal = ({ onClose, t }) => {
     );
 };
 
-// ─── Cards Data & Component ──────────────────────────────────────────────────
 const CARDS_DATA = [
-    { src: '/floating_globe.png',     labelKey: 'home.hero2.card1', fallback: 'Global Reach',   glow: 'rgba(99,102,241,0.55)',  stackRotate: -10, stackX: -6,  stackY:  0  },
-    { src: '/student_phone.png',      labelKey: 'home.hero2.card2', fallback: 'AI Learning',    glow: 'rgba(168,85,247,0.5)',   stackRotate:  -4, stackX: -2,  stackY:  6  },
-    { src: '/ai_brain.png',           labelKey: 'home.hero2.card3', fallback: 'Smart AI',       glow: 'rgba(34,211,238,0.5)',   stackRotate:   4, stackX:  2,  stackY: 12  },
-    { src: '/books_graduation.png',   labelKey: 'home.hero2.card4', fallback: '200+ Courses',   glow: 'rgba(251,191,36,0.45)',  stackRotate:  10, stackX:  6,  stackY: 18  },
+    { src: '/ai_brain.png', labelKey: 'home.hero2.card3', fallback: 'Smart AI', glow: 'rgba(34,211,238,0.5)', stackRotate: -10, stackX: -6, stackY: 0 },
+    { src: '/student_phone.png', labelKey: 'home.hero2.card2', fallback: 'AI Learning', glow: 'rgba(168,85,247,0.5)', stackRotate: -4, stackX: -2, stackY: 6 },
+    { src: '/floating_globe.png', labelKey: 'home.hero2.card1', fallback: 'Global Reach', glow: 'rgba(99,102,241,0.55)', stackRotate: 4, stackX: 2, stackY: 12 },
+    { src: '/books_graduation.png', labelKey: 'home.hero2.card4', fallback: '200+ Courses', glow: 'rgba(251,191,36,0.45)', stackRotate: 10, stackX: 6, stackY: 18 },
 ];
 
 const DSK_X = [-32, -10.6, 10.6, 32];
@@ -195,7 +194,7 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
     const numX = isMobile ? MOB_X[idx] : DSK_X[idx];
     const targetX = `${isAr ? -numX : numX}vw`;
     const targetY = isMobile ? MOB_Y[idx] : DSK_Y;
-    
+
     // Stack is positioned at the bottom edge of the Hero Image
     // In RTL, the image sits on the left side of the screen, so stackX must be negative
     const deskStartX = isAr ? -10 : 10;
@@ -214,7 +213,7 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
     const y = useTransform(scrollYProgress, [0.05, 0.9], [startY, targetY], { clamp: true });
     const rotate = useTransform(scrollYProgress, [0.05, 0.7], [finalRotate, 0], { clamp: true });
     const scale = useTransform(scrollYProgress, [0, 0.8], [isMobile ? 0.8 : 0.85, 1], { clamp: true });
-    
+
     const lblOpacity = useTransform(scrollYProgress, [0.75, 0.95], [0, 1]);
     const lblY = useTransform(scrollYProgress, [0.75, 0.95], [10, 0]);
 
@@ -249,7 +248,7 @@ const HeroSection = ({ getStartedPath }) => {
     const { t, i18n } = useTranslation();
     const isAr = i18n.language === 'ar';
     const [showDemo, setShowDemo] = useState(false);
-    
+
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth < 1024);
@@ -260,18 +259,18 @@ const HeroSection = ({ getStartedPath }) => {
 
     // Scroll ref for Hero 2 (the cards section)
     const hero2Ref = useRef(null);
-    const { scrollYProgress } = useScroll({ 
-        target: hero2Ref, 
-        offset: ['start end', 'center center'] 
+    const { scrollYProgress } = useScroll({
+        target: hero2Ref,
+        offset: ['start end', 'center center']
     });
 
     const imageRef = useRef(null);
     const mx = useMotionValue(0), my = useMotionValue(0);
     const mxSpring = useSpring(mx, { stiffness: 60, damping: 30 });
     const mySpring = useSpring(my, { stiffness: 60, damping: 30 });
-    const rotateX  = useTransform(mySpring, [-0.5, 0.5], ["3deg", "-3deg"]);
-    const rotateY  = useTransform(mxSpring, [-0.5, 0.5], ["-3deg", "3deg"]);
-    
+    const rotateX = useTransform(mySpring, [-0.5, 0.5], ["3deg", "-3deg"]);
+    const rotateY = useTransform(mxSpring, [-0.5, 0.5], ["-3deg", "3deg"]);
+
     const handleMouseMove = (e) => {
         if (!imageRef.current) return;
         const rect = imageRef.current.getBoundingClientRect();
@@ -282,7 +281,7 @@ const HeroSection = ({ getStartedPath }) => {
 
     return (
         <div className="relative overflow-x-clip bg-slate-50 dark:bg-[#0B1120]">
-            
+
             {/* ─── NATIVE SCROLL SECTION 1: HERO ─── */}
             <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-visible">
                 {/* Background orbs */}
@@ -344,21 +343,21 @@ const HeroSection = ({ getStartedPath }) => {
                                 ref={imageRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ perspective: "1200px" }}
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/10 to-cyan-500/20 blur-[100px] rounded-full animate-pulse" />
-                                
+
                                 {/* Smart Learning Floating Badge */}
                                 <motion.div
                                     animate={{ y: [-8, 8, -8] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className={`absolute z-30 ${isAr ? 'left-2 lg:-left-6' : 'right-2 lg:-right-6'} top-6 sm:top-10 bg-white/20 dark:bg-black/30 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 sm:gap-2.5 border-b-2 border-b-yellow-400/20 hover:scale-105 transition-transform cursor-default`}
+                                    className="absolute z-30 right-2 lg:-right-6 top-6 sm:top-10 bg-white/20 dark:bg-black/30 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 sm:gap-2.5 border-b-2 border-b-yellow-400/20 hover:scale-105 transition-transform cursor-default"
                                 >
                                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.2)] flex-shrink-0 backdrop-blur-md">
                                         <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400/50" />
                                     </div>
-                                    <div className="flex flex-col items-start justify-center pr-1">
+                                    <div className="flex flex-col items-start pr-1 justify-center">
                                         <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wide text-white uppercase leading-tight">
-                                            {t('home.hero.smartLearning', { defaultValue: "Smart Learning" })}
+                                            Smart Learning
                                         </span>
-                                        <div className="flex gap-1 items-center mt-0.5">
+                                        <div className="flex gap-1 items-center mt-0.5" dir="ltr">
                                             <span className="w-1 h-1 rounded-full bg-amber-500/80 animate-bounce shadow-[0_0_5px_rgba(245,158,11,0.6)]" style={{ animationDelay: '0s' }} />
                                             <span className="w-1 h-1 rounded-full bg-yellow-400/80 animate-bounce shadow-[0_0_5px_rgba(250,204,21,0.6)]" style={{ animationDelay: '0.15s' }} />
                                             <span className="w-1 h-1 rounded-full bg-amber-300/80 animate-bounce shadow-[0_0_5px_rgba(252,211,77,0.6)]" style={{ animationDelay: '0.3s' }} />
@@ -388,10 +387,10 @@ const HeroSection = ({ getStartedPath }) => {
 
             {/* ─── NATIVE SCROLL SECTION 2: FEATURES CARDS ─── */}
             <section ref={hero2Ref} className="relative min-h-screen flex flex-col items-center justify-start pt-20 lg:pt-24 pb-24 overflow-visible bg-slate-50 dark:bg-[#060B14] border-t border-slate-200 dark:border-slate-800/40 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] z-10">
-                
+
                 {/* Fixed Premium Background for Section 2 */}
                 <div className="absolute inset-0 hidden dark:block bg-gradient-to-b from-[#0c1224]/80 to-[#0B1120] pointer-events-none" />
-                
+
                 <div className="text-center relative z-10 px-4 w-full mb-10 lg:mb-0">
                     <span className="text-primary font-extrabold tracking-[0.2em] uppercase text-[10px] md:text-xs bg-primary/10 border border-primary/20 px-5 py-2 rounded-full inline-block mb-6 shadow-lg shadow-primary/20">
                         {t('home.hero2.badge', { defaultValue: 'Platform Features' })}

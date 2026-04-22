@@ -13,6 +13,14 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '../utils';
 import { formatCompactNumber } from '../utils/formatters';
 
+// 3D Icons for categories
+import dev3d from '../assets/images/3d-icons/dev_3d.png';
+import data3d from '../assets/images/3d-icons/data_3d.png';
+import design3d from '../assets/images/3d-icons/design_3d.png';
+import marketing3d from '../assets/images/3d-icons/marketing_3d.png';
+import photo3d from '../assets/images/3d-icons/photo_3d.png';
+import finance3d from '../assets/images/3d-icons/finance_3d.png';
+
 /* ─── Shared Framer Motion variants ─── */
 const staggerContainer = {
     hidden: {},
@@ -599,10 +607,11 @@ const HomePage = () => {
                                     </motion.span>
 
                                     <div className={cn("flex items-start gap-4 mb-6", isAr && "flex-row-reverse")}>
-                                        <div className="w-1.5 h-16 md:h-20 bg-gradient-to-b from-primary via-secondary to-accent rounded-full shrink-0 mt-1.5 shadow-lg shadow-primary/20" />
+                                        <div className="w-2.5 h-20 md:h-24 bg-gradient-to-b from-primary via-secondary to-accent rounded-full shrink-0 mt-1 shadow-[0_0_25px_rgba(79,70,229,0.5)] dark:shadow-[0_0_35px_rgba(79,70,229,0.3)] shadow-primary/20" />
                                         <div>
-                                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15]">
-                                                {t('home.categories.titleMain')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent block mt-1 drop-shadow-sm">
+                                            <h2 className="text-3xl md:text-4xl lg:text-5xl text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+                                                <span className="font-light block">{t('home.categories.titleMain')}</span>
+                                                <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent block mt-1 drop-shadow-sm">
                                                     {t('home.categories.titleHighlight')}
                                                 </span>
                                             </h2>
@@ -615,12 +624,22 @@ const HomePage = () => {
                                 </motion.div>
 
                                 {/* Right — Domains Grid (2-col staggered, glass cards) */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                                     {categoriesList.map((cat, idx) => {
                                         const accent = DOMAIN_ACCENTS[idx % DOMAIN_ACCENTS.length];
                                         const number = String(idx + 1).padStart(2, '0');
                                         const isRightCol = idx % 2 !== 0;
-                                        const Icon = iconMap[cat.icon] || BookOpen;
+                                        
+                                        // 3D Icon Mapping
+                                        const iconMap3D = {
+                                            'Development': dev3d,
+                                            'Data Science': data3d,
+                                            'Design': design3d,
+                                            'Marketing': marketing3d,
+                                            'Photography': photo3d,
+                                            'Finance': finance3d,
+                                        };
+                                        const Icon3D = iconMap3D[cat.name] || dev3d; // Fallback to dev3d if unknown
 
                                         return (
                                             <motion.div
@@ -628,72 +647,103 @@ const HomePage = () => {
                                                 initial={{ opacity: 0, y: 40, filter: 'blur(6px)' }}
                                                 whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                                                 viewport={{ once: true, margin: '-40px' }}
-                                                transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                                transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
                                                 onClick={() => navigate(`/courses?category=${encodeURIComponent(cat.name)}`)}
                                                 style={{ '--accent-color': accent }}
                                                 className={cn(
-                                                    "group cursor-pointer",
-                                                    isRightCol && "sm:mt-10 md:mt-14"
+                                                    "group cursor-pointer perspective-container",
+                                                    isRightCol && "sm:mt-8 md:mt-12"
                                                 )}
                                             >
                                                 {/* Glass Card */}
-                                                <div className={cn(
-                                                    "relative rounded-2xl p-4 md:p-7 overflow-hidden transition-all duration-500",
-                                                    "bg-white/50 dark:bg-slate-900/30",
-                                                    "backdrop-blur-xl",
-                                                    "border border-slate-200/60 dark:border-white/[0.08]",
-                                                    "shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)]",
-                                                    "group-hover:shadow-[0_12px_40px_rgba(99,102,241,0.1)] dark:group-hover:shadow-[0_12px_40px_rgba(99,102,241,0.15)]",
-                                                    "group-hover:border-slate-300/80 dark:group-hover:border-white/15",
-                                                    "group-hover:-translate-y-1"
-                                                )}>
-                                                    {/* Accent Line at top of glass */}
+                                                <motion.div 
+                                                    whileHover={{ y: -6, scale: 1.01 }}
+                                                    className={cn(
+                                                        "relative rounded-2xl p-4 md:p-6 overflow-hidden transition-all duration-500 card-3d",
+                                                        "bg-white/5 dark:bg-slate-900/40",
+                                                        "backdrop-blur-xl",
+                                                        "border border-white/10 dark:border-white/[0.05]",
+                                                        "shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_12px_48px_rgba(0,0,0,0.4)]",
+                                                        "group-hover:shadow-[0_12px_48px_rgba(99,102,241,0.15)] dark:group-hover:shadow-[0_20px_60px_rgba(99,102,241,0.2)]",
+                                                        "group-hover:border-primary/30 dark:group-hover:border-primary/20",
+                                                    )}
+                                                >
+                                                    {/* Index Number - Top Right with Hover Glow */}
+                                                    <span
+                                                        className={cn(
+                                                            "absolute top-4 font-poppins font-black text-xl md:text-2xl transition-all duration-500",
+                                                            "opacity-[0.3] dark:opacity-[0.4] group-hover:opacity-100",
+                                                            "group-hover:drop-shadow-[0_0_15px_var(--accent-color)]",
+                                                            isAr ? "left-5" : "right-5"
+                                                        )}
+                                                        style={{ color: accent }}
+                                                    >
+                                                        {number}
+                                                    </span>
+
+                                                    {/* Accent Line */}
                                                     <motion.div
                                                         initial={{ scaleX: 0 }}
                                                         whileInView={{ scaleX: 1 }}
                                                         viewport={{ once: true }}
-                                                        transition={{ duration: 0.6, delay: 0.3 + idx * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                                        className="absolute top-0 left-0 w-16 h-[3px] rounded-br-full origin-left group-hover:w-48 transition-all duration-500"
+                                                        transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                                                        className="absolute top-0 left-0 w-12 h-[2.5px] rounded-br-full origin-left group-hover:w-32 transition-all duration-500"
                                                         style={{ backgroundColor: accent }}
                                                     />
 
-                                                    {/* Category Icon */}
-                                                    <div 
-                                                        className="w-10 h-10 md:w-12 md:h-12 rounded-2xl mb-4 md:mb-5 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6"
-                                                        style={{ backgroundColor: `${accent}1A`, color: accent }}
-                                                    >
-                                                        <Icon className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2} />
+                                                    {/* 3D Icon Container with Restored Glow */}
+                                                    <div className="relative mb-4 md:mb-5">
+                                                        <motion.div
+                                                            whileHover={{ 
+                                                                scale: 1.1,
+                                                                y: -10,
+                                                                rotate: 5
+                                                            }}
+                                                            className="relative z-10 w-fit"
+                                                        >
+                                                            <img 
+                                                                src={Icon3D} 
+                                                                alt={cat.name}
+                                                                className="w-12 h-12 md:w-16 md:h-16 object-contain mix-blend-multiply dark:mix-blend-screen"
+                                                            />
+                                                        </motion.div>
+                                                        
+                                                        {/* Restored Decorative Background Blob (Underneath Glow) */}
+                                                        <div 
+                                                            className="absolute -top-4 -left-4 w-12 h-12 blur-2xl rounded-full opacity-20 dark:opacity-30"
+                                                            style={{ backgroundColor: accent }}
+                                                        />
                                                     </div>
 
-                                                    {/* Category Name — Modern Responsive Styling */}
-                                                    <h3 className="font-grotesk font-bold text-lg md:text-2xl mb-1 md:mb-2 tracking-tight transition-colors duration-300 text-slate-900 dark:text-white md:group-hover:text-[var(--accent-color)] max-md:text-[var(--accent-color)]">
+                                                    {/* Category Name - Using Poppins */}
+                                                    <h3 className="font-poppins font-bold text-lg md:text-xl mb-1.5 tracking-tight transition-colors duration-300 text-slate-900 dark:text-white group-hover:text-[var(--accent-color)]">
                                                         {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
                                                     </h3>
 
                                                     {/* Course Count + Arrow */}
                                                     <div className={cn(
-                                                        "flex items-center gap-2 mb-2 md:mb-3",
+                                                        "flex items-center justify-between",
                                                         isAr && "flex-row-reverse"
                                                     )}>
-                                                        <span className="text-[10px] md:text-[11px] font-grotesk font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
-                                                            {cat.count} {t('home.categories.coursesCount')}
-                                                        </span>
-                                                        <ArrowRight
-                                                            className="w-3 h-3 md:w-3.5 md:h-3.5 transition-all duration-300 group-hover:translate-x-1"
-                                                            style={{ color: accent }}
-                                                        />
+                                                        <div className={cn("flex items-center gap-2", isAr && "flex-row-reverse")}>
+                                                            <span className="text-[10px] md:text-[11px] font-poppins font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">
+                                                                {cat.count} {t('home.categories.coursesCount')}
+                                                            </span>
+                                                            <motion.div
+                                                                animate={{ x: [0, 4, 0] }}
+                                                                transition={{ duration: 1.5, repeat: Infinity }}
+                                                            >
+                                                                <ArrowRight
+                                                                    className="w-3.5 h-3.5"
+                                                                    style={{ color: accent }}
+                                                                />
+                                                            </motion.div>
+                                                        </div>
                                                     </div>
-
-                                                    {/* Number — lifts up + glow on hover based on the whole card */}
-                                                    <span
-                                                        className="block font-grotesk font-bold text-sm md:text-lg tracking-tight opacity-70 group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_var(--accent-color)] transition-all duration-500 group-hover:-translate-y-1"
-                                                        style={{ color: 'var(--accent-color)' }}
-                                                    >
-                                                        {number}
-                                                    </span>
-                                                </div>
+                                                </motion.div>
                                             </motion.div>
                                         );
+
                                     })}
                                 </div>
                             </div>

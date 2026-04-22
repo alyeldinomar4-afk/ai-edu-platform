@@ -20,27 +20,11 @@ const VideoPlayerPage = () => {
     const [rightSidebarTab, setRightSidebarTab] = useState('playlist'); // playlist, ai
     const [isTheaterMode, setIsTheaterMode] = useState(false);
     const [activeTab, setActiveTab] = useState('overview');
-    const [messages, setMessages] = useState([]);
-    const [isAiTyping, setIsAiTyping] = useState(false);
     const [videoState, setVideoState] = useState({ currentTime: 0, isPlaying: false });
     const [markers, setMarkers] = useState([]);
     const [questionInput, setQuestionInput] = useState('');
-    const [questions, setQuestions] = useState([
-        {
-            id: 1,
-            user: "Mohammed Khaled",
-            question: "How do we decide the number of hidden layers in a deep neural network?",
-            date: "2 hours ago",
-            reply: "Hi Mohammed! Generally, it starts with trial and error. More layers allow for more complex abstractions, but also risk overfitting. Start small and use validation metrics to guide your architecture."
-        },
-        {
-            id: 2,
-            user: "Nour Ali",
-            question: "Is backpropagation the only way to train neural networks?",
-            date: "1 day ago",
-            reply: null
-        }
-    ]);
+    const [questions, setQuestions] = useState([]);
+    // TODO: Replace with api.instructor.questions.getAll() when backend is ready
     const [courseData, setCourseData] = useState(null);
     const [courseLectures, setCourseLectures] = useState([]);
     const [activeLectureId, setActiveLectureId] = useState(null);
@@ -80,50 +64,7 @@ const VideoPlayerPage = () => {
         }
     }, [activeLectureId]);
 
-    // Initial AI welcome message
-    useEffect(() => {
-        if (messages.length === 0) {
-            setMessages([{ id: 1, role: 'ai', text: t('videoPlayer.aiTutor.defaultWelcome'), isNew: false }]);
-        }
-    }, [t]);
 
-    const handleAiMessage = (text, timestamp = null) => {
-        if (!text.trim()) return;
-
-        const currentTime = timestamp !== null ? timestamp : videoState.currentTime;
-
-        // Add user message
-        setMessages(prev => [...prev, {
-            id: Date.now(),
-            role: 'user',
-            text,
-            timestamp: currentTime
-        }]);
-
-        setIsAiTyping(true);
-
-        // Mock AI response
-        setTimeout(() => {
-            setIsAiTyping(false);
-
-            const lastMessageText = text.toLowerCase();
-            let responseText = t('videoPlayer.aiTutor.analyzingResponse', { timestamp: formatDuration(currentTime) });
-
-            if (lastMessageText.includes('explain') || lastMessageText.includes('شرح')) {
-                responseText = i18n.language === 'ar'
-                    ? "أرى شرحًا لبنية الـ React Context تظهر على الشاشة. يتحدث المعلم في هذه اللحظة عن كيفية تمرير البيانات عبر شجرة المكونات دون الحاجة لاستخدام الـ Props يدوياً."
-                    : "I see a structural diagram showing React Context architecture. The instructor is explaining how data is passed through the component tree without manually passing props at every level.";
-            }
-
-            setMessages(prev => [...prev, {
-                id: Date.now() + 1,
-                role: 'ai',
-                text: responseText,
-                timestamp: currentTime,
-                isNew: true
-            }]);
-        }, 1500);
-    };
 
     const handleLectureSelect = (lecture) => {
         setActiveLectureId(lecture.id);
@@ -224,10 +165,6 @@ const VideoPlayerPage = () => {
                             markers={markers}
                             isTheaterMode={isTheaterMode}
                             onToggleTheaterMode={() => setIsTheaterMode(!isTheaterMode)}
-                            aiMessages={messages}
-                            isAiTyping={isAiTyping}
-                            onAiAsk={handleAiMessage}
-                            setMessages={setMessages}
                         />
                     </div>
 
@@ -272,9 +209,6 @@ const VideoPlayerPage = () => {
                                     <ContextualAI
                                         videoState={videoState}
                                         addMarker={addMarker}
-                                        messages={messages}
-                                        onSend={handleAiMessage}
-                                        isTyping={isAiTyping}
                                     />
                                 </div>
                             )}
@@ -283,8 +217,7 @@ const VideoPlayerPage = () => {
                                 <div className="max-w-3xl">
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{t('videoPlayer.overview.title')}</h2>
                                     <p className="leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
-                                        In this lecture, we explore the fundamental building blocks of neural networks.
-                                        We'll start with the biological inspiration behind artificial neurons and mathematically define the perceptron.
+                                        {lectureData?.description || courseData?.description || t('videoPlayer.overview.noDescription')}
                                     </p>
                                 </div>
                             )}
@@ -427,9 +360,6 @@ const VideoPlayerPage = () => {
                             <ContextualAI
                                 videoState={videoState}
                                 addMarker={addMarker}
-                                messages={messages}
-                                onSend={handleAiMessage}
-                                isTyping={isAiTyping}
                             />
                         )}
                     </div>
