@@ -130,22 +130,29 @@ const VideoPlayerPage = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen h-[100dvh] bg-white dark:bg-slate-900 overflow-hidden transition-colors duration-300">
-            {/* Top Bar */}
-            <header className="h-16 bg-white dark:bg-[#0A0F1C] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 flex-shrink-0">
+        <div className="dark immersive-mode flex flex-col h-screen h-[100dvh] bg-[#020617] text-slate-200 overflow-hidden transition-all duration-700 relative">
+            {/* Cinematic Background Elements - Always Visible */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/15 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-900/15 blur-[120px] rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.04)_0%,transparent_70%)]" />
+            </div>
+
+            {/* Top Bar - Solid Dark */}
+            <header className="h-16 bg-[#0A0F1C] border-b border-slate-800 flex items-center justify-between px-6 flex-shrink-0 z-20">
                 <div className="flex items-center gap-4">
-                    <Link to={`/courses/${courseId}`} className="text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors">
+                    <Link to={`/courses/${courseId}`} className="text-slate-400 hover:text-white transition-colors">
                         <motion.div whileHover={{ x: -3, scale: 1.1 }} whileTap={{ scale: 0.9 }} transition={{ type: 'spring', stiffness: 400, damping: 20 }}>
                             <ArrowLeft strokeWidth={1.5} size={20} />
                         </motion.div>
                     </Link>
                     <div>
-                        <h1 className="text-slate-900 dark:text-white font-bold text-[15px] leading-tight tracking-wide">{currentLecture.title}</h1>
-                        <p className="text-transparent bg-clip-text bg-gradient-to-r from-slate-500 to-slate-600 dark:from-slate-400 dark:to-slate-500 text-xs leading-tight mt-0.5 font-medium">{courseTitle}</p>
+                        <h1 className="text-white font-bold text-[15px] leading-tight tracking-wide">{currentLecture.title}</h1>
+                        <p className="text-slate-500 text-xs leading-tight mt-0.5 font-medium">{courseTitle}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" className="hidden md:flex bg-transparent border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary dark:hover:text-white rounded-xl text-xs px-3 font-semibold transition-colors">
+                    <Button size="sm" variant="outline" className="bg-[#1E293B] border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white rounded-xl text-xs px-3 font-semibold transition-colors">
                         <HelpCircle size={14} className="mr-1.5" /> {t('videoPlayer.header.help')}
                     </Button>
                 </div>
@@ -155,7 +162,7 @@ const VideoPlayerPage = () => {
                 {/* Main Content (Video + Tabs) */}
                 <div
                     ref={scrollContainerRef}
-                    className={`flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 transition-all duration-500 ease-in-out`}
+                    className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-[#020617] transition-all duration-500 ease-in-out relative z-10"
                 >
                     <div className={`transition-all duration-500 ${isTheaterMode ? 'p-2 md:p-4 pb-0 max-w-[1600px] mx-auto w-full' : 'p-4 md:p-6 pb-0'}`}>
                         <VideoPlayer
@@ -181,18 +188,18 @@ const VideoPlayerPage = () => {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`pb-4 px-2 flex items-center gap-2 text-sm font-medium transition-colors relative flex-shrink-0 ${(tab.mobileOnly && !isTheaterMode) ? 'lg:hidden' : ''
-                                        } ${activeTab === tab.id ? 'text-primary' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'}`}
+                                    className={`pb-4 px-2 flex items-center gap-2.5 text-[13px] font-bold transition-all relative flex-shrink-0 tracking-wide ${(tab.mobileOnly && !isTheaterMode) ? 'lg:hidden' : ''
+                                        } ${activeTab === tab.id ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
                                 >
-                                    <tab.icon size={16} />
-                                    {tab.label}
-                                    {activeTab === tab.id && (
-                                        <motion.div
-                                            layoutId="video-tab-indicator"
-                                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full shadow-[0_0_8px_rgba(99,102,241,0.5)]"
-                                            transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                                        />
-                                    )}
+                                     <tab.icon size={16} className={activeTab === tab.id ? 'text-indigo-400' : ''} />
+                                     {tab.label}
+                                     {activeTab === tab.id && (
+                                         <motion.div
+                                             layoutId="video-tab-indicator"
+                                             className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.6)]"
+                                             transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                                         />
+                                     )}
                                 </button>
                             ))}
                         </div>
@@ -320,33 +327,33 @@ const VideoPlayerPage = () => {
                 </div>
 
                 {/* Right Sidebar (Playlist / AI) */}
-                <div className={`w-80 md:w-[360px] bg-white dark:bg-[#0A0F1C] border-l border-slate-200 dark:border-slate-800 flex flex-col flex-shrink-0 transition-all duration-500 ${isTheaterMode ? 'hidden' : 'hidden lg:flex'}`}>
-                    <div className="flex border-b border-slate-200 dark:border-slate-800 h-[60px] shrink-0 bg-white dark:bg-[#0A0F1C]">
+                <div className={`w-80 md:w-[380px] bg-[#0A0F1C] border-l border-slate-800 flex flex-col flex-shrink-0 transition-all duration-500 relative z-20 ${isTheaterMode ? 'hidden' : 'hidden lg:flex'}`}>
+                    <div className="flex border-b border-slate-800 h-[64px] shrink-0 bg-[#0A0F1C]">
                         <button
                             onClick={() => setRightSidebarTab('playlist')}
-                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'playlist' ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/30'}`}
+                            className={`flex-1 flex items-center justify-center gap-2.5 text-[11px] font-black uppercase tracking-[0.15em] transition-all relative ${rightSidebarTab === 'playlist' ? 'text-white bg-[#1E293B]' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
                         >
-                            <List size={16} /> {t('videoPlayer.tabs.playlist')}
+                            <List size={16} className={rightSidebarTab === 'playlist' ? 'text-indigo-400' : ''} /> {t('videoPlayer.tabs.playlist')}
                             {rightSidebarTab === 'playlist' && (
                                 <motion.div
                                     layoutId="sidebar-tab"
-                                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"
+                                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]"
                                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                                 />
                             )}
                         </button>
                         <button
                             onClick={() => setRightSidebarTab('ai')}
-                            className={`flex-1 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider transition-all relative ${rightSidebarTab === 'ai' ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/5' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/30'}`}
+                            className={`flex-1 flex items-center justify-center gap-2.5 text-[11px] font-black uppercase tracking-[0.15em] transition-all relative ${rightSidebarTab === 'ai' ? 'text-white bg-[#1E293B]' : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/30'}`}
                         >
-                            <motion.div animate={rightSidebarTab === 'ai' ? { rotate: [0, 10, -10, 0] } : {}} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
-                                <Zap size={16} />
+                            <motion.div animate={rightSidebarTab === 'ai' ? { rotate: [0, 15, -15, 0] } : {}} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
+                                <Zap size={16} className={rightSidebarTab === 'ai' ? 'text-purple-400 fill-purple-400/20' : ''} />
                             </motion.div>
                             {t('videoPlayer.tabs.ai')}
                             {rightSidebarTab === 'ai' && (
                                 <motion.div
                                     layoutId="sidebar-tab"
-                                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]"
                                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                                 />
                             )}

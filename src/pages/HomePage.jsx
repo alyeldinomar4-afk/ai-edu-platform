@@ -526,7 +526,7 @@ const HomePage = () => {
     };
 
     return (
-        <div className="pb-24 overflow-x-hidden bg-slate-50 dark:bg-[#0B1120] transition-colors duration-300">
+        <div className="pb-16 overflow-x-hidden bg-slate-50 dark:bg-[#0B1120] transition-colors duration-300">
             {/* Hero Section — Clean & Minimal */}
             <HeroSection getStartedPath={getStartedPath} />
 
@@ -576,7 +576,7 @@ const HomePage = () => {
             </section>
 
             {/* ═══ Categories / Domains — Editorial Text Layout ═══ */}
-            <section className="relative py-14 md:py-20 overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
+            <section className="relative py-10 md:py-14 overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
                     {(() => {
                         const DOMAIN_ACCENTS = ['#EC4899', '#6366F1', '#84CC16', '#F59E0B', '#8B5CF6', '#14B8A6'];
@@ -758,7 +758,7 @@ const HomePage = () => {
             </div>
 
             {/* Featured Courses - Premium SaaS Stack */}
-            <section className="py-16 md:py-20 bg-slate-50 dark:bg-[#0B1120] border-y border-slate-200/50 dark:border-white/5 transition-colors duration-300">
+            <section className="py-10 md:py-14 bg-slate-50 dark:bg-[#0B1120] border-y border-slate-200/50 dark:border-white/5 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -811,7 +811,7 @@ const HomePage = () => {
             </section>
 
             {/* AI Feature Highlight — Premium SaaS Experience */}
-            <section className="py-16 md:py-24 relative overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
+            <section className="py-10 md:py-16 relative overflow-hidden bg-slate-50 dark:bg-[#0B1120]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative overflow-visible">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.96, y: 40 }}
@@ -914,7 +914,7 @@ const HomePage = () => {
             </div>
 
             {/* ═══ How It Works — Animated Mockup Demo ═══ */}
-            <section className="relative py-10 md:py-14 overflow-hidden">
+            <section className="relative py-8 md:py-10 overflow-hidden">
 
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
                     {/* Header */}
@@ -984,7 +984,7 @@ const HomePage = () => {
             </div>
 
             {/* Top Instructors Section */}
-            <section className="relative py-10 md:py-14 overflow-hidden transition-colors duration-500">
+            <section className="relative py-8 md:py-10 overflow-hidden transition-colors duration-500">
 
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 relative z-10">
                     <motion.div
@@ -1093,7 +1093,7 @@ const HomePage = () => {
             </section>
 
             {/* Testimonials — Stagger with Scale & Carousel Mobile */}
-            <section className="py-10 md:py-12 transition-colors duration-300">
+            <section className="py-8 md:py-10 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 pb-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

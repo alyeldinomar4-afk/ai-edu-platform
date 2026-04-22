@@ -17,17 +17,17 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
     return (
-        <div className="flex flex-col h-full bg-white dark:bg-[#0F172A] border-l border-slate-200 dark:border-slate-800 overflow-hidden text-slate-900 dark:text-slate-200 font-sans">
+        <div className="flex flex-col h-full bg-[#0F172A] border-l border-slate-800 overflow-hidden text-slate-200 font-sans">
             {/* Header */}
-            <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-[#131C31]">
-                <h3 className="font-bold text-slate-900 dark:text-white tracking-wide">{t('videoPlayer.playlist.title')}</h3>
+            <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-[#131C31]">
+                <h3 className="font-bold text-white tracking-wide">{t('videoPlayer.playlist.title')}</h3>
             </div>
 
             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                 {sections.map((section, sIdx) => (
                     <div key={sIdx} className="border-b border-slate-200 dark:border-slate-800 last:border-0">
                         {/* Section Title */}
-                        <div className="bg-slate-100 dark:bg-[#1E293B] px-5 py-3.5 text-xs font-bold text-slate-500 dark:text-slate-300 uppercase tracking-widest shadow-inner border-y border-slate-200 dark:border-slate-700/50">
+                        <div className="bg-[#1E293B] px-5 py-3.5 text-xs font-bold text-slate-400 uppercase tracking-widest shadow-inner border-y border-slate-700/50">
                             {t('videoPlayer.playlist.section', { number: sIdx + 1 })}: {section.title}
                         </div>
 
@@ -44,13 +44,13 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                         variants={listItem}
                                         onClick={() => !isLocked && onSelect(lecture)}
                                         disabled={isLocked}
-                                        whileHover={!isLocked ? { x: isRTL ? -4 : 4 } : {}}
+                                        whileHover={!isLocked ? { x: isRTL ? -4 : 4, backgroundColor: "rgba(30, 41, 59, 0.5)" } : {}}
                                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                                         className={cn(
-                                            `w-full px-5 py-4 flex items-center gap-4 transition-all cursor-pointer border-b border-slate-100 dark:border-slate-800/50 last:border-0 group ${isRTL ? 'text-right' : 'text-left'}`,
+                                            `w-full px-5 py-4 flex items-center gap-4 transition-all cursor-pointer border-b border-slate-800/40 last:border-0 group ${isRTL ? 'text-right' : 'text-left'}`,
                                             isActive
-                                                ? `bg-indigo-600/10 hover:bg-indigo-600/20 ${isRTL ? 'border-r-[3px] border-r-indigo-500' : 'border-l-[3px] border-l-indigo-500'}`
-                                                : 'hover:bg-slate-50 dark:hover:bg-slate-800/80'
+                                                ? `bg-indigo-600/15 ${isRTL ? 'border-r-[3px] border-r-indigo-500' : 'border-l-[3px] border-l-indigo-500'}`
+                                                : ''
                                         )}
                                     >
                                         <div className="flex-shrink-0 relative">
@@ -101,12 +101,12 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                         <div className="flex-1 min-w-0 flex flex-col justify-center">
                                             <p className={cn(
                                                 "text-[14px] transition-colors leading-snug line-clamp-2",
-                                                isActive ? "font-bold text-slate-900 dark:text-white" : "text-slate-600 dark:text-slate-300 font-medium group-hover:text-slate-900 dark:group-hover:text-white"
+                                                isActive ? "font-bold text-white" : "text-slate-300 font-medium group-hover:text-white"
                                             )}>
                                                 {lIdx + 1}. {lecture.title}
                                             </p>
                                             <div className="flex items-center gap-2 mt-1.5 opacity-80">
-                                                <span className={`text-[11px] font-semibold flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-colors ${isActive ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-300' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'}`}>
+                                                <span className={`text-[11px] font-semibold flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-colors ${isActive ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>
                                                     <PlayCircle size={12} /> {lecture.duration}
                                                 </span>
                                             </div>

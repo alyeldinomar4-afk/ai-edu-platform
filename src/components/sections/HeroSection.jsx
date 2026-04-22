@@ -283,7 +283,7 @@ const HeroSection = ({ getStartedPath }) => {
         <div className="relative overflow-x-clip bg-slate-50 dark:bg-[#0B1120]">
 
             {/* ─── NATIVE SCROLL SECTION 1: HERO ─── */}
-            <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-visible">
+            <section className="relative min-h-screen flex items-center pt-16 pb-12 overflow-visible">
                 {/* Background orbs */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
                     <div className="orb orb-primary w-[600px] h-[600px] -top-32 -left-32 opacity-30 dark:opacity-40" />
@@ -386,7 +386,7 @@ const HeroSection = ({ getStartedPath }) => {
             </section>
 
             {/* ─── NATIVE SCROLL SECTION 2: FEATURES CARDS ─── */}
-            <section ref={hero2Ref} className="relative min-h-screen flex flex-col items-center justify-start pt-20 lg:pt-24 pb-24 overflow-visible bg-slate-50 dark:bg-[#060B14] border-t border-slate-200 dark:border-slate-800/40 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] z-10">
+            <section ref={hero2Ref} className="relative min-h-screen flex flex-col items-center justify-start pt-12 lg:pt-16 pb-16 overflow-visible bg-slate-50 dark:bg-[#060B14] border-t border-slate-200 dark:border-slate-800/40 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] z-10">
 
                 {/* Fixed Premium Background for Section 2 */}
                 <div className="absolute inset-0 hidden dark:block bg-gradient-to-b from-[#0c1224]/80 to-[#0B1120] pointer-events-none" />
