@@ -189,7 +189,7 @@ const DSK_Y = '20vh'; // Moved down from 8vh so it doesn't overlap text
 const MOB_X = [-25, 25, -25, 25];
 const MOB_Y = ['4vh', '4vh', '24vh', '24vh']; // Reduced gap between rows on mobile
 
-function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
+function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered, setIsDeckHovered, isStacked }) {
     // Mirror coordinates if Arabic (RTL) mode
     const numX = isMobile ? MOB_X[idx] : DSK_X[idx];
     const targetX = `${isAr ? -numX : numX}vw`;
@@ -222,15 +222,28 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
             style={{
                 x, y, rotate, scale,
                 position: 'absolute',
-                zIndex: CARDS_DATA.length - idx,
+                zIndex: isStacked && isDeckHovered ? 50 - idx : CARDS_DATA.length - idx,
             }}
+            className="pointer-events-auto"
+            onMouseEnter={() => isStacked && setIsDeckHovered(true)}
+            onMouseLeave={() => isStacked && setIsDeckHovered(false)}
         >
-            <div className="flex flex-col items-center gap-3">
+            <motion.div 
+                animate={{
+                    x: isStacked && isDeckHovered ? (isAr ? -card.stackX * 8 : card.stackX * 8) : 0,
+                    y: isStacked && isDeckHovered ? card.stackY * 2.5 - 20 : 0,
+                    rotate: isStacked && isDeckHovered ? finalRotate * 0.8 : 0,
+                    scale: isStacked && isDeckHovered ? 1.05 : 1
+                }}
+                whileHover={!isStacked ? { y: -8, scale: 1.02 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="flex flex-col items-center gap-3 cursor-pointer group"
+            >
                 <div
                     className="w-28 h-28 sm:w-44 sm:h-44 lg:w-52 lg:h-52 xl:w-56 xl:h-56 rounded-3xl overflow-hidden ring-4 ring-slate-200/60 dark:ring-white/10"
                     style={{ boxShadow: `0 10px 45px ${card.glow}, 0 4px 15px rgba(0,0,0,0.4)` }}
                 >
-                    <img src={card.src} alt={card.fallback} className="w-full h-full object-cover" />
+                    <img src={card.src} alt={card.fallback} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 </div>
                 <motion.p
                     style={{ opacity: lblOpacity, y: lblY }}
@@ -238,7 +251,7 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr }) {
                 >
                     {t(card.labelKey, { defaultValue: card.fallback })}
                 </motion.p>
-            </div>
+            </motion.div>
         </motion.div>
     );
 }
@@ -248,6 +261,8 @@ const HeroSection = ({ getStartedPath }) => {
     const { t, i18n } = useTranslation();
     const isAr = i18n.language === 'ar';
     const [showDemo, setShowDemo] = useState(false);
+    const [isDeckHovered, setIsDeckHovered] = useState(false);
+    const [isStacked, setIsStacked] = useState(true);
 
     const [isMobile, setIsMobile] = useState(false);
     useEffect(() => {
@@ -263,6 +278,13 @@ const HeroSection = ({ getStartedPath }) => {
         target: hero2Ref,
         offset: ['start end', 'center center']
     });
+
+    useEffect(() => {
+        return scrollYProgress.on('change', (latest) => {
+            setIsStacked(latest < 0.05);
+            if (latest >= 0.05) setIsDeckHovered(false);
+        });
+    }, [scrollYProgress]);
 
     const imageRef = useRef(null);
     const mx = useMotionValue(0), my = useMotionValue(0);
@@ -413,10 +435,20 @@ const HeroSection = ({ getStartedPath }) => {
                     </p>
                 </div>
 
-                {/* Animated Cards Container - Anchored seamlessly spanning Sec1 & Sec2  */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
                     {CARDS_DATA.map((card, idx) => (
-                        <AnimCard key={idx} card={card} idx={idx} scrollYProgress={scrollYProgress} isMobile={isMobile} t={t} isAr={isAr} />
+                        <AnimCard 
+                            key={idx} 
+                            card={card} 
+                            idx={idx} 
+                            scrollYProgress={scrollYProgress} 
+                            isMobile={isMobile} 
+                            t={t} 
+                            isAr={isAr}
+                            isDeckHovered={isDeckHovered}
+                            setIsDeckHovered={setIsDeckHovered}
+                            isStacked={isStacked}
+                        />
                     ))}
                 </div>
 

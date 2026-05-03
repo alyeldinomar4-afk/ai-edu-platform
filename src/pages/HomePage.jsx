@@ -13,13 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '../utils';
 import { formatCompactNumber } from '../utils/formatters';
 
-// 3D Icons for categories
-import dev3d from '../assets/images/3d-icons/dev_3d.png';
-import data3d from '../assets/images/3d-icons/data_3d.png';
-import design3d from '../assets/images/3d-icons/design_3d.png';
-import marketing3d from '../assets/images/3d-icons/marketing_3d.png';
-import photo3d from '../assets/images/3d-icons/photo_3d.png';
-import finance3d from '../assets/images/3d-icons/finance_3d.png';
+
 
 /* ─── Shared Framer Motion variants ─── */
 const staggerContainer = {
@@ -594,7 +588,7 @@ const HomePage = () => {
                                 >
                                     {/* Decorative Glow */}
                                     <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-10 pointer-events-none" />
-                                    
+
                                     <motion.span
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         whileInView={{ opacity: 1, scale: 1 }}
@@ -624,22 +618,22 @@ const HomePage = () => {
                                 </motion.div>
 
                                 {/* Right — Domains Grid (2-col staggered, glass cards) */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
                                     {categoriesList.map((cat, idx) => {
                                         const accent = DOMAIN_ACCENTS[idx % DOMAIN_ACCENTS.length];
                                         const number = String(idx + 1).padStart(2, '0');
                                         const isRightCol = idx % 2 !== 0;
-                                        
-                                        // 3D Icon Mapping
-                                        const iconMap3D = {
-                                            'Development': dev3d,
-                                            'Data Science': data3d,
-                                            'Design': design3d,
-                                            'Marketing': marketing3d,
-                                            'Photography': photo3d,
-                                            'Finance': finance3d,
+
+                                        // Premium SVG Icon Mapping
+                                        const iconMapSvg = {
+                                            'Development': Code2,
+                                            'Data Science': BarChart3,
+                                            'Design': Palette,
+                                            'Marketing': Megaphone,
+                                            'Photography': Camera,
+                                            'Finance': DollarSign,
                                         };
-                                        const Icon3D = iconMap3D[cat.name] || dev3d; // Fallback to dev3d if unknown
+                                        const IconComponent = iconMapSvg[cat.name] || Code2;
 
                                         return (
                                             <motion.div
@@ -652,11 +646,11 @@ const HomePage = () => {
                                                 style={{ '--accent-color': accent }}
                                                 className={cn(
                                                     "group cursor-pointer perspective-container",
-                                                    isRightCol && "sm:mt-8 md:mt-12"
+                                                    isRightCol && "sm:mt-4 md:mt-6"
                                                 )}
                                             >
                                                 {/* Glass Card */}
-                                                <motion.div 
+                                                <motion.div
                                                     whileHover={{ y: -6, scale: 1.01 }}
                                                     className={cn(
                                                         "relative rounded-2xl p-4 md:p-6 overflow-hidden transition-all duration-500 card-3d",
@@ -691,26 +685,30 @@ const HomePage = () => {
                                                         style={{ backgroundColor: accent }}
                                                     />
 
-                                                    {/* 3D Icon Container with Restored Glow */}
-                                                    <div className="relative mb-4 md:mb-5">
+                                                    {/* Premium SVG Icon Container */}
+                                                    <div className="relative mb-6 mt-2">
                                                         <motion.div
-                                                            whileHover={{ 
+                                                            whileHover={{
                                                                 scale: 1.1,
-                                                                y: -10,
+                                                                y: -5,
                                                                 rotate: 5
                                                             }}
-                                                            className="relative z-10 w-fit"
+                                                            className="relative z-10 flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/80 dark:bg-slate-800/80 shadow-xl border border-slate-100 dark:border-slate-700/50 backdrop-blur-md"
                                                         >
-                                                            <img 
-                                                                src={Icon3D} 
-                                                                alt={cat.name}
-                                                                className="w-12 h-12 md:w-16 md:h-16 object-contain mix-blend-multiply dark:mix-blend-screen"
+                                                            {/* Inner Gradient Glow */}
+                                                            <div
+                                                                className="absolute inset-0 rounded-2xl opacity-[0.08] dark:opacity-[0.12]"
+                                                                style={{ background: `linear-gradient(135deg, ${accent}, transparent)` }}
+                                                            />
+                                                            <IconComponent
+                                                                className="w-7 h-7 md:w-8 md:h-8 relative z-10 drop-shadow-sm transition-colors"
+                                                                style={{ color: accent }}
                                                             />
                                                         </motion.div>
-                                                        
-                                                        {/* Restored Decorative Background Blob (Underneath Glow) */}
-                                                        <div 
-                                                            className="absolute -top-4 -left-4 w-12 h-12 blur-2xl rounded-full opacity-20 dark:opacity-30"
+
+                                                        {/* Decorative Background Blob */}
+                                                        <div
+                                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 blur-[20px] rounded-full opacity-15 dark:opacity-20"
                                                             style={{ backgroundColor: accent }}
                                                         />
                                                     </div>
@@ -758,7 +756,7 @@ const HomePage = () => {
             </div>
 
             {/* Featured Courses - Premium SaaS Stack */}
-            <section className="py-10 md:py-14 bg-slate-50 dark:bg-[#0B1120] border-y border-slate-200/50 dark:border-white/5 transition-colors duration-300">
+            <section className="py-6 md:py-10 bg-slate-50 dark:bg-[#0B1120] border-y border-slate-200/50 dark:border-white/5 transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -785,7 +783,7 @@ const HomePage = () => {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: '-30px' }}
-                        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 pt-4 px-6 -mx-6 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:px-0 md:mx-0 md:pb-4 md:snap-none md:overflow-visible"
+                        className="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-5 pb-12 pt-4 px-6 -mx-6 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-4 md:px-0 md:mx-0 md:pb-4 md:snap-none md:overflow-visible"
                     >
                         {isLoading ? (
                             Array(4).fill(0).map((_, i) => (
