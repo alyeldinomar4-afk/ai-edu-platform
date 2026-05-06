@@ -16,6 +16,7 @@ const InstructorQAPage = () => {
     const { user } = useAuth();
     const [questions, setQuestions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(false);
     const [expandedId, setExpandedId] = useState(null);
     const [replyTexts, setReplyTexts] = useState({});
 
@@ -31,12 +32,14 @@ const InstructorQAPage = () => {
                     avatar: q.avatar || `https://ui-avatars.com/api/?name=${q.user}&background=random`,
                     course: q.course || 'Global Q&A',
                     question: q.question,
-                    date: q.date || 'Just now',
+                    date: q.date || t('common.justNow'),
                     status: q.reply ? 'resolved' : 'pending'
                 }));
                 setQuestions(formatted);
             } catch (error) {
                 console.error('Error fetching questions:', error);
+                setFetchError(true);
+                toast.error(t('common.error'));
             } finally {
                 setIsLoading(false);
             }

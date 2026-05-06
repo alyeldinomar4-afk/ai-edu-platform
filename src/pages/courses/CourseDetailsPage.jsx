@@ -26,10 +26,8 @@ const CourseDetailsPage = () => {
     const [reviewText, setReviewText] = useState('');
     const [reviewError, setReviewError] = useState('');
     const [reviewSuccess, setReviewSuccess] = useState(false);
-    const [reviews, setReviews] = useState([
-        { name: "Mohammed Khaled", date: "3 days ago", rating: 5, comment: "This course is life-changing. Everything is explained so clearly!" },
-        { name: "Youssef Tariq", date: "1 week ago", rating: 4, comment: "Great content, but would love more practical exercises in section 3." }
-    ]);
+    const [reviews, setReviews] = useState([]);
+    // TODO: Replace with api.learner.getCourseReviews(id) when backend is ready
 
     const [course, setCourse] = useState(null);
     const [instructorData, setInstructorData] = useState(null);
@@ -38,7 +36,12 @@ const CourseDetailsPage = () => {
         if (reviewRating === 0) { setReviewError('Please select a star rating first.'); return; }
         if (!reviewText.trim()) { setReviewError('Please write your feedback before submitting.'); return; }
         setReviewError('');
-        setReviews(prev => [{ name: 'أنت', date: 'Just now', rating: reviewRating, comment: reviewText.trim() }, ...prev]);
+        setReviews(prev => [{ 
+            name: user?.name || t('common.you'), 
+            date: t('common.justNow'), 
+            rating: reviewRating, 
+            comment: reviewText.trim() 
+        }, ...prev]);
         setReviewRating(0);
         setReviewText('');
         setReviewSuccess(true);

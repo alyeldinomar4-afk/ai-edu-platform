@@ -163,6 +163,7 @@
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong",
+    "success": "Success",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -178,6 +179,7 @@
     "error_subtitle": "An unexpected error occurred. Please try refreshing the page or going back to the home page.",
     "refresh_page": "Refresh Page",
     "justNow": "Just now",
+    "you": "You",
     "h": "h",
     "new": "New",
     "viewCourse": "View Course",
@@ -512,7 +514,6 @@
         "subjectPlaceholder": "e.g. Important Update: New Content Added",
         "message": "Message",
         "messagePlaceholder": "Write your message here...",
-        "mockEditor": "Mock Rich Text Editor",
         "cancel": "Cancel",
         "send": "Send Announcement",
         "sending": "Sending...",

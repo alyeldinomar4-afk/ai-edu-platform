@@ -89,6 +89,7 @@ The backend MUST return data in the following shapes to avoid frontend crashes. 
   "course": "string (Course Title)",
   "courseId": "number",
   "instructorId": "number",
+  "instructor": "string (Instructor Name)",
   "views": "number",
   "duration": "number (seconds)",
   "status": "published | draft | pending",
@@ -111,44 +112,56 @@ The backend MUST return data in the following shapes to avoid frontend crashes. 
 {
   "id": "number",
   "name": "string",
-  "email": "string",
+  "role": "string (e.g. 'AI Researcher & Educator')",
   "avatar": "string (URL)",
-  "specialty": "string",
+  "coursesCount": "number",
+  "rating": "number (0-5)",
+  "studentsCount": "number",
+  "category": "string (e.g. 'Data Science')",
   "bio": "string",
-  "courses": "number (count)",
-  "students": "number (count)",
-  "rating": "number (0-5)"
+  "website": "string (URL, optional)",
+  "linkedin": "string (URL, optional)",
+  "twitter": "string (URL, optional)"
 }
 ```
+> [!NOTE]
+> Frontend uses `role` (not `specialty`), `coursesCount` (not `courses`), and `studentsCount` (not `students`).
+> Social links (`website`, `linkedin`, `twitter`) are optional but displayed on instructor profile pages.
 
 ### 💬 Question Object (Instructor Q&A)
 ```json
 {
   "id": "number",
-  "studentName": "string",
-  "studentAvatar": "string (URL)",
+  "user": "string (student name)",
+  "avatar": "string (URL)",
   "course": "string (Course Title)",
   "question": "string",
-  "date": "string (YYYY-MM-DD)",
-  "reply": "string | null"
+  "date": "string",
+  "reply": "string | empty string"
 }
 ```
+> [!NOTE]
+> Frontend uses `user` (not `studentName`) and `avatar` (not `studentAvatar`). The page maps `user → studentName` internally.
 
 ### ⭐ Review Object (Instructor Reviews)
 ```json
 {
   "id": "number",
-  "studentName": "string",
-  "studentAvatar": "string (URL)",
+  "user": "string (student name)",
+  "avatar": "string (URL)",
   "course": "string (Course Title)",
   "rating": "number (1-5)",
   "comment": "string",
-  "date": "string (YYYY-MM-DD)",
-  "reply": "string | null"
+  "date": "string",
+  "reply": "string | empty string"
 }
 ```
+> [!NOTE]
+> Frontend uses `user` (not `studentName`) and `avatar` (not `studentAvatar`). The page maps `user → studentName` internally.
 
 ### 📢 Announcement Object
+
+#### Learner Announcement (from `GET /learner/announcements`)
 ```json
 {
   "id": "number",
@@ -159,6 +172,22 @@ The backend MUST return data in the following shapes to avoid frontend crashes. 
   "courseId": "number | null"
 }
 ```
+
+#### Instructor Announcement (from `GET /instructor/announcements`)
+```json
+{
+  "id": "number",
+  "subject": "string",
+  "message": "string",
+  "course": "string (course name, resolved by backend from courseId)",
+  "courseId": "number | string ('all')",
+  "date": "string (ISO Date or relative)",
+  "sentTo": "number (count of students who received it)"
+}
+```
+> [!IMPORTANT]
+> The frontend uses `subject` and `message` for instructor announcements, NOT `title` and `body`.
+> The backend MUST return `sentTo` (student count) and `course` (resolved course name) in the response.
 
 ### 💳 Billing History Object
 ```json
@@ -190,11 +219,13 @@ The backend MUST return data in the following shapes to avoid frontend crashes. 
   "id": "number",
   "name": "string",
   "role": "string",
-  "avatar": "string (URL)",
-  "comment": "string",
+  "image": "string (URL)",
+  "content": "string",
   "rating": "number (1-5)"
 }
 ```
+> [!CAUTION]
+> Frontend uses `image` (NOT `avatar`) and `content` (NOT `comment`). Returning the wrong keys will cause blank testimonials.
 
 ---
 
@@ -909,38 +940,56 @@ questions: {
 ```
 
 ### 9.6 Instructor Announcements
-- **Target Line**: ~335 to 345
+- **Target Line**: ~336 to 348
 - **API**: `GET /instructor/announcements` + `POST /instructor/announcements`
 
 #### ❌ MOCK CODE TO REMOVE:
 ```javascript
-335:    announcements: {
-336:        getAll: async (courseId) => {
-337:            await delay(400);
-338:            if (courseId === 'all') return instructorAnnouncements;
-339:            return instructorAnnouncements.filter(a => a.courseId === courseId);
-340:        },
-341:        create: async (data) => {
-342:            await delay(500);
-343:            return { ...data, id: Date.now() };
-344:        }
-345:    }
+announcements: {
+    getAll: async (courseId) => {
+        await delay(400);
+        if (courseId === 'all') return announcementsSub;
+        return announcementsSub.filter(a => a.courseId === courseId);
+    },
+    create: async (data) => {
+        await delay(500);
+        const newAnnouncement = { ...data, id: Date.now() };
+        announcementsSub = [newAnnouncement, ...announcementsSub];
+        return newAnnouncement;
+    }
+}
 ```
 
 #### ✅ PRODUCTION CODE TO INSERT:
 ```javascript
 announcements: {
     getAll: async (courseId) => {
+        // GET /instructor/announcements?courseId=:id
         const params = courseId !== 'all' ? { courseId } : {};
         const response = await apiInstance.get('/instructor/announcements', { params });
-        return response.data; // Array of Announcement objects
+        return response.data;
+        // Expected: Array of { id, subject, message, course, courseId, date, sentTo }
     },
     create: async (data) => {
-        const response = await apiInstance.post('/instructor/announcements', data);
-        return response.data; // Created Announcement object
+        // POST /instructor/announcements
+        // Body: { courseId, subject, message }
+        // Backend resolves: course name from courseId, sentTo from enrolled students count
+        const response = await apiInstance.post('/instructor/announcements', {
+            courseId: data.courseId,
+            subject: data.subject,
+            message: data.message
+        });
+        return response.data;
+        // Expected: { id, subject, message, course, courseId, date, sentTo }
     }
 }
 ```
+
+> [!IMPORTANT]
+> **Backend Notes:**
+> - `course` (string): Backend must resolve the course name from `courseId`. If `courseId === 'all'`, return `"All Courses"`.
+> - `sentTo` (number): Backend must calculate how many enrolled students received this announcement.
+> - The frontend sends only `{ courseId, subject, message }`. All other fields are server-generated.
 
 ---
 
@@ -1242,7 +1291,7 @@ testimonials: {
 
 1. **Delete `src/data/mockData.js`**: سيصبح غير مستخدم.
 2. **Remove `delay()` Helper**: احذفه من جميع ملفات الـ services.
-3. **Remove Local variables**: احذف `coursesSub` و `lecturesSub` و `questionsSub` و `reviewsSub` من ملف `api.js`.
+3. **Remove Local variables**: احذف `coursesSub` و `lecturesSub` و `questionsSub` و `reviewsSub` و `announcementsSub` من ملف `api.js`.
 4. **Remove `normalizeDuration()`**: الباك اند هيكون مسؤول عن التأكد إن الـ duration بالثواني.
 5. **Change Imports**: استبدل استيراد البيانات الوهمية باستيراد `apiInstance`.
 6. **Remove `i18n` import from `api.js`**: الباك اند الـ AI هيكون مسؤول عن اللغة بناءً على الـ request headers أو body.

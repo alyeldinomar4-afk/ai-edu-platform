@@ -30,6 +30,7 @@ const InstructorReviewsPage = () => {
     const { user } = useAuth();
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(false);
     const [activeReplyId, setActiveReplyId] = useState(null);
     const [replyTexts, setReplyTexts] = useState({});
 
@@ -45,12 +46,14 @@ const InstructorReviewsPage = () => {
                     avatar: r.avatar || `https://ui-avatars.com/api/?name=${r.user}&background=random`,
                     course: r.course || 'Nexora Course',
                     review: r.comment || r.review, // handle both keys if any
-                    date: r.date || 'Just now',
+                    date: r.date || t('common.justNow'),
                     reply: r.reply || ''
                 }));
                 setReviews(formatted);
             } catch (error) {
                 console.error('Error fetching reviews:', error);
+                setFetchError(true);
+                toast.error(t('common.error'));
             } finally {
                 setIsLoading(false);
             }

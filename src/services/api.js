@@ -16,6 +16,7 @@ let coursesSub = [...mockCourses];
 let lecturesSub = [...mockLectures];
 let questionsSub = [...instructorQuestions];
 let reviewsSub = [...instructorReviews];
+let announcementsSub = [...instructorAnnouncements];
 
 // Simulated network delay
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -335,12 +336,14 @@ export const api = {
         announcements: {
             getAll: async (courseId) => {
                 await delay(400);
-                if (courseId === 'all') return instructorAnnouncements;
-                return instructorAnnouncements.filter(a => a.courseId === courseId);
+                if (courseId === 'all') return announcementsSub;
+                return announcementsSub.filter(a => a.courseId === courseId);
             },
             create: async (data) => {
                 await delay(500);
-                return { ...data, id: Date.now() };
+                const newAnnouncement = { ...data, id: Date.now() };
+                announcementsSub = [newAnnouncement, ...announcementsSub];
+                return newAnnouncement;
             }
         }
     },

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Megaphone, Send, Users, Clock, Bold, Italic, Link as LinkIcon, List } from 'lucide-react';
+import { Megaphone, Send, Users, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import InstructorNav from '../../components/layout/InstructorNav';
 import Button from '../../components/ui/Button';
@@ -17,6 +17,7 @@ const InstructorAnnouncementsPage = () => {
     const [coursesList, setCoursesList] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(false);
 
     const [selectedCourse, setSelectedCourse] = useState('all');
     const [subject, setSubject] = useState('');
@@ -35,6 +36,8 @@ const InstructorAnnouncementsPage = () => {
                 setCoursesList(courseData.map(c => ({ id: c.id, title: c.title })));
             } catch (error) {
                 console.error('Error fetching announcements:', error);
+                setFetchError(true);
+                toast.error(t('common.error'));
             } finally {
                 setIsLoading(false);
             }
@@ -55,7 +58,7 @@ const InstructorAnnouncementsPage = () => {
                 course: courseName,
                 subject,
                 message,
-                date: 'Just now',
+                date: t('common.justNow'),
                 sentTo: selectedCourse === 'all' ? 5200 : 1450 // Mock numbers for UI
             });
 
@@ -126,25 +129,14 @@ const InstructorAnnouncementsPage = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t('dashboard.instructor.announcements.message')}</label>
-                                    <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-white dark:bg-slate-900">
-                                        {/* Mock Formatting Toolbar */}
-                                        <div className="flex items-center gap-1 p-2 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
-                                            <button type="button" className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-400" title="Bold"><Bold size={16} /></button>
-                                            <button type="button" className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-400" title="Italic"><Italic size={16} /></button>
-                                            <button type="button" className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-400" title="List"><List size={16} /></button>
-                                            <button type="button" className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-600 dark:text-slate-400" title="Link"><LinkIcon size={16} /></button>
-                                            <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-                                            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold ml-1">{t('dashboard.instructor.announcements.mockEditor')}</span>
-                                        </div>
-                                        <textarea
-                                            required
-                                            value={message}
-                                            onChange={(e) => setMessage(e.target.value)}
-                                            placeholder={t('dashboard.instructor.announcements.messagePlaceholder')}
-                                            rows="6"
-                                            className={`w-full px-4 py-3 bg-transparent text-slate-900 dark:text-white focus:outline-none transition-colors resize-y ${isRTL ? 'text-right' : ''}`}
-                                        />
-                                    </div>
+                                    <textarea
+                                        required
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        placeholder={t('dashboard.instructor.announcements.messagePlaceholder')}
+                                        rows="6"
+                                        className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors resize-y ${isRTL ? 'text-right' : ''}`}
+                                    />
                                 </div>
                                 <div className={`flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 ${isRTL ? 'flex-row-reverse' : ''}`}>
                                     <Button type="button" variant="ghost" onClick={() => setShowForm(false)} disabled={isSending}>
@@ -184,7 +176,7 @@ const InstructorAnnouncementsPage = () => {
                                 <div className={`flex items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700 ${isRTL ? 'flex-row-reverse' : ''}`}>
                                     <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Clock size={14} /> {ann.date}</span>
                                     <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
-                                    <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Users size={14} /> {t('dashboard.instructor.announcements.sentTo', { count: ann.sentTo?.toLocaleString() || 0 })}</span>
+                                    <span className={`flex items-center gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}><Users size={14} /> {t('dashboard.instructor.announcements.sentTo', { count: Number(ann.sentTo || 0).toLocaleString() })}</span>
                                 </div>
                             </div>
                             <div className="prose prose-sm dark:prose-invert max-w-none text-slate-600 dark:text-slate-300">
