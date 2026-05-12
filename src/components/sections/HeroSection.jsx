@@ -370,7 +370,7 @@ const HeroSection = ({ getStartedPath }) => {
                                 <motion.div
                                     animate={{ y: [-8, 8, -8] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute z-30 right-2 lg:-right-6 top-6 sm:top-10 bg-white/20 dark:bg-black/30 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 sm:gap-2.5 border-b-2 border-b-yellow-400/20 hover:scale-105 transition-transform cursor-default"
+                                    className="absolute z-30 right-2 lg:-right-6 top-6 sm:top-10 bg-black/30 backdrop-blur-md border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 sm:gap-2.5 border-b-2 border-b-yellow-400/20 hover:scale-105 transition-transform cursor-default"
                                 >
                                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.2)] flex-shrink-0 backdrop-blur-md">
                                         <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400/50" />
