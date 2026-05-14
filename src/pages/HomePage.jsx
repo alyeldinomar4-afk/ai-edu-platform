@@ -3,6 +3,7 @@ import { Zap, Sparkles, Star, Code2, BarChart3, Palette, Megaphone, Camera, Doll
 import React, { useState, useEffect, useRef } from 'react';
 import Button from '../components/ui/Button';
 import HeroSection from '../components/sections/HeroSection';
+import SmartLearningSection from '../components/sections/SmartLearningSection';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import CourseCard from '../components/features/course/CourseCard';
 import { api } from '../services/api';
@@ -523,6 +524,8 @@ const HomePage = () => {
         <div className="pb-16 overflow-x-hidden bg-slate-50 dark:bg-[#0B1120] transition-colors duration-300">
             {/* Hero Section — Clean & Minimal */}
             <HeroSection getStartedPath={getStartedPath} />
+
+            <SmartLearningSection />
 
             {/* Stats Section */}
             <section className="relative py-4 md:py-8 px-4 md:px-8 overflow-hidden bg-slate-50 dark:bg-[#0B1120]">

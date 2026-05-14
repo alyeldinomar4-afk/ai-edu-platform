@@ -195,16 +195,16 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered
     const targetX = `${isAr ? -numX : numX}vw`;
     const targetY = isMobile ? MOB_Y[idx] : DSK_Y;
 
-    // Stack is positioned at the bottom edge of the Hero Image
-    // In RTL, the image sits on the left side of the screen, so stackX must be negative
-    const deskStartX = isAr ? -10 : 10;
+    // Stack is positioned over the girl's hand. 
+    // In LTR (image on right), hand is right of center. In RTL (image on left, unflipped), hand is far left.
+    const deskStartX = isAr ? -20 : 20;
     // On mobile, spread cards to the edges and position them lower down to avoid hero center
     // On mobile, keep them in a stack but move it to the bottom-side to avoid the hero center
     const mobStartX = isAr ? '28vw' : '-28vw';
     const mobStartY = '-60vh';
 
     const startX = isMobile ? mobStartX : `${deskStartX}vw`;
-    const startY = isMobile ? mobStartY : '-80vh';
+    const startY = isMobile ? mobStartY : '-88vh';
 
     // Cards should rotate the opposite way in RTL to look matched to the mirror
     const finalRotate = isAr ? -card.stackRotate : card.stackRotate;
@@ -228,7 +228,7 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered
             onMouseEnter={() => isStacked && setIsDeckHovered(true)}
             onMouseLeave={() => isStacked && setIsDeckHovered(false)}
         >
-            <motion.div 
+            <motion.div
                 animate={{
                     x: isStacked && isDeckHovered ? (isAr ? -card.stackX * 8 : card.stackX * 8) : 0,
                     y: isStacked && isDeckHovered ? card.stackY * 2.5 - 20 : 0,
@@ -240,7 +240,7 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered
                 className="flex flex-col items-center gap-3 cursor-pointer group"
             >
                 <div
-                    className="w-28 h-28 sm:w-44 sm:h-44 lg:w-52 lg:h-52 xl:w-56 xl:h-56 rounded-3xl overflow-hidden ring-4 ring-slate-200/60 dark:ring-white/10"
+                    className="w-24 h-24 sm:w-36 sm:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 rounded-3xl overflow-hidden ring-4 ring-slate-200/60 dark:ring-white/10"
                     style={{ boxShadow: `0 10px 45px ${card.glow}, 0 4px 15px rgba(0,0,0,0.4)` }}
                 >
                     <img src={card.src} alt={card.fallback} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -305,7 +305,25 @@ const HeroSection = ({ getStartedPath }) => {
         <div className="relative overflow-x-clip bg-slate-50 dark:bg-[#0B1120]">
 
             {/* ─── NATIVE SCROLL SECTION 1: HERO ─── */}
-            <section className="relative min-h-screen flex items-center pt-16 pb-12 overflow-visible">
+            <section className="relative min-h-screen flex items-center pt-16 pb-12 overflow-hidden">
+
+                {/* Full Bleed Absolute Right/Left Image */}
+                <div className={`absolute top-1/2 -translate-y-1/2 w-full lg:w-[60%] z-0 hidden lg:flex items-center pointer-events-none ${isAr ? 'left-0 justify-start' : 'right-0 justify-end'}`}>
+                    {/* Dark Mode Image (shown only in dark mode) */}
+                    <img 
+                        src="/premium_hero_nexora_tall.jpg" 
+                        alt="Nexora AI Dark" 
+                        className={`max-h-[100vh] w-auto object-contain hidden dark:block ${isAr ? 'object-left' : 'object-right'}`}
+                    />
+                    {/* Light Mode Image (shown only in light mode) */}
+                    <img 
+                        src="/premium_hero_nexora_light.jpg" 
+                        alt="Nexora AI Light" 
+                        className={`max-h-[100vh] w-auto object-contain block dark:hidden ${isAr ? 'object-left' : 'object-right'}`}
+                    />
+                    {/* Gradient fade to blend with the background color smoothly */}
+                    <div className={`absolute inset-y-0 w-[40%] to-transparent pointer-events-none ${isAr ? 'right-0 bg-gradient-to-l from-slate-50 dark:from-[#0B1120]' : 'left-0 bg-gradient-to-r from-slate-50 dark:from-[#0B1120]'}`} />
+                </div>
                 {/* Background orbs */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
                     <div className="orb orb-primary w-[600px] h-[600px] -top-32 -left-32 opacity-30 dark:opacity-40" />
@@ -354,55 +372,8 @@ const HeroSection = ({ getStartedPath }) => {
                             </div>
                         </motion.div>
 
-                        {/* Right — 3D Hero image */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                            className="flex items-center justify-center relative mt-6 lg:mt-0 w-full"
-                        >
-                            <div
-                                className="relative w-full max-w-[620px] h-[340px] sm:h-[420px] lg:h-[540px] flex items-center justify-center mx-auto lg:ml-auto"
-                                ref={imageRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ perspective: "1200px" }}
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/10 to-cyan-500/20 blur-[100px] rounded-full animate-pulse" />
-
-                                {/* Smart Learning Floating Badge */}
-                                <motion.div
-                                    animate={{ y: [-8, 8, -8] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute z-30 right-2 lg:-right-6 top-6 sm:top-10 bg-black/30 backdrop-blur-md border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 sm:gap-2.5 border-b-2 border-b-yellow-400/20 hover:scale-105 transition-transform cursor-default"
-                                >
-                                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.2)] flex-shrink-0 backdrop-blur-md">
-                                        <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400/50" />
-                                    </div>
-                                    <div className="flex flex-col items-start pr-1 justify-center">
-                                        <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wide text-white uppercase leading-tight">
-                                            Smart Learning
-                                        </span>
-                                        <div className="flex gap-1 items-center mt-0.5" dir="ltr">
-                                            <span className="w-1 h-1 rounded-full bg-amber-500/80 animate-bounce shadow-[0_0_5px_rgba(245,158,11,0.6)]" style={{ animationDelay: '0s' }} />
-                                            <span className="w-1 h-1 rounded-full bg-yellow-400/80 animate-bounce shadow-[0_0_5px_rgba(250,204,21,0.6)]" style={{ animationDelay: '0.15s' }} />
-                                            <span className="w-1 h-1 rounded-full bg-amber-300/80 animate-bounce shadow-[0_0_5px_rgba(252,211,77,0.6)]" style={{ animationDelay: '0.3s' }} />
-                                        </div>
-                                    </div>
-                                </motion.div>
-
-                                <motion.div
-                                    style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                                    className="relative z-10 w-full h-full rounded-[40px] overflow-hidden shadow-2xl shadow-indigo-500/40 p-1 bg-gradient-to-br from-white/20 via-white/5 to-white/10 backdrop-blur-md"
-                                >
-                                    <div className="w-full h-full rounded-[36px] overflow-hidden bg-[#0c1224] relative">
-                                        <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                                        <img
-                                            src="/premium_hero_nexora_subtle_neon_1775433853183.png"
-                                            alt="Nexora AI"
-                                            className="w-full h-full object-cover rounded-[36px] transition-all duration-700"
-                                            style={{ filter: 'brightness(1.1) saturate(1.1) contrast(1.05)' }}
-                                        />
-                                    </div>
-                                </motion.div>
-                            </div>
-                        </motion.div>
+                        {/* Right column empty to allow the absolute image to show through */}
+                        <div className="hidden lg:block relative w-full h-[600px] pointer-events-none" />
                     </div>
                 </div>
             </section>
@@ -437,13 +408,13 @@ const HeroSection = ({ getStartedPath }) => {
 
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
                     {CARDS_DATA.map((card, idx) => (
-                        <AnimCard 
-                            key={idx} 
-                            card={card} 
-                            idx={idx} 
-                            scrollYProgress={scrollYProgress} 
-                            isMobile={isMobile} 
-                            t={t} 
+                        <AnimCard
+                            key={idx}
+                            card={card}
+                            idx={idx}
+                            scrollYProgress={scrollYProgress}
+                            isMobile={isMobile}
+                            t={t}
                             isAr={isAr}
                             isDeckHovered={isDeckHovered}
                             setIsDeckHovered={setIsDeckHovered}
