@@ -30,6 +30,7 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
+    const isAr = i18n.language === 'ar';
 
     const handleLogout = () => {
         logout();
@@ -59,11 +60,11 @@ const Navbar = () => {
 
     return (
         <nav className="sticky top-0 z-50 bg-slate-50/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-transparent shadow-[0_4px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_30px_rgb(0,0,0,0.2)] transition-all duration-500">
-            <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-12">
+            <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-12" dir={isAr ? 'rtl' : 'ltr'}>
                 <div className="flex justify-between items-center h-[84px]">
                     {/* Left side: Logo */}
                     <div className="flex-1 flex items-center justify-start">
-                        <Link to="/" className="flex items-center gap-3 group shrink-0 relative z-10">
+                        <Link to="/" className="flex items-center gap-3 group shrink-0 relative z-10" dir="ltr">
                             {/* Light mode logo */}
                             <div className="w-9 h-9 flex items-center justify-center transition-transform group-hover:scale-105 dark:hidden">
                                 <img src={logoLight} alt="Nexora AI Logo" className="w-full h-full object-contain" />
@@ -72,8 +73,11 @@ const Navbar = () => {
                             <div className="hidden w-9 h-9 items-center justify-center transition-transform group-hover:scale-105 dark:flex">
                                 <img src={logoDark} alt="Nexora AI Logo" className="w-full h-full object-contain" />
                             </div>
-                            <span className="font-extrabold text-[26px] xl:text-[28px] tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white transition-all duration-300 group-hover:from-primary group-hover:via-primary group-hover:to-indigo-500">
-                                Nexora<span className="text-primary group-hover:text-indigo-500 italic ml-1 font-black transition-colors duration-300">AI</span>
+                            <span className="font-extrabold text-[24px] sm:text-[26px] xl:text-[28px] tracking-tight flex items-center gap-1.5">
+                                <span className="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white transition-all duration-300 group-hover:from-primary group-hover:to-indigo-500">
+                                    Nexora
+                                </span>
+                                <span className="text-secondary italic font-black">AI</span>
                             </span>
                         </Link>
                     </div>
@@ -253,9 +257,9 @@ const Navbar = () => {
                                                 <User size={18} className="mr-3" /> {t('nav.profile')}
                                             </Button>
                                         </Link>
-                                        <Button 
-                                            variant="ghost" 
-                                            className="w-full justify-start h-12 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10" 
+                                        <Button
+                                            variant="ghost"
+                                            className="w-full justify-start h-12 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
                                             onClick={() => { setIsLogoutModalOpen(true); setIsOpen(false); }}
                                         >
                                             <LogOut size={18} className="mr-3" /> {t('nav.logout')}
