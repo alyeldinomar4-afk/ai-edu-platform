@@ -348,7 +348,7 @@ const HeroSection = ({ getStartedPath }) => {
                             >
                                 <div className="absolute -inset-4 bg-primary/10 rounded-full blur-3xl opacity-50" />
                                 <img src="/premium_hero_nexora_tall.jpg" alt="Hero Mobile" className="relative z-10 w-full h-auto object-contain dark:block hidden rounded-2xl" />
-                                <img src="/premium_hero_nexora_light.jpg" alt="Hero Mobile" className="relative z-10 w-full h-auto object-contain block dark:hidden rounded-2xl shadow-xl" />
+                                <img src="/premium_hero_nexora_light.jpg" alt="Hero Mobile" className="relative z-10 w-full h-auto object-contain block dark:hidden rounded-2xl" />
                             </motion.div>
 
                             <div className="flex flex-col sm:flex-row gap-4 mb-12 justify-center lg:justify-start">

@@ -115,7 +115,7 @@ const SmartLearningSection = () => {
                     {/* Floating Card 1: Top Left */}
                     <motion.div 
                         initial={{ x: 50, y: 50, opacity: 0 }}
-                        whileInView={{ x: 0, y: 0, opacity: 1, y: [-8, 8, -8] }}
+                        whileInView={{ x: 0, opacity: 1, y: [-8, 8, -8] }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                         className="absolute top-[-5%] left-[-2%] sm:top-[5%] sm:left-[5%] w-28 sm:w-48 p-1.5 sm:p-2 rounded-2xl bg-gradient-to-br from-indigo-500/80 to-blue-600/80 backdrop-blur-xl border border-white/20 shadow-2xl shadow-indigo-500/30 -rotate-6 z-10 group cursor-pointer"
@@ -136,7 +136,7 @@ const SmartLearningSection = () => {
                     {/* Floating Card 2: Bottom Left */}
                     <motion.div 
                         initial={{ x: 50, y: -50, opacity: 0 }}
-                        whileInView={{ x: 0, y: 0, opacity: 1, y: [8, -8, 8] }}
+                        whileInView={{ x: 0, opacity: 1, y: [8, -8, 8] }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.2, y: { duration: 4.5, repeat: Infinity, ease: "easeInOut" } }}
                         className="absolute bottom-[-5%] left-[-2%] sm:bottom-[5%] sm:left-[5%] w-28 sm:w-48 p-1.5 sm:p-2 rounded-2xl bg-gradient-to-br from-blue-600/80 to-cyan-500/80 backdrop-blur-xl border border-white/20 shadow-2xl shadow-cyan-500/30 rotate-12 z-10 group cursor-pointer"
@@ -157,7 +157,7 @@ const SmartLearningSection = () => {
                     {/* Floating Card 3: Top Right */}
                     <motion.div 
                         initial={{ x: -50, y: 50, opacity: 0 }}
-                        whileInView={{ x: 0, y: 0, opacity: 1, y: [-6, 6, -6] }}
+                        whileInView={{ x: 0, opacity: 1, y: [-6, 6, -6] }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.1, y: { duration: 3.8, repeat: Infinity, ease: "easeInOut" } }}
                         className="absolute top-[-5%] right-[-2%] sm:top-[5%] sm:right-[5%] w-28 sm:w-48 p-1.5 sm:p-2 rounded-2xl bg-gradient-to-br from-emerald-500/80 to-green-600/80 backdrop-blur-xl border border-white/20 shadow-2xl shadow-green-500/30 rotate-6 z-10 group cursor-pointer"
@@ -178,7 +178,7 @@ const SmartLearningSection = () => {
                     {/* Floating Card 4: Bottom Right */}
                     <motion.div 
                         initial={{ x: -50, y: -50, opacity: 0 }}
-                        whileInView={{ x: 0, y: 0, opacity: 1, y: [6, -6, 6] }}
+                        whileInView={{ x: 0, opacity: 1, y: [6, -6, 6] }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: 0.3, y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" } }}
                         className="absolute bottom-[-5%] right-[-2%] sm:bottom-[5%] sm:right-[5%] w-28 sm:w-48 p-1.5 sm:p-2 rounded-2xl bg-gradient-to-br from-orange-500/80 to-red-500/80 backdrop-blur-xl border border-white/20 shadow-2xl shadow-orange-500/30 -rotate-12 z-10 group cursor-pointer"
