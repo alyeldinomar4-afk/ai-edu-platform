@@ -19,9 +19,9 @@ const SmartLearningSection = () => {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 flex flex-col items-center text-center">
-                
+
                 {/* Section Header */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -39,17 +39,17 @@ const SmartLearningSection = () => {
                         </span>
                     </h2>
                     <p className={`text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-2xl mx-auto ${isAr ? 'leading-relaxed font-cairo' : ''}`}>
-                        {isAr 
-                            ? 'جرب منهجاً متكيفاً يتطور مع مهاراتك. محرك الذكاء الاصطناعي الخاص بنا يختار لك المسار المثالي لاحتراف تكنولوجيا المستقبل.' 
+                        {isAr
+                            ? 'جرب منهجاً متكيفاً يتطور مع مهاراتك. محرك الذكاء الاصطناعي الخاص بنا يختار لك المسار المثالي لاحتراف تكنولوجيا المستقبل.'
                             : 'Experience an adaptive curriculum that evolves with your skills. Our AI engine curates the perfect roadmap to master the technologies of tomorrow.'}
                     </p>
                 </motion.div>
 
                 {/* Center Core (AI Sphere) & Floating Cards */}
                 <div className="relative w-full max-w-4xl mx-auto h-[400px] sm:h-[500px] mb-8 flex items-center justify-center">
-                    
+
                     {/* Center AI Core (Globe with Orbits) */}
-                    <motion.div 
+                    <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
                         viewport={{ once: true }}
@@ -57,7 +57,7 @@ const SmartLearningSection = () => {
                         className="relative z-20"
                     >
                         <div className="relative w-40 h-40 sm:w-56 sm:h-56 rounded-full border border-indigo-500/20 dark:border-indigo-500/40 bg-white/40 dark:bg-indigo-950/40 backdrop-blur-md flex items-center justify-center shadow-[0_0_80px_rgba(79,70,229,0.15)] dark:shadow-[0_0_80px_rgba(79,70,229,0.4)]">
-                            
+
                             {/* SVG Wireframe Globe */}
                             <svg className="absolute inset-0 w-full h-full text-indigo-500/30 animate-[spin_40s_linear_infinite]" viewBox="0 0 100 100">
                                 <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="1" />
@@ -69,21 +69,21 @@ const SmartLearningSection = () => {
 
                             {/* Inner animated glow */}
                             <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 3, repeat: Infinity }} className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-500/30 to-purple-500/30 blur-2xl" />
-                            
+
                             {/* Core Text */}
                             <div className="relative z-10 flex flex-col items-center">
                                 <span className="text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-indigo-500 to-purple-500 drop-shadow-[0_0_15px_rgba(99,102,241,0.4)]">
                                     AI
                                 </span>
                             </div>
-                            
+
                             {/* --- ORBITS & NODES (Coming out of the sphere) --- */}
-                            
+
                             {/* Orbit 1 (Horizontal tilt) */}
                             <motion.div animate={{ rotate: 360, rotateY: 60, rotateX: 20 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="absolute inset-[-40px] sm:inset-[-60px] border border-cyan-400/20 rounded-full" style={{ transformStyle: 'preserve-3d' }}>
                                 <div className="absolute top-0 left-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-cyan-400 rounded-full shadow-[0_0_15px_#22d3ee] -translate-x-1/2 -translate-y-1/2" style={{ transform: 'rotateX(-20deg) rotateY(-60deg)' }} />
                             </motion.div>
-                            
+
                             {/* Orbit 2 (Vertical tilt) */}
                             <motion.div animate={{ rotate: -360, rotateX: 60, rotateY: -20 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute inset-[-60px] sm:inset-[-90px] border border-purple-400/20 rounded-full" style={{ transformStyle: 'preserve-3d' }}>
                                 <div className="absolute top-1/2 right-0 w-4 h-4 sm:w-5 sm:h-5 bg-purple-400 rounded-full shadow-[0_0_20px_#a855f7] translate-x-1/2 -translate-y-1/2 flex items-center justify-center" style={{ transform: 'rotateX(-60deg) rotateY(20deg)' }}>
@@ -103,17 +103,17 @@ const SmartLearningSection = () => {
                                 <path d="M 200 200 L 100 300" stroke="url(#line-grad-3)" strokeWidth="2" strokeDasharray="4 4" />
                                 <path d="M 200 200 L 300 300" stroke="url(#line-grad-4)" strokeWidth="2" strokeDasharray="4 4" />
                                 <defs>
-                                    <linearGradient id="line-grad-1" x1="1" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="transparent"/></linearGradient>
-                                    <linearGradient id="line-grad-2" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stopColor="#34d399"/><stop offset="100%" stopColor="transparent"/></linearGradient>
-                                    <linearGradient id="line-grad-3" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#60a5fa"/><stop offset="100%" stopColor="transparent"/></linearGradient>
-                                    <linearGradient id="line-grad-4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#f87171"/><stop offset="100%" stopColor="transparent"/></linearGradient>
+                                    <linearGradient id="line-grad-1" x1="1" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#818cf8" /><stop offset="100%" stopColor="transparent" /></linearGradient>
+                                    <linearGradient id="line-grad-2" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stopColor="#34d399" /><stop offset="100%" stopColor="transparent" /></linearGradient>
+                                    <linearGradient id="line-grad-3" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#60a5fa" /><stop offset="100%" stopColor="transparent" /></linearGradient>
+                                    <linearGradient id="line-grad-4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#f87171" /><stop offset="100%" stopColor="transparent" /></linearGradient>
                                 </defs>
                             </svg>
                         </div>
                     </motion.div>
 
                     {/* Floating Card 1: Top Left */}
-                    <motion.div 
+                    <motion.div
                         initial={{ x: 50, y: 50, opacity: 0 }}
                         whileInView={{ x: 0, opacity: 1, y: [-8, 8, -8] }}
                         viewport={{ once: true }}
@@ -134,7 +134,7 @@ const SmartLearningSection = () => {
                     </motion.div>
 
                     {/* Floating Card 2: Bottom Left */}
-                    <motion.div 
+                    <motion.div
                         initial={{ x: 50, y: -50, opacity: 0 }}
                         whileInView={{ x: 0, opacity: 1, y: [8, -8, 8] }}
                         viewport={{ once: true }}
@@ -155,7 +155,7 @@ const SmartLearningSection = () => {
                     </motion.div>
 
                     {/* Floating Card 3: Top Right */}
-                    <motion.div 
+                    <motion.div
                         initial={{ x: -50, y: 50, opacity: 0 }}
                         whileInView={{ x: 0, opacity: 1, y: [-6, 6, -6] }}
                         viewport={{ once: true }}
@@ -176,7 +176,7 @@ const SmartLearningSection = () => {
                     </motion.div>
 
                     {/* Floating Card 4: Bottom Right */}
-                    <motion.div 
+                    <motion.div
                         initial={{ x: -50, y: -50, opacity: 0 }}
                         whileInView={{ x: 0, opacity: 1, y: [6, -6, 6] }}
                         viewport={{ once: true }}
