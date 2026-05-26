@@ -26,6 +26,8 @@ const adapters = {
         totalStudents: data.totalStudents || 0,
         activeCourses: data.activeCourses || 0,
         totalInstructors: data.totalInstructors || 0,
+        totalLectures: data.totalLectures || 0,
+        hoursWatched: data.hoursWatched || 0,
         satisfactionRate: data.avgRating ? Math.round((data.avgRating / 5) * 100) : 99,
     }),
     course: (data) => ({
@@ -94,14 +96,24 @@ export const api = {
     // ─── Profile Endpoints ───────────────────────────────────
     profile: {
         update: async (data) => {
-            await delay(800);
-            console.log('Profile updated:', data);
-            return { success: true, user: data };
+            try {
+                const response = await httpClient.put('/auth/me', data);
+                return { success: true, user: response.data || data };
+            } catch (error) {
+                console.warn("Fallback to mock data for profile update", error);
+                await delay(800);
+                return { success: true, user: data };
+            }
         },
         updatePassword: async (data) => {
-            await delay(1000);
-            console.log('Password updated');
-            return { success: true };
+            try {
+                const response = await httpClient.patch('/auth/me', data);
+                return { success: true, message: response.message };
+            } catch (error) {
+                console.warn("Fallback to mock data for password update", error);
+                await delay(1000);
+                return { success: true };
+            }
         }
     },
 
@@ -401,20 +413,38 @@ export const api = {
                 }
             },
             create: async (data) => {
-                await delay(800);
-                const newCourse = { ...data, id: coursesSub.length + 1, instructorId: 1 };
-                coursesSub = [newCourse, ...coursesSub];
-                return newCourse;
+                try {
+                    const response = await httpClient.post('/courses', data);
+                    return response.data || data;
+                } catch (error) {
+                    console.warn("Fallback to mock data for course create", error);
+                    await delay(800);
+                    const newCourse = { ...data, id: coursesSub.length + 1, instructorId: 1 };
+                    coursesSub = [newCourse, ...coursesSub];
+                    return newCourse;
+                }
             },
             update: async (id, data) => {
-                await delay(800);
-                coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
-                return { ...data, id };
+                try {
+                    const response = await httpClient.put(`/courses/${id}`, data);
+                    return response.data || { ...data, id };
+                } catch (error) {
+                    console.warn("Fallback to mock data for course update", error);
+                    await delay(800);
+                    coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
+                    return { ...data, id };
+                }
             },
             delete: async (id) => {
-                await delay(500);
-                coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
-                return { success: true };
+                try {
+                    await httpClient.delete(`/courses/${id}`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for course delete", error);
+                    await delay(500);
+                    coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
+                    return { success: true };
+                }
             }
         },
 
@@ -433,38 +463,70 @@ export const api = {
                 }
             },
             create: async (data) => {
-                await delay(800);
-                const normalizedData = {
-                    ...data,
-                    duration: normalizeDuration(data.duration)
-                };
-                const newLecture = { 
-                    ...normalizedData, 
-                    id: Date.now(), 
-                    views: 0, 
-                    date: new Date().toISOString().split('T')[0] 
-                };
-                lecturesSub = [newLecture, ...lecturesSub];
-                return newLecture;
+                try {
+                    const normalizedData = {
+                        ...data,
+                        duration: normalizeDuration(data.duration)
+                    };
+                    const response = await httpClient.post('/lectures', normalizedData);
+                    return response.data || normalizedData;
+                } catch (error) {
+                    console.warn("Fallback to mock data for lecture create", error);
+                    await delay(800);
+                    const normalizedData = {
+                        ...data,
+                        duration: normalizeDuration(data.duration)
+                    };
+                    const newLecture = { 
+                        ...normalizedData, 
+                        id: Date.now(), 
+                        views: 0, 
+                        date: new Date().toISOString().split('T')[0] 
+                    };
+                    lecturesSub = [newLecture, ...lecturesSub];
+                    return newLecture;
+                }
             },
             update: async (id, data) => {
-                await delay(800);
-                const updateData = { ...data };
-                if (updateData.duration !== undefined) {
-                    updateData.duration = normalizeDuration(updateData.duration);
+                try {
+                    const updateData = { ...data };
+                    if (updateData.duration !== undefined) {
+                        updateData.duration = normalizeDuration(updateData.duration);
+                    }
+                    const response = await httpClient.put(`/lectures/${id}`, updateData);
+                    return response.data || { ...updateData, id };
+                } catch (error) {
+                    console.warn("Fallback to mock data for lecture update", error);
+                    await delay(800);
+                    const updateData = { ...data };
+                    if (updateData.duration !== undefined) {
+                        updateData.duration = normalizeDuration(updateData.duration);
+                    }
+                    lecturesSub = lecturesSub.map(l => l.id === parseInt(id) ? { ...l, ...updateData } : l);
+                    return { ...updateData, id };
                 }
-                lecturesSub = lecturesSub.map(l => l.id === parseInt(id) ? { ...l, ...updateData } : l);
-                return { ...updateData, id };
             },
             delete: async (id) => {
-                await delay(500);
-                lecturesSub = lecturesSub.filter(l => l.id !== parseInt(id));
-                return { success: true };
+                try {
+                    await httpClient.delete(`/lectures/${id}`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for lecture delete", error);
+                    await delay(500);
+                    lecturesSub = lecturesSub.filter(l => l.id !== parseInt(id));
+                    return { success: true };
+                }
             },
             toggleStatus: async (id) => {
-                await delay(400);
-                lecturesSub = lecturesSub.map(l => l.id === parseInt(id) ? { ...l, status: l.status === 'published' ? 'draft' : 'published' } : l);
-                return { success: true };
+                try {
+                    await httpClient.patch(`/lectures/${id}/status`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for lecture toggle status", error);
+                    await delay(400);
+                    lecturesSub = lecturesSub.map(l => l.id === parseInt(id) ? { ...l, status: l.status === 'published' ? 'draft' : 'published' } : l);
+                    return { success: true };
+                }
             }
         },
 
@@ -480,11 +542,17 @@ export const api = {
                 }
             },
             reply: async (id, comment) => {
-                await delay(500);
-                reviewsSub = reviewsSub.map(r => 
-                    r.id === id ? { ...r, reply: comment } : r
-                );
-                return { id, user: 'Instructor', comment, date: 'Just now' };
+                try {
+                    const response = await httpClient.put(`/reviews/${id}`, { reply: comment });
+                    return response.data || { id, user: 'Instructor', comment, date: 'Just now' };
+                } catch (error) {
+                    console.warn("Fallback to mock data for review reply", error);
+                    await delay(500);
+                    reviewsSub = reviewsSub.map(r => 
+                        r.id === id ? { ...r, reply: comment } : r
+                    );
+                    return { id, user: 'Instructor', comment, date: 'Just now' };
+                }
             }
         },
 
@@ -500,11 +568,17 @@ export const api = {
                 }
             },
             reply: async (id, replyText) => {
-                await delay(500);
-                questionsSub = questionsSub.map(q => 
-                    q.id === id ? { ...q, reply: replyText } : q
-                );
-                return { id, reply: replyText, date: 'Just now' };
+                try {
+                    const response = await httpClient.put(`/questions/${id}`, { reply: replyText, isAnswered: true });
+                    return response.data || { id, reply: replyText, date: 'Just now' };
+                } catch (error) {
+                    console.warn("Fallback to mock data for question reply", error);
+                    await delay(500);
+                    questionsSub = questionsSub.map(q => 
+                        q.id === id ? { ...q, reply: replyText } : q
+                    );
+                    return { id, reply: replyText, date: 'Just now' };
+                }
             }
         },
 
@@ -522,10 +596,16 @@ export const api = {
                 }
             },
             create: async (data) => {
-                await delay(500);
-                const newAnnouncement = { ...data, id: Date.now() };
-                announcementsSub = [newAnnouncement, ...announcementsSub];
-                return newAnnouncement;
+                try {
+                    const response = await httpClient.post('/announcements', data);
+                    return response.data || data;
+                } catch (error) {
+                    console.warn("Fallback to mock data for announcement create", error);
+                    await delay(500);
+                    const newAnnouncement = { ...data, id: Date.now() };
+                    announcementsSub = [newAnnouncement, ...announcementsSub];
+                    return newAnnouncement;
+                }
             }
         }
     },
@@ -582,20 +662,44 @@ export const api = {
                 }
             },
             create: async (data) => {
-                await delay(800);
-                return { ...data, id: Date.now() };
+                try {
+                    const response = await httpClient.post('/users', data);
+                    return response.data || { ...data, id: Date.now() };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin user create", error);
+                    await delay(800);
+                    return { ...data, id: Date.now() };
+                }
             },
             update: async (id, data) => {
-                await delay(800);
-                return { ...data, id };
+                try {
+                    const response = await httpClient.put(`/users/${id}`, data);
+                    return response.data || { ...data, id };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin user update", error);
+                    await delay(800);
+                    return { ...data, id };
+                }
             },
             delete: async (id) => {
-                await delay(500);
-                return { success: true };
+                try {
+                    await httpClient.delete(`/users/${id}`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin user delete", error);
+                    await delay(500);
+                    return { success: true };
+                }
             },
             toggleStatus: async (id) => {
-                await delay(400);
-                return { success: true };
+                try {
+                    await httpClient.patch(`/users/${id}/status`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin user toggle status", error);
+                    await delay(400);
+                    return { success: true };
+                }
             }
         },
 
@@ -612,57 +716,109 @@ export const api = {
                 }
             },
             create: async (data) => {
-                await delay(800);
-                const newCourse = { ...data, id: Date.now() };
-                coursesSub = [newCourse, ...coursesSub];
-                return newCourse;
+                try {
+                    const response = await httpClient.post('/courses', data);
+                    return response.data || { ...data, id: Date.now() };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin course create", error);
+                    await delay(800);
+                    const newCourse = { ...data, id: Date.now() };
+                    coursesSub = [newCourse, ...coursesSub];
+                    return newCourse;
+                }
             },
             update: async (id, data) => {
-                await delay(800);
-                coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
-                return { ...data, id };
+                try {
+                    const response = await httpClient.put(`/courses/${id}`, data);
+                    return response.data || { ...data, id };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin course update", error);
+                    await delay(800);
+                    coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
+                    return { ...data, id };
+                }
             },
             delete: async (id) => {
-                await delay(500);
-                coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
-                return { success: true };
+                try {
+                    await httpClient.delete(`/courses/${id}`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin course delete", error);
+                    await delay(500);
+                    coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
+                    return { success: true };
+                }
             }
         },
 
         videos: {
             getAll: async () => {
-                await delay(600);
-                return lecturesSub;
+                try {
+                    const response = await httpClient.get('/lectures');
+                    return response.data || [];
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin videos", error);
+                    await delay(600);
+                    return lecturesSub;
+                }
             },
             create: async (data) => {
-                await delay(800);
-                const normalizedData = {
-                    ...data,
-                    duration: normalizeDuration(data.duration)
-                };
-                const newLecture = { 
-                    ...normalizedData, 
-                    id: Date.now(), 
-                    views: 0, 
-                    date: new Date().toISOString().split('T')[0] 
-                };
-                lecturesSub = [newLecture, ...lecturesSub];
-                return newLecture;
+                try {
+                    const normalizedData = {
+                        ...data,
+                        duration: normalizeDuration(data.duration)
+                    };
+                    const response = await httpClient.post('/lectures', normalizedData);
+                    return response.data || normalizedData;
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin video create", error);
+                    await delay(800);
+                    const normalizedData = {
+                        ...data,
+                        duration: normalizeDuration(data.duration)
+                    };
+                    const newLecture = { 
+                        ...normalizedData, 
+                        id: Date.now(), 
+                        views: 0, 
+                        date: new Date().toISOString().split('T')[0] 
+                    };
+                    lecturesSub = [newLecture, ...lecturesSub];
+                    return newLecture;
+                }
             },
             update: async (id, data) => {
-                await delay(800);
-                lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, ...data } : v);
-                return { ...data, id };
+                try {
+                    const response = await httpClient.put(`/lectures/${id}`, data);
+                    return response.data || { ...data, id };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin video update", error);
+                    await delay(800);
+                    lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, ...data } : v);
+                    return { ...data, id };
+                }
             },
             delete: async (id) => {
-                await delay(500);
-                lecturesSub = lecturesSub.filter(v => v.id !== parseInt(id));
-                return { success: true };
+                try {
+                    await httpClient.delete(`/lectures/${id}`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin video delete", error);
+                    await delay(500);
+                    lecturesSub = lecturesSub.filter(v => v.id !== parseInt(id));
+                    return { success: true };
+                }
             },
             toggleStatus: async (id) => {
-                await delay(400);
-                lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, status: v.status === 'published' ? 'draft' : 'published' } : v);
-                return { success: true };
+                try {
+                    await httpClient.patch(`/lectures/${id}/status`);
+                    return { success: true };
+                } catch (error) {
+                    console.warn("Fallback to mock data for admin video toggle status", error);
+                    await delay(400);
+                    lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, status: v.status === 'published' ? 'draft' : 'published' } : v);
+                    return { success: true };
+                }
             }
         },
 

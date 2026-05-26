@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, BookOpen, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,8 @@ import Button from '../../components/ui/Button';
 const PaymentSuccessPage = () => {
     const { t, i18n } = useTranslation();
     const isAr = i18n.language === 'ar';
+    const location = useLocation();
+    const courseId = location.state?.courseId;
 
     return (
         <div className="bg-slate-50 dark:bg-slate-950 min-h-screen flex items-center justify-center px-4 transition-colors duration-300">
@@ -84,9 +86,9 @@ const PaymentSuccessPage = () => {
                     transition={{ delay: 0.6 }}
                     className="space-y-3"
                 >
-                    <Link to="/learner/dashboard">
+                    <Link to={courseId ? `/courses/${courseId}/learn` : "/learner/dashboard"}>
                         <Button size="lg" className="w-full shadow-[0_4px_14px_0_rgb(79,70,229,0.39)]" icon={BookOpen}>
-                            {t('checkout.success.myCourses')}
+                            {courseId ? t('checkout.success.goToCourse', 'Start Learning') : t('checkout.success.myCourses')}
                         </Button>
                     </Link>
                     <Link to="/courses">

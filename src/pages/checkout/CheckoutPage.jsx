@@ -108,7 +108,7 @@ const CheckoutPage = () => {
             if (course.price === 0) {
                 navigate(`/courses/${courseId}/learn`);
             } else {
-                navigate('/payment-success');
+                navigate('/payment-success', { state: { courseId } });
             }
         } catch (error) {
             console.error('Checkout error:', error);
