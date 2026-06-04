@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora AI — Frontend Development Chapter</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#4F46E5;--primary-light:#6366F1;--secondary:#8B5CF6;--accent:#EC4899;--success:#10B981;--warning:#F59E0B;--dark:#0F172A;--gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;--gray-300:#CBD5E1;--gray-500:#64748B;--gray-700:#334155;--gray-800:#1E293B;--radius:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--dark);background:#fff;line-height:1.6;font-size:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+/* ── Page / Print ── */
+@media print{
+  body{font-size:12px}
+  .container{width:100%!important;margin:0!important;padding:0!important}
+  .page-break{page-break-before:always}
+  .no-print{display:none!important}
+  @page{size:A4;margin:1.5cm}
+  h2,h3{page-break-after:avoid;break-after:avoid}
+  .screenshot,.card,.tree,.arch-box,.features,.stats-strip,.palette,pre,table,.screenshot-group{page-break-inside:avoid;break-inside:avoid}
+  a[href]::after{content:none!important}
+  a{text-decoration:none!important}
+}
+
+/* ── Cover ── */
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0F172A 0%,#1E1B4B 40%,#312E81 70%,#4F46E5 100%);color:#fff;text-align:center;padding:60px 40px;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,.25) 0%,transparent 70%);top:-100px;right:-100px;border-radius:50%}
+.cover-icon{font-size:72px;margin-bottom:20px}
+.cover h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:52px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;background:linear-gradient(135deg,#fff 0%,#C7D2FE 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cover .subtitle{font-size:20px;color:#C7D2FE;margin-bottom:48px}
+.cover .meta{display:flex;gap:32px;justify-content:center;color:#A5B4FC;font-size:14px}
+
+/* ── Layout ── */
+.container{max-width:900px;margin:0 auto;padding:40px 20px}
+.section-title{display:flex;align-items:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--dark);margin-bottom:8px}
+.section-number{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-radius:8px;font-weight:700;font-size:14px;margin-right:12px;flex-shrink:0}
+.section-desc{color:var(--gray-500);font-size:14px;margin-bottom:32px;padding-left:48px}
+h3{font-size:18px;font-weight:700;color:var(--gray-800);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+h3 .icon{font-size:18px}
+
+/* ── Tables ── */
+table{width:100%;border-collapse:collapse;margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--gray-200)}
+th{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;padding:12px;text-align:left;font-size:11px;text-transform:uppercase}
+td{padding:10px 12px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
+
+/* ── Code & Tree ── */
+pre, .tree, .arch-box{background:#fdfdfd;color:#1e293b;padding:22px;border-radius:var(--radius);font-family:'Fira Code', 'Courier New', monospace;font-size:14px;line-height:1.6;margin:16px 0;white-space:pre-wrap;word-break:break-word;overflow-x:hidden;border:1px solid #e2e8f0;-webkit-print-color-adjust:exact}
+.tree .folder{color:#d97706;font-weight:bold}
+.tree .file{color:#2563eb}
+.tree .comment{color:#008000;font-style:italic}
+
+/* Syntax Highlighting (VS Code Light Style) */
+.token-kw{color:#0000FF;font-weight:bold} /* blue keyword */
+.token-str{color:#A31515} /* dark red string */
+.token-comment{color:#008000;font-style:italic} /* green comment */
+.token-fn{color:#795E26} /* brown function */
+.token-var{color:#001080} /* navy variable */
+.token-num{color:#098658} /* green teal number */
+.token-selector{color:#800000;font-weight:bold} /* css selector */
+.token-prop{color:#FF0000} /* css property */
+
+/* ── Colors ── */
+.palette{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:12px;margin:20px 0}
+.swatch-color{height:50px;border-radius:8px;margin-bottom:6px;border:1px solid rgba(0,0,0,0.1);-webkit-print-color-adjust:exact}
+.swatch-label{font-size:10px;color:var(--gray-500);font-weight:bold;display:block}
+.swatch-hex{font-size:10px;font-family:'Fira Code',monospace}
+
+/* ── UI ── */
+.screenshot{width:100%;border-radius:var(--radius);border:1px solid var(--gray-200);box-shadow:0 8px 32px rgba(0,0,0,.1);margin:16px 0 8px}
+.img-caption{text-align:center;font-size:12px;color:var(--gray-500);font-style:italic;margin-bottom:24px}
+.card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.card-accent{border-left:4px solid var(--primary);background:linear-gradient(135deg,#EEF2FF,#F8FAFC)}
+.inline-code{background:#EEF2FF;color:var(--primary);padding:2px 6px;border-radius:4px;font-size:12px}
+
+/* ── Features Grid ── */
+.features{display:grid;grid-template-columns:repeat(2, 1fr);gap:16px;margin:20px 0}
+.feature-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;text-align:center}
+.feature-card .emoji{font-size:32px;margin-bottom:10px;display:block}
+.feature-card h4{margin-bottom:8px;color:var(--dark)}
+.feature-card p{font-size:12px;color:var(--gray-500);line-height:1.4}
+
+/* ── Stats ── */
+.stats-strip{display:grid;grid-template-columns:repeat(4, 1fr);gap:12px;margin:20px 0}
+.stat{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:15px;text-align:center}
+.stat .num{font-size:24px;font-weight:800;color:var(--primary);display:block}
+.stat .label{font-size:11px;color:var(--gray-500)}
+
+/* ── TOC ── */
+.toc{list-style:none;padding:0;margin:0}
+.toc li{display:flex;align-items:center;gap:20px;padding:12px 0;border-bottom:1px solid var(--gray-100);font-size:14px;color:var(--gray-700)}
+.toc li:last-child{border-bottom:none}
+.toc .toc-num{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--gray-300);font-size:16px;min-width:24px;text-align:right}
+
+@media print {
+  .page-break { page-break-before: always; break-before: always; margin-top: 0; }
+  .container { width: 100% !important; margin: 0 !important; padding: 20px !important; }
+  h2, h3 { page-break-after: avoid; break-after: avoid; }
+  .card, pre, .tree, .arch-box, .features, .stats-strip, .screenshot-group { 
+    page-break-inside: avoid; 
+    break-inside: avoid; 
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ COVER ════════════════════ -->
+<div class="cover">
+  <div class="cover-icon">🧠</div>
+  <h1>Nexora AI Platform</h1>
+  <p class="subtitle">Frontend Development — Technical Documentation</p>
+  <div style="display:flex;gap:12px;margin-bottom:40px;flex-wrap:wrap;justify-content:center">
+    <span class="badge badge-blue" style="font-size:13px;padding:6px 16px">⚛️ React 19</span>
+    <span class="badge badge-purple" style="font-size:13px;padding:6px 16px">⚡ Vite 7</span>
+    <span class="badge badge-green" style="font-size:13px;padding:6px 16px">🎨 Tailwind CSS 4</span>
+    <span class="badge badge-pink" style="font-size:13px;padding:6px 16px">🤖 AI-Powered</span>
+  </div>
+  <div class="meta">
+    <span>📄 Graduation Project</span>
+    <span>🌐 aitourgraduation.netlify.app</span>
+  </div>
+</div>
+
+<!-- ════════════════════ TOC ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title" style="margin-bottom:28px">
+    <span class="section-number">📑</span> Table of Contents
+  </h2>
+  <div class="card">
+    <ul class="toc">
+      <li><span class="toc-num">1</span> Introduction & Project Overview</li>
+      <li><span class="toc-num">2</span> Technology Stack</li>
+      <li><span class="toc-num">3</span> Project Architecture</li>
+      <li><span class="toc-num">4</span> Design System & UI/UX</li>
+      <li><span class="toc-num">5</span> Component Hierarchy</li>
+      <li><span class="toc-num">6</span> Routing & Authentication</li>
+      <li><span class="toc-num">7</span> Internationalization (i18n)</li>
+      <li><span class="toc-num">8</span> API Integration Layer</li>
+      <li><span class="toc-num">9</span> Key Screens & UI Showcase</li>
+      <li><span class="toc-num">10</span> Code Samples (Appendix)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════ 1. INTRODUCTION ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title"><span class="section-number">1</span> Introduction & Project Overview</h2>
+  <p class="section-desc">A high-level overview of the frontend layer and its design goals.</p>
+
+  <p>The frontend of <strong>Nexora AI</strong> was developed as a standalone, production-ready client layer for an AI-powered Learning Management System (LMS). Built with <strong>React 19</strong> and the latest web technologies, the interface serves three distinct user roles — <strong>Learner</strong>, <strong>Instructor</strong>, and <strong>Admin</strong> — each with a dedicated dashboard and tailored experience.</p>
+
+  <div class="features">
+    <div class="feature-card">
+      <span class="emoji">🎯</span>
+      <h4>Premium UX</h4>
+      <p>Modern design with 3D cards, glassmorphism, and micro-animations</p>
+    </div>
+    <div class="feature-card">
+      <span class="emoji">🧩</span>
+      <h4>Modular Architecture</h4>
+      <p>Component-based structure for scalability and maintainability</p>
+    </div>
+    <div class="feature-card">
+      <span class="emoji">🔌</span>
+      <h4>API-Ready</h4>
+      <p>Abstract API layer ready for any backend integration</p>
+    </div>
+    <div class="feature-card">
+      <span class="emoji">🌍</span>
+      <h4>Bilingual</h4>
+      <p>Full Arabic RTL and English LTR support</p>
+    </div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat"><span class="num">72</span><span class="label">Source Files</span></div>
+    <div class="stat"><span class="num">26</span><span class="label">Pages & Views</span></div>
+    <div class="stat"><span class="num">22</span><span class="label">Reusable Components</span></div>
+    <div class="stat"><span class="num">2</span><span class="label">Languages (AR/EN)</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════ 2. TECH STACK ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title"><span class="section-number">2</span> Technology Stack</h2>
+  <p class="section-desc">The core libraries and tools powering the frontend.</p>
+
+  <table>
+    <thead><tr><th>Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>⚛️ <strong>React</strong></td><td style="color:var(--primary);font-weight:bold">19.2</td><td>UI component library with concurrent rendering</td></tr>
+      <tr><td>⚡ <strong>Vite</strong></td><td style="color:var(--primary);font-weight:bold">7.2</td><td>Lightning-fast build tool and dev server</td></tr>
+      <tr><td>🎨 <strong>Tailwind CSS</strong></td><td style="color:var(--primary);font-weight:bold">4.1</td><td>Utility-first CSS framework</td></tr>
+      <tr><td>🎬 <strong>Framer Motion</strong></td><td style="color:var(--primary);font-weight:bold">12.30</td><td>Declarative animation library</td></tr>
+      <tr><td>🧭 <strong>React Router</strong></td><td style="color:var(--primary);font-weight:bold">7.13</td><td>Client-side routing with nested layouts</td></tr>
+      <tr><td>🌐 <strong>i18next</strong></td><td style="color:var(--primary);font-weight:bold">25.8</td><td>Internationalization framework</td></tr>
+      <tr><td>🧊 <strong>Three.js + R3F</strong></td><td style="color:var(--primary);font-weight:bold">0.183</td><td>3D graphics and WebGL rendering</td></tr>
+      <tr><td>🔷 <strong>Lucide React</strong></td><td style="color:var(--primary);font-weight:bold">0.563</td><td>Modern SVG icon library</td></tr>
+      <tr><td>🔔 <strong>React Hot Toast</strong></td><td style="color:var(--primary);font-weight:bold">2.6</td><td>Notification system</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card card-accent">
+    <h4>💡 Why This Stack?</h4>
+    <p style="margin:8px 0 0"><strong>React 19</strong> provides the latest concurrent rendering features for optimal performance. <strong>Vite 7</strong> offers near-instant HMR and faster builds compared to Webpack. <strong>Tailwind CSS v4</strong> delivers a consistent design system with minimal final CSS bundle size through automatic tree-shaking.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ 3. ARCHITECTURE ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title"><span class="section-number">3</span> Project Architecture</h2>
+  <p class="section-desc">Folder structure, data flow, and architectural diagram.</p>
+
+  <h3><span class="icon">📂</span> Folder Structure</h3>
+  <div class="tree">
+src/
+ ├── <span class="folder">components/</span>
+ │    ├── <span class="folder">ui/</span>           <span class="comment"># Shared UI primitives (Navbar, Footer, NeuralBackground)</span>
+ │    ├── <span class="folder">features/</span>     <span class="comment"># Feature-specific logic</span>
+ │    │    ├── <span class="folder">video/</span>    <span class="comment"># Video player + purple markers logic</span>
+ │    │    └── <span class="folder">ai-tutor/</span>  <span class="comment"># AI Chat + Pause detection logic</span>
+ │    ├── <span class="folder">course/</span>       <span class="comment"># Course cards & enrolment UI</span>
+ │    └── <span class="folder">instructor/</span>   <span class="comment"># Instructor-only components</span>
+ ├── <span class="folder">pages/</span>
+ │    ├── <span class="file">HomePage.jsx</span>
+ │    ├── <span class="file">CoursesPage.jsx</span>
+ │    ├── <span class="file">VideoPlayerPage.jsx</span> <span class="comment"># The core AI Tutor experience</span>
+ │    └── <span class="file">LoginPage.jsx</span>       <span class="comment"># Auth with starfield background</span>
+ ├── <span class="folder">hooks/</span>             <span class="comment"># Global React hooks</span>
+ ├── <span class="folder">context/</span>           <span class="comment"># Auth & Theme state management</span>
+ ├── <span class="folder">i18n/</span>              <span class="comment"># Arabic & English translation files</span>
+ └── <span class="file">main.jsx</span>           <span class="comment"># Application entry point</span></div>
+
+  <h3><span class="icon">🏗️</span> Architecture Diagram</h3>
+<div class="arch-box">
+┌──────────────────────────────────────────────────────────────┐
+│                     Browser (Client)                         │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌──────────┐    ┌─────────────┐    ┌───────────────────┐    │
+│  │  Pages   │───▶│ Components  │───▶│   UI Primitives   │    │
+│  │ (Views)  │    │ (Features)  │    │ (Button, Skeleton) │    │
+│  └────┬─────┘    └─────────────┘    └───────────────────┘    │
+│       │                                                      │
+│  ┌────▼──────────────────────────────────────────────────┐   │
+│  │          Context Layer (Global State)                  │   │
+│  │   AuthContext  │  ThemeContext  │  i18n (Language)     │   │
+│  └────┬──────────────────────────────────────────────────┘   │
+│       │                                                      │
+│  ┌────▼────────────────────────┐                             │
+│  │    Services (API Layer)     │ ◀── Mock Data (Development) │
+│  │  api.js  +  authService.js  │ ◀── REST API (Production)  │
+│  └─────────────────────────────┘                             │
+└──────────────────────────────────────────────────────────────┘</div>
+</div>
+
+<!-- ════════════════════ 4. DESIGN SYSTEM ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title"><span class="section-number">4</span> Design System & UI/UX</h2>
+  <p class="section-desc">Colors, typography, theming, and visual effects.</p>
+
+  <h3><span class="icon">🎨</span> Color Palette</h3>
+  <div class="palette">
+    <div class="swatch"><div class="swatch-color" style="background:#4F46E5"></div><div class="swatch-label">Primary</div><div class="swatch-hex">#4F46E5</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#8B5CF6"></div><div class="swatch-label">Secondary</div><div class="swatch-hex">#8B5CF6</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#EC4899"></div><div class="swatch-label">Accent</div><div class="swatch-hex">#EC4899</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#10B981"></div><div class="swatch-label">Success</div><div class="swatch-hex">#10B981</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F59E0B"></div><div class="swatch-label">Warning</div><div class="swatch-hex">#F59E0B</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0F172A"></div><div class="swatch-label">Dark</div><div class="swatch-hex">#0F172A</div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#F8FAFC;border:1px solid #E2E8F0"></div><div class="swatch-label">Light</div><div class="swatch-hex">#F8FAFC</div></div>
+  </div>
+
+  <h3><span class="icon">🔤</span> Typography</h3>
+  <table>
+    <thead><tr><th>Font</th><th>Usage</th><th>Weights</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Inter</strong></td><td>Primary UI font (English)</td><td>400, 500, 600, 700</td></tr>
+      <tr><td><strong>Poppins</strong></td><td>Display headings</td><td>500, 600, 700, 800</td></tr>
+      <tr><td><strong>Cairo</strong></td><td>Primary UI font (Arabic)</td><td>400, 500, 600, 700</td></tr>
+      <tr><td><strong>Tajawal</strong></td><td>Secondary Arabic font</td><td>400, 500, 700</td></tr>
+      <tr><td><strong>Alexandria</strong></td><td>Arabic display headings</td><td>700, 800</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="icon">🌗</span> Dark & Light Mode</h3>
+  <div class="card card-accent">
+    <p style="margin:0">The platform supports both <strong>Dark Mode</strong> (background: <span class="inline-code">#020617</span>) and <strong>Light Mode</strong> (background: <span class="inline-code">#F8FAFC</span>), toggled via <span class="inline-code">ThemeContext</span>. The toggle uses class-based switching with Tailwind v4's <span class="inline-code">@custom-variant dark</span> directive.</p>
+  </div>
+
+  <h3><span class="icon">✨</span> Visual Effects</h3>
+  <div class="features">
+    <div class="feature-card"><div class="emoji">🃏</div><h4>3D Card System</h4><p>Perspective transforms with layered shadows on hover</p></div>
+    <div class="feature-card"><div class="emoji">🪟</div><h4>Glassmorphism</h4><p>Frosted glass panels via backdrop-filter blur</p></div>
+    <div class="feature-card"><div class="emoji">🔮</div><h4>Glowing Orbs</h4><p>Animated radial gradients as background accents</p></div>
+    <div class="feature-card"><div class="emoji">💫</div><h4>Micro-Animations</h4><p>fade-in, slide-up, scale-in, float, shimmer</p></div>
+  </div>
+</div>
+
+
+<!-- ════════════════════ 5. COMPONENTS ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title"><span class="section-number">5</span> Component Hierarchy</h2>
+  <p class="section-desc">Reusable building blocks and their organization.</p>
+
+  <h3><span class="icon">🌳</span> Component Tree</h3>
+  <div class="tree">
+<span class="folder">App.jsx</span>
+├── <span class="folder">AuthProvider</span> <span class="comment">── global auth state</span>
+│   └── <span class="folder">ErrorBoundary</span> <span class="comment">── catches render errors</span>
+│       └── <span class="folder">Router</span>
+│           ├── <span class="folder">MainLayout</span>
+│           │   ├── <span class="file">Navbar</span> <span class="comment">── nav + lang toggle + theme toggle</span>
+│           │   ├── <span class="file">[Page Content]</span>
+│           │   └── <span class="file">Footer</span>
+│           ├── <span class="folder">AuthLayout</span>
+│           │   └── <span class="file">AuthBackground</span> <span class="comment">── animated stars + shapes</span>
+│           └── <span class="folder">AdminLayout</span>
+│               └── <span class="file">Sidebar + Dashboard</span></div>
+
+  <h3><span class="icon">📦</span> Component Registry</h3>
+  <table>
+    <thead><tr><th>Component</th><th>Path</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>🧭 <strong>Navbar</strong></td><td><span class="inline-code">layout/</span></td><td>Responsive navigation with mobile menu, language & theme toggles</td></tr>
+      <tr><td>🦶 <strong>Footer</strong></td><td><span class="inline-code">layout/</span></td><td>Site-wide footer with links and branding</td></tr>
+      <tr><td>🏛️ <strong>AdminLayout</strong></td><td><span class="inline-code">layout/</span></td><td>Sidebar-based layout for admin dashboard pages</td></tr>
+      <tr><td>🔘 <strong>Button</strong></td><td><span class="inline-code">ui/</span></td><td>Reusable button with multiple variants (primary, outline, ghost)</td></tr>
+      <tr><td>💀 <strong>LoadingSkeleton</strong></td><td><span class="inline-code">ui/</span></td><td>Shimmer loading placeholder for async content</td></tr>
+      <tr><td>🌗 <strong>ThemeToggle</strong></td><td><span class="inline-code">ui/</span></td><td>Dark/light mode switch with smooth animation</td></tr>
+      <tr><td>🌌 <strong>AuthBackground</strong></td><td><span class="inline-code">ui/</span></td><td>Animated star-field and geometric shapes for auth pages</td></tr>
+      <tr><td>🔢 <strong>AnimatedCounter</strong></td><td><span class="inline-code">ui/</span></td><td>Number animation for statistics display</td></tr>
+      <tr><td>🛡️ <strong>ErrorBoundary</strong></td><td><span class="inline-code">common/</span></td><td>Catches JavaScript errors to prevent full app crash</td></tr>
+      <tr><td>🚀 <strong>HeroSection</strong></td><td><span class="inline-code">sections/</span></td><td>Homepage hero with scroll-driven animations</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════ 6, 7, 8. LOGIC & DATA ════════════════════ -->
+<div class="container page-break">
+  <!-- SECTION 6 -->
+  <h2 class="section-title"><span class="section-number">6</span> Routing & Authentication</h2>
+  <p class="section-desc">Page routing map and role-based access control system.</p>
+
+  <h3><span class="icon">🗺️</span> Route Map</h3>
+  <table>
+    <thead><tr><th>Route</th><th>Page</th><th>Access</th></tr></thead>
+    <tbody>
+      <tr><td><span class="inline-code">/</span></td><td>Homepage</td><td><span class="route-public">🟢 Public</span></td></tr>
+      <tr><td><span class="inline-code">/courses</span></td><td>Course Catalog</td><td><span class="route-public">🟢 Public</span></td></tr>
+      <tr><td><span class="inline-code">/login</span></td><td>Sign In</td><td><span class="route-public">🟢 Public</span></td></tr>
+      <tr><td><span class="inline-code">/register</span></td><td>Create Account</td><td><span class="route-public">🟢 Public</span></td></tr>
+      <tr><td><span class="inline-code">/courses/:id/learn</span></td><td>Video Player</td><td><span class="route-protected">🟡 Authenticated</span></td></tr>
+      <tr><td><span class="inline-code">/checkout/:id</span></td><td>Checkout</td><td><span class="route-protected">🟡 Learner</span></td></tr>
+      <tr><td><span class="inline-code">/learner/dashboard</span></td><td>Learner Dashboard</td><td><span class="route-protected">🟡 Learner</span></td></tr>
+      <tr><td><span class="inline-code">/instructor/dashboard</span></td><td>Instructor Dashboard</td><td><span class="route-protected">🟡 Instructor</span></td></tr>
+      <tr><td><span class="inline-code">/instructor/videos</span></td><td>Manage Lectures</td><td><span class="route-protected">🟡 Instructor</span></td></tr>
+      <tr><td><span class="inline-code">/admin/dashboard</span></td><td>Admin Dashboard</td><td><span class="route-admin">🔴 Admin</span></td></tr>
+      <tr><td><span class="inline-code">/admin/users</span></td><td>Manage Users</td><td><span class="route-admin">🔴 Admin</span></td></tr>
+      <tr><td><span class="inline-code">/admin/courses</span></td><td>Manage Courses</td><td><span class="route-admin">🔴 Admin</span></td></tr>
+      <tr><td><span class="inline-code">/admin/settings</span></td><td>Platform Settings</td><td><span class="route-admin">🔴 Admin</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="card card-accent">
+    <p style="margin:0">Routes are protected by a <span class="inline-code">ProtectedRoute</span> wrapper that checks authentication and user roles (<span class="inline-code">allowedRoles</span>).</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 7 -->
+  <h2 class="section-title"><span class="section-number">7</span> Internationalization (i18n)</h2>
+  <p class="section-desc">Full bilingual support with RTL/LTR layout switching.</p>
+
+  <div class="features">
+    <div class="feature-card"><span class="emoji">🇬🇧</span><h4>English (LTR)</h4><p>Inter & Poppins fonts</p></div>
+    <div class="feature-card"><span class="emoji">🇸🇦</span><h4>Arabic (RTL)</h4><p>Cairo & Tajawal fonts</p></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 8 -->
+  <h2 class="section-title"><span class="section-number">8</span> API Integration Layer</h2>
+  <p class="section-desc">Abstracted service layer separating UI from data sources.</p>
+
+  <h3><span class="icon">📡</span> Available Endpoints</h3>
+  <table>
+    <thead><tr><th>Module</th><th>Operations</th><th>Used By</th></tr></thead>
+    <tbody>
+      <tr><td>👤 <strong>Profile</strong></td><td>update, updatePassword</td><td>All roles</td></tr>
+      <tr><td>📚 <strong>Courses</strong></td><td>getAll, getById, getLectures</td><td>Public + All roles</td></tr>
+      <tr><td>👨‍🏫 <strong>Instructors</strong></td><td>getAll, getById</td><td>Public</td></tr>
+      <tr><td>📊 <strong>Stats</strong></td><td>getPublicOverview</td><td>Homepage</td></tr>
+      <tr><td>🎓 <strong>Learner</strong></td><td>getProgress, getStats, checkout, getAnnouncements</td><td>Learner</td></tr>
+      <tr><td>🎬 <strong>Instructor</strong></td><td>getStats, courses.CRUD, reviews, questions</td><td>Instructor</td></tr>
+      <tr><td>⚙️ <strong>Admin</strong></td><td>stats, users.CRUD, courses.CRUD, settings</td><td>Admin</td></tr>
+      <tr><td>🤖 <strong>AI</strong></td><td>chat, videoAssistant (auto_prompt, explain-scene)</td><td>AI Tutor</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════════════ 9. SCREENSHOTS ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title"><span class="section-number">9</span> Key Screens & UI Showcase</h2>
+  <p class="section-desc">Visual showcase of the platform's main interfaces.</p>
+
+  <div class="screenshot-group">
+    <h3><span class="icon">✨</span> Modern Interface Design</h3>
+    <img src="homepage.png" alt="Nexora AI Interface" class="screenshot">
+    <p class="img-caption">Figure 9.1 — High-fidelity UI design featuring adaptive layouts, glassmorphism components, and dynamic gradient accents.</p>
+  </div>
+
+  <div class="screenshot-group">
+    <h3><span class="icon">📊</span> Admin Dashboard</h3>
+    <img src="admin_dashboard.png" alt="Admin Dashboard" class="screenshot">
+    <p class="img-caption">Figure 9.2 — Admin dashboard with stat cards, revenue chart, sidebar navigation, and recent activity feed.</p>
+  </div>
+
+  <div class="screenshot-group">
+    <h3><span class="icon">🔐</span> Login Page (Animated Background)</h3>
+    <img src="login_page.png" alt="Login Page" class="screenshot">
+    <p class="img-caption">Figure 9.3 — Authentication page with animated starfield, glowing orbs, and glassmorphic login card.</p>
+  </div>
+
+  <div class="screenshot-group">
+    <h3><span class="icon">🤖</span> AI-Powered Video Learning</h3>
+    <img src="aiAnimated.png" alt="AI Video Player" class="screenshot">
+    <p class="img-caption">Figure 9.4 — Contextual AI Tutor interface with pause detection, real-time code analysis, and automated progress markers.</p>
+  </div>
+
+  <div class="card card-accent" style="margin-top:24px">
+    <h4>📸 Full Live Demo</h4>
+    <p style="margin:8px 0 0">All screens can be explored interactively at <strong>aitourgraduation.netlify.app</strong></p>
+  </div>
+</div>
+
+<!-- ════════════════════ 10. APPENDIX ════════════════════ -->
+<div class="container page-break">
+  <h2 class="section-title"><span class="section-number">10</span> Code Samples (Appendix)</h2>
+  <p class="section-desc">Selected code snippets from the actual project source files demonstrating core logic and design patterns.</p>
+
+  <div class="divider" style="margin-bottom: 30px;"></div>
+
+  <h3><span class="icon">🤖</span> A. AI Tutor — Pause Detection Logic (Hook)</h3>
+
+
+<pre data-label="VideoPlayer.jsx"><code><span class="token-kw">const</span> <span class="token-fn">useAiPauseDetection</span> = (isPaused, currentTime) => {
+  <span class="token-kw">const</span> pauseTimerRef = <span class="token-fn">useRef</span>(<span class="token-kw">null</span>);
+
+  <span class="token-fn">useEffect</span>(() => {
+    <span class="token-kw">if</span> (isPaused) {
+      <span class="token-comment">// Start AI prompt timer after 3 seconds of inactivity</span>
+      pauseTimerRef.current = <span class="token-fn">setTimeout</span>(() => {
+        <span class="token-kw">const</span> now = <span class="token-fn">Date.now</span>();
+        <span class="token-kw">const</span> approxTime = <span class="token-fn">Math.floor</span>(currentTime / 5) * 5;
+
+        <span class="token-kw">if</span> (now - lastPromptTimeRef.current > 10000 && !promptedTimestamps.current.has(approxTime)) {
+          <span class="token-fn">setMessages</span>(prev => [...prev, {
+            id: `prompt-${<span class="token-fn">Date.now</span>()}`,
+            role: <span class="token-str">'ai'</span>,
+            text: <span class="token-str">`I noticed you paused. Want me to explain this concept?`</span>,
+            isPrompt: <span class="token-kw">true</span>,
+            timestamp: currentTime,
+          }]);
+          lastPromptTimeRef.current = now;
+          promptedTimestamps.current.add(approxTime);
+        }
+      }, 3000);
+    } <span class="token-kw">else</span> {
+      <span class="token-fn">clearTimeout</span>(pauseTimerRef.current);
+    }
+    <span class="token-kw">return</span> () => <span class="token-fn">clearTimeout</span>(pauseTimerRef.current);
+  }, [isPaused, currentTime]);
+};</code></pre>
+
+  <h3><span class="icon">🟣</span> B. Progress Bar — Animated Purple Markers</h3>
+  <pre data-label="VideoPlayer.jsx"><code><span class="token-comment">// Animated purple dots on progress bar</span>
+{duration &gt; <span class="token-num">0</span> &amp;&amp; markers.<span class="token-fn">map</span>((time, i) =&gt; (
+  <span class="token-kw">&lt;</span>div
+    key={i}
+    className=<span class="token-str">"absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"</span>
+    style={{ left: <span class="token-str">`${(time / duration) * 100}%`</span> }}
+  <span class="token-kw">&gt;</span>
+    <span class="token-kw">&lt;</span>div className=<span class="token-str">"relative w-3 h-3"</span><span class="token-kw">&gt;</span>
+      <span class="token-comment">{/* Glow pulse ring */}</span>
+      <span class="token-kw">&lt;</span>div className=<span class="token-str">"absolute inset-0 rounded-full bg-purple-500 animate-ping opacity-75"</span> <span class="token-kw">/&gt;</span>
+      <span class="token-comment">{/* Solid dot */}</span>
+      <span class="token-kw">&lt;</span>div className=<span class="token-str">"relative rounded-full w-3 h-3 bg-purple-400"</span> <span class="token-kw">/&gt;</span>
+    <span class="token-kw">&lt;/</span>div<span class="token-kw">&gt;</span>
+  <span class="token-kw">&lt;/</span>div<span class="token-kw">&gt;</span>
+))}</code></pre>
+
+  <h3><span class="icon">🃏</span> C. Premium 3D Card System (CSS)</h3>
+  <pre data-label="index.css — Design System"><code><span class="token-comment">/* 3D Card with depth and hover lift */</span>
+<span class="token-selector">.card-3d</span> {
+    <span class="token-prop">transform-style</span>: preserve-3d;
+    <span class="token-prop">transition</span>: transform <span class="token-num">0.35s</span> cubic-bezier(<span class="token-num">0.23, 1, 0.32, 1</span>);
+}
+<span class="token-selector">.card-3d:hover</span> {
+    <span class="token-prop">transform</span>: <span class="token-fn">translateY</span>(-8px) <span class="token-fn">scale</span>(1.01);
+    <span class="token-prop">box-shadow</span>: <span class="token-num">0 12px 30px</span> <span class="token-fn">rgba</span>(<span class="token-num">79, 70, 229, 0.12</span>);
+}
+
+<span class="token-comment">/* Glassmorphism panel */</span>
+<span class="token-selector">.glass</span> {
+    <span class="token-prop">background</span>: <span class="token-fn">rgba</span>(<span class="token-num">255, 255, 255, 0.08</span>);
+    <span class="token-prop">backdrop-filter</span>: <span class="token-fn">blur</span>(16px) <span class="token-fn">saturate</span>(180%);
+    <span class="token-prop">border</span>: <span class="token-num">1px</span> solid <span class="token-fn">rgba</span>(<span class="token-num">255, 255, 255, 0.1</span>);
+}
+
+<span class="token-comment">/* Shimmer gradient text for headings */</span>
+<span class="token-selector">.text-shimmer</span> {
+    <span class="token-prop">background</span>: <span class="token-fn">linear-gradient</span>(<span class="token-num">135deg, #6366f1, #8b5cf6, #38bdf8</span>);
+    <span class="token-prop">-webkit-background-clip</span>: text;
+}</code></pre>
+
+  <h3><span class="icon">🌗</span> D. Dark/Light Theme Toggle</h3>
+  <pre data-label="context/ThemeContext.jsx"><code><span class="token-kw">const</span> <span class="token-fn">getInitialTheme</span> = () => {
+    <span class="token-kw">const</span> stored = <span class="token-var">localStorage</span>.<span class="token-fn">getItem</span>(<span class="token-str">'ai_edu_theme'</span>);
+    <span class="token-kw">if</span> (stored === <span class="token-str">'dark'</span> || stored === <span class="token-str">'light'</span>) <span class="token-kw">return</span> stored;
+    <span class="token-kw">return</span> <span class="token-str">'dark'</span>;
+};
+
+<span class="token-kw">export const</span> <span class="token-fn">ThemeProvider</span> = ({ children }) => {
+    <span class="token-kw">const</span> [theme, setThemeState] = <span class="token-fn">useState</span>(getInitialTheme);
+
+    <span class="token-fn">useEffect</span>(() => {
+        <span class="token-kw">const</span> root = <span class="token-var">document</span>.documentElement;
+        <span class="token-kw">if</span> (theme === <span class="token-str">'dark'</span>) {
+            root.classList.<span class="token-fn">add</span>(<span class="token-str">'dark'</span>);
+        } <span class="token-kw">else</span> {
+            root.classList.<span class="token-fn">remove</span>(<span class="token-str">'dark'</span>);
+        }
+        <span class="token-var">localStorage</span>.<span class="token-fn">setItem</span>(<span class="token-str">'ai_edu_theme'</span>, theme);
+    }, [theme]);
+
+    <span class="token-kw">const</span> <span class="token-fn">toggleTheme</span> = () =>
+        <span class="token-fn">setThemeState</span>(prev => prev === <span class="token-str">'dark'</span> ? <span class="token-str">'light'</span> : <span class="token-str">'dark'</span>);
+
+    <span class="token-kw">return</span> (
+        <span class="token-kw">&lt;</span>ThemeContext.Provider value={{ theme, toggleTheme }}<span class="token-kw">&gt;</span>
+            {children}
+        <span class="token-kw">&lt;/</span>ThemeContext.Provider<span class="token-kw">&gt;</span>
+    );
+};</code></pre>
+</div>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<div style="background:linear-gradient(135deg,#0F172A,#1E1B4B);color:#A5B4FC;text-align:center;padding:40px 20px;margin-top:40px">
+  <p style="font-size:20px;margin-bottom:8px;color:#fff">🧠 Nexora AI Platform</p>
+  <p style="font-size:14px;margin-bottom:4px">Frontend Technical Documentation — Graduation Project 2026</p>
+  <p style="font-size:13px;margin:0">🌐 <a href="https://aitourgraduation.netlify.app" style="color:#C7D2FE">aitourgraduation.netlify.app</a> &nbsp;│&nbsp; 📂 <a href="https://github.com/alyeldinomar4-afk/ai-edu-platform" style="color:#C7D2FE">GitHub Repository</a></p>
+</div>
+
+</body>
+</html>

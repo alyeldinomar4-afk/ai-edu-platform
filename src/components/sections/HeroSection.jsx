@@ -187,7 +187,7 @@ const DSK_X = [-32, -10.6, 10.6, 32];
 const DSK_Y = '20vh'; // Moved down from 8vh so it doesn't overlap text
 
 const MOB_X = [-25, 25, -25, 25];
-const MOB_Y = ['4vh', '4vh', '24vh', '24vh']; // Reduced gap between rows on mobile
+const MOB_Y = ['10vh', '10vh', '32vh', '32vh']; // Brining cards closer to the text
 
 function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered, setIsDeckHovered, isStacked }) {
     // Mirror coordinates if Arabic (RTL) mode
@@ -195,16 +195,15 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered
     const targetX = `${isAr ? -numX : numX}vw`;
     const targetY = isMobile ? MOB_Y[idx] : DSK_Y;
 
-    // Stack is positioned at the bottom edge of the Hero Image
-    // In RTL, the image sits on the left side of the screen, so stackX must be negative
-    const deskStartX = isAr ? -10 : 10;
-    // On mobile, spread cards to the edges and position them lower down to avoid hero center
-    // On mobile, keep them in a stack but move it to the bottom-side to avoid the hero center
-    const mobStartX = isAr ? '28vw' : '-28vw';
-    const mobStartY = '-60vh';
+    // Stack is positioned over the girl's hand. 
+    // In LTR (image on right), hand is right of center. In RTL (image on left, unflipped), hand is far left.
+    const deskStartX = isAr ? -20 : 20;
+    // On mobile, position them over the robot hand area (Slightly Left for AR, Slightly Right for EN)
+    const mobStartX = isAr ? '-4vw' : '4vw';
+    const mobStartY = '-88vh';
 
     const startX = isMobile ? mobStartX : `${deskStartX}vw`;
-    const startY = isMobile ? mobStartY : '-80vh';
+    const startY = isMobile ? mobStartY : '-88vh';
 
     // Cards should rotate the opposite way in RTL to look matched to the mirror
     const finalRotate = isAr ? -card.stackRotate : card.stackRotate;
@@ -228,7 +227,7 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered
             onMouseEnter={() => isStacked && setIsDeckHovered(true)}
             onMouseLeave={() => isStacked && setIsDeckHovered(false)}
         >
-            <motion.div 
+            <motion.div
                 animate={{
                     x: isStacked && isDeckHovered ? (isAr ? -card.stackX * 8 : card.stackX * 8) : 0,
                     y: isStacked && isDeckHovered ? card.stackY * 2.5 - 20 : 0,
@@ -240,7 +239,7 @@ function AnimCard({ card, idx, scrollYProgress, isMobile, t, isAr, isDeckHovered
                 className="flex flex-col items-center gap-3 cursor-pointer group"
             >
                 <div
-                    className="w-28 h-28 sm:w-44 sm:h-44 lg:w-52 lg:h-52 xl:w-56 xl:h-56 rounded-3xl overflow-hidden ring-4 ring-slate-200/60 dark:ring-white/10"
+                    className="w-20 h-20 sm:w-36 sm:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 rounded-2xl sm:rounded-3xl overflow-hidden ring-4 ring-slate-200/60 dark:ring-white/10"
                     style={{ boxShadow: `0 10px 45px ${card.glow}, 0 4px 15px rgba(0,0,0,0.4)` }}
                 >
                     <img src={card.src} alt={card.fallback} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -305,38 +304,58 @@ const HeroSection = ({ getStartedPath }) => {
         <div className="relative overflow-x-clip bg-slate-50 dark:bg-[#0B1120]">
 
             {/* ─── NATIVE SCROLL SECTION 1: HERO ─── */}
-            <section className="relative min-h-screen flex items-center pt-16 pb-12 overflow-visible">
+            <section className="relative min-h-[85vh] sm:min-h-screen flex items-center pt-2 sm:pt-16 pb-12 overflow-hidden">
+
+                {/* Desktop Absolute Image (lg and up) */}
+                <div className={`absolute top-1/2 -translate-y-1/2 w-full lg:w-[60%] z-0 hidden lg:flex items-center pointer-events-none ${isAr ? 'left-0 justify-start' : 'right-0 justify-end'}`}>
+                    <img src="/premium_hero_nexora_tall.jpg" alt="Nexora AI Dark" className={cn("max-h-[100vh] w-auto object-contain hidden dark:block transition-all duration-700", isAr ? 'object-left' : 'object-right')} />
+                    <img src="/premium_hero_nexora_light.jpg" alt="Nexora AI Light" className={cn("max-h-[100vh] w-auto object-contain block dark:hidden transition-all duration-700", isAr ? 'object-left' : 'object-right')} />
+                    <div className={`absolute inset-y-0 w-[40%] to-transparent pointer-events-none ${isAr ? 'right-0 bg-gradient-to-l from-slate-50 dark:from-[#0B1120]' : 'left-0 bg-gradient-to-r from-slate-50 dark:from-[#0B1120]'}`} />
+                </div>
+
                 {/* Background orbs */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-                    <div className="orb orb-primary w-[600px] h-[600px] -top-32 -left-32 opacity-30 dark:opacity-40" />
-                    <div className="orb orb-purple w-[500px] h-[500px] -top-20 right-0 opacity-25 dark:opacity-35" />
-                    <div className="orb orb-blue w-[400px] h-[400px] bottom-0 left-1/3 opacity-20 dark:opacity-30" />
+                    <div className="orb orb-primary w-[300px] h-[300px] sm:w-[600px] sm:h-[600px] -top-32 -left-32 opacity-20 sm:opacity-30 dark:opacity-30 sm:dark:opacity-40" />
+                    <div className="orb orb-purple w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] -top-20 right-0 opacity-15 sm:opacity-25 dark:opacity-25 sm:dark:opacity-35" />
                     <div className="absolute inset-0 opacity-0 dark:opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(99,102,241,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.8) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="grid lg:grid-cols-2 gap-8 sm:gap-16 items-center">
                         {/* Left — Text */}
-                        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700 text-primary font-semibold text-sm mb-6">
+                        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} className="text-center lg:text-start">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200/20 dark:border-slate-700 text-primary font-semibold text-sm mb-6 mx-auto lg:mx-0">
                                 <Sparkles className="w-4 h-4" />
                                 {t('home.heroBadge')}
                             </div>
-                            <h1 className={`text-3xl sm:text-5xl md:text-6xl xl:text-7xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight dark:[text-shadow:_0_0_40px_rgba(255,255,255,0.12),_0_2px_10px_rgba(0,0,0,0.4)] ${isAr ? 'leading-[1.4]' : ''}`}>
+                            <h1 className={`text-3xl sm:text-5xl md:text-6xl xl:text-7xl font-bold text-slate-900 dark:text-white leading-[1.2] sm:leading-[1.1] mb-6 tracking-tight dark:[text-shadow:_0_0_40px_rgba(255,255,255,0.12),_0_2px_10px_rgba(0,0,0,0.4)] ${isAr ? 'leading-[1.4] sm:leading-[1.4]' : ''}`}>
                                 {t('home.heroTitleMain')}
                                 {isAr ? ' ' : <br />}
                                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent">
                                     {t('home.heroTitleHighlight')}
                                 </span>
                             </h1>
-                            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-lg leading-relaxed">
+                            <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-400 mb-8 sm:mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                                 {t('home.heroSubtitle')}
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-                                <Link to="/courses">
+
+                            {/* Mobile Image (shown only on small screens) */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.3 }}
+                                className="relative w-full max-w-md mx-auto mb-10 lg:hidden"
+                            >
+                                <div className="absolute -inset-4 bg-primary/10 rounded-full blur-3xl opacity-50" />
+                                <img src="/premium_hero_nexora_tall.jpg" alt="Hero Mobile" className="relative z-10 w-full h-auto object-contain dark:block hidden rounded-2xl" />
+                                <img src="/premium_hero_nexora_light.jpg" alt="Hero Mobile" className="relative z-10 w-full h-auto object-contain block dark:hidden rounded-2xl" />
+                            </motion.div>
+
+                            <div className="flex flex-col sm:flex-row gap-4 mb-12 justify-center lg:justify-start">
+                                <Link to="/courses" className="w-full sm:w-auto">
                                     <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                                        <Button size="lg" className="h-14 px-8 text-lg w-full sm:w-auto flex items-center justify-center gap-2 relative overflow-hidden group/btn">
-                                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                                        <Button size="lg" className="h-14 px-8 text-lg w-full flex items-center justify-center gap-2 relative overflow-hidden group/btn">
+                                            <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                                             <span className="relative z-10 flex items-center gap-2">
                                                 {t('home.btnStartLearning')}
                                                 <ArrowRight className={cn("w-5 h-5 transition-transform group-hover/btn:translate-x-1", isAr && "rotate-180 group-hover/btn:-translate-x-1")} />
@@ -344,76 +363,29 @@ const HeroSection = ({ getStartedPath }) => {
                                         </Button>
                                     </motion.div>
                                 </Link>
-                                <motion.div onClick={() => setShowDemo(true)} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="cursor-pointer relative group/demo">
+                                <motion.div onClick={() => setShowDemo(true)} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="cursor-pointer relative group/demo w-full sm:w-auto">
                                     <span className="absolute -inset-[2px] rounded-xl bg-gradient-to-r from-primary via-purple-500 to-pink-500 opacity-0 group-hover/demo:opacity-60 blur-[3px] transition-opacity duration-500 animate-pulse" />
-                                    <Button variant="outline" size="lg" className="relative h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full sm:w-auto flex items-center justify-center gap-2 pointer-events-none overflow-hidden">
-                                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/demo:translate-x-full transition-transform duration-700" />
+                                    <Button variant="outline" size="lg" className="relative h-14 px-8 text-lg border-2 hover:bg-slate-50 dark:hover:bg-slate-900 dark:border-slate-700 dark:text-slate-200 w-full flex items-center justify-center gap-2 pointer-events-none overflow-hidden">
+                                        <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-primary/10 to-white/0 -translate-x-full group-hover/demo:translate-x-full transition-transform duration-700" />
                                         <span className="relative z-10"><Play className="w-5 h-5 fill-current inline-block mr-2" /> {t('home.btnWatchDemo')}</span>
                                     </Button>
                                 </motion.div>
                             </div>
                         </motion.div>
 
-                        {/* Right — 3D Hero image */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                            className="flex items-center justify-center relative mt-6 lg:mt-0 w-full"
-                        >
-                            <div
-                                className="relative w-full max-w-[620px] h-[340px] sm:h-[420px] lg:h-[540px] flex items-center justify-center mx-auto lg:ml-auto"
-                                ref={imageRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ perspective: "1200px" }}
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/10 to-cyan-500/20 blur-[100px] rounded-full animate-pulse" />
-
-                                {/* Smart Learning Floating Badge */}
-                                <motion.div
-                                    animate={{ y: [-8, 8, -8] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute z-30 right-2 lg:-right-6 top-6 sm:top-10 bg-white/20 dark:bg-black/30 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-full py-1.5 sm:py-2 px-3 sm:px-4 flex items-center gap-2 sm:gap-2.5 border-b-2 border-b-yellow-400/20 hover:scale-105 transition-transform cursor-default"
-                                >
-                                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center shadow-[0_0_15px_rgba(250,204,21,0.2)] flex-shrink-0 backdrop-blur-md">
-                                        <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400/50" />
-                                    </div>
-                                    <div className="flex flex-col items-start pr-1 justify-center">
-                                        <span className="text-[10px] sm:text-[11px] font-extrabold tracking-wide text-white uppercase leading-tight">
-                                            Smart Learning
-                                        </span>
-                                        <div className="flex gap-1 items-center mt-0.5" dir="ltr">
-                                            <span className="w-1 h-1 rounded-full bg-amber-500/80 animate-bounce shadow-[0_0_5px_rgba(245,158,11,0.6)]" style={{ animationDelay: '0s' }} />
-                                            <span className="w-1 h-1 rounded-full bg-yellow-400/80 animate-bounce shadow-[0_0_5px_rgba(250,204,21,0.6)]" style={{ animationDelay: '0.15s' }} />
-                                            <span className="w-1 h-1 rounded-full bg-amber-300/80 animate-bounce shadow-[0_0_5px_rgba(252,211,77,0.6)]" style={{ animationDelay: '0.3s' }} />
-                                        </div>
-                                    </div>
-                                </motion.div>
-
-                                <motion.div
-                                    style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-                                    className="relative z-10 w-full h-full rounded-[40px] overflow-hidden shadow-2xl shadow-indigo-500/40 p-1 bg-gradient-to-br from-white/20 via-white/5 to-white/10 backdrop-blur-md"
-                                >
-                                    <div className="w-full h-full rounded-[36px] overflow-hidden bg-[#0c1224] relative">
-                                        <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                                        <img
-                                            src="/premium_hero_nexora_subtle_neon_1775433853183.png"
-                                            alt="Nexora AI"
-                                            className="w-full h-full object-cover rounded-[36px] transition-all duration-700"
-                                            style={{ filter: 'brightness(1.1) saturate(1.1) contrast(1.05)' }}
-                                        />
-                                    </div>
-                                </motion.div>
-                            </div>
-                        </motion.div>
+                        {/* Right column empty to allow the absolute image to show through on Desktop */}
+                        <div className="hidden lg:block relative w-full h-[600px] pointer-events-none" />
                     </div>
                 </div>
             </section>
 
             {/* ─── NATIVE SCROLL SECTION 2: FEATURES CARDS ─── */}
-            <section ref={hero2Ref} className="relative min-h-screen flex flex-col items-center justify-start pt-12 lg:pt-16 pb-16 overflow-visible bg-slate-50 dark:bg-[#060B14] border-t border-slate-200 dark:border-slate-800/40 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] z-10">
+            <section ref={hero2Ref} className="relative min-h-[90vh] sm:min-h-screen flex flex-col items-center justify-start pt-16 sm:pt-24 pb-16 sm:pb-24 overflow-visible bg-slate-50 dark:bg-[#060B14] border-t border-slate-200 dark:border-slate-800/40 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] z-10">
 
                 {/* Fixed Premium Background for Section 2 */}
                 <div className="absolute inset-0 hidden dark:block bg-gradient-to-b from-[#0c1224]/80 to-[#0B1120] pointer-events-none" />
 
-                <div className="text-center relative z-10 px-4 w-full mb-10 lg:mb-0">
+                <div className="text-center relative z-10 px-4 w-full mb-12 sm:mb-20">
                     <span className="text-primary font-extrabold tracking-[0.2em] uppercase text-[10px] md:text-xs bg-primary/10 border border-primary/20 px-5 py-2 rounded-full inline-block mb-6 shadow-lg shadow-primary/20">
                         {t('home.hero2.badge', { defaultValue: 'Platform Features' })}
                     </span>
@@ -422,28 +394,18 @@ const HeroSection = ({ getStartedPath }) => {
                     </h2>
                     <p className={`text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mt-6 text-sm md:text-base leading-relaxed ${isAr ? 'leading-[1.8]' : ''}`}>
                         {t('home.hero2.subtitle', { defaultValue: 'Experience the next generation of learning with powerful AI tools designed to enhance your educational journey' })}
-                        {!isAr && (
-                            <span className="hidden lg:inline">
-                                {t('home.hero2.subtitle_suffix', { defaultValue: ', seamlessly combining cutting-edge tech with world-class content.' })}
-                            </span>
-                        )}
-                        {isAr && (
-                            <span className="hidden lg:inline">
-                                {t('home.hero2.subtitle_suffix', { defaultValue: '' })}
-                            </span>
-                        )}
                     </p>
                 </div>
 
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
                     {CARDS_DATA.map((card, idx) => (
-                        <AnimCard 
-                            key={idx} 
-                            card={card} 
-                            idx={idx} 
-                            scrollYProgress={scrollYProgress} 
-                            isMobile={isMobile} 
-                            t={t} 
+                        <AnimCard
+                            key={idx}
+                            card={card}
+                            idx={idx}
+                            scrollYProgress={scrollYProgress}
+                            isMobile={isMobile}
+                            t={t}
                             isAr={isAr}
                             isDeckHovered={isDeckHovered}
                             setIsDeckHovered={setIsDeckHovered}
