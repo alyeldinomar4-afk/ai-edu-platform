@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 // // import toast from "react-hot-toast";
 import { getProfile, handleLogout, signAPI } from "../lib/auth";
 
@@ -89,15 +89,16 @@ export const AuthProvider = ({ children }) => {
         profile = {},
         message = "Logged in successfully!",
       } = await signAPI(data, mode);
-
+      
       setSession(profile);
 
-      queryClient.clear();
+      //  queryClient.clear();
 
       if (!isAdmin(profile)) {
         // toast.success(message);
       }
     } catch (error) {
+        console.log("🚀 ~ AuthProvider ~ error:", error)
       if (error?.logout) {
         await logOut();
       } else {

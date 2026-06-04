@@ -3,6 +3,7 @@ import { timeToSeconds } from "./time";
 import eventBus from "./eventBus";
 
 const baseURL = `${import.meta.env.VITE_API_URL}/api`;
+console.log("🚀 ~ baseURL:", baseURL)
 const defaultTimeout = 10 * 60 * 1000; // 10 minutes
 export const csrApi = axios.create({
   baseURL,
@@ -47,7 +48,7 @@ csrApi.interceptors.response.use(
             ...error.response.data,
           });
         case 403:
-          const channel = new BroadcastChannel("auth_channel");
+         // const channel = new BroadcastChannel("auth_channel");
           channel.postMessage({ massage: "logout", path: "/log-in" });
       //    await SessionExpire().catch(() => {});
           return Promise.reject({

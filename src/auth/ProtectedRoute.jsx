@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-    const { user, isAuthenticated, loading } = useAuth();
+    const { session, isAuthenticated, loading } = useAuth();
     const location = useLocation();
 
     if (loading) {
@@ -13,8 +13,8 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // Normalize user role (handle potential 'student' vs 'learner' mismatch)
-    const currentRole = user.role === 'student' ? 'learner' : user.role;
+    // Normalize session role (handle potential 'student' vs 'learner' mismatch)
+    const currentRole = session.role === 'student' ? 'learner' : session.role;
 
     if (allowedRoles.length > 0 && !allowedRoles.includes(currentRole)) {
         // Determine redirect path based on role

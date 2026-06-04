@@ -964,15 +964,8 @@ export const api = {
     // ─── Testimonials ────────────────────────────────────────
     testimonials: {
         getAll: async () => {
-            try {
-                const response = await httpClient.get('/testimonials');
-                const data = response.data || [];
-                return data.map(adapters.testimonial);
-            } catch (error) {
-                console.warn("Fallback to mock data for testimonials", error);
-                await delay(300);
-                return testimonials;
-            }
+            await delay(300);
+            return testimonials;
         }
     }
 };
