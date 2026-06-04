@@ -1,0 +1,14 @@
+.text {
+  margin-top: 15px;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+.layout {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100000;
+  background: white;
+  width: 100vw;
+  overflow: hidden;
+}

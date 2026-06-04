@@ -1,76 +1,178 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { authService } from '../services/authService';
+"use client"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+// // import toast from "react-hot-toast";
+import { getProfile, handleLogout, signAPI } from "../lib/auth";
 
+import { isAdmin } from "../env/auth";
+import LogOutCover from "../components/ui/LogOutCover/LogOutCover";
+
+// =========================
+// CONTEXT
+// =========================
 const AuthContext = createContext(null);
 
+// =========================
+// PROVIDER
+// =========================
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-    useEffect(() => {
-        const initAuth = async () => {
-            try {
-                const currentUser = authService.getCurrentUser();
-                if (currentUser) {
-                    setUser(currentUser);
-                }
-            } catch (error) {
-                console.error("Auth initialization error:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+  
+  const navigate = useNavigate();
+ // const queryClient = useQueryClient();
 
-        initAuth();
-    }, []);
+  /**
+   * Destroy current session
+   */
+  const destroySession = useCallback(async (path = "/") => {
+    try {
+      setIsLoggingOut(true);
 
-    const login = async (email, password) => {
-        try {
-            const { user: userData, token } = await authService.login(email, password);
-            setUser(userData);
-            authService.setSession(userData, token);
-            return userData;
-        } catch (error) {
-            throw error;
-        }
+      setSession(null);
+
+     // queryClient.clear();
+
+      if (path) {
+        navigate(path, { replace: true });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  /**
+   * Update session manually
+   */
+  const updateSession = useCallback((data) => {
+    setSession(data);
+  }, []);
+
+  /**
+   * Logout user
+   */
+  const logOut = useCallback(async () => {
+    const channel = new BroadcastChannel("auth_channel");
+
+    try {
+      setIsLoggingOut(true);
+
+      await handleLogout();
+
+      channel.postMessage({
+        message: "logout",
+        path: "/",
+      });
+    } catch (error) {
+      channel.postMessage({
+        message: "logout",
+        path: "/login",
+      });
+    }
+  }, []);
+
+  /**
+   * Sign in
+   */
+  const signIn = useCallback(async ({ data = {}, mode = "signin" }) => {
+    try {
+      const {
+        profile = {},
+        message = "Logged in successfully!",
+      } = await signAPI(data, mode);
+
+      setSession(profile);
+
+      queryClient.clear();
+
+      if (!isAdmin(profile)) {
+        // toast.success(message);
+      }
+    } catch (error) {
+      if (error?.logout) {
+        await logOut();
+      } else {
+        throw error;
+      }
+    }
+  }, []);
+
+  /**
+   * Verify current session
+   */
+  const verifySession = useCallback(async () => {
+    try {
+      setIsLoading(true);
+
+      const { profile = null } = await getProfile();
+
+      setSession(profile);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  /**
+   * Listen for logout across tabs
+   */
+  useEffect(() => {
+    const channel = new BroadcastChannel("auth_channel");
+
+    channel.onmessage = (event) => {
+      if (event?.data?.message === "logout") {
+        destroySession(event?.data?.path);
+      }
     };
 
-    const register = async (name, email, password, role) => {
-        try {
-            const { user: userData, token } = await authService.register(name, email, password, role);
-            setUser(userData);
-            authService.setSession(userData, token);
-            return userData;
-        } catch (error) {
-            throw error;
-        }
-    };
+    verifySession();
 
-    const logout = () => {
-        authService.logout();
-        setUser(null);
+    return () => {
+      channel.close();
     };
+  }, []);
 
-    const value = {
-        user,
-        loading,
-        isAuthenticated: !!user,
-        login,
-        register,
-        logout
-    };
-
-    return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider
+      value={{
+        session,
+        isLoading,
+        isLoggingOut,
+        reVerify: verifySession,
+        signIn,
+        logOut,
+        updateSession,
+        destroySession,
+      }}
+    >
+      {isLoggingOut ? (
+        <LogOutCover onFinish={() => setIsLoggingOut(false)} />
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
+  );
 };
 
+// =========================
+// HOOK
+// =========================
 export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
-    }
-    return context;
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used inside AuthProvider");
+  }
+
+  return context;
 };
