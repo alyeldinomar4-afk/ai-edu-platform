@@ -66,7 +66,7 @@ const ManageUsersPage = () => {
         return users.filter(user => {
             const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 user.email.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+            const matchesRole = roleFilter === 'all' || user?.role === roleFilter;
             const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
             return matchesSearch && matchesRole && matchesStatus;
         });
@@ -254,13 +254,13 @@ const ManageUsersPage = () => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${user.role === 'instructor'
+                                            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${user?.role === 'instructor'
                                             ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400'
-                                            : user.role === 'admin'
+                                            : user?.role === 'admin'
                                             ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
                                             : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
                                             }`}>
-                                            {t(`dashboard.admin.manageUsers.${user.role === 'learner' ? 'learners' : user.role + 's'}`).replace(/s$/, '')}
+                                            {t(`dashboard.admin.manageUsers.${user?.role === 'learner' ? 'learners' : user?.role + 's'}`).replace(/s$/, '')}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
@@ -285,7 +285,7 @@ const ManageUsersPage = () => {
                                             <button
                                                 onClick={() => { 
                                                     setEditingUser(user); 
-                                                    setSelectedRole(user.role);
+                                                    setSelectedRole(user?.role);
                                                     setGeneratedPass('');
                                                     setShowUserModal(true); 
                                                 }}

@@ -39,12 +39,12 @@ const Navbar = () => {
 
     const getDashboardPath = () => {
         if (!user) return '/login';
-        return `/${user.role}/dashboard`;
+        return `/${user?.role}/dashboard`;
     };
 
     const getProfilePath = () => {
         if (!user) return '/login';
-        return `/${user.role}/profile`;
+        return `/${user?.role}/profile`;
     };
 
     const navLinks = [
@@ -161,7 +161,7 @@ const Navbar = () => {
                                             >
                                                 <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800/60 xl:hidden mb-1">
                                                     <p className="text-sm font-bold text-slate-800 dark:text-white truncate">{user.name}</p>
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate capitalize">{user.role}</p>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 truncate capitalize">{user?.role}</p>
                                                 </div>
                                                 <Link to={getProfilePath()} onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-3 py-2.5 text-[14px] font-semibold text-slate-600 dark:text-slate-300 hover:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 rounded-xl transition-colors cursor-pointer">
                                                     <User size={16} />
@@ -249,7 +249,7 @@ const Navbar = () => {
                                             <img src={user.avatar} alt={user.name} className="w-12 h-12 rounded-full border-2 border-slate-100 dark:border-slate-800 shadow-sm" />
                                             <div className="flex flex-col">
                                                 <span className="font-bold text-slate-900 dark:text-white leading-none">{user.name}</span>
-                                                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize">{user.role}</span>
+                                                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize">{user?.role}</span>
                                             </div>
                                         </div>
                                         <Link to={getProfilePath()} onClick={() => setIsOpen(false)}>

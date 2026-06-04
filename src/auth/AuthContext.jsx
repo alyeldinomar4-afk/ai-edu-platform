@@ -97,6 +97,7 @@ export const AuthProvider = ({ children }) => {
       if (!isAdmin(profile)) {
         // toast.success(message);
       }
+      return profile
     } catch (error) {
         console.log("🚀 ~ AuthProvider ~ error:", error)
       if (error?.logout) {
@@ -147,7 +148,9 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         session,
+        user:session,
         isLoading,
+        loading:isLoading,
         isLoggingOut,
         reVerify: verifySession,
         signIn,

@@ -36,12 +36,13 @@ const LoginPage = () => {
         data: formData,
         mode: "signin",
       });
+      console.log("🚀 ~ handleSubmit ~ user:", user)
       // Redirect based on role or 'from' location
       if (from !== "/") {
         navigate(from, { replace: true });
       } else {
-        if (user.role === "admin") navigate("/admin/dashboard");
-        else if (user.role === "instructor") navigate("/instructor/dashboard");
+        if (user?.role === "admin") navigate("/admin/dashboard");
+        else if (user?.role === "instructor") navigate("/instructor/dashboard");
         else navigate("/learner/dashboard");
       }
     } catch (err) {

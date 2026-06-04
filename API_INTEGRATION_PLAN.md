@@ -252,7 +252,7 @@ The backend MUST return data in the following shapes to avoid frontend crashes. 
                 }
 44:             throw new Error('Invalid email or password');
 45:         }
-91:         const token = `mock-jwt-token-${user.role}-${Date.now()}`;
+91:         const token = `mock-jwt-token-${user?.role}-${Date.now()}`;
 94:         const { password: _, ...userWithoutPassword } = user;
 95:         return { user: userWithoutPassword, token };
 99:     },

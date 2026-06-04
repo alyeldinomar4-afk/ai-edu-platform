@@ -3,7 +3,7 @@ import { timeToSeconds } from "./time";
 import eventBus from "./eventBus";
 
 const baseURL = `${import.meta.env.VITE_API_URL}/api`;
-console.log("🚀 ~ baseURL:", baseURL)
+
 const defaultTimeout = 10 * 60 * 1000; // 10 minutes
 export const csrApi = axios.create({
   baseURL,
@@ -35,7 +35,6 @@ csrApi.interceptors.response.use(
     const config = error.config;
 
     if (error.response) {
-      console.log("🚀 ~ error.response.status:", error.response.status);
       switch (error.response.status) {
         case 400:
           return Promise.reject({

@@ -5,9 +5,10 @@ import { AsyncHandler, csrApi } from "../utils/api";
 
 export const signAPI = AsyncHandler(
   async (formdata, mood = "signin", locale = "en") => {
-    console.log("🚀 ~ formdata:", formdata)
+  
     let pathName = mood === "signup" ? "signup" : "signin";
     const data = await csrApi.post(`/auth/${pathName}`, formdata);
+
     return data;
   },
 );
