@@ -79,17 +79,18 @@ let announcementsSub = [...instructorAnnouncements];
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const normalizeDuration = (duration) => {
-    // Backend expects number (seconds). If UI sends a string (e.g. "10:30"), we convert it here.
-    if (typeof duration === 'number') return duration;
-    
-    if (typeof duration === 'string' && duration.includes(':')) {
-        const parts = duration.split(':').map(Number);
-        if (parts.length === 2) return (parts[0] || 0) * 60 + (parts[1] || 0);
-        if (parts.length === 3) return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
-    }
-    
-    const num = parseInt(duration, 10);
-    return isNaN(num) ? 0 : num;
+  // Backend expects number (seconds). If UI sends a string (e.g. "10:30"), we convert it here.
+  if (typeof duration === "number") return duration;
+
+  if (typeof duration === "string" && duration.includes(":")) {
+    const parts = duration.split(":").map(Number);
+    if (parts.length === 2) return (parts[0] || 0) * 60 + (parts[1] || 0);
+    if (parts.length === 3)
+      return (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+  }
+
+  const num = parseInt(duration, 10);
+  return isNaN(num) ? 0 : num;
 };
 
 export const api = {
@@ -281,37 +282,45 @@ export const api = {
             }
         },
 
-        checkout: async (courseId) => {
-            await delay(1000);
-            const purchased = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
-            if (!purchased.includes(parseInt(courseId))) {
-                purchased.push(parseInt(courseId));
-                localStorage.setItem('purchasedCourses', JSON.stringify(purchased));
-            }
-            return { success: true, orderId: `ORD-${Date.now()}` };
-        },
+    checkout: async (courseId) => {
+      await delay(1000);
+      const purchased = JSON.parse(
+        localStorage.getItem("purchasedCourses") || "[]",
+      );
+      if (!purchased.includes(parseInt(courseId))) {
+        purchased.push(parseInt(courseId));
+        localStorage.setItem("purchasedCourses", JSON.stringify(purchased));
+      }
+      return { success: true, orderId: `ORD-${Date.now()}` };
+    },
 
-        getPurchase: async (courseId) => {
-            await delay(500);
-            const purchased = JSON.parse(localStorage.getItem('purchasedCourses') || '[]');
-            if (purchased.includes(parseInt(courseId))) {
-                return { id: courseId, date: new Date().toISOString(), status: 'completed' };
-            }
-            return null;
-        },
+    getPurchase: async (courseId) => {
+      await delay(500);
+      const purchased = JSON.parse(
+        localStorage.getItem("purchasedCourses") || "[]",
+      );
+      if (purchased.includes(parseInt(courseId))) {
+        return {
+          id: courseId,
+          date: new Date().toISOString(),
+          status: "completed",
+        };
+      }
+      return null;
+    },
 
-        getSavedVideos: async () => {
-            await delay(600);
-            // Return some samples from lecturesSub
-            return lecturesSub.slice(0, 2).map(l => ({
-                id: l.id,
-                title: l.title,
-                courseTitle: l.course,
-                thumbnail: l.thumbnail,
-                duration: l.duration,
-                savedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString() // 2 days ago
-            }));
-        },
+    getSavedVideos: async () => {
+      await delay(600);
+      // Return some samples from lecturesSub
+      return lecturesSub.slice(0, 2).map((l) => ({
+        id: l.id,
+        title: l.title,
+        courseTitle: l.course,
+        thumbnail: l.thumbnail,
+        duration: l.duration,
+        savedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
+      }));
+    },
 
         getAnnouncements: async () => {
             try {
@@ -822,116 +831,141 @@ export const api = {
             }
         },
 
-        settings: {
-            get: async () => {
-                await delay(600);
-                return {
-                    platformName: 'Nexora AI',
-                    supportEmail: 'support@nexora.ai',
-                    maintenanceMode: false,
-                    enableAiTutor: true,
-                    defaultAiModel: 'gpt-4-turbo',
-                    feedbackIntensity: 'medium',
-                    autoApproveCourses: false,
-                    defaultCurrency: 'USD',
-                    googleLogin: true,
-                    githubLogin: true
-                };
-            },
-            update: async (data) => {
-                await delay(1000);
-                console.log('Settings updated:', data);
-                return { success: true, settings: data };
-            }
-        }
+    settings: {
+      get: async () => {
+        await delay(600);
+        return {
+          platformName: "Nexora AI",
+          supportEmail: "support@nexora.ai",
+          maintenanceMode: false,
+          enableAiTutor: true,
+          defaultAiModel: "gpt-4-turbo",
+          feedbackIntensity: "medium",
+          autoApproveCourses: false,
+          defaultCurrency: "USD",
+          googleLogin: true,
+          githubLogin: true,
+        };
+      },
+      update: async (data) => {
+        await delay(1000);
+        console.log("Settings updated:", data);
+        return { success: true, settings: data };
+      },
     },
+  },
 
-    // ─── AI Chat & Video Assistant ──────────────────────────
-    ai: {
-        chat: async (message, context = {}) => {
-            await delay(1200);
-            const msg = message.toLowerCase();
-            const isAr = i18n.language === 'ar';
+  // ─── AI Chat & Video Assistant ──────────────────────────
+  ai: {
+    chat: async (message, context = {}) => {
+      await delay(1200);
+      const msg = message.toLowerCase();
+      const isAr = i18n.language === "ar";
 
-            if (msg.includes('react') || msg.includes('component') || msg.includes('ريأكت')) {
-                return { message: isAr ? "ريأكت (React) هي مكتبة JavaScript لبناء واجهات المستخدم. تعتمد على فكرة المكونات (Components) التي تجعل الكود قابلاً لإعادة الاستخدام وسهل الصيانة." : "React is a JavaScript library for building user interfaces. It relies on the concept of Components, making code reusable and easier to maintain." };
-            }
-            if (msg.includes('python') || msg.includes('loop') || msg.includes('بايثون')) {
-                return { message: isAr ? "بايثون هي لغة برمجة قوية وسهلة التعلم. تُستخدم بكثرة في علم البيانات، الذكاء الاصطناعي، وتطوير الويب لسهولة قراءة كودها وتوفر مكتبات ضخمة لها." : "Python is a powerful and easy-to-learn programming language. It is widely used in Data Science, AI, and Web Development due to its readability and massive library support." };
-            }
-            if (msg.includes('machine learning') || msg.includes('ml') || msg.includes('ai') || msg.includes('تعلم الآلة') || msg.includes('ذكاء اصطناعي')) {
-                return { message: isAr ? "تعلم الآلة (ML) هو فرع من الذكاء الاصطناعي يركز على بناء أنظمة تتعلم من البيانات وتحسن أداءها مع الوقت دون برمجة صريحة لكل خطوة." : "Machine Learning (ML) is a branch of AI focusing on building systems that learn from data and improve over time without being explicitly programmed for every step." };
-            }
-            if (msg.includes('code') || msg.includes('مثال') || msg.includes('كود')) {
-                return {
-                    message: isAr
-                        ? "بالتأكيد! إليك مثال بسيط لمكون React:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>أهلاً بك في مشروعي!</h1>\n    </div>\n  );\n}\n```\nشوفت التنسيق جميل إزاي؟ ✨"
-                        : "Sure thing! Here is a simple React component example:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>Welcome to my project!</h1>\n    </div>\n  );\n}\n```\nI have formatted it for you! ✨"
-                };
-            }
+      if (
+        msg.includes("react") ||
+        msg.includes("component") ||
+        msg.includes("ريأكت")
+      ) {
+        return {
+          message: isAr
+            ? "ريأكت (React) هي مكتبة JavaScript لبناء واجهات المستخدم. تعتمد على فكرة المكونات (Components) التي تجعل الكود قابلاً لإعادة الاستخدام وسهل الصيانة."
+            : "React is a JavaScript library for building user interfaces. It relies on the concept of Components, making code reusable and easier to maintain.",
+        };
+      }
+      if (
+        msg.includes("python") ||
+        msg.includes("loop") ||
+        msg.includes("بايثون")
+      ) {
+        return {
+          message: isAr
+            ? "بايثون هي لغة برمجة قوية وسهلة التعلم. تُستخدم بكثرة في علم البيانات، الذكاء الاصطناعي، وتطوير الويب لسهولة قراءة كودها وتوفر مكتبات ضخمة لها."
+            : "Python is a powerful and easy-to-learn programming language. It is widely used in Data Science, AI, and Web Development due to its readability and massive library support.",
+        };
+      }
+      if (
+        msg.includes("machine learning") ||
+        msg.includes("ml") ||
+        msg.includes("ai") ||
+        msg.includes("تعلم الآلة") ||
+        msg.includes("ذكاء اصطناعي")
+      ) {
+        return {
+          message: isAr
+            ? "تعلم الآلة (ML) هو فرع من الذكاء الاصطناعي يركز على بناء أنظمة تتعلم من البيانات وتحسن أداءها مع الوقت دون برمجة صريحة لكل خطوة."
+            : "Machine Learning (ML) is a branch of AI focusing on building systems that learn from data and improve over time without being explicitly programmed for every step.",
+        };
+      }
+      if (msg.includes("code") || msg.includes("مثال") || msg.includes("كود")) {
+        return {
+          message: isAr
+            ? "بالتأكيد! إليك مثال بسيط لمكون React:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>أهلاً بك في مشروعي!</h1>\n    </div>\n  );\n}\n```\nشوفت التنسيق جميل إزاي؟ ✨"
+            : "Sure thing! Here is a simple React component example:\n\n```javascript\nfunction Welcome() {\n  return (\n    <div className='p-4 bg-blue-500 text-white rounded-lg'>\n      <h1>Welcome to my project!</h1>\n    </div>\n  );\n}\n```\nI have formatted it for you! ✨",
+        };
+      }
 
-            return {
-                message: isAr ? `سؤال مثير للاهتمام! سأقوم بتحليل "${message}" والرد عليك بالتفصيل بناءً على المصادر المتاحة لدي.` : `Interesting question! I will analyze "${message}" and provide a detailed response based on the available resources.`
-            };
-        },
-        /**
-         * AI Video Assistant
-         * Handles auto-prompts on pause and contextual user questions.
-         */
-        videoAssistant: async ({ lectureId, currentTime, action, query }) => {
-            await delay(800);
-            
-            // 1. Auto Prompt logic
-            if (action === 'auto_prompt') {
-                return {
-                    message: i18n.language === 'ar' 
-                        ? "لاحظت أنك توقفت هنا. هل تود أن أشرح لك المفهوم البرمجي الذي يظهر على الشاشة الآن؟"
-                        : "I noticed you paused here. Would you like me to explain the concept being shown on screen right now?",
-                    suggested: true
-                };
-            }
-
-            // 2. Specialized responses for specific contextual queries
-            if (action === 'show-code' || (query && query.includes('code'))) {
-                return {
-                    message: i18n.language === 'ar'
-                        ? "بالتأكيد! إليك كود برمجي يوضح المفهوم الذي يتم شرحه في الفيديو:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nويمكنك نسخه مباشرة وتجربته في مشروعك! 🚀"
-                        : "Certainly! Here's a clean implementation of the Custom Hook discussed in the video:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nYou can copy this directly into your project! 🚀",
-                    suggested: false
-                };
-            }
-
-            if (action === 'explain-scene' || action === 'explain-section') {
-                return {
-                    message: i18n.language === 'ar' 
-                        ? "أرى شرحًا لبنية الـ React Context تظهر على الشاشة. يتحدث المعلم في هذه اللحظة عن كيفية تمرير البيانات عبر شجرة المكونات دون الحاجة لاستخدام الـ Props يدوياً."
-                        : "I see a structural diagram showing React Context architecture. The instructor is explaining how data is passed through the component tree without manually passing props at every level.",
-                    suggested: false
-                };
-            }
-
-            // 3. Default fallback response
-            return {
-                message: i18n.language === 'ar'
-                    ? `سؤال رائع عن محتوى الفيديو عند الثانية ${Math.floor(currentTime)}. في هذا الجزء، يشرح المحاضر كيفية تحسين أداء التطبيق وتقليل عمليات إعادة الـ Rendering لزيادة السرعة.`
-                    : `That's a great question about the content at ${Math.floor(currentTime)}s. In this part, the instructor is discussing how to optimize application performance and minimize re-renders for speed.`,
-                suggested: false
-            };
-        }
+      return {
+        message: isAr
+          ? `سؤال مثير للاهتمام! سأقوم بتحليل "${message}" والرد عليك بالتفصيل بناءً على المصادر المتاحة لدي.`
+          : `Interesting question! I will analyze "${message}" and provide a detailed response based on the available resources.`,
+      };
     },
+    /**
+     * AI Video Assistant
+     * Handles auto-prompts on pause and contextual user questions.
+     */
+    videoAssistant: async ({ lectureId, currentTime, action, query }) => {
+      await delay(800);
+
+      // 1. Auto Prompt logic
+      if (action === "auto_prompt") {
+        return {
+          message:
+            i18n.language === "ar"
+              ? "لاحظت أنك توقفت هنا. هل تود أن أشرح لك المفهوم البرمجي الذي يظهر على الشاشة الآن؟"
+              : "I noticed you paused here. Would you like me to explain the concept being shown on screen right now?",
+          suggested: true,
+        };
+      }
+
+      // 2. Specialized responses for specific contextual queries
+      if (action === "show-code" || (query && query.includes("code"))) {
+        return {
+          message:
+            i18n.language === "ar"
+              ? "بالتأكيد! إليك كود برمجي يوضح المفهوم الذي يتم شرحه في الفيديو:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nويمكنك نسخه مباشرة وتجربته في مشروعك! 🚀"
+              : "Certainly! Here's a clean implementation of the Custom Hook discussed in the video:\n\n```javascript\nimport { useState, useEffect } from 'react';\n\nexport const useDebounce = (value, delay) => {\n  const [val, setVal] = useState(value);\n  useEffect(() => {\n    const h = setTimeout(() => setVal(value), delay);\n    return () => clearTimeout(h);\n  }, [value, delay]);\n  return val;\n};\n```\n\nYou can copy this directly into your project! 🚀",
+          suggested: false,
+        };
+      }
+
+      if (action === "explain-scene" || action === "explain-section") {
+        return {
+          message:
+            i18n.language === "ar"
+              ? "أرى شرحًا لبنية الـ React Context تظهر على الشاشة. يتحدث المعلم في هذه اللحظة عن كيفية تمرير البيانات عبر شجرة المكونات دون الحاجة لاستخدام الـ Props يدوياً."
+              : "I see a structural diagram showing React Context architecture. The instructor is explaining how data is passed through the component tree without manually passing props at every level.",
+          suggested: false,
+        };
+      }
+
+      // 3. Default fallback response
+      return {
+        message:
+          i18n.language === "ar"
+            ? `سؤال رائع عن محتوى الفيديو عند الثانية ${Math.floor(currentTime)}. في هذا الجزء، يشرح المحاضر كيفية تحسين أداء التطبيق وتقليل عمليات إعادة الـ Rendering لزيادة السرعة.`
+            : `That's a great question about the content at ${Math.floor(currentTime)}s. In this part, the instructor is discussing how to optimize application performance and minimize re-renders for speed.`,
+        suggested: false,
+      };
+    },
+  },
 
     // ─── Testimonials ────────────────────────────────────────
     testimonials: {
         getAll: async () => {
-            try {
-                const response = await httpClient.get('/testimonials');
-                const data = response.data || [];
-                return data.map(adapters.testimonial);
-            } catch (error) {
-                console.warn("Fallback to mock data for testimonials", error);
-                await delay(300);
-                return testimonials;
-            }
+            await delay(300);
+            return testimonials;
         }
     }
 };

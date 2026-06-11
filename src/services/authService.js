@@ -43,7 +43,7 @@ export const authService = {
                     id: user._id || user.id,
                     name: user.fullName || user.name,
                     email: user.email,
-                    role: user.role,
+                    role: user?.role,
                     avatar: user.avatar?.url || user.avatar || `https://i.pravatar.cc/150?u=${user.email}`
                 },
                 token
@@ -105,7 +105,7 @@ export const authService = {
             }
 
             // Generate a mock token
-            const token = `mock-jwt-token-${user.role}-${Date.now()}`;
+            const token = `mock-jwt-token-${user?.role}-${Date.now()}`;
 
             // Return user info (excluding password) and token
             const { password: _, ...userWithoutPassword } = user;
@@ -130,7 +130,7 @@ export const authService = {
                     id: user._id || user.id,
                     name: user.fullName || user.name,
                     email: user.email,
-                    role: user.role,
+                    role: user?.role,
                     avatar: user.avatar?.url || user.avatar || `https://i.pravatar.cc/150?u=${user.email}`
                 },
                 token

@@ -37,8 +37,8 @@ const RegisterPage = () => {
     
         try {
             const user = await register(formData.name, formData.email, formData.password, formData.role);
-            if (user.role === 'admin') navigate('/admin/dashboard');
-            else if (user.role === 'instructor') navigate('/instructor/dashboard');
+            if (user?.role === 'admin') navigate('/admin/dashboard');
+            else if (user?.role === 'instructor') navigate('/instructor/dashboard');
             else navigate('/learner/dashboard');
         } catch (err) {
             setError(err.message || t('common.error'));
