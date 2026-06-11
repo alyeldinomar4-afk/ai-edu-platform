@@ -98,7 +98,12 @@ export const api = {
     profile: {
         update: async (data) => {
             try {
-                const response = await httpClient.put('/auth/me', data);
+                const payload = {
+                    ...data,
+                    fullName: data.name
+                };
+                delete payload.name;
+                const response = await httpClient.put('/auth/me', payload);
                 return { success: true, user: response.data || data };
             } catch (error) {
                 console.warn("Fallback to mock data for profile update", error);
@@ -108,7 +113,11 @@ export const api = {
         },
         updatePassword: async (data) => {
             try {
-                const response = await httpClient.patch('/auth/me', data);
+                const payload = {
+                    currentpassword: data.currentPassword,
+                    newpassword: data.newPassword
+                };
+                const response = await httpClient.patch('/auth/me', payload);
                 return { success: true, message: response.message };
             } catch (error) {
                 console.warn("Fallback to mock data for password update", error);
@@ -964,8 +973,15 @@ export const api = {
     // ─── Testimonials ────────────────────────────────────────
     testimonials: {
         getAll: async () => {
-            await delay(300);
-            return testimonials;
+            try {
+                const response = await httpClient.get('/testimonials');
+                const data = response.data || [];
+                return data.map(adapters.testimonial);
+            } catch (error) {
+                console.warn("Fallback to mock data for testimonials", error);
+                await delay(300);
+                return testimonials;
+            }
         }
     }
 };
