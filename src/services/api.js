@@ -160,9 +160,9 @@ export const api = {
                 const response = await httpClient.get('/categories');
                 const data = response.data || [];
                 // Handle objects vs array of strings
-                return data.map(cat => typeof cat === 'string' ? cat : cat.name);
+                return data
             } catch (error) {
-                console.warn("Fallback to mock data for categories", error);
+                console.error("Fallback to mock data for categories", error);
                 await delay(400);
                 return categories;
             }

@@ -173,3 +173,31 @@ function App() {
 }
 
 export default App;
+
+/*
+✅ Public Pages
+
+- HomePage (/)
+- CoursesPage (/courses)
+- CourseDetailsPage (/courses/:id)
+- InstructorsPage (/instructors)
+- PublicInstructorProfilePage (/instructor/user/:name)
+- AIDemoPage (/ai-demo)
+
+- CheckoutPage (/checkout/:courseId)
+- PaymentSuccessPage (/payment-success)
+
+----------------------------------------
+
+✅ Learning
+
+- VideoPlayerPage (/courses/:courseId/learn)
+
+----------------------------------------
+
+✅ Auth
+
+- LoginPage (/login)
+- RegisterPage (/register)
+- ForgotPasswordPage (/forgot-password)
+*/

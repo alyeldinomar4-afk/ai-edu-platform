@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL provided by the backend team (from README.md)
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
+const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api`;
 
 const httpClient = axios.create({
   baseURL: API_BASE_URL,
@@ -9,6 +9,7 @@ const httpClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials:true
 });
 
 // Request Interceptor: Automatically attach the Auth token when available
