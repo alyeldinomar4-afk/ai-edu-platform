@@ -19,4 +19,5 @@ export const isAdmin = (user = {}) => {
 
 export const isAuth = (user = {}) => {
   return enumRoles.all?.includes(user?.role);
+
 };
