@@ -13,6 +13,7 @@ import { formatCurrency, formatDuration } from '../../utils/formatters';
 
 const CourseDetailsPage = () => {
     const { id } = useParams();
+    console.log("🚀 ~ CourseDetailsPage ~ id:", id)
     const navigate = useNavigate();
     const { user } = useAuth();
     const { t, i18n } = useTranslation();
@@ -53,7 +54,7 @@ const CourseDetailsPage = () => {
         const fetchCourseData = async () => {
             setIsLoading(true);
             try {
-                const courseData = await api.courses.getById(parseInt(id));
+                const courseData = await api.courses.getById(id);
                 if (courseData) {
                     setCourse(courseData);
                     // Fetch instructors to get bio/avatar
@@ -237,7 +238,7 @@ const CourseDetailsPage = () => {
 
                                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.whatLearn')}</h3>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {(course.highlights || [1, 2, 3, 4, 5, 6]).map((item, index) => (
+                                                    {(course.highlights.split(".")).filter(Boolean).map((item, index) => (
                                                         <div key={index} className="flex items-start gap-3">
                                                             <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
                                                             <span className="text-slate-600 dark:text-slate-300 text-sm">
