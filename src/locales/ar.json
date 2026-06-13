@@ -203,6 +203,7 @@
       "title": "إنشاء حساب",
       "subtitle": "ابدأ رحلة تعلمك بالذكاء الاصطناعي اليوم",
       "nameLabel": "الاسم الكامل",
+      "phoneLabel": "رقم الهاتف",
       "roleLabel": "أنا...",
       "roleStudent": "طالب",
       "roleInstructor": "معلم",

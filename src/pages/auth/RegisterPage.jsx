@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Loader2, AlertCircle, Github } from 'lucide-react';
+import { Mail, Lock, User, Loader2, AlertCircle, Github, Phone } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../auth/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -12,11 +12,12 @@ const RegisterPage = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
+        phone: '',
         password: '',
         role: 'learner'
     });
 
-    const { register } = useAuth();
+    const { signIn } = useAuth();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -36,7 +37,15 @@ const RegisterPage = () => {
         }
     
         try {
-            const user = await register(formData.name, formData.email, formData.password, formData.role);
+            const user = await signIn({
+                data: {
+                    fullName: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    password: formData.password,
+                },
+                mode: 'signup',
+            });
             if (user?.role === 'admin') navigate('/admin/dashboard');
             else if (user?.role === 'instructor') navigate('/instructor/dashboard');
             else navigate('/learner/dashboard');
@@ -104,6 +113,27 @@ const RegisterPage = () => {
                             onChange={handleChange}
                             className="appearance-none block w-full pl-10 pr-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors"
                             placeholder="you@example.com"
+                        />
+                    </div>
+                </div>
+
+                <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">
+                        {t('auth.register.phoneLabel') || 'Phone Number'}
+                    </label>
+                    <div className="mt-1 relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Phone className="h-5 w-5 text-slate-400 dark:text-slate-500" />
+                        </div>
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={handleChange}
+                            className="appearance-none block w-full pl-10 pr-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors"
+                            placeholder="01012345678"
                         />
                     </div>
                 </div>
