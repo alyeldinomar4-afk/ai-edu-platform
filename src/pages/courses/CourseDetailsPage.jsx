@@ -238,7 +238,7 @@ const CourseDetailsPage = () => {
 
                                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t('courseDetails.whatLearn')}</h3>
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {(course.highlights.split(".")).filter(Boolean).map((item, index) => (
+                                                    {(course?.highlights?.toString().split(".")).filter(Boolean).map((item, index) => (
                                                         <div key={index} className="flex items-start gap-3">
                                                             <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
                                                             <span className="text-slate-600 dark:text-slate-300 text-sm">
