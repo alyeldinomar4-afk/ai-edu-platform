@@ -33,7 +33,7 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
 
                         <motion.div variants={listStagger} initial="hidden" animate="visible">
                             {section?.lectures?.map((lecture, lIdx) => {
-                                const isActive = currentLecture === lecture._id;
+                                const isActive = currentLecture === (lecture.id || lecture._id);
                                 const isCompleted = lecture.completed;
                                 const isLocked = lecture.locked;
 
@@ -42,7 +42,7 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
 
                                 return (
                                     <motion.button
-                                        key={lecture._id}
+                                        key={lecture.id || lecture._id}
                                         variants={listItem}
                                         onClick={() => !isLocked && onSelect(lecture)}
                                         disabled={isLocked}
@@ -59,7 +59,7 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                             <div className={`w-[80px] h-[50px] rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden shadow-md border transition-all duration-300 ${isActive ? 'border-indigo-500/50 shadow-indigo-500/10' : 'border-slate-200 dark:border-slate-700 group-hover:border-slate-300 dark:group-hover:border-slate-600'}`}>
                                                 {lecture.thumbnail ? (
                                                     <div className="relative w-full h-full">
-                                                        <img src={lecture.thumbnail?.url} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" alt="" />
+                                                        <img src={lecture.thumbnail} className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-500" alt="" />
                                                         {/* Play overlay on hover */}
                                                         {!isLocked && (
                                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">

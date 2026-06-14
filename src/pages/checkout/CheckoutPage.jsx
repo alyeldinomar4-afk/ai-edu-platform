@@ -26,7 +26,7 @@ const CheckoutPage = () => {
         const fetchCourse = async () => {
             setLoading(true);
             try {
-                const data = await api.courses.getById(parseInt(courseId));
+                const data = await api.courses.getById(courseId);
                 if (data) {
                     setCourse(data);
                 } else {

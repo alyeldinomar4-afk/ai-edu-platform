@@ -51,8 +51,8 @@ const adapters = {
         id: data._id || data.id,
         title: data.title,
         description: data.description || '',
-        courseId: data.course?._id || data.courseId || 1,
-        course: data.course?.title || data.course || "Unknown Course",
+        courseId: data.courseData?._id || data.course?._id || data.courseId || 1,
+        course: data.courseData?.title || data.course?.title || data.course || "Unknown Course",
         videoUrl: data.video?.url || data.videoUrl?.url || data.videoUrl || "",
         duration: data.duration || 0,
         thumbnail: data.thumbnail?.url || data.thumbnail || "https://via.placeholder.com/150",
@@ -134,9 +134,14 @@ export const api = {
     courses: {
         getAll: async (filters = {}) => {
             try {
-                const response = await httpClient.get('/courses', { params: filters });
+                const apiParams = {};
+                if (filters.search) apiParams.search = filters.search;
+                if (filters.category && filters.category !== 'All') apiParams['filters[category]'] = filters.category;
+                if (filters.level && filters.level !== 'All') apiParams['filters[level]'] = filters.level;
+
+                const response = await httpClient.get('/courses', { params: apiParams });
                 const data = response.data || [];
-                return data 
+                return data.map(adapters.course);
             } catch (error) {
                 console.warn("Fallback to mock data for courses.getAll", error);
                 throw error;
@@ -157,7 +162,7 @@ export const api = {
             try {
                 const response = await httpClient.get(`/courses/${id}`);
                 const data = response.data || response;
-                return data
+                return adapters.course(data);
             } catch (error) {
                 console.warn("Fallback to mock data for courses.getById", error);
                 throw error;
@@ -175,20 +180,19 @@ export const api = {
                 return data
             } catch (error) {
                 console.error("Fallback to mock data for categories", error);
-                throw error;
+                // throw error;
                 return categories;
             }
         },
 
         getLectures: async (id) => {
             try {
-                const response = await httpClient.get(`/lectures`, { params: { course: id } });
+                const response = await httpClient.get(`/lectures`, { params: { 'filters[course]': id } });
                 const data = response.data || [];
-                return data 
+                return data.map(adapters.lecture);
             } catch (error) {
                 console.warn("Fallback to mock data for course lectures", error);
                 throw error;
-                return lecturesSub.filter(l => l.courseId === parseInt(id) || String(l.courseId) === String(id));
             }
         },
 
@@ -214,7 +218,7 @@ export const api = {
                 return data.map(adapters.user);
             } catch (error) {
                 console.warn("Fallback to mock data for instructors", error);
-                throw error;
+                // throw error;
                 return mockInstructors;
             }
         },
@@ -240,7 +244,7 @@ export const api = {
                 return adapters.statsOverview(data);
             } catch (error) {
                 console.warn("Fallback to mock data for stats", error);
-                throw error;
+                // throw error;
                 return {
                     totalStudents: 52300,
                     activeCourses: 240,
@@ -259,7 +263,7 @@ export const api = {
                 return response.data || [];
             } catch (error) {
                 console.warn("Fallback to mock data for learner progress", error);
-                throw error;
+                // throw error;
                 return [
                     {
                         courseId: 1,
@@ -285,7 +289,7 @@ export const api = {
                 return response.data || response;
             } catch (error) {
                 console.warn("Fallback to mock data for learner stats", error);
-                throw error;
+                // throw error;
                 return {
                     hoursWatched: 12,
                     certificates: 2,
@@ -301,29 +305,29 @@ export const api = {
                 return data.map(adapters.course);
             } catch (error) {
                 console.warn("Fallback to mock data for learner recommendations", error);
-                throw error;
+                // throw error;
                 return coursesSub.slice(0, 3);
             }
         },
 
     checkout: async (courseId) => {
-      throw error;
+      // throw error;
       const purchased = JSON.parse(
         localStorage.getItem("purchasedCourses") || "[]",
       );
-      if (!purchased.includes(parseInt(courseId))) {
-        purchased.push(parseInt(courseId));
+      if (!purchased.includes(courseId)) {
+        purchased.push(courseId);
         localStorage.setItem("purchasedCourses", JSON.stringify(purchased));
       }
       return { success: true, orderId: `ORD-${Date.now()}` };
     },
 
     getPurchase: async (courseId) => {
-      throw error;
+      // throw error;
       const purchased = JSON.parse(
         localStorage.getItem("purchasedCourses") || "[]",
       );
-      if (purchased.includes(parseInt(courseId))) {
+      if (purchased.includes(courseId)) {
         return {
           id: courseId,
           date: new Date().toISOString(),
@@ -334,7 +338,7 @@ export const api = {
     },
 
     getSavedVideos: async () => {
-      throw error;
+      // throw error;
       // Return some samples from lecturesSub
       return lecturesSub.slice(0, 2).map((l) => ({
         id: l.id,
@@ -352,7 +356,7 @@ export const api = {
                 return response.data || [];
             } catch (error) {
                 console.warn("Fallback to mock data for learner announcements", error);
-                throw error;
+                // throw error;
                 return [
                     {
                         id: 1,
@@ -379,7 +383,7 @@ export const api = {
                 return response.data || [];
             } catch (error) {
                 console.warn("Fallback to mock data for billing history", error);
-                throw error;
+                // throw error;
                 return [
                     {
                         id: 'TRX-98421',
@@ -1028,7 +1032,7 @@ export const api = {
                 return data.map(adapters.testimonial);
             } catch (error) {
                 console.warn("Fallback to mock data for testimonials", error);
-                throw error;
+                // throw error;
                 return testimonials;
             }
         }

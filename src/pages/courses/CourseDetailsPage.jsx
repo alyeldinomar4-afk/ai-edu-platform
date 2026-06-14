@@ -218,14 +218,14 @@ const CourseDetailsPage = () => {
                 <div className="flex items-center gap-1.5">
                   <User className="w-4 h-4 shrink-0 text-slate-400" />
                   <Link
-                    to={`/instructor/user/${encodeURIComponent(course?.instructor?.fullName?.replace(/\s+/g, "-").toLowerCase())}`}
+                    to={`/instructor/user/${encodeURIComponent(course?.instructor?.replace(/\s+/g, "-").toLowerCase())}`}
                     className="truncate max-w-[150px] sm:max-w-none hover:text-primary transition-colors cursor-pointer block"
                   >
                     <span className="hidden sm:inline text-slate-400">
                       {t("courseDetails.createdBy")}{" "}
                     </span>
                     <span className="text-white font-medium underline decoration-primary/50 underline-offset-4">
-                      {course?.instructor?.fullName}
+                      {course?.instructor}
                     </span>
                   </Link>
                 </div>
@@ -288,7 +288,7 @@ const CourseDetailsPage = () => {
                         <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                           {t("courseDetails.description_full", {
                             category: course.category,
-                            instructor: course?.instructor?.fullName,
+                            instructor: course?.instructor,
                           })}
                         </p>
 
@@ -382,19 +382,19 @@ const CourseDetailsPage = () => {
                           <img
                             src={
                               instructorData?.avatar ||
-                              `https://ui-avatars.com/api/?name=${course.instructor.fullName}&background=random`
+                              `https://ui-avatars.com/api/?name=${course.instructor}&background=random`
                             }
-                            alt={course.instructor.fullName}
+                            alt={course.instructor}
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div>
                           <Link
-                            to={`/instructor/user/${encodeURIComponent(course.instructor.fullName.replace(/\s+/g, "-").toLowerCase())}`}
+                            to={`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, "-").toLowerCase())}`}
                             className="block hover:opacity-80 transition-opacity"
                           >
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 hover:text-primary transition-colors">
-                              {course.instructor.fullName}
+                              {course.instructor}
                             </h3>
                           </Link>
                           <p className="text-primary font-medium text-sm mb-4">
@@ -421,7 +421,7 @@ const CourseDetailsPage = () => {
                           <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                             {instructorData?.bio ||
                               t("courseDetails.instructorBio", {
-                                instructor: course.instructor.fullName,
+                                instructor: course.instructor,
                               })}
                           </p>
                         </div>
@@ -665,7 +665,7 @@ const CourseDetailsPage = () => {
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-800 space-y-6 sticky top-24 transition-colors">
               <div className="rounded-lg overflow-hidden aspect-video relative group cursor-pointer">
                 <img
-                  src={course?.image?.url}
+                  src={course?.image}
                   alt={course.title}
                   className="w-full h-full object-cover"
                 />

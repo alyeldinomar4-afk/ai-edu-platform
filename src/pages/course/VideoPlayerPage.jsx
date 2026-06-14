@@ -40,15 +40,15 @@ const VideoPlayerPage = () => {
             try {
                 // courseId is a MongoDB ObjectId string — do NOT parseInt it
                 const id = courseId;
-                // lecturesData defaults to [] in case getLectures returns undefined (Mohammed's fix ✅)
-                const [course, lecturesData = []] = await Promise.all([
-                    api.courses.getById(id),
-                    api.courses.getLectures(id)
-                ]);
+                const course = await api.courses.getById(id);
                 setCourseData(course);
+                
+                // Use the real course ID (not slug) to fetch lectures
+                const lecturesData = await api.courses.getLectures(course.id) || [];
                 setCourseLectures(lecturesData);
+                
                 if (lecturesData.length > 0) {
-                    setActiveLectureId(lecturesData[0]?._id);
+                    setActiveLectureId(lecturesData[0]?.id || lecturesData[0]?._id);
                 }
             } catch (error) {
                 console.error('Error loading course content:', error);
@@ -84,7 +84,7 @@ const VideoPlayerPage = () => {
 
 
     const handleLectureSelect = (lecture) => {
-        setActiveLectureId(lecture?._id);
+        setActiveLectureId(lecture?.id || lecture?._id);
         setActiveLectureData(null); // clear stale data while new lecture loads
         setVideoState({ currentTime: 0, isPlaying: false });
         toast.dismiss();
@@ -117,7 +117,7 @@ const VideoPlayerPage = () => {
     };
 
     // Find current lecture from actual backend data
-    const listLecture = courseLectures.find(l => l._id === activeLectureId) || courseLectures[0] || {};
+    const listLecture = courseLectures.find(l => (l.id || l._id) === activeLectureId) || courseLectures[0] || {};
     const rawLecture = activeLectureData || {}; 
 
     // Handle string titles or localized object titles (if they exist)
@@ -127,11 +127,12 @@ const VideoPlayerPage = () => {
     };
 
     const lectureTitle = getLocalizedTitle(rawLecture) !== '...' ? getLocalizedTitle(rawLecture) : getLocalizedTitle(listLecture);
-    const lectureDescription = rawLecture?.description || listLecture?.description || '';
+    const rawDesc = rawLecture?.description || listLecture?.description || '';
+    const lectureDescription = typeof rawDesc === 'string' ? rawDesc : (rawDesc[i18n.language] || rawDesc.en || '');
     const videoSrc = rawLecture?.videoUrl || listLecture?.videoUrl || '';
     const aiChunks = rawLecture?.transcript?.chunks || listLecture?.transcript?.chunks || [];
 
-    const courseTitle = courseData?.title || '...';
+    const courseTitle = courseData?.title ? (typeof courseData.title === 'string' ? courseData.title : (courseData.title[i18n.language] || courseData.title.en || '...')) : '...';
     const currentLecture = { title: lectureTitle };
     // lectureData still needed for Quiz and Overview tabs
     const lectureData = activeLectureData || listLecture;
@@ -261,7 +262,7 @@ const VideoPlayerPage = () => {
                                 <div className="max-w-3xl">
                                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{t('videoPlayer.overview.title')}</h2>
                                     <p className="leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
-                                        {lectureDescription || courseData?.description || t('videoPlayer.overview.noDescription')}
+                                        {lectureDescription || (courseData?.description ? (typeof courseData.description === 'string' ? courseData.description : (courseData.description[i18n.language] || courseData.description.en || '')) : '') || t('videoPlayer.overview.noDescription')}
                                     </p>
                                 </div>
                             )}

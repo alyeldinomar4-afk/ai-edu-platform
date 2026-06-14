@@ -539,10 +539,10 @@ const HomePage = () => {
                         className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
                     >
                         {[
-                            { label: t('home.stats.learners'), value: fetchedStats?.totalStudents || 52300, suffix: '+' },
-                            { label: t('home.stats.courses'), value: fetchedStats?.activeCourses || 240, suffix: '+' },
-                            { label: t('home.stats.instructors'), value: fetchedStats?.totalInstructors || 180, suffix: '+' },
-                            { label: t('home.stats.satisfaction'), value: 99, suffix: '%' },
+                            { label: t('home.stats.learners'), value: fetchedStats?.totalStudents ?? 52300, suffix: '+' },
+                            { label: t('home.stats.courses'), value: fetchedStats?.activeCourses ?? 240, suffix: '+' },
+                            { label: t('home.stats.instructors'), value: fetchedStats?.totalInstructors ?? 180, suffix: '+' },
+                            { label: t('home.stats.satisfaction'), value: fetchedStats?.satisfactionRate ?? 99, suffix: '%' },
                         ].map((stat, idx) => (
                             <motion.div
                                 key={idx}

@@ -7,6 +7,7 @@ const API_BASE_URL = envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
 const httpClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   }
