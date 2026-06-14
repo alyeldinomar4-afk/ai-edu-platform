@@ -279,7 +279,7 @@ const CoursesPage = () => {
                                                 )}>
                                                     {isActive && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
                                                 </div>
-                                                <span className="truncate">{t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}</span>
+                                                <span className="truncate">{cat?.name}</span>
                                                 <span className="ml-auto text-[10px] font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/50 px-2 py-0.5 rounded-md min-w-[24px] text-center">
                                                     {count}
                                                 </span>
