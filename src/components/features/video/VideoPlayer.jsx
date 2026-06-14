@@ -15,6 +15,7 @@ const formatTime = (seconds) => {
 };
 
 const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, onToggleTheaterMode }) => {
+    console.log("🚀 ~ VideoPlayer ~ src:", src)
     const { t, i18n } = useTranslation();
     const videoRef = useRef(null);
     const containerRef = useRef(null);

@@ -26,14 +26,14 @@ const Navbar = () => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
-    const { user, logout } = useAuth();
+    const { user, logOut } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
     const isAr = i18n.language === 'ar';
 
     const handleLogout = () => {
-        logout();
+        logOut();
         navigate('/');
     };
 

@@ -81,6 +81,8 @@ const VideoPlayerPage = () => {
             setMarkers(prev => [...prev, time]);
         }
     };
+    
+  
 
     const handlePostQuestion = () => {
         if (!questionInput.trim()) return;
@@ -129,6 +131,9 @@ const VideoPlayerPage = () => {
         );
     }
 
+      console.log(lectureData?.video);
+    
+
     return (
         <div className="dark immersive-mode flex flex-col h-screen h-[100dvh] bg-[#020617] text-slate-200 overflow-hidden transition-all duration-700 relative">
             {/* Cinematic Background Elements - Always Visible */}
@@ -166,7 +171,7 @@ const VideoPlayerPage = () => {
                 >
                     <div className={`transition-all duration-500 ${isTheaterMode ? 'p-2 md:p-4 pb-0 max-w-[1600px] mx-auto w-full' : 'p-4 md:p-6 pb-0'}`}>
                         <VideoPlayer
-                            src={lectureData?.videoUrl}
+                            src={lectureData?.video?.url}
                             title={currentLecture.title}
                             onStateChange={handleVideoStateChange}
                             markers={markers}
@@ -367,6 +372,11 @@ const VideoPlayerPage = () => {
                             <ContextualAI
                                 videoState={videoState}
                                 addMarker={addMarker}
+                                data={{
+                                    title:courseData?.title,
+                                    description:courseData?.description,
+                                    chunks:courseData?.transcript?.chunks
+                                }}
                             />
                         )}
                     </div>
