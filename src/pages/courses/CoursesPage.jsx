@@ -389,7 +389,7 @@ const CoursesPage = () => {
                                                             <div className="min-w-0">
                                                                 <p className="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors mb-0.5 truncate">{course.title}</p>
                                                                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                                                                    {t(`courses.categories.${course.category.charAt(0).toLowerCase() + course.category.slice(1).replace(/\s+/g, '')}`)}
+                                                                    {t(`courses.categories.${course.category.name.charAt(0).toLowerCase() + course.category.name.slice(1).replace(/\s+/g, '')}`)}
                                                                 </p>
                                                             </div>
                                                         </div>
