@@ -136,7 +136,7 @@ export const api = {
             try {
                 const response = await httpClient.get('/courses', { params: filters });
                 const data = response.data || [];
-                return data.map(adapters.course);
+                return data 
             } catch (error) {
                 console.warn("Fallback to mock data for courses.getAll", error);
                 await delay(600);
@@ -157,7 +157,7 @@ export const api = {
             try {
                 const response = await httpClient.get(`/courses/${id}`);
                 const data = response.data || response;
-                return adapters.course(data);
+                return data
             } catch (error) {
                 console.warn("Fallback to mock data for courses.getById", error);
                 await delay(600);
@@ -184,7 +184,7 @@ export const api = {
             try {
                 const response = await httpClient.get(`/lectures`, { params: { course: id } });
                 const data = response.data || [];
-                return data.map(adapters.lecture);
+                return data 
             } catch (error) {
                 console.warn("Fallback to mock data for course lectures", error);
                 await delay(500);

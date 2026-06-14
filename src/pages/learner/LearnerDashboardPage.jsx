@@ -254,9 +254,9 @@ const LearnerDashboardPage = () => {
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                 </div>
                                 <div className="p-4">
-                                    <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{course.category}</span>
+                                    <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{course.category.name}</span>
                                     <h3 className="font-bold text-slate-900 dark:text-white mt-2 mb-1 line-clamp-1 group-hover:text-primary transition-colors">{course.title}</h3>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400">{course.instructor}</p>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">{course.instructor.fullName}</p>
                                     <div className="flex items-center gap-1 mt-2 text-sm text-yellow-500">
                                         ★ {course.rating} <span className="text-slate-400 dark:text-slate-500">({course.reviews})</span>
                                     </div>

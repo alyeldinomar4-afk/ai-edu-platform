@@ -307,7 +307,7 @@ const CheckoutPage = () => {
 
                             <h3 className="font-semibold text-slate-900 dark:text-white text-base mb-2">{course.title}</h3>
 
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">By {course.instructor}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">By {course.instructor.fullName}</p>
 
                             <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 mb-4">
                                 <span className="flex items-center gap-1">
