@@ -203,6 +203,7 @@
       "title": "Create an account",
       "subtitle": "Start your AI learning journey today",
       "nameLabel": "Full Name",
+      "phoneLabel": "Phone Number",
       "roleLabel": "I am a...",
       "roleStudent": "Student",
       "roleInstructor": "Instructor",

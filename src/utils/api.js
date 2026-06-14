@@ -2,7 +2,8 @@ import axios from "axios";
 import { timeToSeconds } from "./time";
 import eventBus from "./eventBus";
 
-const baseURL = `${import.meta.env.VITE_API_URL}/api`;
+const envUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
+const baseURL = envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
 
 const defaultTimeout = 10 * 60 * 1000; // 10 minutes
 export const csrApi = axios.create({
