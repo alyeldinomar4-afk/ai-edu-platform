@@ -26,6 +26,7 @@ const VideoPlayerPage = () => {
     const [questions, setQuestions] = useState([]);
     // TODO: Replace with api.instructor.questions.getAll() when backend is ready
     const [courseData, setCourseData] = useState(null);
+    console.log("🚀 ~ VideoPlayerPage ~ courseData:", courseData)
     const [courseLectures, setCourseLectures] = useState([]);
     const [activeLectureId, setActiveLectureId] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,15 +38,15 @@ const VideoPlayerPage = () => {
         const loadCourseContent = async () => {
             setIsLoading(true);
             try {
-                const id = parseInt(courseId);
-                const [course, lecturesData] = await Promise.all([
+                const id = courseId;
+                const [course, lecturesData = []] = await Promise.all([
                     api.courses.getById(id),
                     api.courses.getLectures(id)
                 ]);
                 setCourseData(course);
                 setCourseLectures(lecturesData);
                 if (lecturesData.length > 0) {
-                    setActiveLectureId(lecturesData[0].id);
+                    setActiveLectureId(lecturesData[0]?._id);
                 }
             } catch (error) {
                 console.error('Error loading course content:', error);
@@ -67,7 +68,7 @@ const VideoPlayerPage = () => {
 
 
     const handleLectureSelect = (lecture) => {
-        setActiveLectureId(lecture.id);
+        setActiveLectureId(lecture?._id);
         setVideoState({ currentTime: 0, isPlaying: false });
         toast.dismiss();
     };
@@ -101,7 +102,7 @@ const VideoPlayerPage = () => {
     };
 
     // Find current lecture
-    const lectureData = courseLectures.find(l => l.id === activeLectureId) || courseLectures[0] || {};
+    const lectureData = courseLectures.find(l => l?._id === activeLectureId) || courseLectures[0] || {};
     const courseTitle = courseData?.title || "...";
     const currentLecture = { title: lectureData?.title || "..." };
 
@@ -118,7 +119,7 @@ const VideoPlayerPage = () => {
     ] : [
         {
             title: t('videoPlayer.playlist.courseContent') || "Course Content",
-            lectures: courseLectures.length > 0 ? courseLectures.filter(Boolean) : (lectureData.id ? [lectureData] : [])
+            lectures: courseLectures.length > 0 ? courseLectures.filter(Boolean) : (lectureData?._id ? [lectureData] : [])
         }
     ];
 
@@ -191,14 +192,14 @@ const VideoPlayerPage = () => {
                                 { id: 'resources', label: t('videoPlayer.tabs.resources'), icon: FileText },
                             ].map(tab => (
                                 <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
+                                    key={tab?._id}
+                                    onClick={() => setActiveTab(tab?._id)}
                                     className={`pb-4 px-2 flex items-center gap-2.5 text-[13px] font-bold transition-all relative flex-shrink-0 tracking-wide ${(tab.mobileOnly && !isTheaterMode) ? 'lg:hidden' : ''
-                                        } ${activeTab === tab.id ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                                        } ${activeTab === tab?._id ? 'text-white' : 'text-slate-500 hover:text-slate-300'}`}
                                 >
-                                     <tab.icon size={16} className={activeTab === tab.id ? 'text-indigo-400' : ''} />
+                                     <tab.icon size={16} className={activeTab === tab?._id ? 'text-indigo-400' : ''} />
                                      {tab.label}
-                                     {activeTab === tab.id && (
+                                     {activeTab === tab?._id && (
                                          <motion.div
                                              layoutId="video-tab-indicator"
                                              className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.6)]"
@@ -274,7 +275,7 @@ const VideoPlayerPage = () => {
                                         </div>
 
                                         {questions.map(q => (
-                                            <div key={q.id} className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                                            <div key={q?._id} className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
                                                 <div className="flex items-center gap-3 mb-3">
                                                     <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[10px] text-slate-500 dark:text-slate-400 font-bold">
                                                         {q.user.charAt(0)}
