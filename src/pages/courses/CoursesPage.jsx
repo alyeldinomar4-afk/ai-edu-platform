@@ -87,8 +87,10 @@ const CoursesPage = () => {
     };
 
     const filteredCourses = allCourses.filter(course => {
-        const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
-        const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+        // category may be object {name, _id} or string — handle both
+        const catName = course.category?.name || course.category || '';
+        const matchesCategory = selectedCategory === 'All' || catName === selectedCategory;
+        const matchesSearch = (course.title || '').toLowerCase().includes(searchQuery.toLowerCase());
         const matchesLevel = selectedLevels.length === 0 || selectedLevels.includes(course.level);
         return matchesCategory && matchesSearch && matchesLevel;
     });
@@ -384,12 +386,12 @@ const CoursesPage = () => {
                                                     <td className="px-8 py-5">
                                                         <div className="flex items-center gap-4">
                                                             <div className="w-16 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 shadow-sm">
-                                                                <img src={course.image} className="w-full h-full object-cover" alt={course.title} />
+                                                                <img src={course?.image?.url || course?.image || ''} className="w-full h-full object-cover" alt={course?.title} />
                                                             </div>
                                                             <div className="min-w-0">
                                                                 <p className="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors mb-0.5 truncate">{course.title}</p>
                                                                 <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                                                                    {t(`courses.categories.${course.category.name.charAt(0).toLowerCase() + course.category.name.slice(1).replace(/\s+/g, '')}`)}
+                                                                    {course?.category?.name || course?.category || ''}
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -414,7 +416,7 @@ const CoursesPage = () => {
                                                                 course.level === 'Intermediate' ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" :
                                                                     "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
                                                         )}>
-                                                            {t(`courses.levels.${course.level.toLowerCase()}`)}
+                                                            {course?.level || 'Beginner'}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-5 text-center">

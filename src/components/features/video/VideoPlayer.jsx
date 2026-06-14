@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import ContextualAI from '../ai/ContextualAI';
 
-const SAMPLE_VIDEO = 'https://media.w3.org/2010/05/sintel/trailer_hd.mp4';
+
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
 const formatTime = (seconds) => {
@@ -37,9 +37,19 @@ const VideoPlayer = ({ src, title, onStateChange, markers = [], isTheaterMode, o
     const [hasStarted, setHasStarted] = useState(false);
     const [showFsAi, setShowFsAi] = useState(false);
 
-    const videoSrc = src || SAMPLE_VIDEO;
+    const videoSrc = src || '';
 
-    // ─── Auto-hide controls ───────────────────────────────
+    // Reload video element when source changes (React doesn't do this automatically)
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        video.load();
+        setIsPlaying(false);
+        setCurrentTime(0);
+        setDuration(0);
+        setHasStarted(false);
+    }, [videoSrc]);
+
     const resetControlsTimeout = useCallback(() => {
         setShowControls(true);
         clearTimeout(controlsTimeoutRef.current);

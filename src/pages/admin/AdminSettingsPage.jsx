@@ -254,7 +254,7 @@ const AdminSettingsPage = () => {
                                                                 : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 hover:border-primary/50'
                                                             }`}
                                                     >
-                                                        {t(`dashboard.admin.settings.ai.intensity${level.charAt(0).toUpperCase() + level.slice(1)}`)}
+                                                        {t(`dashboard.admin.settings.ai.intensity${(level || '').charAt(0).toUpperCase() + (level || '').slice(1)}`)}
                                                     </button>
                                                 ))}
                                             </div>

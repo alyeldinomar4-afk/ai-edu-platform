@@ -35,9 +35,9 @@ const ManageCoursesPage = () => {
     const filteredCourses = useMemo(() => {
         const search = searchTerm.toLowerCase();
         return courseList.filter(course =>
-            course.title.toLowerCase().includes(search) ||
-            course.instructor.toLowerCase().includes(search) ||
-            course.category.toLowerCase().includes(search)
+            (course?.title || '').toLowerCase().includes(search) ||
+            (course?.instructor?.fullName || course?.instructor || '').toLowerCase().includes(search) ||
+            (course?.category?.name || course?.category || '').toLowerCase().includes(search)
         );
     }, [courseList, searchTerm]);
 
@@ -143,14 +143,14 @@ const ManageCoursesPage = () => {
                                                     <img src={course.image} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                                                     <div className="min-w-0">
                                                         <span className="font-medium text-slate-900 dark:text-white block truncate">{course.title}</span>
-                                                        <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">{course.instructor.fullName}</span>
+                                                        <span className="text-xs text-slate-500 dark:text-slate-400 sm:hidden">{course?.instructor?.fullName || course?.instructor || ''}</span>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="p-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell">{course.instructor.fullName}</td>
+                                            <td className="p-4 text-slate-600 dark:text-slate-300 hidden sm:table-cell">{course?.instructor?.fullName || course?.instructor || ''}</td>
                                             <td className="p-4 hidden md:table-cell">
                                                 <span className="px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-400">
-                                                    {course.category ? t(`courses.categories.${course.category.name.charAt(0).toLowerCase() + course.category.name.slice(1).replace(/\s+/g, '')}`) : ''}
+                                                    {course?.category?.name || course?.category || ''}
                                                 </span>
                                             </td>
                                             <td className="p-4 font-medium text-slate-900 dark:text-white">{formatCurrency(course.price)}</td>

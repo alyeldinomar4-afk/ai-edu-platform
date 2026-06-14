@@ -9,15 +9,14 @@ const httpClient = axios.create({
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
-  },
-  withCredentials:true
+  }
 });
 
 // Request Interceptor: Automatically attach the Auth token when available
 httpClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('ai_edu_token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`; // Keep for compatibility if needed elsewhere
   }
   return config;
 }, (error) => {

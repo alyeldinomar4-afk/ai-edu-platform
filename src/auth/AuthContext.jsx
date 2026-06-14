@@ -67,6 +67,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoggingOut(true);
 
       await handleLogout();
+      localStorage.removeItem('ai_edu_token');
 
       channel.postMessage({
         message: "logout",
@@ -85,10 +86,16 @@ export const AuthProvider = ({ children }) => {
    */
   const signIn = useCallback(async ({ data = {}, mode = "signin" }) => {
     try {
+      const response = await signAPI(data, mode);
       const {
         profile = {},
         message = "Logged in successfully!",
-      } = await signAPI(data, mode);
+        token
+      } = response;
+      
+      if (token) {
+          localStorage.setItem('ai_edu_token', token);
+      }
       
       setSession(profile);
 
@@ -149,6 +156,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         session,
         user:session,
+        isAuthenticated: !!session,
         isLoading,
         loading:isLoading,
         isLoggingOut,

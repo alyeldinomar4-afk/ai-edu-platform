@@ -718,7 +718,7 @@ const HomePage = () => {
 
                                                     {/* Category Name - Using Poppins */}
                                                     <h3 className="font-poppins font-bold text-lg md:text-xl mb-1.5 tracking-tight transition-colors duration-300 text-slate-900 dark:text-white group-hover:text-[var(--accent-color)]">
-                                                        {t(`courses.categories.${cat.name.charAt(0).toLowerCase() + cat.name.slice(1).replace(/\s+/g, '')}`)}
+                                                        {cat?.name || 'Category'}
                                                     </h3>
 
                                                     {/* Course Count + Arrow */}
@@ -1119,7 +1119,7 @@ const HomePage = () => {
                                 key={testimonial.id}
                                 variants={fadeScale}
                                 whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                                className="flex-none w-[80%] sm:w-[320px] md:w-auto snap-start p-6 sm:p-7 rounded-[28px] bg-white dark:bg-slate-900/50 backdrop-blur-sm border border-slate-100 dark:border-slate-800/60 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 relative overflow-hidden"
+                        className="flex-none w-[80%] sm:w-[320px] md:w-auto snap-start p-6 sm:p-7 rounded-[28px] bg-white dark:bg-slate-900/50 backdrop-blur-sm border border-slate-100 dark:border-slate-800/60 shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 relative overflow-hidden"
                             >
                                 <div className="absolute top-0 right-0 p-4 opacity-[0.03] dark:opacity-[0.05]">
                                     <Users className="w-16 h-16 rotate-12" />
@@ -1132,7 +1132,7 @@ const HomePage = () => {
                                     <div>
                                         <h4 className="font-black text-slate-900 dark:text-white text-sm">{testimonial.name}</h4>
                                         <p className="text-[9px] font-black uppercase tracking-widest text-primary/80">
-                                            {t(`home.testimonials.roles.${testimonial.role.charAt(0).toLowerCase() + testimonial.role.slice(1).replace(/\s+/g, '')}`)}
+                                            {t(`home.testimonials.roles.${(testimonial.role || '').charAt(0).toLowerCase() + (testimonial.role || '').slice(1).replace(/\s+/g, '')}`)}
                                         </p>
                                     </div>
                                 </div>

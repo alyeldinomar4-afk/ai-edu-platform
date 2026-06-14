@@ -110,7 +110,7 @@ export const api = {
                 return { success: true, user: response.data || data };
             } catch (error) {
                 console.warn("Fallback to mock data for profile update", error);
-                await delay(800);
+                throw error;
                 return { success: true, user: data };
             }
         },
@@ -124,7 +124,7 @@ export const api = {
                 return { success: true, message: response.message };
             } catch (error) {
                 console.warn("Fallback to mock data for password update", error);
-                await delay(1000);
+                throw error;
                 return { success: true };
             }
         }
@@ -139,7 +139,7 @@ export const api = {
                 return data 
             } catch (error) {
                 console.warn("Fallback to mock data for courses.getAll", error);
-                await delay(600);
+                throw error;
                 let result = [...coursesSub];
                 if (filters.category && filters.category !== 'All') {
                     result = result.filter(c => c.category === filters.category);
@@ -160,7 +160,7 @@ export const api = {
                 return data
             } catch (error) {
                 console.warn("Fallback to mock data for courses.getById", error);
-                await delay(600);
+                throw error;
                 const course = coursesSub.find((c) => c.id === parseInt(id) || c.id === id);
                 if (!course) throw new Error('Course not found');
                 return course;
@@ -175,7 +175,7 @@ export const api = {
                 return data
             } catch (error) {
                 console.error("Fallback to mock data for categories", error);
-                await delay(400);
+                throw error;
                 return categories;
             }
         },
@@ -187,7 +187,7 @@ export const api = {
                 return data 
             } catch (error) {
                 console.warn("Fallback to mock data for course lectures", error);
-                await delay(500);
+                throw error;
                 return lecturesSub.filter(l => l.courseId === parseInt(id) || String(l.courseId) === String(id));
             }
         },
@@ -199,7 +199,7 @@ export const api = {
                 return adapters.lecture(data);
             } catch (error) {
                 console.warn("Fallback to mock data for getLectureById", error);
-                await delay(300);
+                throw error;
                 return lecturesSub.find(l => String(l.id) === String(lectureId)) || null;
             }
         }
@@ -214,7 +214,7 @@ export const api = {
                 return data.map(adapters.user);
             } catch (error) {
                 console.warn("Fallback to mock data for instructors", error);
-                await delay(500);
+                throw error;
                 return mockInstructors;
             }
         },
@@ -225,7 +225,7 @@ export const api = {
                 return adapters.user(data);
             } catch (error) {
                 console.warn("Fallback to mock data for instructor by id", error);
-                await delay(500);
+                throw error;
                 return mockInstructors.find(ins => ins.id === parseInt(id) || ins.id === id);
             }
         }
@@ -240,7 +240,7 @@ export const api = {
                 return adapters.statsOverview(data);
             } catch (error) {
                 console.warn("Fallback to mock data for stats", error);
-                await delay(500);
+                throw error;
                 return {
                     totalStudents: 52300,
                     activeCourses: 240,
@@ -259,7 +259,7 @@ export const api = {
                 return response.data || [];
             } catch (error) {
                 console.warn("Fallback to mock data for learner progress", error);
-                await delay(500);
+                throw error;
                 return [
                     {
                         courseId: 1,
@@ -285,7 +285,7 @@ export const api = {
                 return response.data || response;
             } catch (error) {
                 console.warn("Fallback to mock data for learner stats", error);
-                await delay(500);
+                throw error;
                 return {
                     hoursWatched: 12,
                     certificates: 2,
@@ -301,13 +301,13 @@ export const api = {
                 return data.map(adapters.course);
             } catch (error) {
                 console.warn("Fallback to mock data for learner recommendations", error);
-                await delay(600);
+                throw error;
                 return coursesSub.slice(0, 3);
             }
         },
 
     checkout: async (courseId) => {
-      await delay(1000);
+      throw error;
       const purchased = JSON.parse(
         localStorage.getItem("purchasedCourses") || "[]",
       );
@@ -319,7 +319,7 @@ export const api = {
     },
 
     getPurchase: async (courseId) => {
-      await delay(500);
+      throw error;
       const purchased = JSON.parse(
         localStorage.getItem("purchasedCourses") || "[]",
       );
@@ -334,7 +334,7 @@ export const api = {
     },
 
     getSavedVideos: async () => {
-      await delay(600);
+      throw error;
       // Return some samples from lecturesSub
       return lecturesSub.slice(0, 2).map((l) => ({
         id: l.id,
@@ -352,7 +352,7 @@ export const api = {
                 return response.data || [];
             } catch (error) {
                 console.warn("Fallback to mock data for learner announcements", error);
-                await delay(400);
+                throw error;
                 return [
                     {
                         id: 1,
@@ -379,7 +379,7 @@ export const api = {
                 return response.data || [];
             } catch (error) {
                 console.warn("Fallback to mock data for billing history", error);
-                await delay(700);
+                throw error;
                 return [
                     {
                         id: 'TRX-98421',
@@ -410,7 +410,7 @@ export const api = {
                 return response.data || response;
             } catch (error) {
                 console.warn("Fallback to mock data for instructor stats", error);
-                await delay(500);
+                throw error;
                 return {
                     totalStudents: 15420,
                     totalRevenue: 24500,
@@ -436,7 +436,7 @@ export const api = {
                     }));
                 } catch (error) {
                     console.warn("Fallback to mock data for instructor courses", error);
-                    await delay(600);
+                    throw error;
                     return coursesSub.filter(c => c.instructorId === 1).map((c, index) => ({
                         ...c,
                         students: 120 + (index * 15),
@@ -451,7 +451,7 @@ export const api = {
                     return response.data || data;
                 } catch (error) {
                     console.warn("Fallback to mock data for course create", error);
-                    await delay(800);
+                    throw error;
                     const newCourse = { ...data, id: coursesSub.length + 1, instructorId: 1 };
                     coursesSub = [newCourse, ...coursesSub];
                     return newCourse;
@@ -463,7 +463,7 @@ export const api = {
                     return response.data || { ...data, id };
                 } catch (error) {
                     console.warn("Fallback to mock data for course update", error);
-                    await delay(800);
+                    throw error;
                     coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
                     return { ...data, id };
                 }
@@ -474,7 +474,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for course delete", error);
-                    await delay(500);
+                    throw error;
                     coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
                     return { success: true };
                 }
@@ -490,7 +490,7 @@ export const api = {
                     return data.map(adapters.lecture);
                 } catch (error) {
                     console.warn("Fallback to mock data for instructor lectures", error);
-                    await delay(500);
+                    throw error;
                     if (courseId === 'all') return lecturesSub;
                     return lecturesSub.filter(l => l.courseId === parseInt(courseId));
                 }
@@ -505,7 +505,7 @@ export const api = {
                     return response.data || normalizedData;
                 } catch (error) {
                     console.warn("Fallback to mock data for lecture create", error);
-                    await delay(800);
+                    throw error;
                     const normalizedData = {
                         ...data,
                         duration: normalizeDuration(data.duration)
@@ -530,7 +530,7 @@ export const api = {
                     return response.data || { ...updateData, id };
                 } catch (error) {
                     console.warn("Fallback to mock data for lecture update", error);
-                    await delay(800);
+                    throw error;
                     const updateData = { ...data };
                     if (updateData.duration !== undefined) {
                         updateData.duration = normalizeDuration(updateData.duration);
@@ -545,7 +545,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for lecture delete", error);
-                    await delay(500);
+                    throw error;
                     lecturesSub = lecturesSub.filter(l => l.id !== parseInt(id));
                     return { success: true };
                 }
@@ -556,7 +556,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for lecture toggle status", error);
-                    await delay(400);
+                    throw error;
                     lecturesSub = lecturesSub.map(l => l.id === parseInt(id) ? { ...l, status: l.status === 'published' ? 'draft' : 'published' } : l);
                     return { success: true };
                 }
@@ -570,7 +570,7 @@ export const api = {
                     return response.data || [];
                 } catch (error) {
                     console.warn("Fallback to mock data for reviews", error);
-                    await delay(500);
+                    throw error;
                     return reviewsSub;
                 }
             },
@@ -580,7 +580,7 @@ export const api = {
                     return response.data || { id, user: 'Instructor', comment, date: 'Just now' };
                 } catch (error) {
                     console.warn("Fallback to mock data for review reply", error);
-                    await delay(500);
+                    throw error;
                     reviewsSub = reviewsSub.map(r => 
                         r.id === id ? { ...r, reply: comment } : r
                     );
@@ -596,7 +596,7 @@ export const api = {
                     return response.data || [];
                 } catch (error) {
                     console.warn("Fallback to mock data for questions", error);
-                    await delay(500);
+                    throw error;
                     return questionsSub;
                 }
             },
@@ -606,7 +606,7 @@ export const api = {
                     return response.data || { id, reply: replyText, date: 'Just now' };
                 } catch (error) {
                     console.warn("Fallback to mock data for question reply", error);
-                    await delay(500);
+                    throw error;
                     questionsSub = questionsSub.map(q => 
                         q.id === id ? { ...q, reply: replyText } : q
                     );
@@ -623,7 +623,7 @@ export const api = {
                     return response.data || [];
                 } catch (error) {
                     console.warn("Fallback to mock data for instructor announcements", error);
-                    await delay(400);
+                    throw error;
                     if (courseId === 'all') return announcementsSub;
                     return announcementsSub.filter(a => a.courseId === courseId);
                 }
@@ -634,7 +634,7 @@ export const api = {
                     return response.data || data;
                 } catch (error) {
                     console.warn("Fallback to mock data for announcement create", error);
-                    await delay(500);
+                    throw error;
                     const newAnnouncement = { ...data, id: Date.now() };
                     announcementsSub = [newAnnouncement, ...announcementsSub];
                     return newAnnouncement;
@@ -652,7 +652,7 @@ export const api = {
                     return response.data || response;
                 } catch (error) {
                     console.warn("Fallback to mock data for admin stats", error);
-                    await delay(500);
+                    throw error;
                     return {
                         totalStudents: 1540,
                         activeCourses: mockCourses.length,
@@ -683,7 +683,7 @@ export const api = {
                     return data.map(adapters.user);
                 } catch (error) {
                     console.warn("Fallback to mock data for admin users", error);
-                    await delay(600);
+                    throw error;
                     return [
                         { id: 1, name: 'Dr. Laila Hassan', email: 'laila@nexora.ai', role: 'instructor', joined: '2023-01-10', status: 'active', avatar: 'https://randomuser.me/api/portraits/women/65.jpg' },
                         { id: 2, name: 'Ahmed Mansour', email: 'ahmed@nexora.ai', role: 'instructor', joined: '2023-02-15', status: 'active', avatar: 'https://randomuser.me/api/portraits/men/46.jpg' },
@@ -700,7 +700,7 @@ export const api = {
                     return response.data || { ...data, id: Date.now() };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin user create", error);
-                    await delay(800);
+                    throw error;
                     return { ...data, id: Date.now() };
                 }
             },
@@ -710,7 +710,7 @@ export const api = {
                     return response.data || { ...data, id };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin user update", error);
-                    await delay(800);
+                    throw error;
                     return { ...data, id };
                 }
             },
@@ -720,7 +720,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin user delete", error);
-                    await delay(500);
+                    throw error;
                     return { success: true };
                 }
             },
@@ -730,7 +730,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin user toggle status", error);
-                    await delay(400);
+                    throw error;
                     return { success: true };
                 }
             }
@@ -744,7 +744,7 @@ export const api = {
                     return data.map(adapters.course);
                 } catch (error) {
                     console.warn("Fallback to mock data for admin courses", error);
-                    await delay(600);
+                    throw error;
                     return coursesSub;
                 }
             },
@@ -754,7 +754,7 @@ export const api = {
                     return response.data || { ...data, id: Date.now() };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin course create", error);
-                    await delay(800);
+                    throw error;
                     const newCourse = { ...data, id: Date.now() };
                     coursesSub = [newCourse, ...coursesSub];
                     return newCourse;
@@ -766,7 +766,7 @@ export const api = {
                     return response.data || { ...data, id };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin course update", error);
-                    await delay(800);
+                    throw error;
                     coursesSub = coursesSub.map(c => c.id === parseInt(id) ? { ...c, ...data } : c);
                     return { ...data, id };
                 }
@@ -777,7 +777,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin course delete", error);
-                    await delay(500);
+                    throw error;
                     coursesSub = coursesSub.filter(c => c.id !== parseInt(id));
                     return { success: true };
                 }
@@ -791,7 +791,7 @@ export const api = {
                     return response.data || [];
                 } catch (error) {
                     console.warn("Fallback to mock data for admin videos", error);
-                    await delay(600);
+                    throw error;
                     return lecturesSub;
                 }
             },
@@ -805,7 +805,7 @@ export const api = {
                     return response.data || normalizedData;
                 } catch (error) {
                     console.warn("Fallback to mock data for admin video create", error);
-                    await delay(800);
+                    throw error;
                     const normalizedData = {
                         ...data,
                         duration: normalizeDuration(data.duration)
@@ -826,7 +826,7 @@ export const api = {
                     return response.data || { ...data, id };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin video update", error);
-                    await delay(800);
+                    throw error;
                     lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, ...data } : v);
                     return { ...data, id };
                 }
@@ -837,7 +837,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin video delete", error);
-                    await delay(500);
+                    throw error;
                     lecturesSub = lecturesSub.filter(v => v.id !== parseInt(id));
                     return { success: true };
                 }
@@ -848,7 +848,7 @@ export const api = {
                     return { success: true };
                 } catch (error) {
                     console.warn("Fallback to mock data for admin video toggle status", error);
-                    await delay(400);
+                    throw error;
                     lecturesSub = lecturesSub.map(v => v.id === parseInt(id) ? { ...v, status: v.status === 'published' ? 'draft' : 'published' } : v);
                     return { success: true };
                 }
@@ -857,7 +857,7 @@ export const api = {
 
     settings: {
       get: async () => {
-        await delay(600);
+        throw error;
         return {
           platformName: "Nexora AI",
           supportEmail: "support@nexora.ai",
@@ -872,7 +872,7 @@ export const api = {
         };
       },
       update: async (data) => {
-        await delay(1000);
+        throw error;
         console.log("Settings updated:", data);
         return { success: true, settings: data };
       },
@@ -905,7 +905,7 @@ export const api = {
       } catch (error) {
         console.warn('Fallback to mock for ai.ask', error);
         // Graceful mock fallback
-        await delay(1000);
+        throw error;
         const isAr = i18n.language === 'ar';
         return {
           message: isAr
@@ -916,7 +916,7 @@ export const api = {
     },
 
     chat: async (message, context = {}) => {
-      await delay(1200);
+      throw error;
       const msg = message.toLowerCase();
       const isAr = i18n.language === "ar";
 
@@ -974,7 +974,7 @@ export const api = {
      * Handles auto-prompts on pause and contextual user questions.
      */
     videoAssistant: async ({ lectureId, currentTime, action, query }) => {
-      await delay(800);
+      throw error;
 
       // 1. Auto Prompt logic
       if (action === "auto_prompt") {
@@ -1028,7 +1028,7 @@ export const api = {
                 return data.map(adapters.testimonial);
             } catch (error) {
                 console.warn("Fallback to mock data for testimonials", error);
-                await delay(300);
+                throw error;
                 return testimonials;
             }
         }

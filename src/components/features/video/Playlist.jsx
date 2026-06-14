@@ -33,14 +33,16 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
 
                         <motion.div variants={listStagger} initial="hidden" animate="visible">
                             {section?.lectures?.map((lecture, lIdx) => {
-                                if (!lecture) return null;
-                                const isActive = currentLecture === lecture.id;
+                                const isActive = currentLecture === lecture._id;
                                 const isCompleted = lecture.completed;
                                 const isLocked = lecture.locked;
 
+                                // Handle localized title if it's an object
+                                const lectureTitle = typeof lecture.title === 'string' ? lecture.title : (lecture.title?.en || lecture.title?.ar || 'Untitled');
+
                                 return (
                                     <motion.button
-                                        key={lecture.id}
+                                        key={lecture._id}
                                         variants={listItem}
                                         onClick={() => !isLocked && onSelect(lecture)}
                                         disabled={isLocked}
@@ -103,7 +105,7 @@ const Playlist = ({ sections, currentLecture, onSelect }) => {
                                                 "text-[14px] transition-colors leading-snug line-clamp-2",
                                                 isActive ? "font-bold text-white" : "text-slate-300 font-medium group-hover:text-white"
                                             )}>
-                                                {lIdx + 1}. {lecture.title}
+                                                {lIdx + 1}. {lectureTitle}
                                             </p>
                                             <div className="flex items-center gap-2 mt-1.5 opacity-80">
                                                 <span className={`text-[11px] font-semibold flex items-center gap-1.5 px-2 py-0.5 rounded-full transition-colors ${isActive ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700'}`}>

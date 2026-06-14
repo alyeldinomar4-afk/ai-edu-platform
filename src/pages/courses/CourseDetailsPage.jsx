@@ -86,12 +86,18 @@ const CourseDetailsPage = () => {
           setInstructorData(instructor);
 
           // Fetch actual lectures
-          const lecturesData = await api.courses.getLectures(parseInt(id));
+          const lecturesData = await api.courses.getLectures(id);
           setLectures(lecturesData);
 
-          // Check purchase status from API
-          const purchase = await api.learner.getPurchase(id);
-          setIsPurchased(purchase?.status === "completed" || false);
+          // Check purchase status from API (fallback if endpoint missing)
+          try {
+            if (api.learner.getPurchase) {
+              const purchase = await api.learner.getPurchase(id);
+              setIsPurchased(purchase?.status === "completed" || false);
+            }
+          } catch (err) {
+            console.warn("Purchase check failed", err);
+          }
         }
       } catch (error) {
         console.error("Error fetching course details:", error);

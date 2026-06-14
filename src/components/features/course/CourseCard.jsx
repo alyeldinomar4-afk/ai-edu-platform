@@ -29,10 +29,10 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                 <div className="absolute inset-0 rounded-xl border border-white/20 dark:border-white/5 pointer-events-none z-20" />
 
                 {/* Image Section */}
-                <Link to={`/courses/${course?._id}`} className="relative h-36 sm:h-44 w-full overflow-hidden shrink-0 z-30 block group/img">
+                <Link to={`/courses/${course?._id || course?.id}`} className="relative h-36 sm:h-44 w-full overflow-hidden shrink-0 z-30 block group/img">
                     <img
-                        src={course.image.url}
-                        alt={course.title}
+                        src={course?.image?.url || course?.image || 'https://via.placeholder.com/300x200'}
+                        alt={course?.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     
@@ -45,7 +45,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
 
                     {/* Category Badge */}
                     <div className="absolute top-3 left-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wide text-primary dark:text-white shadow-sm z-40">
-                        {t(`courses.categories.${course.category.name.charAt(0).toLowerCase() + course.category.name.slice(1).replace(/\s+/g, '')}`)}
+                        {course?.category?.name || course?.category || 'General'}
                     </div>
                 </Link>
 
@@ -53,7 +53,7 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                 <div className="p-4 sm:p-5 flex flex-col relative flex-grow min-w-0 z-30">
                     
                     {/* 2. Title */}
-                    <Link to={`/courses/${course.id}`} className="mt-1 mb-1 block">
+                    <Link to={`/courses/${course._id || course.id}`} className="mt-1 mb-1 block">
                         <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
                             {course.title}
                         </h3>
@@ -61,10 +61,10 @@ const CourseCard = ({ course, layout = 'grid' }) => {
 
                     {/* Instructor */}
                     <Link
-                        to={`/instructor/user/${encodeURIComponent(course.instructor.fullName.replace(/\s+/g, '-').toLowerCase())}`}
+                        to={`/instructor/user/${encodeURIComponent((course?.instructor?.fullName || '').replace(/\s+/g, '-').toLowerCase())}`}
                         className="text-xs text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary mb-2 font-medium transition-colors w-fit block z-40 relative"
                     >
-                        {course.instructor.fullName}
+                        {course?.instructor?.fullName || course?.instructor || 'Unknown Instructor'}
                     </Link>
 
                     {/* 1. Rating Row */}
@@ -96,11 +96,11 @@ const CourseCard = ({ course, layout = 'grid' }) => {
                         </div>
                         <div className={cn(
                             "flex items-center gap-1.5 uppercase tracking-wide text-[9px] font-bold",
-                            course.level === 'Beginner' ? "text-green-600 dark:text-green-400" :
-                            course.level === 'Intermediate' ? "text-amber-600 dark:text-amber-400" :
+                            course?.level === 'Beginner' ? "text-green-600 dark:text-green-400" :
+                            course?.level === 'Intermediate' ? "text-amber-600 dark:text-amber-400" :
                             "text-red-600 dark:text-red-400"
                         )}>
-                            {t(`courses.levels.${course.level.toLowerCase()}`)}
+                            {course?.level || 'Beginner'}
                         </div>
                     </div>
 

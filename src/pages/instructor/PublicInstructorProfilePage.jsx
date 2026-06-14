@@ -35,15 +35,17 @@ const PublicInstructorProfilePage = () => {
                 ]);
 
                 // Find instructor data
-                const foundInstructor = allInstructors.find(inst => 
-                    inst.name.toLowerCase() === instructorName.toLowerCase()
-                );
+                const foundInstructor = allInstructors.find(inst => {
+                    const name = inst?.fullName || inst?.name || '';
+                    return name.toLowerCase() === instructorName.toLowerCase();
+                });
                 setInstructorData(foundInstructor || null);
 
                 // Find courses taught by this instructor
-                const foundCourses = allCourses.filter(course =>
-                    course.instructor.toLowerCase() === instructorName.toLowerCase()
-                );
+                const foundCourses = allCourses.filter(course => {
+                    const courseInstName = course?.instructor?.fullName || course?.instructor?.name || course?.instructor || '';
+                    return courseInstName.toLowerCase() === instructorName.toLowerCase();
+                });
 
                 // If they don't have courses, we'll keep it empty or handle error
                 setInstructorCourses(foundCourses);

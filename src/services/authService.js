@@ -50,7 +50,7 @@ export const authService = {
             };
         } catch (error) {
             console.warn("Fallback to mock data for login", error);
-            await delay(800); // Simulate network delay
+            throw error;
 
             const users = getUsers();
             const user = users.find(u => u.email === email && u.password === password);
@@ -137,7 +137,7 @@ export const authService = {
             };
         } catch (error) {
             console.warn("Fallback to mock data for register", error);
-            await delay(1000);
+            throw error;
 
             const users = getUsers();
             if (users.find(u => u.email === email)) {
