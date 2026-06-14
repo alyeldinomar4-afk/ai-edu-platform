@@ -28,6 +28,8 @@ const VideoPlayerPage = () => {
     const [courseData, setCourseData] = useState(null);
     const [courseLectures, setCourseLectures] = useState([]);
     const [activeLectureId, setActiveLectureId] = useState(null);
+    // Full lecture data fetched individually (has description + transcript.chunks)
+    const [activeLectureData, setActiveLectureData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const scrollContainerRef = useRef(null);
 
@@ -37,7 +39,8 @@ const VideoPlayerPage = () => {
         const loadCourseContent = async () => {
             setIsLoading(true);
             try {
-                const id = parseInt(courseId);
+                // courseId is a MongoDB ObjectId string — do NOT parseInt it
+                const id = courseId;
                 const [course, lecturesData] = await Promise.all([
                     api.courses.getById(id),
                     api.courses.getLectures(id)
@@ -57,6 +60,20 @@ const VideoPlayerPage = () => {
         if (courseId) loadCourseContent();
     }, [courseId, t]);
 
+    // When lecture changes → fetch full lecture data (title + description + transcript.chunks)
+    useEffect(() => {
+        if (!activeLectureId) return;
+        const fetchActiveLecture = async () => {
+            try {
+                const data = await api.courses.getLectureById(activeLectureId, i18n.language);
+                setActiveLectureData(data);
+            } catch (err) {
+                console.warn('Could not fetch full lecture data', err);
+            }
+        };
+        fetchActiveLecture();
+    }, [activeLectureId, i18n.language]);
+
     // Reset scroll when lecture changes
     useEffect(() => {
         if (scrollContainerRef.current) {
@@ -68,6 +85,7 @@ const VideoPlayerPage = () => {
 
     const handleLectureSelect = (lecture) => {
         setActiveLectureId(lecture.id);
+        setActiveLectureData(null); // clear stale data while new lecture loads
         setVideoState({ currentTime: 0, isPlaying: false });
         toast.dismiss();
     };
@@ -98,10 +116,15 @@ const VideoPlayerPage = () => {
         toast.success(t('videoPlayer.discussion.toasts.postSuccess'));
     };
 
-    // Find current lecture
-    const lectureData = courseLectures.find(l => l.id === activeLectureId) || courseLectures[0] || {};
-    const courseTitle = courseData?.title || "...";
-    const currentLecture = { title: lectureData?.title || "..." };
+    // Find current lecture — prefer the fully-fetched data (has description + transcript)
+    const lectureData = activeLectureData
+        || courseLectures.find(l => l.id === activeLectureId)
+        || courseLectures[0]
+        || {};
+    const courseTitle = courseData?.title || '...';
+    const currentLecture = { title: lectureData?.title || '...' };
+    // AI context
+    const aiChunks = lectureData?.transcript?.chunks || [];
 
     // Group lectures into sections for the playlist
     const playlistData = courseLectures.length >= 3 ? [
@@ -214,8 +237,11 @@ const VideoPlayerPage = () => {
                             {activeTab === 'ai' && (
                                 <div className={`${isTheaterMode ? '' : 'lg:hidden'} h-[500px] flex flex-col overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800`}>
                                     <ContextualAI
-                                        videoState={videoState}
+                                        videoState={{ ...videoState, lectureId: activeLectureId }}
                                         addMarker={addMarker}
+                                        lectureTitle={lectureData?.title || ''}
+                                        lectureDescription={lectureData?.description || courseData?.description || ''}
+                                        chunks={aiChunks}
                                     />
                                 </div>
                             )}
@@ -365,8 +391,11 @@ const VideoPlayerPage = () => {
                             <Playlist sections={playlistData} currentLecture={activeLectureId} onSelect={handleLectureSelect} />
                         ) : (
                             <ContextualAI
-                                videoState={videoState}
+                                videoState={{ ...videoState, lectureId: activeLectureId }}
                                 addMarker={addMarker}
+                                lectureTitle={lectureData?.title || ''}
+                                lectureDescription={lectureData?.description || courseData?.description || ''}
+                                chunks={aiChunks}
                             />
                         )}
                     </div>

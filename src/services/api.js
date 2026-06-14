@@ -50,12 +50,15 @@ const adapters = {
     lecture: (data) => ({
         id: data._id || data.id,
         title: data.title,
+        description: data.description || '',
         courseId: data.course?._id || data.courseId || 1,
         course: data.course?.title || data.course || "Unknown Course",
-        videoUrl: data.videoUrl?.url || data.videoUrl || "",
+        videoUrl: data.video?.url || data.videoUrl?.url || data.videoUrl || "",
         duration: data.duration || 0,
         thumbnail: data.thumbnail?.url || data.thumbnail || "https://via.placeholder.com/150",
-        status: data.status || "published"
+        status: data.status || "published",
+        // transcript data for AI tutor
+        transcript: data.video?.transcript || data.transcript || null,
     }),
     user: (data) => ({
         id: data._id || data.id,
@@ -186,6 +189,18 @@ export const api = {
                 console.warn("Fallback to mock data for course lectures", error);
                 await delay(500);
                 return lecturesSub.filter(l => l.courseId === parseInt(id) || String(l.courseId) === String(id));
+            }
+        },
+
+        getLectureById: async (lectureId, language = 'en') => {
+            try {
+                const response = await httpClient.get(`/lectures/${lectureId}`, { params: { language } });
+                const data = response.data || response;
+                return adapters.lecture(data);
+            } catch (error) {
+                console.warn("Fallback to mock data for getLectureById", error);
+                await delay(300);
+                return lecturesSub.find(l => String(l.id) === String(lectureId)) || null;
             }
         }
     },
@@ -866,6 +881,40 @@ export const api = {
 
   // ─── AI Chat & Video Assistant ──────────────────────────
   ai: {
+    /**
+     * POST /api/ai/ask
+     * Sends the user's question to the AI along with lecture context (title, description, chunks).
+     * @param {Object} params
+     * @param {string} params.title        - Lecture title
+     * @param {string} params.description  - Lecture description
+     * @param {string} params.question     - The user's question
+     * @param {Array}  params.chunks       - data.transcript.chunks from the lecture API
+     */
+    ask: async ({ title, description, question, chunks = [] }) => {
+      try {
+        const response = await httpClient.post('/ai/ask', {
+          title,
+          description,
+          question,
+          chunks,
+        });
+        // Backend is expected to return { message: "..." } or { data: { message: "..." } }
+        return {
+          message: response?.data?.message || response?.message || response,
+        };
+      } catch (error) {
+        console.warn('Fallback to mock for ai.ask', error);
+        // Graceful mock fallback
+        await delay(1000);
+        const isAr = i18n.language === 'ar';
+        return {
+          message: isAr
+            ? `بناءً على محتوى المحاضرة "${title}"، سؤالك عن "${question}" يتعلق بـ: ${chunks.slice(0, 2).map(c => c.text).join(' ')} ...`
+            : `Based on the lecture "${title}", your question about "${question}" relates to: ${chunks.slice(0, 2).map(c => c.text).join(' ')} ...`,
+        };
+      }
+    },
+
     chat: async (message, context = {}) => {
       await delay(1200);
       const msg = message.toLowerCase();

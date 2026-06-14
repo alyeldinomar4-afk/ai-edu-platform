@@ -36,7 +36,7 @@ const buttonItem = {
     visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 400, damping: 25 } },
 };
 
-const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
+const ContextualAI = ({ videoState, addMarker, hideHeader = false, lectureTitle = '', lectureDescription = '', chunks = [] }) => {
     const { t, i18n } = useTranslation();
     const isRTL = i18n.language === 'ar';
     const [messages, setMessages] = useState([
@@ -136,11 +136,12 @@ const ContextualAI = ({ videoState, addMarker, hideHeader = false }) => {
             else if (textToSend === t('videoPlayer.aiTutor.createQuizPrompt')) action = 'create-quiz';
             else if (textToSend === t('videoPlayer.aiTutor.showCodePrompt')) action = 'show-code';
 
-            const response = await api.ai.videoAssistant({
-                lectureId: videoState?.lectureId || 'demo-lecture',
-                currentTime: currentTime,
-                action: action,
-                query: textToSend
+            // Use real backend endpoint POST /api/ai/ask
+            const response = await api.ai.ask({
+                title: lectureTitle,
+                description: lectureDescription,
+                question: textToSend,
+                chunks: chunks,
             });
 
             setIsTyping(false);
