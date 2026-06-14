@@ -160,34 +160,6 @@ const RegisterPage = () => {
                     </div>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 ml-1 mb-2">
-                        {t('auth.register.roleLabel')}
-                    </label>
-                    <div className="grid grid-cols-2 gap-3">
-                        <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, role: 'learner' })}
-                            className={`py-2 px-4 rounded-lg border text-sm font-bold transition-all ${formData.role === 'learner'
-                                    ? 'bg-primary/10 border-primary text-primary shadow-sm'
-                                    : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-primary/50'
-                                }`}
-                        >
-                            {t('auth.register.roleStudent')}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, role: 'instructor' })}
-                            className={`py-2 px-4 rounded-lg border text-sm font-bold transition-all ${formData.role === 'instructor'
-                                    ? 'bg-primary/10 border-primary text-primary shadow-sm'
-                                    : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-primary/50'
-                                }`}
-                        >
-                            {t('auth.register.roleInstructor')}
-                        </button>
-                    </div>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 ml-1 italic">{t('auth.register.roleHint')}</p>
-                </div>
 
                 <Button
                     type="submit"
