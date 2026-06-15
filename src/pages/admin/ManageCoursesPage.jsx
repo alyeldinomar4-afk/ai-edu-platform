@@ -248,7 +248,7 @@ const ManageCoursesPage = () => {
                                             <label className={`block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>{t('dashboard.admin.manageCourses.table.instructor')}</label>
                                             <input
                                                 type="text"
-                                                value={formData.instructor}
+                                                value={formData?.instructor?.fullName}
                                                 onChange={e => setFormData(prev => ({ ...prev, instructor: e.target.value }))}
                                                 className={`w-full px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`}
                                                 placeholder={t('dashboard.admin.manageCourses.instructorPlaceholder')}
