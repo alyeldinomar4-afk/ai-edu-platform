@@ -41,7 +41,7 @@ const adapters = {
         discount: data.discount || 0,
         image: data.image?.url || data.image || "https://via.placeholder.com/300",
         category: data.category?.name || data.category || "General",
-        level: data.level || "Beginner",
+        level: data.level ? data.level.charAt(0).toUpperCase() + data.level.slice(1).toLowerCase() : "Beginner",
         lessons: data.lessonsCount || data.lessons || 0,
         duration: data.duration || 0,
         description: data.description || "",
