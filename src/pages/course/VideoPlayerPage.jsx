@@ -25,6 +25,7 @@ const VideoPlayerPage = () => {
     const [questionInput, setQuestionInput] = useState('');
     const [questions, setQuestions] = useState([]);
     const [courseData, setCourseData] = useState(null);
+    console.log("🚀 ~ VideoPlayerPage ~ courseData:", courseData)
     const [courseLectures, setCourseLectures] = useState([]);
     const [activeLectureId, setActiveLectureId] = useState(null);
     // Full lecture data fetched individually (has description + transcript.chunks)
@@ -129,7 +130,8 @@ const VideoPlayerPage = () => {
     const lectureTitle = getLocalizedTitle(rawLecture) !== '...' ? getLocalizedTitle(rawLecture) : getLocalizedTitle(listLecture);
     const rawDesc = rawLecture?.description || listLecture?.description || '';
     const lectureDescription = typeof rawDesc === 'string' ? rawDesc : (rawDesc[i18n.language] || rawDesc.en || '');
-    const videoSrc = rawLecture?.videoUrl || listLecture?.videoUrl || '';
+    const videoSrc = rawLecture?.video?.url || listLecture?.video?.url || '';
+
     const aiChunks = rawLecture?.transcript?.chunks || listLecture?.transcript?.chunks || [];
 
     const courseTitle = courseData?.title ? (typeof courseData.title === 'string' ? courseData.title : (courseData.title[i18n.language] || courseData.title.en || '...')) : '...';

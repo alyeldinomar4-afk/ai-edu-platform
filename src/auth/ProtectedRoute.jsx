@@ -3,21 +3,18 @@ import { useAuth } from './AuthContext';
 
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     const { session,  loading } = useAuth();
-    console.log("🚀 ~ ProtectedRoute ~ loading:", loading)
     const location = useLocation();
 
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
     }
 
-    console.log("🚀 ~ ProtectedRoute ~ session:", session)
     if (!session) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
     // Normalize session role (handle potential 'student' vs 'learner' mismatch)
     const currentRole = session.role === 'student' ? 'learner' : session.role;
-    console.log("🚀 ~ ProtectedRoute ~ currentRole:", currentRole)
 
     if (allowedRoles.length > 0 && !allowedRoles.includes(currentRole)) {
         // Determine redirect path based on role
