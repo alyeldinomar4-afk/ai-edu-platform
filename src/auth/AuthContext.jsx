@@ -106,7 +106,6 @@ export const AuthProvider = ({ children }) => {
       }
       return profile
     } catch (error) {
-        console.log("🚀 ~ AuthProvider ~ error:", error)
       if (error?.logout) {
         await logOut();
       } else {

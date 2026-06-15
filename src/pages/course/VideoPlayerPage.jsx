@@ -25,11 +25,10 @@ const VideoPlayerPage = () => {
     const [questionInput, setQuestionInput] = useState('');
     const [questions, setQuestions] = useState([]);
     const [courseData, setCourseData] = useState(null);
-    console.log("🚀 ~ VideoPlayerPage ~ courseData:", courseData)
     const [courseLectures, setCourseLectures] = useState([]);
     const [activeLectureId, setActiveLectureId] = useState(null);
     // Full lecture data fetched individually (has description + transcript.chunks)
-    const [activeLectureData, setActiveLectureData] = useState(null);
+
     const [isLoading, setIsLoading] = useState(true);
     const scrollContainerRef = useRef(null);
 
@@ -62,18 +61,18 @@ const VideoPlayerPage = () => {
     }, [courseId, t]);
 
     // When lecture changes → fetch full lecture data (title + description + transcript.chunks)
-    useEffect(() => {
-        if (!activeLectureId) return;
-        const fetchActiveLecture = async () => {
-            try {
-                const data = await api.courses.getLectureById(activeLectureId, i18n.language);
-                setActiveLectureData(data);
-            } catch (err) {
-                console.warn('Could not fetch full lecture data', err);
-            }
-        };
-        fetchActiveLecture();
-    }, [activeLectureId, i18n.language]);
+    // useEffect(() => {
+    //     if (!activeLectureId) return;
+    //     const fetchActiveLecture = async () => {
+    //         try {
+    //             const data = await api.courses.getLectureById(activeLectureId, i18n.language);
+    //             setlistLecture(data);
+    //         } catch (err) {
+    //             console.warn('Could not fetch full lecture data', err);
+    //         }
+    //     };
+    //     fetchActiveLecture();
+    // }, [activeLectureId, i18n.language]);
 
     // Reset scroll when lecture changes
     useEffect(() => {
@@ -86,7 +85,7 @@ const VideoPlayerPage = () => {
 
     const handleLectureSelect = (lecture) => {
         setActiveLectureId(lecture?.id || lecture?._id);
-        setActiveLectureData(null); // clear stale data while new lecture loads
+
         setVideoState({ currentTime: 0, isPlaying: false });
         toast.dismiss();
     };
@@ -119,7 +118,7 @@ const VideoPlayerPage = () => {
 
     // Find current lecture from actual backend data
     const listLecture = courseLectures.find(l => (l.id || l._id) === activeLectureId) || courseLectures[0] || {};
-    const rawLecture = activeLectureData || {}; 
+    const rawLecture = listLecture 
 
     // Handle string titles or localized object titles (if they exist)
     const getLocalizedTitle = (lecture) => {
@@ -132,12 +131,10 @@ const VideoPlayerPage = () => {
     const lectureDescription = typeof rawDesc === 'string' ? rawDesc : (rawDesc[i18n.language] || rawDesc.en || '');
     const videoSrc = rawLecture?.video?.url || listLecture?.video?.url || '';
 
-    const aiChunks = rawLecture?.transcript?.chunks || listLecture?.transcript?.chunks || [];
-
     const courseTitle = courseData?.title ? (typeof courseData.title === 'string' ? courseData.title : (courseData.title[i18n.language] || courseData.title.en || '...')) : '...';
     const currentLecture = { title: lectureTitle };
     // lectureData still needed for Quiz and Overview tabs
-    const lectureData = activeLectureData || listLecture;
+    const lectureData = listLecture || listLecture;
 
     // Group lectures into sections for the playlist
     const playlistData = courseLectures.length >= 3 ? [
@@ -255,7 +252,7 @@ const VideoPlayerPage = () => {
                                         addMarker={addMarker}
                                         lectureTitle={lectureTitle}
                                         lectureDescription={lectureDescription}
-                                        chunks={aiChunks}
+                                        videoData={rawLecture?.video}
                                     />
                                 </div>
                             )}
@@ -409,7 +406,7 @@ const VideoPlayerPage = () => {
                                 addMarker={addMarker}
                                 lectureTitle={lectureTitle}
                                 lectureDescription={lectureDescription}
-                                chunks={aiChunks}
+                                videoData={rawLecture?.video}
                             />
                         )}
                     </div>

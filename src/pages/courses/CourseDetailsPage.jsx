@@ -25,7 +25,6 @@ import { formatCurrency, formatDuration } from "../../utils/formatters";
 
 const CourseDetailsPage = () => {
   const { id } = useParams();
-  console.log("🚀 ~ CourseDetailsPage ~ id:", id);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t, i18n } = useTranslation();

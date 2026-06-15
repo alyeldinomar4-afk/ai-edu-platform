@@ -36,7 +36,6 @@ const LoginPage = () => {
         data: formData,
         mode: "signin",
       });
-      console.log("🚀 ~ handleSubmit ~ user:", user)
       // Redirect based on role or 'from' location
       if (from !== "/") {
         navigate(from, { replace: true });

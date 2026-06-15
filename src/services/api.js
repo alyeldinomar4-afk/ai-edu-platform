@@ -189,6 +189,8 @@ export const api = {
             try {
                 const response = await httpClient.get(`/lectures`, { params: { 'filters[course]': id } });
                 const data = response.data || [];
+                console.log(data);
+                
                 return data
             } catch (error) {
                 console.warn("Fallback to mock data for course lectures", error);
@@ -904,7 +906,7 @@ export const api = {
         });
         // Backend is expected to return { message: "..." } or { data: { message: "..." } }
         return {
-          message: response?.data?.message || response?.message || response,
+          message: response?.data
         };
       } catch (error) {
         console.warn('Fallback to mock for ai.ask', error);
