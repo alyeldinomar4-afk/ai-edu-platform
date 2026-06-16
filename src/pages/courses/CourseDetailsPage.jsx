@@ -80,7 +80,7 @@ const CourseDetailsPage = () => {
           // Fetch instructors to get bio/avatar
           const instructors = await api.instructors.getAll();
           const instructor = instructors.find(
-            (ins) => ins.name === courseData.instructor,
+            (ins) => ins.name === courseData?.instructor?.fullName || ins.name === courseData?.instructor,
           );
           setInstructorData(instructor);
 
@@ -381,7 +381,7 @@ const CourseDetailsPage = () => {
                           <img
                             src={
                               instructorData?.avatar ||
-                              `https://ui-avatars.com/api/?name=${course.instructor}&background=random`
+                              `https://ui-avatars.com/api/?name=${encodeURIComponent(course?.instructor?.fullName || "")}&background=random`
                             }
                             alt={course?.instructor?.fullName}
                             className="w-full h-full object-cover"
@@ -389,7 +389,7 @@ const CourseDetailsPage = () => {
                         </div>
                         <div>
                           <Link
-                            to={`/instructor/user/${encodeURIComponent(course.instructor.replace(/\s+/g, "-").toLowerCase())}`}
+                            to={`/instructor/user/${encodeURIComponent(course?.instructor?.fullName?.replace(/\s+/g, "-")?.toLowerCase() || "")}`}
                             className="block hover:opacity-80 transition-opacity"
                           >
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 hover:text-primary transition-colors">
@@ -420,7 +420,7 @@ const CourseDetailsPage = () => {
                           <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                             {instructorData?.bio ||
                               t("courseDetails.instructorBio", {
-                                instructor: course.instructor,
+                                instructor: course?.instructor?.fullName,
                               })}
                           </p>
                         </div>
