@@ -238,7 +238,7 @@ const ManageVideosPage = () => {
                                 <div className="p-5 flex-1 flex flex-col text-left">
                                     <h3 className="font-bold text-slate-900 dark:text-white mb-2 line-clamp-1">{video.title}</h3>
                                     <div className="space-y-1.5 mb-4">
-                                        <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2"><User size={14} className="text-primary" /> {video.instructor}</div>
+                                        <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2"><User size={14} className="text-primary" /> {video.instructor?.fullName}</div>
                                         <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 font-medium">{video.course}</div>
                                     </div>
                                     <div className="mt-auto pt-4 border-t border-slate-50 dark:border-slate-800 flex items-center justify-between">
@@ -283,7 +283,7 @@ const ManageVideosPage = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-slate-600 dark:text-slate-300">{video.instructor}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-slate-600 dark:text-slate-300">{video.instructor?.fullName}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-[11px] text-slate-500">
                                             <div className="flex flex-col gap-0.5">
                                                 <span className="flex items-center gap-1"><Eye size={12} /> {formatCompactNumber(video.views)}</span>
@@ -368,7 +368,7 @@ const ManageVideosPage = () => {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.instructor')}</label>
-                                                <input name="instructor" required value={formValues.instructor} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
+                                                <input name="instructor" required value={formValues.instructor?.fullName} onChange={handleInputChange} className={`w-full px-4 py-3 border rounded-xl dark:bg-slate-950 border-slate-200 dark:border-slate-700 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium ${isRTL ? 'text-right' : 'text-left'}`} />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="block text-sm font-semibold mb-2 dark:text-slate-300">{t('dashboard.admin.manageVideos.form.course')}</label>
