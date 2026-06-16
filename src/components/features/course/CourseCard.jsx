@@ -9,7 +9,9 @@ import { formatDuration, formatCurrency } from '../../../utils/formatters';
 const CourseCard = ({ course, layout = 'grid' }) => {
     const { t, i18n } = useTranslation();
 
-
+    const instructorName = typeof course?.instructor === 'string' 
+        ? course.instructor 
+        : course?.instructor?.fullName || 'Unknown Instructor';
 
     return (
         <div style={{ perspective: "1200px" }} className="h-full">
@@ -61,10 +63,10 @@ const CourseCard = ({ course, layout = 'grid' }) => {
 
                     {/* Instructor */}
                     <Link
-                        to={`/instructor/user/${encodeURIComponent((course?.instructor?.fullName || '').replace(/\s+/g, '-').toLowerCase())}`}
+                        to={`/instructor/user/${encodeURIComponent(instructorName.replace(/\s+/g, '-').toLowerCase())}`}
                         className="text-xs text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-primary mb-2 font-medium transition-colors w-fit block z-40 relative"
                     >
-                        {course?.instructor?.fullName || course?.instructor || 'Unknown Instructor'}
+                        {instructorName}
                     </Link>
 
                     {/* 1. Rating Row */}
