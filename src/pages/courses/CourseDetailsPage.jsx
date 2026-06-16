@@ -80,7 +80,7 @@ const CourseDetailsPage = () => {
           // Fetch instructors to get bio/avatar
           const instructors = await api.instructors.getAll();
           const instructor = instructors.find(
-            (ins) => ins.name === courseData.instructor,
+            (ins) => ins.name === courseData?.instructor?.fullName || ins.name === courseData?.instructor,
           );
           setInstructorData(instructor);
 
