@@ -187,7 +187,7 @@ export const api = {
 
         getLectures: async (id) => {
             try {
-                const response = await httpClient.get(`/lectures`, { params: { 'filters[course]': id } });
+                const response = await httpClient.get(`/lectures`, { params: { 'filters[course._id]': id } });
                 const data = response.data || [];
                 console.log(data);
                 
